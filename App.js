@@ -1,20 +1,108 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from "react";
+
+import { StatusBar, View, Platform } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+//#region Notifications
+import * as Notifications from "expo-notifications";
+import { isDevice } from "expo-device";
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+});
+//#endregion
+
+import { useFonts } from "expo-font";
+
+//#region Firebase
+import { firebaseApp } from "./constants/firebaseApp";
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, onValue, get, child, set } from "firebase/database";
+const app = initializeApp(firebaseApp);
+//#endregion
+
+//#region Navigation
+import { NavigationContainer } from "@react-navigation/native";
+//#endregion
+
+//#region Pages
+import ViewportManager from "./pages/main/ViewportManager";
+import Landing from "./pages/main/Landing";
+//#endregion
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    const [fontsLoaded, fontsError] = useFonts({
+        RobotoMono_Thin: require("./assets/fonts/RobotoMono-Thin.ttf"),
+        Barlow_Regular: require("./assets/fonts/Barlow-Regular.ttf"),
+        Barlow_Bold: require("./assets/fonts/Barlow-Bold.ttf"),
+    });
+
+    if (!fontsLoaded) return null;
+
+    return (
+        <NavigationContainer>
+            <StatusBar
+                animated
+                networkActivityIndicatorVisible
+                translucent
+                barStyle={"light-content"}
+            />
+            <SafeAreaProvider
+                style={{ flex: 1, width: "100%", backgroundColor: "#000000" }}>
+                <ViewportManager />
+            </SafeAreaProvider>
+        </NavigationContainer>
+    );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+//#region Notifications
+async function registerForPushNotifications() {
+    let token;
+    if (isDevice) {
+        const { status: existingStatus } =
+            await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== "granted") {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== "granted") {
+            console.log("Failed to get push token for push notification");
+            return;
+        }
+        token = (await Notifications.getExpoPushTokenAsync()).data;
+
+        const expoPushToken = (
+            await get(
+                child(
+                    ref(getDatabase()),
+                    "users/" + getAuth().currentUser.uid + "/expoPushToken"
+                )
+            )
+        ).val();
+        if (expoPushToken != token)
+            set(
+                ref(
+                    getDatabase(),
+                    "users/" + getAuth().currentUser.uid + "/expoPushToken"
+                ),
+                token
+            );
+    } else console.log("no ph. Device");
+
+    if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync("default", {
+            name: "default",
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: "#FF231F7C",
+        });
+    }
+
+    return token;
+}
+//#endregion
