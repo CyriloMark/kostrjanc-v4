@@ -4,54 +4,53 @@ import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 
 import * as style from "../../styles";
 
-import { Svg, Rect } from "react-native-svg";
-import { clamp } from "../../constants/clamp";
+import SVG_Settings from "../../assets/svg/Settings";
+import SVG_Return from "../../assets/svg/Return";
+
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function ContentHeader(props) {
     return (
-        <View style={[styles.container, style.Pmd]}>
+        <LinearGradient
+            colors={[style.colors.black, "transparent"]}
+            style={[
+                styles.container,
+                style.Pmd,
+                style.allCenter,
+                { zIndex: 10 },
+            ]}>
             <Pressable
                 style={[styles.btnContainer, style.allCenter]}
                 onPress={props.onContentPress}>
-                <Svg viewBox="0 0 5 5">
-                    <Rect
-                        x={0}
-                        y={0}
-                        width={5 * clamp(Math.random(), 0.6, 1)}
-                        height={1}
-                        fill={style.colors.blue}></Rect>
-                    <Rect
-                        x={0}
-                        y={2}
-                        width={5 * clamp(Math.random(), 0.4, 0.8)}
-                        height={1}
-                        fill={style.colors.sec}></Rect>
-                    <Rect
-                        x={0}
-                        y={4}
-                        width={5 * clamp(Math.random(), 0.6, 1)}
-                        height={1}
-                        fill={style.colors.blue}></Rect>
-                </Svg>
+                <SVG_Settings fill={style.colors.blue} />
             </Pressable>
 
-            <View style={[styles.titleContainer, style.allCenter]}>
+            <View
+                style={[
+                    styles.titleContainer,
+                    style.allCenter,
+                    style.boxShadow,
+                ]}>
                 <Text style={[style.TlgBd, style.tWhite]}>kostrjanc</Text>
+                <View
+                    style={[
+                        style.allCenter,
+                        styles.shBox,
+                        style.bgBlue,
+                        style.Psm,
+                    ]}>
+                    <Text style={[style.TsmRg, style.tWhite, styles.shText]}>
+                        studio
+                    </Text>
+                </View>
             </View>
 
-            <View style={[styles.btnContainer, style.allCenter]}>
-                <Pressable
-                    style={styles.pbContainer}
-                    onPress={props.onUserPress}>
-                    <Image
-                        source={{ uri: props.pb }}
-                        style={styles.pb}
-                        resizeMode="cover"
-                        resizeMethod="auto"
-                    />
-                </Pressable>
-            </View>
-        </View>
+            <Pressable
+                style={[styles.btnContainer, style.allCenter]}
+                onPress={props.onBack}>
+                <SVG_Return fill={style.colors.blue} rotation={0} />
+            </Pressable>
+        </LinearGradient>
     );
 }
 
@@ -72,12 +71,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flex: 0.8,
     },
-    icon: {
-        maxHeight: 32,
-        maxWidth: 32,
-        aspectRatio: 1,
-        flex: 0.1,
-        marginRight: style.defaultMsm,
+    shBox: {
+        borderRadius: 10,
+        marginLeft: style.defaultMmd,
+    },
+    shText: {
+        textTransform: "uppercase",
     },
 
     pbContainer: {

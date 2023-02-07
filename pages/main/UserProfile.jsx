@@ -1,0 +1,389 @@
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import {
+    View,
+    StyleSheet,
+    ScrollView,
+    Pressable,
+    Text,
+    Image,
+} from "react-native";
+
+import * as style from "../../styles";
+
+import { getDatabase, ref, get, child } from "firebase/database";
+import { getAuth } from "firebase/auth";
+
+import { User_Placeholder } from "../../constants/content/PlaceholderData";
+
+import { wait } from "../../constants/wait";
+import { arraySplitter, sortArrayByDate } from "../../constants";
+import { storeData, getData } from "../../constants/storage";
+
+import BackHeader from "../../components/BackHeader";
+import Refresh from "../../components/RefreshControl";
+import PostPreview from "../../components/profile/PostPreview";
+import EventPreview from "../../components/profile/EventPreview";
+import EditProfileButton from "../../components/profile/EditProfileButton";
+
+export default function UserProfile({ navigation }) {
+    const scrollRef = useRef();
+
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+
+        loadUser();
+
+        wait(1000).then(() => setRefreshing(false));
+    }, []);
+
+    const [user, setUser] = useState(User_Placeholder);
+    const [postEventList, setPostEventList] = useState([]);
+
+    const setUserData = data => {
+        if (data["isBanned"]) {
+            if (data.isBanned) {
+                setUser({
+                    ...User_Placeholder,
+                    isBanned: true,
+                });
+                return;
+            }
+        }
+
+        let userData = {
+            ...data,
+            follower: data["follower"] ? data.follower : [],
+            following: data["following"] ? data.following : [],
+        };
+
+        const hasPosts = data["posts"] ? true : false;
+        const hasEvents = data["events"] ? true : false;
+
+        setUser(userData);
+
+        const db = getDatabase();
+        let postEventDatas = [];
+        if (hasPosts) {
+            const p = data.posts;
+
+            for (let i = 0; i < p.length; i++) {
+                get(child(ref(db), "posts/" + p[i]))
+                    .then(postSnap => {
+                        if (postSnap.exists()) {
+                            const postData = postSnap.val();
+
+                            if (postData.isBanned === true) {
+                                setUser(user => {
+                                    return {
+                                        ...user,
+                                        posts: user.posts.splice(
+                                            user.posts.indexOf(p[i]),
+                                            1
+                                        ),
+                                    };
+                                });
+                            } else postEventDatas.push(postData);
+
+                            if (i === p.length - 1 && !hasEvents)
+                                setPostEventList(
+                                    sortArrayByDate(postEventDatas).reverse()
+                                );
+                        }
+                    })
+                    .catch(error =>
+                        console.log(
+                            "error pages/Profile.jsx",
+                            "get post data",
+                            error.code
+                        )
+                    );
+            }
+        }
+
+        if (hasEvents) {
+            const e = data.events;
+
+            for (let i = 0; i < e.length; i++) {
+                get(child(ref(db), "events/" + e[i]))
+                    .then(eventSnap => {
+                        if (eventSnap.exists()) {
+                            const eventData = eventSnap.val();
+                            if (!eventData.isBanned)
+                                postEventDatas.push(eventData);
+                            if (i === e.length - 1)
+                                setPostEventList(
+                                    sortArrayByDate(postEventDatas).reverse()
+                                );
+                        }
+                    })
+                    .catch(error =>
+                        console.log(
+                            "error pages/Profile.jsx",
+                            "get event data",
+                            error.code
+                        )
+                    );
+            }
+        }
+    };
+
+    const loadUser = () => {
+        let uid = "";
+        getData("userId")
+            .then(id => {
+                if (!id) uid = getAuth();
+                else uid = id;
+            })
+            .finally(() => {
+                const db = getDatabase();
+                get(child(ref(db), "users/" + uid)).then(userSnap => {
+                    if (!userSnap.exists()) return;
+
+                    let userData = userSnap.val();
+                    setUserData(userData);
+                    storeData("userData", userData);
+                });
+            });
+    };
+
+    useEffect(() => {
+        getData("userData").then(userData => {
+            if (userData) setUserData(userData);
+            else loadUser();
+        });
+    }, []);
+
+    return (
+        <View style={[style.container, style.bgBlack]}>
+            {/* Header */}
+            <Pressable
+                style={{ zIndex: 10 }}
+                onPress={() =>
+                    scrollRef.current.scrollTo({
+                        y: 0,
+                        animated: true,
+                    })
+                }>
+                <BackHeader
+                    title={user.name}
+                    onBack={() => navigation.goBack()}
+                />
+            </Pressable>
+
+            <ScrollView
+                ref={scrollRef}
+                style={[
+                    style.container,
+                    style.pH,
+                    style.oVisible,
+                    { marginTop: style.defaultMsm },
+                ]}
+                scrollEnabled
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={16}
+                automaticallyAdjustKeyboardInsets
+                automaticallyAdjustContentInsets
+                snapToAlignment="center"
+                snapToEnd
+                refreshControl={
+                    <Refresh onRefresh={onRefresh} refreshing={refreshing} />
+                }>
+                {/* Header Container */}
+                <View style={{ alignItems: "center" }}>
+                    {/* Pb */}
+                    <Pressable
+                        onPress={() =>
+                            navigation.navigate("imgFull", { uri: user.pbUri })
+                        }
+                        style={[
+                            style.allCenter,
+                            styles.imgContainer,
+                            style.oHidden,
+                        ]}>
+                        <Image
+                            source={{
+                                uri: user.pbUri,
+                            }}
+                            style={[style.container, style.allMax]}
+                            resizeMode="cover"
+                        />
+                    </Pressable>
+
+                    {/* Name */}
+                    <Text
+                        style={[
+                            style.tWhite,
+                            style.TlgBd,
+                            { marginTop: style.defaultMmd },
+                        ]}>
+                        {user.name}
+                    </Text>
+
+                    {/* Description */}
+                    <View style={styles.textContainer}>
+                        <Text style={[style.Tmd, style.tWhite]}>
+                            {user.description}
+                        </Text>
+                    </View>
+                </View>
+
+                {/* Stats Container */}
+                <View style={styles.sectionContainer}>
+                    <View style={styles.statsContainer}>
+                        {/* Follower */}
+                        <Pressable
+                            onPress={() =>
+                                navigation.push("userList", {
+                                    users: user.follower,
+                                    title: "Sćěhowarjo",
+                                })
+                            }
+                            style={[
+                                style.allCenter,
+                                styles.statElementContainer,
+                            ]}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {user.follower.length}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.tBlue,
+                                    style.TsmLt,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                Sćěhowarjo
+                            </Text>
+                        </Pressable>
+
+                        {/* Following */}
+                        <Pressable
+                            onPress={() =>
+                                navigation.push("userList", {
+                                    users: user.following,
+                                    title: "Sćěhuje",
+                                })
+                            }
+                            style={[
+                                style.allCenter,
+                                styles.statElementContainer,
+                            ]}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {user.following.length}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.tBlue,
+                                    style.TsmLt,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                Sćěhuje
+                            </Text>
+                        </Pressable>
+
+                        {/* Content */}
+                        <View
+                            style={[
+                                style.allCenter,
+                                styles.statElementContainer,
+                            ]}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {user.posts.length + user.events.length}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.tBlue,
+                                    style.TsmLt,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                Wozjewjenja
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+
+                {/* Content */}
+                <View style={styles.sectionContainer}>
+                    {arraySplitter(postEventList, 2).map((list, listKey) => (
+                        <View
+                            key={listKey}
+                            style={styles.contentItemListContainer}>
+                            {list.map((item, itemKey) =>
+                                item.type === 0 ? (
+                                    <PostPreview
+                                        key={itemKey}
+                                        data={item}
+                                        style={styles.contentItem}
+                                        onPress={() =>
+                                            navigation.push("postView", {
+                                                id: item.id,
+                                            })
+                                        }
+                                    />
+                                ) : (
+                                    <EventPreview
+                                        key={itemKey}
+                                        data={item}
+                                        style={styles.contentItem}
+                                        onPress={() =>
+                                            navigation.push("eventView", {
+                                                id: item.id,
+                                            })
+                                        }
+                                    />
+                                )
+                            )}
+                        </View>
+                    ))}
+                </View>
+
+                <View style={styles.editButton}>
+                    <EditProfileButton />
+                </View>
+            </ScrollView>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    sectionContainer: {
+        width: "100%",
+        marginTop: style.defaultMlg,
+    },
+
+    imgContainer: {
+        maxWidth: 152,
+        maxHeight: 152,
+        borderRadius: 100,
+        aspectRatio: 1,
+    },
+    textContainer: {
+        marginTop: style.defaultMmd,
+    },
+
+    editButton: {
+        marginTop: style.defaultMlg,
+        alignSelf: "center",
+        marginBottom: style.defaultMmd,
+    },
+
+    statsContainer: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        flexWrap: "wrap",
+    },
+    statElementContainer: {
+        flexDirection: "column",
+    },
+
+    contentItemListContainer: {
+        width: "100%",
+        flexDirection: "row",
+    },
+    contentItem: {
+        margin: style.defaultMsm,
+        flex: 1,
+    },
+});

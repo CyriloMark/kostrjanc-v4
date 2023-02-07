@@ -12,6 +12,15 @@ import {
 //#region Pages
 import Landing from "./Landing";
 import Content from "./Content";
+
+import UserProfile from "./UserProfile";
+
+import Post from "../Post";
+import Event from "../Event";
+import Profile from "../Profile";
+
+import ImageFullscreen from "../ImageFullscreen";
+import UserList from "../UserList";
 //#endregion
 
 const MainNavStack = createStackNavigator();
@@ -39,6 +48,21 @@ export default function ViewportManager() {
                     }}
                 />
                 <MainNavStack.Screen name="landing" component={Landing} />
+
+                <MainNavStack.Screen
+                    name="userProfile"
+                    component={UserProfile}
+                />
+
+                <MainNavStack.Screen name="postView" component={Post} />
+                <MainNavStack.Screen name="eventView" component={Event} />
+                <MainNavStack.Screen name="profileView" component={Profile} />
+
+                <MainNavStack.Screen
+                    name="imgFull"
+                    component={ImageFullscreen}
+                />
+                <MainNavStack.Screen name="userList" component={UserList} />
             </MainNavStack.Navigator>
         </SafeAreaView>
     );

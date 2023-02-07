@@ -10,6 +10,10 @@ export const container = {
     flex: 1,
     width: "100%",
 };
+export const allMax = {
+    width: "100%",
+    height: "100%",
+};
 
 export const bgBlue = {
     backgroundColor: colors.blue,
@@ -28,21 +32,21 @@ export const bgRed = {
 };
 
 export const Psm = {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
 };
 export const Pmd = {
-    paddingHorizontal: 16,
+    paddingHorizontal: 15,
     paddingVertical: 10,
 };
 export const Plg = {
-    paddingHorizontal: 22,
-    paddingVertical: 12,
+    paddingHorizontal: 25,
+    paddingVertical: 15,
 };
 
 export const TsmLt = {
     fontFamily: "RobotoMono_Thin",
-    fontSize: 10,
+    fontSize: 12,
 };
 export const TsmRg = {
     fontFamily: "Barlow_Regular",
@@ -59,6 +63,10 @@ export const TlgRg = {
 export const TlgBd = {
     fontFamily: "Barlow_Bold",
     fontSize: 24,
+};
+export const Ttitle = {
+    fontFamily: "Barlow_Bold",
+    fontSize: 58,
 };
 
 export const tBlue = {
@@ -77,10 +85,56 @@ export const tRed = {
     color: colors.red,
 };
 
-export const defaultMsm = 10;
+export const boxShadow = {
+    shadowColor: colors.black,
+    shadowOffset: {
+        width: 0,
+        height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
+};
+
+export const oVisible = {
+    overflow: "visible",
+};
+export const oHidden = {
+    overflow: "hidden",
+};
+
+export const defaultMsm = 5;
+export const defaultMmd = 10;
+export const defaultMlg = 25;
+
+export const pV = {
+    paddingVertical: Psm.paddingVertical,
+};
+export const pH = {
+    paddingHorizontal: Psm.paddingHorizontal,
+};
+
+export const border = {
+    borderWidth: 1,
+    borderStyle: "solid",
+};
 
 export const allCenter = {
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
+};
+
+export const line = {
+    width: "50%",
+    height: 1,
+    backgroundColor: colors.blue,
+    alignSelf: "center",
+};
+
+export const blurBox = {
+    position: "absolute",
+    zIndex: 5,
+    backgroundColor: "rgba(0,0,0, .5)",
+    ...allMax,
 };

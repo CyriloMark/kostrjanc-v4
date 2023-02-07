@@ -20,8 +20,8 @@ import { useFonts } from "expo-font";
 //#region Firebase
 import { firebaseApp } from "./constants/firebaseApp";
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, onValue, get, child, set } from "firebase/database";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getDatabase, ref, get, child, set } from "firebase/database";
 const app = initializeApp(firebaseApp);
 //#endregion
 
@@ -31,7 +31,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 //#region Pages
 import ViewportManager from "./pages/main/ViewportManager";
-import Landing from "./pages/main/Landing";
+import AuthManager from "./pages/auth/AuthManager";
 //#endregion
 
 export default function App() {
@@ -41,8 +41,46 @@ export default function App() {
         Barlow_Bold: require("./assets/fonts/Barlow-Bold.ttf"),
     });
 
-    if (!fontsLoaded) return null;
+    const [loaded, setLoaded] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
+    useEffect(() => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                setLoggedIn(true);
+                setLoaded(true);
+            } else {
+                setLoggedIn(false);
+                setLoaded(true);
+            }
+        });
+    }, []);
+
+    // return null;
+    if (!fontsLoaded) return null;
+    if (!loaded) return null;
+
+    if (!loggedIn) {
+        return (
+            <NavigationContainer>
+                <StatusBar
+                    animated
+                    networkActivityIndicatorVisible
+                    translucent
+                    barStyle={"light-content"}
+                />
+                <SafeAreaProvider
+                    style={{
+                        flex: 1,
+                        width: "100%",
+                        backgroundColor: "#000000",
+                    }}>
+                    <AuthManager />
+                </SafeAreaProvider>
+            </NavigationContainer>
+        );
+    }
     return (
         <NavigationContainer>
             <StatusBar
@@ -52,7 +90,11 @@ export default function App() {
                 barStyle={"light-content"}
             />
             <SafeAreaProvider
-                style={{ flex: 1, width: "100%", backgroundColor: "#000000" }}>
+                style={{
+                    flex: 1,
+                    width: "100%",
+                    backgroundColor: "#000000",
+                }}>
                 <ViewportManager />
             </SafeAreaProvider>
         </NavigationContainer>
