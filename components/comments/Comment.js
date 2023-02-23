@@ -53,8 +53,8 @@ export default function Comment({ style, commentData }) {
                     {/* Timestamp */}
                     <Text
                         style={[
-                            s.Tmd,
-                            s.tSec,
+                            s.TsmLt,
+                            s.tBlue,
                             {
                                 marginLeft: s.defaultMmd,
                             },

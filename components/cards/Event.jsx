@@ -154,7 +154,7 @@ export default function Event(props) {
 
     return (
         <View style={props.style}>
-            <Pressable style={styles.container}>
+            <Pressable style={styles.container} onPress={props.onPress}>
                 {/* Header */}
                 <View style={[styles.headerContainer]}>
                     {/* Live */}

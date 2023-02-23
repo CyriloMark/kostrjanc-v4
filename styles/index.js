@@ -1,9 +1,24 @@
 export const colors = {
+    //old
+    // blue: "#5884B0",
+    // sec: "#143C63",
+    // red: "#B06E6A",
+    // black: "#000000",
+    // white: "#ffffff",
+    //new
     blue: "#5884B0",
     sec: "#143C63",
     red: "#B06E6A",
-    black: "#000000",
-    white: "#ffffff",
+    black: "#060A0D",
+    white: "#CCE6FF",
+};
+
+export const colorsRGB = {
+    blue: "88, 132, 176",
+    sec: "20, 60, 99",
+    red: "176, 110, 106",
+    black: "6, 10, 13",
+    white: "204, 230, 255",
 };
 
 export const container = {
@@ -125,6 +140,10 @@ export const allCenter = {
     alignContent: "center",
 };
 
+export const tCenter = {
+    textAlign: "center",
+};
+
 export const line = {
     width: "50%",
     height: 1,
@@ -135,6 +154,5 @@ export const line = {
 export const blurBox = {
     position: "absolute",
     zIndex: 5,
-    backgroundColor: "rgba(0,0,0, .5)",
     ...allMax,
 };

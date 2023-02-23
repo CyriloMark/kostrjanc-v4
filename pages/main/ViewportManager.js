@@ -19,8 +19,17 @@ import Post from "../Post";
 import Event from "../Event";
 import Profile from "../Profile";
 
+import Settings from "../Settings";
+
+import PostCreate from "../create/PostCreate";
+import EventCreate from "../create/EventCreate";
+
+import UserProfileEdit from "../UserProfileEdit";
+
 import ImageFullscreen from "../ImageFullscreen";
 import UserList from "../UserList";
+import Report from "../interaction/Report";
+import Ban from "../interaction/Ban";
 //#endregion
 
 const MainNavStack = createStackNavigator();
@@ -58,11 +67,26 @@ export default function ViewportManager() {
                 <MainNavStack.Screen name="eventView" component={Event} />
                 <MainNavStack.Screen name="profileView" component={Profile} />
 
+                <MainNavStack.Screen name="settings" component={Settings} />
+
+                <MainNavStack.Screen name="postCreate" component={PostCreate} />
+                <MainNavStack.Screen
+                    name="eventCreate"
+                    component={EventCreate}
+                />
+
+                <MainNavStack.Screen
+                    name="editProfile"
+                    component={UserProfileEdit}
+                />
+
                 <MainNavStack.Screen
                     name="imgFull"
                     component={ImageFullscreen}
                 />
                 <MainNavStack.Screen name="userList" component={UserList} />
+                <MainNavStack.Screen name="report" component={Report} />
+                <MainNavStack.Screen name="ban" component={Ban} />
             </MainNavStack.Navigator>
         </SafeAreaView>
     );

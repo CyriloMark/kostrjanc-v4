@@ -40,3 +40,10 @@ export const removeData = async key => {
         console.log("error storage/index.js removeData", e);
     }
 };
+
+export const hasData = async key => {
+    try {
+        const hasKey = (await AsyncStorage.getAllKeys()).includes(key);
+        return hasKey;
+    } catch (e) {}
+};

@@ -30,7 +30,12 @@ export const Event_Placeholder = {
     description: "",
     starting: 0,
     ending: 0,
-    geoCords: null,
+    geoCords: {
+        latitude: 67,
+        latitudeDelta: 50.7,
+        longitude: 0.094,
+        longitudeDelta: 117,
+    },
     creator: "",
     created: 0,
     comments: [],
@@ -48,7 +53,22 @@ export const Banner_Placeholder = {
 };
 
 export const Comment_Placeholder = {
-    content: "Test",
-    created: 1671787367974,
+    content: "",
+    created: 0,
     creator: "",
+};
+
+export const Report_Placeholder = {
+    id: 0,
+    item: {},
+    creator: "",
+    description: "",
+    type: -1,
+};
+
+export const Ban_Placeholder = {
+    id: 0,
+    item: {},
+    creator: "",
+    description: "",
 };

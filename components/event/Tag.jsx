@@ -13,7 +13,7 @@ export default function Tag(props) {
                     style.Psm,
                     styles.container,
                     {
-                        borderColor: !props.selected
+                        borderColor: !props.checked
                             ? style.colors.blue
                             : style.colors.red,
                     },
@@ -24,7 +24,7 @@ export default function Tag(props) {
                         style.TsmRg,
                         {
                             textAlign: "center",
-                            color: !props.selected
+                            color: !props.checked
                                 ? style.colors.blue
                                 : style.colors.red,
                         },

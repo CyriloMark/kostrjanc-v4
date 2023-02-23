@@ -15,7 +15,7 @@ import { child, get, getDatabase, ref } from "firebase/database";
 import BackHeader from "../components/BackHeader";
 
 export default function UserList({ navigation, route }) {
-    const { users, title } = route.params;
+    const { users, title, needData } = route.params;
 
     const [usersList, setUsersList] = useState([]);
 
@@ -50,12 +50,17 @@ export default function UserList({ navigation, route }) {
     };
 
     useEffect(() => {
-        getUserData();
+        if (needData) getUserData();
+        else setUsersList(users);
     }, []);
 
     return (
         <View style={[style.allMax, style.bgBlack]}>
-            <BackHeader onBack={() => navigation.goBack()} title={title} />
+            <BackHeader
+                onBack={() => navigation.goBack()}
+                title={title}
+                showReload={false}
+            />
 
             <ScrollView
                 style={[

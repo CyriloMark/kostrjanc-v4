@@ -6,6 +6,8 @@ import {
     Pressable,
     Text,
     Image,
+    RefreshControl,
+    Platform,
 } from "react-native";
 
 import * as style from "../styles";
@@ -20,11 +22,11 @@ import { wait } from "../constants/wait";
 import { arraySplitter, sortArrayByDate } from "../constants";
 
 import BackHeader from "../components/BackHeader";
-import Refresh from "../components/RefreshControl";
 import InteractionBar from "../components/InteractionBar";
 import FollowButton from "../components/profile/FollowButton";
 import PostPreview from "../components/profile/PostPreview";
 import EventPreview from "../components/profile/EventPreview";
+import Refresh from "../components/RefreshControl";
 
 let UID = null;
 export default function Profile({ navigation, route }) {
@@ -77,21 +79,23 @@ export default function Profile({ navigation, route }) {
             const p = data.posts;
 
             for (let i = 0; i < p.length; i++) {
-                get(child(ref(db), "posts/" + p[i]))
+                get(child(ref(db), `posts/${p[i]}`))
                     .then(postSnap => {
                         if (postSnap.exists()) {
                             const postData = postSnap.val();
-                            if (postData.isBanned === true) {
-                                setUser(user => {
-                                    return {
-                                        ...user,
-                                        posts: user.posts.splice(
-                                            user.posts.indexOf(p[i]),
-                                            1
-                                        ),
-                                    };
-                                });
-                            } else postEventDatas.push(postData);
+                            if (!postData.isBanned)
+                                postEventDatas.push(postData);
+                            // if (!postData.isBanned) {
+                            //     setUser(user => {
+                            //         return {
+                            //             ...user,
+                            //             posts: user.posts.splice(
+                            //                 user.posts.indexOf(p[i]),
+                            //                 1
+                            //             ),
+                            //         };
+                            //     });
+                            // } else postEventDatas.push(postData);
                             if (i === p.length - 1 && !hasEvents)
                                 setPostEventList(
                                     sortArrayByDate(postEventDatas).reverse()
@@ -165,7 +169,16 @@ export default function Profile({ navigation, route }) {
                 loadUser();
             }
         });
+        getIfAdmin();
     }, []);
+
+    const [clientIsAdmin, setClintIsAdmin] = useState(false);
+    const getIfAdmin = async () => {
+        await getData("userIsAdmin").then(isAdmin => {
+            if (isAdmin === null) return setClintIsAdmin(false);
+            return setClintIsAdmin(isAdmin);
+        });
+    };
 
     const follow = () => {
         if (user.isBanned) return;
@@ -241,16 +254,6 @@ export default function Profile({ navigation, route }) {
             .finally(() => setFollowing(val => !val));
     };
 
-    let getTotalContentCount = () => {
-        if (!user.posts && !user.events) return 0;
-        if (user.posts) {
-            if (user.events) return user.posts.length + user.events.length;
-            else return user.posts.length;
-        }
-        if (user.events) return user.events.length;
-        return 0;
-    };
-
     return (
         <View style={[style.container, style.bgBlack]}>
             {/* Header */}
@@ -265,6 +268,8 @@ export default function Profile({ navigation, route }) {
                 <BackHeader
                     title={user.name}
                     onBack={() => navigation.goBack()}
+                    onRefresh={loadUser}
+                    showReload
                 />
             </Pressable>
 
@@ -285,7 +290,12 @@ export default function Profile({ navigation, route }) {
                 snapToAlignment="center"
                 snapToEnd
                 refreshControl={
-                    <Refresh onRefresh={onRefresh} refreshing={refreshing} />
+                    Platform.OS === "ios" ? (
+                        <Refresh
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    ) : null
                 }>
                 {/* Header Container */}
                 <View style={{ alignItems: "center" }}>
@@ -341,6 +351,7 @@ export default function Profile({ navigation, route }) {
                                 navigation.push("userList", {
                                     users: user.follower,
                                     title: "Sćěhowarjo",
+                                    needData: true,
                                 })
                             }
                             style={[
@@ -366,6 +377,7 @@ export default function Profile({ navigation, route }) {
                                 navigation.push("userList", {
                                     users: user.following,
                                     title: "Sćěhuje",
+                                    needData: true,
                                 })
                             }
                             style={[
@@ -392,7 +404,7 @@ export default function Profile({ navigation, route }) {
                                 styles.statElementContainer,
                             ]}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                {getTotalContentCount()}
+                                {postEventList.length}
                             </Text>
                             <Text
                                 style={[
@@ -448,9 +460,22 @@ export default function Profile({ navigation, route }) {
                     </Text>
                     <InteractionBar
                         style={{ marginTop: style.defaultMsm }}
-                        ban
+                        ban={clientIsAdmin}
                         share
                         warn
+                        onWarn={() =>
+                            navigation.navigate("report", {
+                                item: user,
+                                type: 2,
+                            })
+                        }
+                        onBan={() =>
+                            navigation.navigate("ban", {
+                                item: user,
+                                type: 2,
+                                id: id,
+                            })
+                        }
                     />
                 </View>
             </ScrollView>

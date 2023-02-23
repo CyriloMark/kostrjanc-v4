@@ -6,6 +6,10 @@ import {
     Pressable,
     Text,
     Image,
+    RefreshControl,
+    TextInput,
+    Platform,
+    KeyboardAvoidingView,
 } from "react-native";
 
 import * as style from "../styles";
@@ -19,12 +23,16 @@ import {
 } from "../constants/content/PlaceholderData";
 
 import BackHeader from "../components/BackHeader";
-import Refresh from "../components/RefreshControl";
 import Comment from "../components/comments/Comment";
 import InteractionBar from "../components/InteractionBar";
 import NewCommentButton from "../components/comments/NewCommentButton";
 import CheckButton from "../components/event/CheckButton";
 import Tag from "../components/event/Tag";
+import CommentAccessoryView from "../components/comments/CommentAccessoryView";
+import SendButton from "../components/comments/SendButton";
+import DeleteButton from "../components/comments/DeleteButton";
+import ListButton from "../components/event/ListButton";
+import Refresh from "../components/RefreshControl";
 
 import SVG_Live from "../assets/svg/Live";
 
@@ -38,11 +46,13 @@ import {
 } from "../constants/event";
 import { openLink } from "../constants";
 import { getData } from "../constants/storage";
+import { share } from "../constants/share";
 
 import MapView, { Marker } from "react-native-maps";
 
 export default function Event({ navigation, route }) {
-    const scrollRef = useRef();
+    const mapRef = useRef();
+    const commentInputRef = useRef();
 
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
@@ -61,6 +71,9 @@ export default function Event({ navigation, route }) {
     const [isLive, setIsLive] = useState(false);
     const [currentMapType, setCurrentMapType] = useState(0);
     const [checksUserListData, setChecksUserListData] = useState([]);
+
+    const [commentVisible, setCommentVisible] = useState(false);
+    const [currentCommentInput, setCurrentCommentInput] = useState("");
 
     const loadData = () => {
         const db = getDatabase();
@@ -95,6 +108,8 @@ export default function Event({ navigation, route }) {
                     isBanned: false,
                 });
 
+                mapRef.current.animateToRegion(eventData["geoCords"], 2000);
+
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
                 );
@@ -108,6 +123,7 @@ export default function Event({ navigation, route }) {
                                 if (checkSnap.exists()) {
                                     const a = checkSnap.val();
                                     checksList.push({
+                                        id: eventData["checks"][i],
                                         name: a["name"],
                                         pbUri: a["pbUri"],
                                     });
@@ -160,15 +176,16 @@ export default function Event({ navigation, route }) {
             .finally(() => {
                 if (a.includes(uid)) a.splice(a.indexOf(uid), 1);
                 else a.push(uid);
-
                 const db = getDatabase();
                 let checksList = [];
+                if (a.length === 0) setChecksUserListData([]);
                 for (let i = 0; i < a.length; i++) {
                     get(child(ref(db), "users/" + a[i]))
                         .then(checkSnap => {
                             if (checkSnap.exists()) {
                                 const checkData = checkSnap.val();
                                 checksList.push({
+                                    id: a[i],
                                     name: checkData["name"],
                                     pbUri: checkData["pbUri"],
                                 });
@@ -199,128 +216,190 @@ export default function Event({ navigation, route }) {
             });
     };
 
+    const openCommentInput = () => {
+        if (!commentVisible) {
+            commentInputRef.current.focus();
+            setCommentVisible(true);
+        }
+    };
+
     useEffect(() => {
         loadData();
+        getIfAdmin();
     }, []);
+
+    const [clientIsAdmin, setClintIsAdmin] = useState(false);
+    const getIfAdmin = async () => {
+        await getData("userIsAdmin").then(isAdmin => {
+            if (isAdmin === null) return setClintIsAdmin(false);
+            return setClintIsAdmin(isAdmin);
+        });
+    };
+
+    const publishComment = () => {
+        if (
+            !(
+                currentCommentInput.length > 0 &&
+                currentCommentInput.length <= 64
+            )
+        )
+            return;
+
+        const input = currentCommentInput;
+        setCurrentCommentInput("");
+        setCommentVisible(false);
+
+        let uid = "";
+        getData("userId")
+            .then(userID => {
+                if (userID) uid = userID;
+                else uid = getAuth().currentUser.uid;
+            })
+            .finally(() => {
+                let a = event.comments ? event.comments : [];
+                a.unshift({
+                    creator: uid,
+                    created: Date.now(),
+                    content: input,
+                });
+                setEvent({
+                    ...event,
+                    comments: a,
+                });
+
+                const db = getDatabase();
+                set(ref(db, `events/${id}/comments`), a);
+            });
+    };
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
-            <Pressable
-                style={{ zIndex: 10 }}
-                onPress={() =>
-                    scrollRef.current.scrollTo({
-                        y: 0,
-                        animated: true,
-                    })
-                }>
-                <BackHeader
-                    title={event.title}
-                    onBack={() => navigation.goBack()}
-                />
-            </Pressable>
+            <KeyboardAvoidingView
+                style={style.allMax}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                {/* Header */}
+                <Pressable style={{ zIndex: 10 }}>
+                    <BackHeader
+                        title={event.title}
+                        onBack={() => navigation.goBack()}
+                        onRefresh={loadData}
+                        showReload
+                    />
+                </Pressable>
 
-            <ScrollView
-                ref={scrollRef}
-                style={[
-                    style.container,
-                    style.pH,
-                    style.oVisible,
-                    { marginTop: style.defaultMsm },
-                ]}
-                scrollEnabled
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                scrollEventThrottle={16}
-                automaticallyAdjustKeyboardInsets
-                automaticallyAdjustContentInsets
-                snapToAlignment="center"
-                snapToEnd
-                refreshControl={
-                    <Refresh onRefresh={onRefresh} refreshing={refreshing} />
-                }>
-                {/* Map Container */}
-                <View>
-                    {/* Title */}
-                    <Text style={[style.tWhite, style.TlgBd]}>
-                        {event.title}
-                    </Text>
-
-                    {/* Map */}
-                    <View
-                        style={[
-                            styles.mapContainer,
-                            style.allCenter,
-                            style.oHidden,
-                        ]}>
-                        <MapView
-                            style={style.allMax}
-                            userInterfaceStyle="dark"
-                            showsUserLocation
-                            showsScale
-                            mapType={mapTypes[currentMapType]}
-                            accessible={false}
-                            onLongPress={() => {
-                                setCurrentMapType(cur => {
-                                    return cur === 0 ? 1 : 0;
-                                });
-                            }}
-                            focusable={false}
-                            initialRegion={event.geoCords}>
-                            <Marker
-                                focusable
-                                draggable={false}
-                                title={event.title}
-                                coordinate={event.geoCords}
+                <ScrollView
+                    scrollEnabled
+                    automaticallyAdjustKeyboardInsets
+                    automaticallyAdjustContentInsets
+                    keyboardDismissMode="interactive"
+                    snapToAlignment="center"
+                    snapToEnd
+                    style={[
+                        style.container,
+                        style.pH,
+                        style.oVisible,
+                        { marginTop: style.defaultMsm },
+                    ]}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    scrollEventThrottle={16}
+                    refreshControl={
+                        Platform.OS === "ios" ? (
+                            <Refresh
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
                             />
-                        </MapView>
-                    </View>
-
-                    <View style={styles.textContainer}>
-                        <Text style={[style.Tmd, style.tWhite]}>
-                            {event.description}
+                        ) : null
+                    }>
+                    {/* Map Container */}
+                    <View>
+                        {/* Title */}
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            {event.title}
                         </Text>
-                    </View>
-                </View>
 
-                {/* User Container */}
-                <View style={styles.sectionContainer}>
-                    <Text style={[style.tWhite, style.TlgBd]}>
-                        Přez awtora:
-                    </Text>
-
-                    <Pressable
-                        style={[styles.userContainer, style.Psm]}
-                        onPress={() =>
-                            navigation.push("profileView", {
-                                id: event.creator,
-                            })
-                        }>
-                        <View style={styles.userPbContainer}>
-                            <Image
-                                source={{
-                                    uri: user.pbUri,
-                                }}
-                                style={styles.userPb}
-                                resizeMode="cover"
-                                resizeMethod="auto"
-                            />
-                        </View>
-                        <Text
+                        {/* Map */}
+                        <View
                             style={[
-                                style.Tmd,
-                                style.tWhite,
-                                {
-                                    marginLeft: style.defaultMmd,
-                                },
+                                styles.mapContainer,
+                                style.allCenter,
+                                style.oHidden,
                             ]}>
-                            {user.name}
-                        </Text>
-                    </Pressable>
-                </View>
+                            <MapView
+                                ref={mapRef}
+                                style={style.allMax}
+                                userInterfaceStyle="dark"
+                                showsUserLocation
+                                showsScale
+                                mapType={mapTypes[currentMapType]}
+                                accessible={false}
+                                onLongPress={() => {
+                                    setCurrentMapType(cur => {
+                                        return cur === 0 ? 1 : 0;
+                                    });
+                                }}
+                                focusable={false}
+                                onPress={() => {
+                                    mapRef.current.animateToRegion(
+                                        event.geoCords,
+                                        1000
+                                    );
+                                }}
+                                initialRegion={event.geoCords}>
+                                <Marker
+                                    focusable
+                                    draggable={false}
+                                    title={event.title}
+                                    coordinate={event.geoCords}
+                                />
+                            </MapView>
+                        </View>
 
-                {/* Event Data Container */}
-                {event.eventOptions ? (
+                        <View style={styles.textContainer}>
+                            <Text style={[style.Tmd, style.tWhite]}>
+                                {event.description}
+                            </Text>
+                        </View>
+                    </View>
+
+                    {/* User Container */}
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            Přez awtora:
+                        </Text>
+
+                        <Pressable
+                            style={[styles.userContainer, style.Psm]}
+                            onPress={() =>
+                                navigation.push("profileView", {
+                                    id: event.creator,
+                                })
+                            }>
+                            <View style={styles.userPbContainer}>
+                                <Image
+                                    source={{
+                                        uri: user.pbUri,
+                                    }}
+                                    style={styles.userPb}
+                                    resizeMode="cover"
+                                    resizeMethod="auto"
+                                />
+                            </View>
+                            <Text
+                                style={[
+                                    style.Tmd,
+                                    style.tWhite,
+                                    {
+                                        marginLeft: style.defaultMmd,
+                                    },
+                                ]}>
+                                {user.name}
+                            </Text>
+                        </Pressable>
+                    </View>
+
+                    {/* Event Data Container */}
+
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             Přez ewent:
@@ -342,172 +421,294 @@ export default function Event({ navigation, route }) {
                                 styles.underSectionContainer,
                                 styles.rowContainer,
                             ]}>
-                            {!isLive ? (
-                                <Text style={[style.tWhite, style.Tmd]}>
-                                    {convertTimestampToString(event.starting)} -{" "}
-                                    {convertTimestampToString(event.ending)}
-                                </Text>
-                            ) : event.ending < Date.now() ? (
-                                <Text>Ewent je so hižo zakónčił.</Text>
-                            ) : (
-                                <View></View>
-                            )}
+                            <Text style={[style.tWhite, style.Tmd]}>
+                                {convertTimestampToString(event.starting)} -{" "}
+                                {convertTimestampToString(event.ending)}
+                            </Text>
                         </View>
+                        {event.eventOptions ? (
+                            <View>
+                                {/* Type */}
+                                {event.eventOptions.type !== undefined ? (
+                                    <View
+                                        style={[
+                                            styles.underSectionContainer,
+                                            styles.rowContainer,
+                                        ]}>
+                                        <Text style={[style.Tmd, style.tWhite]}>
+                                            Družina:{" "}
+                                            {
+                                                Event_Types[
+                                                    event.eventOptions.type
+                                                ]
+                                            }
+                                        </Text>
+                                    </View>
+                                ) : null}
 
-                        {/* Type */}
-                        {event.eventOptions.type !== undefined ? (
-                            <View
-                                style={[
-                                    styles.underSectionContainer,
-                                    styles.rowContainer,
-                                ]}>
-                                <Text style={[style.Tmd, style.tWhite]}>
-                                    Družina:{" "}
-                                    {Event_Types[event.eventOptions.type]}
-                                </Text>
+                                {/* Entrance Fee */}
+                                {event.eventOptions.entrance_fee !==
+                                undefined ? (
+                                    <View
+                                        style={[
+                                            styles.underSectionContainer,
+                                            styles.rowContainer,
+                                        ]}>
+                                        <Text style={[style.Tmd, style.tWhite]}>
+                                            Zastup:{" "}
+                                            {event.eventOptions.entrance_fee}€
+                                        </Text>
+                                    </View>
+                                ) : null}
+
+                                {/* Website */}
+                                {event.eventOptions.website ? (
+                                    <Pressable
+                                        style={styles.underSectionContainer}
+                                        onPress={() =>
+                                            openLink(event.eventOptions.website)
+                                        }>
+                                        <Text style={[style.Tmd, style.tWhite]}>
+                                            Webstrona:{" "}
+                                            {event.eventOptions.website}
+                                        </Text>
+                                    </Pressable>
+                                ) : null}
+
+                                {/* Ad Banner */}
+                                {event.eventOptions.adBanner ? (
+                                    <Pressable
+                                        onPress={() =>
+                                            navigation.navigate("imgFull", {
+                                                uri: event.eventOptions.adBanner
+                                                    .uri,
+                                            })
+                                        }
+                                        style={[
+                                            styles.underSectionContainer,
+                                            styles.rowContainer,
+                                        ]}>
+                                        <Image
+                                            style={[
+                                                styles.adBanner,
+                                                {
+                                                    aspectRatio:
+                                                        event.eventOptions
+                                                            .adBanner.aspect,
+                                                },
+                                            ]}
+                                            source={{
+                                                uri: event.eventOptions.adBanner
+                                                    .uri,
+                                            }}
+                                            resizeMode="cover"
+                                        />
+                                    </Pressable>
+                                ) : null}
+
+                                {/* Tags */}
+                                {event.eventOptions.tags ? (
+                                    <View
+                                        style={[
+                                            styles.underSectionContainer,
+                                            styles.rowContainer,
+                                            { flexWrap: "wrap" },
+                                        ]}>
+                                        {event.eventOptions.tags.map(
+                                            (tag, key) => (
+                                                <Tag
+                                                    key={key}
+                                                    style={{
+                                                        margin: style.defaultMsm,
+                                                    }}
+                                                    title={Event_Tags[tag]}
+                                                />
+                                            )
+                                        )}
+                                    </View>
+                                ) : null}
                             </View>
                         ) : null}
+                    </View>
 
-                        {/* Entrance Fee */}
-                        {event.eventOptions.entrance_fee !== undefined ? (
-                            <View
-                                style={[
-                                    styles.underSectionContainer,
-                                    styles.rowContainer,
-                                ]}>
-                                <Text style={[style.Tmd, style.tWhite]}>
-                                    Zastup: {event.eventOptions.entrance_fee}€
-                                </Text>
-                            </View>
-                        ) : null}
-
-                        {/* Website */}
-                        {event.eventOptions.website ? (
-                            <Pressable
-                                style={styles.underSectionContainer}
+                    {/* Checks */}
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            Štó je pódla:
+                        </Text>
+                        <View
+                            style={{
+                                marginTop: style.defaultMmd,
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}>
+                            <CheckButton
+                                onPress={() => check()}
+                                checked={event.checks.includes(
+                                    getAuth().currentUser.uid
+                                )}
+                            />
+                            <ListButton
+                                title={event.checks.length}
+                                style={{ marginLeft: style.defaultMsm }}
                                 onPress={() =>
-                                    openLink(event.eventOptions.website)
-                                }>
-                                <Text style={[style.Tmd, style.tWhite]}>
-                                    Webstrona: {event.eventOptions.website}
-                                </Text>
-                            </Pressable>
-                        ) : null}
-
-                        {/* Ad Banner */}
-                        {event.eventOptions.adBanner ? (
-                            <Pressable
-                                onPress={() =>
-                                    navigation.navigate("imgFull", {
-                                        uri: event.eventOptions.adBanner.uri,
+                                    navigation.navigate("userList", {
+                                        users: checksUserListData,
+                                        title: "Što je pódla",
+                                        needData: false,
                                     })
                                 }
-                                style={[
-                                    styles.underSectionContainer,
-                                    styles.rowContainer,
-                                ]}>
+                            />
+                        </View>
+
+                        <View
+                            style={[
+                                styles.checkListContainer,
+                                {
+                                    marginTop:
+                                        checksUserListData.length === 0
+                                            ? 0
+                                            : style.defaultMmd,
+                                },
+                            ]}>
+                            {checksUserListData.map((user, key) => (
                                 <Image
+                                    key={key}
+                                    source={{ uri: user.pbUri }}
+                                    resizeMode="contain"
                                     style={[
-                                        styles.adBanner,
-                                        {
-                                            aspectRatio:
-                                                event.eventOptions.adBanner
-                                                    .aspect,
-                                        },
+                                        style.oHidden,
+                                        style.allMax,
+                                        styles.checkPbIcon,
                                     ]}
-                                    source={{
-                                        uri: event.eventOptions.adBanner.uri,
-                                    }}
-                                    resizeMode="cover"
                                 />
-                            </Pressable>
-                        ) : null}
-
-                        {/* Tags */}
-                        {event.eventOptions.tags ? (
-                            <View
-                                style={[
-                                    styles.underSectionContainer,
-                                    styles.rowContainer,
-                                    { flexWrap: "wrap" },
-                                ]}>
-                                {event.eventOptions.tags.map((tag, key) => (
-                                    <Tag
-                                        key={key}
-                                        style={{ margin: style.defaultMsm }}
-                                        title={Event_Tags[tag]}
-                                    />
-                                ))}
-                            </View>
-                        ) : null}
-                    </View>
-                ) : null}
-
-                {/* Checks */}
-                <View style={styles.sectionContainer}>
-                    <Text style={[style.tWhite, style.TlgBd]}>
-                        Štó je pódla:
-                    </Text>
-                    <View style={{ marginTop: style.defaultMmd }}>
-                        <CheckButton
-                            onPress={() => check()}
-                            checked={event.checks.includes(
-                                getAuth().currentUser.uid
-                            )}
-                        />
+                            ))}
+                        </View>
                     </View>
 
-                    <View style={styles.checkListContainer}>
-                        {checksUserListData.map((user, key) => (
-                            <Image
-                                key={key}
-                                source={{ uri: user.pbUri }}
-                                resizeMode="contain"
+                    {/* Comments Container */}
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            Komentary:
+                        </Text>
+                        <View style={{ marginTop: style.defaultMmd }}>
+                            <NewCommentButton onPress={openCommentInput} />
+                        </View>
+
+                        {/* New comment */}
+                        <View
+                            style={{
+                                marginTop: commentVisible
+                                    ? style.defaultMlg
+                                    : 0,
+                            }}>
+                            {/* Title */}
+                            {commentVisible ? (
+                                <Text style={[style.tWhite, style.TlgBd]}>
+                                    Nowy komentar:
+                                </Text>
+                            ) : null}
+                            {/* Input */}
+                            <TextInput
+                                ref={commentInputRef}
+                                inputAccessoryViewID={"4127435841768339"}
+                                allowFontScaling
+                                autoCapitalize="none"
+                                cursorColor={style.colors.blue}
+                                multiline={true}
+                                numberOfLines={1}
+                                maxLength={128}
+                                keyboardAppearance="dark"
+                                keyboardType="default"
+                                scrollEnabled
+                                selectTextOnFocus
+                                placeholder="Zapodaj twój komentar"
+                                placeholderTextColor={style.colors.sec}
+                                textAlign="left"
+                                caretHidden
+                                value={currentCommentInput}
+                                textAlignVertical="center"
+                                textBreakStrategy="simple"
+                                onChangeText={t => setCurrentCommentInput(t)}
                                 style={[
-                                    style.oHidden,
-                                    style.allMax,
-                                    styles.checkPbIcon,
+                                    { marginTop: style.defaultMmd },
+                                    style.tWhite,
+                                    !commentVisible ? { height: 0 } : null,
                                 ]}
                             />
-                        ))}
-                    </View>
-                </View>
+                            {commentVisible ? (
+                                <View style={styles.commentsButtonContainer}>
+                                    <DeleteButton
+                                        onPress={() => {
+                                            setCurrentCommentInput("");
+                                            setCommentVisible(false);
+                                        }}
+                                    />
+                                    <SendButton
+                                        onPress={publishComment}
+                                        style={{ marginLeft: style.defaultMsm }}
+                                    />
+                                </View>
+                            ) : null}
+                        </View>
 
-                {/* Comments Container */}
-                <View style={styles.sectionContainer}>
-                    <Text style={[style.tWhite, style.TlgBd]}>Komentary:</Text>
-                    <View style={{ marginTop: style.defaultMmd }}>
-                        <NewCommentButton />
+                        {/* Comments List */}
+                        <View
+                            style={{
+                                marginTop: !commentVisible
+                                    ? event.comments.length === 0
+                                        ? 0
+                                        : style.defaultMmd
+                                    : style.defaultMlg,
+                            }}>
+                            {event.comments.map((comment, key) => (
+                                <Comment
+                                    key={key}
+                                    style={
+                                        key != event.comments.length - 1
+                                            ? { marginBottom: style.defaultMmd }
+                                            : null
+                                    }
+                                    commentData={comment}
+                                />
+                            ))}
+                        </View>
                     </View>
 
-                    <View style={{ marginTop: style.defaultMmd }}>
-                        {event.comments.map((comment, key) => (
-                            <Comment
-                                key={key}
-                                style={
-                                    key != event.comments.length - 1
-                                        ? { marginBottom: style.defaultMmd }
-                                        : null
-                                }
-                                commentData={comment}
-                            />
-                        ))}
+                    {/* Interaction Container */}
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            Funkcije za wužiwarja:
+                        </Text>
+                        <InteractionBar
+                            style={{ marginTop: style.defaultMsm }}
+                            ban={clientIsAdmin}
+                            share
+                            warn
+                            onShare={() => share(1, id, event.title)}
+                            onWarn={() =>
+                                navigation.navigate("report", {
+                                    item: event,
+                                    type: 1,
+                                })
+                            }
+                            onBan={() =>
+                                navigation.navigate("ban", {
+                                    item: event,
+                                    type: 1,
+                                    id: event.id,
+                                })
+                            }
+                        />
                     </View>
-                </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
 
-                {/* Interaction Container */}
-                <View style={styles.sectionContainer}>
-                    <Text style={[style.tWhite, style.TlgBd]}>
-                        Funkcije za wužiwarja:
-                    </Text>
-                    <InteractionBar
-                        style={{ marginTop: style.defaultMsm }}
-                        ban
-                        share
-                        warn
-                    />
-                </View>
-            </ScrollView>
+            <CommentAccessoryView
+                text={currentCommentInput}
+                onElementPress={l => setCurrentCommentInput(prev => prev + l)}
+                nativeID={"4127435841768339"}
+            />
         </View>
     );
 }
@@ -608,7 +809,6 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "row",
         flexWrap: "wrap",
-        marginTop: style.defaultMmd,
     },
     checkPbIcon: {
         aspectRatio: 1,
@@ -616,5 +816,12 @@ const styles = StyleSheet.create({
         maxWidth: 32,
         borderRadius: 100,
         margin: style.defaultMsm,
+    },
+
+    commentsButtonContainer: {
+        marginTop: style.defaultMmd,
+        flexDirection: "row",
+        width: "100%",
+        maxHeight: 58,
     },
 });

@@ -3,17 +3,17 @@
     "name": "kostrjanc",
     "slug": "kostrjanc",
     "owner": "kostrjanc",
-    "version": "0.6.4",
+    "version": "0.6.0b",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
     "splash": {
       "image": "./assets/icons/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#060A0D"
     },
     "notification": {
       "icon": "./assets/icons/icon.png",
-      "color": "#000000"
+      "color": "#060A0D"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -29,7 +29,7 @@
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",
-        "backgroundColor": "#000000"
+        "backgroundColor": "#060A0D"
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "de.kostrjanc"

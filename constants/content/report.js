@@ -1,0 +1,15 @@
+export const Report_Types = [
+    "so mi njelubi",
+    "prawniski wobsah w. z. w. NetzDG",
+    "spam",
+    "nahosć abo seksualne jednanja",
+    "Scam abo wobšudźenja",
+    "marěč abo symbole hidy",
+    "wopačne informacije",
+    "Mobbing abo wobćežowanje",
+    "namóc abo strašne organizacije",
+    "přeńdźenje přećiwo prawow na duchownym swójstwje",
+    "předań ilegalnych tworow",
+    "Suizid abo samozhranjenja",
+    "druhe",
+];

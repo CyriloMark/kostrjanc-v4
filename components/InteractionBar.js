@@ -22,19 +22,29 @@ export default function InteractionBar({
         <View style={style}>
             <View style={[s.Psm, styles.container]}>
                 {share ? (
-                    <SVG_Share style={[styles.icon]} fill={s.colors.sec} />
+                    <Pressable onPress={onShare} style={styles.iconContainer}>
+                        <SVG_Share style={styles.icon} fill={s.colors.sec} />
+                    </Pressable>
                 ) : null}
                 {warn ? (
-                    <SVG_Warn
-                        style={[styles.icon, { marginLeft: s.defaultMlg }]}
-                        fill={s.colors.sec}
-                    />
+                    <Pressable
+                        onPress={onWarn}
+                        style={[
+                            styles.iconContainer,
+                            { marginLeft: s.defaultMlg },
+                        ]}>
+                        <SVG_Warn style={styles.icon} fill={s.colors.sec} />
+                    </Pressable>
                 ) : null}
                 {ban ? (
-                    <SVG_Ban
-                        style={[styles.icon, { marginLeft: s.defaultMlg }]}
-                        fill={s.colors.sec}
-                    />
+                    <Pressable
+                        onPress={onBan}
+                        style={[
+                            styles.iconContainer,
+                            { marginLeft: s.defaultMlg },
+                        ]}>
+                        <SVG_Ban style={styles.icon} fill={s.colors.sec} />
+                    </Pressable>
                 ) : null}
             </View>
         </View>
@@ -46,9 +56,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
-    icon: {
-        aspectRatio: 1,
+    iconContainer: {
         maxWidth: 24,
         maxHeight: 24,
+    },
+    icon: {
+        aspectRatio: 1,
+        width: "100%",
     },
 });

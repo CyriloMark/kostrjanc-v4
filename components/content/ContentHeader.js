@@ -21,7 +21,7 @@ export default function ContentHeader(props) {
             ]}>
             <Pressable
                 style={[styles.btnContainer, style.allCenter]}
-                onPress={props.onContentPress}>
+                onPress={props.onSettingsPress}>
                 <SVG_Settings fill={style.colors.blue} />
             </Pressable>
 

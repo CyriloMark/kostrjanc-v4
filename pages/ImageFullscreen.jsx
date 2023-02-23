@@ -10,7 +10,11 @@ export default function ImageFullscreen({ navigation, route }) {
 
     return (
         <View style={[style.allMax, style.bgBlack]}>
-            <BackHeader onBack={() => navigation.goBack()} title="" />
+            <BackHeader
+                onBack={() => navigation.goBack()}
+                title=""
+                showReload={false}
+            />
 
             <Image
                 source={{ uri: uri }}

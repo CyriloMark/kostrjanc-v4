@@ -2,7 +2,7 @@ import React from "react";
 
 import { View, TextInput, StyleSheet } from "react-native";
 
-import * as style from "../styles";
+import * as s from "../styles";
 
 export default function InputField(props) {
     return (
@@ -10,37 +10,39 @@ export default function InputField(props) {
             <View
                 style={[
                     styles.container,
-                    style.border,
-                    style.Pmd,
-                    {
-                        zIndex: 10,
-                        borderColor: style.colors.sec,
-                        backgroundColor: "rgba(0,0,0,.9)",
-                        alignItems: "center",
-                    },
+                    s.border,
+                    s.oHidden,
+                    s.allMax,
+                    s.Pmd,
+                    props.bg ? { backgroundColor: props.bg } : null,
                 ]}>
-                <View style={[styles.icon, style.allCenter]}>{props.icon}</View>
+                <View style={[styles.icon, s.allCenter]}>{props.icon}</View>
                 <TextInput
                     allowFontScaling
                     autoCapitalize="none"
                     autoCorrect={false}
-                    editable
-                    cursorColor={style.colors.blue}
+                    cursorColor={s.colors.blue}
                     multiline={false}
                     numberOfLines={1}
                     maxLength={128}
                     keyboardAppearance="dark"
                     keyboardType="default"
                     placeholder={props.placeholder}
-                    style={[style.allMax, style.tBlue, style.Tmd]}
+                    style={[s.allMax, s.tWhite, s.Tmd, s.pH]}
                     onChangeText={val => props.onChangeText(val)}
-                    placeholderTextColor={style.colors.sec}
+                    placeholderTextColor={s.colors.sec}
                     scrollEnabled
                     selectTextOnFocus
+                    inputAccessoryViewID={
+                        props.inputAccessoryViewID
+                            ? props.inputAccessoryViewID
+                            : ""
+                    }
                     textAlign="left"
                     value={props.value}
                     textAlignVertical="center"
                     textBreakStrategy="simple"
+                    {...props}
                 />
             </View>
         </View>
@@ -50,15 +52,17 @@ export default function InputField(props) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        width: "100%",
-        height: "100%",
         borderRadius: 10,
+        zIndex: 10,
+        borderColor: s.colors.sec,
+        alignItems: "center",
+        maxHeight: 58,
     },
     icon: {
         aspectRatio: 1,
         height: "100%",
         maxHeight: 24,
         maxWidth: 24,
-        marginRight: style.defaultMsm,
+        marginRight: s.defaultMsm,
     },
 });

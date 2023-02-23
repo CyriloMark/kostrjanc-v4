@@ -6,19 +6,21 @@ import {
     View,
     Text,
     ScrollView,
+    RefreshControl,
     Image,
+    Platform,
 } from "react-native";
 
 import AddButton from "../../components/content/AddButton";
 import ContentHeader from "../../components/content/ContentHeader";
-import Refresh from "../../components/RefreshControl";
 import InputField from "../../components/InputField";
 import User from "../../components/cards/User";
+import Refresh from "../../components/RefreshControl";
 
 import { getDatabase, get, ref, child } from "firebase/database";
 
 import { wait } from "../../constants/wait";
-import { lerp } from "../../constants";
+import { lerp, splitterForContent } from "../../constants";
 
 import * as style from "../../styles";
 
@@ -28,13 +30,11 @@ import SVG_Event from "../../assets/svg/Event";
 
 import Animated, {
     useSharedValue,
-    useAnimatedProps,
     useAnimatedStyle,
     withTiming,
     withSpring,
     Easing,
 } from "react-native-reanimated";
-import { interpolatePath, parse } from "react-native-redash";
 
 let UsersData = null;
 
@@ -60,11 +60,13 @@ export default function Content({ navigation }) {
 
             if (user.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
                 if (searchResult.length <= 5) {
-                    output.push({
-                        name: UsersData[key].name,
-                        pbUri: UsersData[key].pbUri,
-                        id: key,
-                    });
+                    if (!UsersData[key].isBanned) {
+                        output.push({
+                            name: UsersData[key].name,
+                            pbUri: UsersData[key].pbUri,
+                            id: key,
+                        });
+                    }
                 }
             }
         }
@@ -192,7 +194,10 @@ export default function Content({ navigation }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            <ContentHeader onBack={() => navigation.navigate("landing")} />
+            <ContentHeader
+                onBack={() => navigation.navigate("landing")}
+                onSettingsPress={() => navigation.navigate("settings")}
+            />
             {/* Search Input */}
             <View
                 style={[
@@ -205,6 +210,7 @@ export default function Content({ navigation }) {
                     onChangeText={val => {
                         fetchUsers(val);
                     }}
+                    bg={`rgba(${style.colorsRGB.black},.9)`}
                 />
             </View>
 
@@ -225,7 +231,12 @@ export default function Content({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd
                 refreshControl={
-                    <Refresh onRefresh={onRefresh} refreshing={refreshing} />
+                    Platform.OS === "ios" ? (
+                        <Refresh
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    ) : null
                 }>
                 <Pressable
                     onPress={() => {
@@ -308,12 +319,12 @@ export default function Content({ navigation }) {
                 </Pressable>
             </ScrollView>
 
-            <View style={(styles.addBtnContainer, style.allCenter)}>
+            <View style={[styles.addBtnContainer, style.allCenter]}>
                 <View style={{ position: "relative" }}>
                     {/* Left Box / Post */}
                     <Animated.View style={[styles.sideBox, leftBoxStyles]}>
                         <Pressable
-                            // onPress={}
+                            onPress={() => navigation.navigate("postCreate")}
                             style={[
                                 styles.sideBoxInner,
                                 style.Pmd,
@@ -331,7 +342,7 @@ export default function Content({ navigation }) {
                     {/* Right Box / Event */}
                     <Animated.View style={[styles.sideBox, rightBoxStyles]}>
                         <Pressable
-                            // onPress={onEventPress}
+                            onPress={() => navigation.navigate("eventCreate")}
                             style={[
                                 styles.sideBoxInner,
                                 style.Pmd,
@@ -361,7 +372,7 @@ const styles = StyleSheet.create({
     addBtnContainer: {
         position: "absolute",
         width: "100%",
-        bottom: style.defaultMsm,
+        bottom: Platform.OS === "ios" ? style.defaultMsm : style.defaultMlg,
         minHeight: 72,
     },
 
@@ -399,7 +410,7 @@ const styles = StyleSheet.create({
     },
     sideBoxInner: {
         borderColor: style.colors.blue,
-        backgroundColor: "rgba(0,0,0, .75)",
+        backgroundColor: `rgba(${style.colorsRGB.black}, .75)`,
         borderRadius: 10,
     },
 });

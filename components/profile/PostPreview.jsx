@@ -19,7 +19,7 @@ export default function PostPreview({ style, onPress, data }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        width: "100%",
         aspectRatio: 1,
         borderRadius: 10,
     },

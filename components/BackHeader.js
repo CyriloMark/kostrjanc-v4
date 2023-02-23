@@ -1,11 +1,19 @@
 import React from "react";
-import { View, StyleSheet, Text, Image, Pressable } from "react-native";
+import {
+    View,
+    StyleSheet,
+    Text,
+    Image,
+    Pressable,
+    Platform,
+} from "react-native";
 
 import * as style from "../styles";
 
 import { LinearGradient } from "expo-linear-gradient";
 
 import SVG_Return from "../assets/svg/Return";
+import SVG_Reload from "../assets/svg/Search";
 
 export default function BackHeader(props) {
     return (
@@ -36,7 +44,16 @@ export default function BackHeader(props) {
                 </Text>
             </View>
 
-            <View style={styles.btnContainer} />
+            {/* Android Only No refreshControl -> refresh btn */}
+            {Platform.OS === "android" && props.showReload ? (
+                <Pressable
+                    style={[styles.btnContainer, style.allCenter]}
+                    onPress={props.onReloadPress}>
+                    <SVG_Reload fill={style.colors.blue} rotation={180} />
+                </Pressable>
+            ) : (
+                <View style={styles.btnContainer} />
+            )}
         </LinearGradient>
     );
 }

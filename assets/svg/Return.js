@@ -5,13 +5,15 @@ export default function Return(props) {
         <Svg
             style={[
                 props.style,
-                {
-                    transform: [
-                        {
-                            rotate: `${props.rotation}deg`,
-                        },
-                    ],
-                },
+                props.rotation
+                    ? {
+                          transform: [
+                              {
+                                  rotate: `${props.rotation}deg`,
+                              },
+                          ],
+                      }
+                    : null,
             ]}
             viewBox="0 0 500 420">
             <Path

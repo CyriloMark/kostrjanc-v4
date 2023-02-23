@@ -37,6 +37,11 @@ export function arraySplitter(data, coloums) {
     return newData;
 }
 
+/**
+ *
+ * @param {*[]} data array to sort by date
+ * @returns
+ */
 export function sortArrayByDate(data) {
     let dates = data;
     for (let i = data.length - 1; i >= 0; i--) {
@@ -51,6 +56,80 @@ export function sortArrayByDate(data) {
     return dates;
 }
 
+/**
+ *
+ * @param {number} min Minimal number
+ * @param {number} max Maximal number
+ * @param {number} ratio Interolation variable [0-1]
+ * @returns
+ */
 export function lerp(min, max, ratio) {
     return min * (1 - ratio) + max * ratio;
+}
+
+/**
+ *
+ * @param {*[]} data Data Array to split
+ * @param {number} coloums Maximal Amount of Coloums the output must be split in
+ */
+export function splitterForContent(data, columns) {
+    let outputRanges = [];
+    let itemsLeft = data.length;
+    while (itemsLeft > 0) {
+        const randomAmtPerLine = Math.round(lerp(1, columns, Math.random()));
+        if (itemsLeft >= randomAmtPerLine) {
+            outputRanges.push(randomAmtPerLine);
+            itemsLeft -= randomAmtPerLine;
+        } else {
+            outputRanges.push(itemsLeft);
+            itemsLeft = 0;
+        }
+    }
+
+    let newData = [];
+    let usedAmt = 0;
+    for (let i = 0; i < outputRanges.length; i++) {
+        let currentObject = [];
+        for (let j = usedAmt; j < usedAmt + outputRanges[i]; j++) {
+            if (j < data.length) {
+                currentObject.push(data[j]);
+            }
+        }
+        usedAmt += outputRanges[i];
+        newData.push(currentObject);
+    }
+    return newData;
+}
+
+export const splitArrayIntoNEqualy = (array, amt) => {
+    let output = [];
+    let amtPerLine = Math.floor(array.length / amt);
+    for (let i = 0; i < amt; i++) {
+        let a = [];
+        for (let j = 0; j < amtPerLine; j++) a.push(array[j + amtPerLine * i]);
+        output.push(a);
+    }
+    if (array.length % amt !== 0)
+        for (let i = 0; i < array.length % amt; i++)
+            output[amt - 1].push(array[array.length - 1 - i]);
+    return output;
+};
+
+/**
+ *
+ * @param {*[]} data Array to sort by Date
+ * @param {number|text} sortingKey Key to sort
+ */
+export function sortArrayByDateFromUnderorderedKey(data, sortingKey) {
+    let dates = data;
+    for (let i = data.length - 1; i >= 0; i--) {
+        for (let j = 1; j <= i; j++) {
+            if (dates[j - 1][sortingKey] > dates[j][sortingKey]) {
+                let temp = dates[j - 1];
+                dates[j - 1] = dates[j];
+                dates[j] = temp;
+            }
+        }
+    }
+    return dates.reverse();
 }

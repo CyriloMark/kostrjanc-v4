@@ -6,6 +6,8 @@ import {
     Pressable,
     Text,
     Image,
+    RefreshControl,
+    Platform,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -20,10 +22,10 @@ import { arraySplitter, sortArrayByDate } from "../../constants";
 import { storeData, getData } from "../../constants/storage";
 
 import BackHeader from "../../components/BackHeader";
-import Refresh from "../../components/RefreshControl";
 import PostPreview from "../../components/profile/PostPreview";
 import EventPreview from "../../components/profile/EventPreview";
 import EditProfileButton from "../../components/profile/EditProfileButton";
+import Refresh from "../../components/RefreshControl";
 
 export default function UserProfile({ navigation }) {
     const scrollRef = useRef();
@@ -72,19 +74,8 @@ export default function UserProfile({ navigation }) {
                     .then(postSnap => {
                         if (postSnap.exists()) {
                             const postData = postSnap.val();
-
-                            if (postData.isBanned === true) {
-                                setUser(user => {
-                                    return {
-                                        ...user,
-                                        posts: user.posts.splice(
-                                            user.posts.indexOf(p[i]),
-                                            1
-                                        ),
-                                    };
-                                });
-                            } else postEventDatas.push(postData);
-
+                            if (!postData.isBanned)
+                                postEventDatas.push(postData);
                             if (i === p.length - 1 && !hasEvents)
                                 setPostEventList(
                                     sortArrayByDate(postEventDatas).reverse()
@@ -132,7 +123,7 @@ export default function UserProfile({ navigation }) {
         let uid = "";
         getData("userId")
             .then(id => {
-                if (!id) uid = getAuth();
+                if (!id) uid = getAuth().currentUser.uid;
                 else uid = id;
             })
             .finally(() => {
@@ -168,6 +159,8 @@ export default function UserProfile({ navigation }) {
                 <BackHeader
                     title={user.name}
                     onBack={() => navigation.goBack()}
+                    onRefresh={loadUser}
+                    showReload
                 />
             </Pressable>
 
@@ -188,7 +181,12 @@ export default function UserProfile({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd
                 refreshControl={
-                    <Refresh onRefresh={onRefresh} refreshing={refreshing} />
+                    Platform.OS === "ios" ? (
+                        <Refresh
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    ) : null
                 }>
                 {/* Header Container */}
                 <View style={{ alignItems: "center" }}>
@@ -238,6 +236,7 @@ export default function UserProfile({ navigation }) {
                                 navigation.push("userList", {
                                     users: user.follower,
                                     title: "Sćěhowarjo",
+                                    needData: true,
                                 })
                             }
                             style={[
@@ -263,6 +262,7 @@ export default function UserProfile({ navigation }) {
                                 navigation.push("userList", {
                                     users: user.following,
                                     title: "Sćěhuje",
+                                    needData: true,
                                 })
                             }
                             style={[
@@ -289,7 +289,7 @@ export default function UserProfile({ navigation }) {
                                 styles.statElementContainer,
                             ]}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                {user.posts.length + user.events.length}
+                                {postEventList.length}
                             </Text>
                             <Text
                                 style={[
@@ -339,7 +339,15 @@ export default function UserProfile({ navigation }) {
                 </View>
 
                 <View style={styles.editButton}>
-                    <EditProfileButton />
+                    <EditProfileButton
+                        title={"Wobdźěłać"}
+                        checked
+                        onPress={() =>
+                            navigation.navigate("editProfile", {
+                                userData: user,
+                            })
+                        }
+                    />
                 </View>
             </ScrollView>
         </View>

@@ -46,6 +46,7 @@ export default function AppHeader(props) {
 
             <Pressable
                 onLongPress={() => signOut(getAuth())}
+                onPress={props.onCenterPress}
                 style={[
                     styles.titleContainer,
                     style.allCenter,

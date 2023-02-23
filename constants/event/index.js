@@ -48,7 +48,7 @@ export const Event_Tags = [
     "60",
     "100",
     "přiroda",
-    "zwěrjo",
+    "zwěrina",
     "live hudźba",
     "priwatne",
     "Jenož z přeprošenjom",
@@ -56,4 +56,19 @@ export const Event_Tags = [
     "wiki",
     "hody",
     "jutry",
+    "prózdniny",
+    "lěćo",
+    "spěwać",
+    "computer",
+    "online",
+    "offline",
+    "wjedro",
+    "scouty",
 ];
+
+export const initialRegion = {
+    latitude: 51.186106956552244,
+    longitude: 14.435684115023259,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+};

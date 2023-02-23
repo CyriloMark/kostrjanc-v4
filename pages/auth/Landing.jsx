@@ -66,9 +66,12 @@ export default function Landing({ navigation }) {
 
     const blurBoxStyle = useAnimatedStyle(() => {
         return {
-            backgroundColor: withTiming(`rgba(0,0,0,${blurBox.value})`, {
-                duration: 200,
-            }),
+            backgroundColor: withTiming(
+                `rgba(${style.colorsRGB.black},${blurBox.value})`,
+                {
+                    duration: 200,
+                }
+            ),
         };
     });
 
@@ -159,7 +162,6 @@ export default function Landing({ navigation }) {
                     ]}>
                     Započinaj twój puć hnydom z kostrjanc:
                 </Text>
-
                 {/* Account View */}
                 <View style={[style.container, style.allCenter, { zIndex: 5 }]}>
                     <View style={[styles.accountContainer, style.allCenter]}>
@@ -212,6 +214,7 @@ export default function Landing({ navigation }) {
                                 bottomBoxStyles,
                             ]}>
                             <Pressable
+                                onPress={() => navigation.navigate("register")}
                                 style={[
                                     styles.sideBoxInner,
                                     style.Pmd,
@@ -270,7 +273,7 @@ const styles = StyleSheet.create({
     },
     sideBoxInner: {
         borderColor: style.colors.blue,
-        backgroundColor: "rgba(0,0,0, .75)",
+        backgroundColor: `rgba(${style.colorsRGB.black}, .75)`,
         borderRadius: 10,
     },
 });

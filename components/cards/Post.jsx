@@ -97,7 +97,7 @@ export default function Post(props) {
                     ]}>
                     <Image
                         source={{ uri: post.imgUri }}
-                        style={[style.container, { aspectRatio: 0.9 }]}
+                        style={[styles.img]}
                         resizeMode="cover"
                     />
                 </View>
@@ -142,6 +142,10 @@ const styles = StyleSheet.create({
         marginTop: style.defaultMsm,
         width: "100%",
         borderRadius: 10,
+    },
+    img: {
+        width: "100%",
+        aspectRatio: 1,
     },
 
     textContainer: {

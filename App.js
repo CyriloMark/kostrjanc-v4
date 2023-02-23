@@ -20,8 +20,8 @@ import { useFonts } from "expo-font";
 //#region Firebase
 import { firebaseApp } from "./constants/firebaseApp";
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, ref, get, child, set } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, get, child, set, onValue } from "firebase/database";
 const app = initializeApp(firebaseApp);
 //#endregion
 
@@ -29,9 +29,25 @@ const app = initializeApp(firebaseApp);
 import { NavigationContainer } from "@react-navigation/native";
 //#endregion
 
+// #region navbar
+import {
+    setBackgroundColorAsync,
+    setButtonStyleAsync,
+} from "expo-navigation-bar";
+//#endregion
+
+import * as style from "./styles";
+
+import { storeData, removeData, hasData } from "./constants/storage";
+
 //#region Pages
 import ViewportManager from "./pages/main/ViewportManager";
 import AuthManager from "./pages/auth/AuthManager";
+
+import Loading from "./pages/static/Loading";
+import UpdateVersion from "./pages/static/UpdateVersion";
+import ServerStatus from "./pages/static/ServerStatus";
+import Ban from "./pages/static/Ban";
 //#endregion
 
 export default function App() {
@@ -44,22 +60,104 @@ export default function App() {
     const [loaded, setLoaded] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
 
+    const [banned, setBanned] = useState(false);
+    const [isRecentVersion, setIsRecentVersion] = useState(null);
+    const [serverStatus, setServerStatus] = useState(null);
+
+    const [expoPushToken, setExpoPushToken] = useState("");
+
     useEffect(() => {
         const auth = getAuth();
+        const db = getDatabase();
+        //onAuthChange
         onAuthStateChanged(auth, user => {
             if (user) {
                 setLoggedIn(true);
                 setLoaded(true);
+
+                get(child(ref(db), `users/${user.uid}/isAdmin`)).then(
+                    isAdminSnap => {
+                        if (isAdminSnap.exists()) {
+                            const isAdmin = isAdminSnap.val();
+                            if (isAdmin) storeData("userIsAdmin", true);
+                            else if (hasData("userIsAdmin"))
+                                removeData("userIsAdmin");
+                        }
+                    }
+                );
+
+                // Ban Check
             } else {
                 setLoggedIn(false);
                 setLoaded(true);
             }
         });
+
+        // Android Bottom Nav Bar - Color
+        if (Platform.OS === "android") {
+            setBackgroundColorAsync(style.colors.black);
+            setButtonStyleAsync("light");
+        }
+
+        // Server Status - Firebase
+        onValue(ref(db, "status"), statusSnap => {
+            if (statusSnap.exists()) {
+                const statusData = statusSnap.val();
+                setServerStatus(statusData);
+            }
+        });
+
+        // Version Check - Firebase
+        onValue(ref(db, "version"), snapshot => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                if (data === require("./app.json").expo.version)
+                    setIsRecentVersion({
+                        equal: true,
+                        client: data,
+                        server: data,
+                    });
+                else
+                    setIsRecentVersion({
+                        equal: false,
+                        client: require("./app.json").expo.version,
+                        server: data,
+                    });
+            }
+        });
     }, []);
 
+    useEffect(() => {
+        if (loggedIn) {
+            const db = getDatabase();
+            registerForPushNotifications().then(token =>
+                setExpoPushToken(token)
+            );
+            // Ban Check
+            onValue(
+                ref(db, `users/${getAuth().currentUser.uid}/isBanned`),
+                bannedSnap => {
+                    if (bannedSnap.exists()) {
+                        const isBanned = bannedSnap.val();
+                        setBanned(isBanned);
+                    }
+                }
+            );
+        }
+    }, [loggedIn]);
+
     // return null;
-    if (!fontsLoaded) return null;
-    if (!loaded) return null;
+    if (!fontsLoaded) return <View style={style.bgBlack} />;
+    if (!(loaded && isRecentVersion !== null && serverStatus !== null))
+        return <Loading />;
+
+    // Server Status
+    if (serverStatus !== "online")
+        return <ServerStatus status={serverStatus} />;
+
+    // not recent version
+    if (isRecentVersion.equal === false)
+        return <UpdateVersion versions={isRecentVersion} />;
 
     if (!loggedIn) {
         return (
@@ -68,32 +166,37 @@ export default function App() {
                     animated
                     networkActivityIndicatorVisible
                     translucent
+                    backgroundColor={style.colors.black}
                     barStyle={"light-content"}
                 />
                 <SafeAreaProvider
                     style={{
                         flex: 1,
                         width: "100%",
-                        backgroundColor: "#000000",
+                        ...style.bgBlack,
                     }}>
                     <AuthManager />
                 </SafeAreaProvider>
             </NavigationContainer>
         );
     }
+
+    if (banned) return <Ban />;
+
     return (
         <NavigationContainer>
             <StatusBar
                 animated
                 networkActivityIndicatorVisible
                 translucent
+                backgroundColor={style.colors.black}
                 barStyle={"light-content"}
             />
             <SafeAreaProvider
                 style={{
                     flex: 1,
                     width: "100%",
-                    backgroundColor: "#000000",
+                    ...style.bgBlack,
                 }}>
                 <ViewportManager />
             </SafeAreaProvider>

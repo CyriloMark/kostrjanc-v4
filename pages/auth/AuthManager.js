@@ -13,6 +13,8 @@ import {
 import Landing from "./Landing";
 
 import Login from "./Login";
+import Register from "./Register";
+import ResetPassword from "./ResetPassword";
 //#endregion
 
 const AuthNavStack = createStackNavigator();
@@ -35,7 +37,8 @@ export default function AuthManager() {
                 <AuthNavStack.Screen name="landing" component={Landing} />
 
                 <AuthNavStack.Screen name="login" component={Login} />
-                {/* <AuthNavStack.Screen name="landing" component={Landing} /> */}
+                <AuthNavStack.Screen name="register" component={Register} />
+                <AuthNavStack.Screen name="reset" component={ResetPassword} />
             </AuthNavStack.Navigator>
         </SafeAreaView>
     );
