@@ -9,8 +9,6 @@ import { Svg, Rect } from "react-native-svg";
 import { clamp } from "../../constants/clamp";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { signOut, getAuth } from "firebase/auth";
-
 export default function AppHeader(props) {
     return (
         <LinearGradient
@@ -45,7 +43,6 @@ export default function AppHeader(props) {
             </Pressable>
 
             <Pressable
-                onLongPress={() => signOut(getAuth())}
                 onPress={props.onCenterPress}
                 style={[
                     styles.titleContainer,

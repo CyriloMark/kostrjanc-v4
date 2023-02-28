@@ -23,6 +23,7 @@ import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import TextField from "../../components/TextField";
 import SelectableButton from "../../components/event/SelectableButton";
+import AccessoryView from "../../components/AccessoryView";
 
 let reporting = false;
 
@@ -172,6 +173,10 @@ export default function Report({ navigation, route }) {
                         </Text>
                         <TextField
                             placeholder="Dodaj informacije..."
+                            value={reportData.description}
+                            inputAccessoryViewID={
+                                "report_Description_InputAccessoryViewID"
+                            }
                             onChangeText={val => {
                                 setReportData({
                                     ...reportData,
@@ -186,6 +191,18 @@ export default function Report({ navigation, route }) {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            <AccessoryView
+                onElementPress={l => {
+                    setReportData(prev => {
+                        return {
+                            ...prev,
+                            description: prev.description + l,
+                        };
+                    });
+                }}
+                nativeID={"report_Description_InputAccessoryViewID"}
+            />
         </View>
     );
 }

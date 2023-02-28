@@ -19,7 +19,12 @@ import Post from "../Post";
 import Event from "../Event";
 import Profile from "../Profile";
 
-import Settings from "../Settings";
+import Settings from "../settings/Landing";
+import Settings_Help from "../settings/Help";
+import Settings_Verify from "../settings/Verify";
+import Settings_DataSecurityImpresum from "../settings/DataSecurityImpresum";
+import Settings_Admin from "../settings/Admin";
+import Settings_Profile from "../settings/Profile";
 
 import PostCreate from "../create/PostCreate";
 import EventCreate from "../create/EventCreate";
@@ -68,6 +73,28 @@ export default function ViewportManager() {
                 <MainNavStack.Screen name="profileView" component={Profile} />
 
                 <MainNavStack.Screen name="settings" component={Settings} />
+
+                <MainNavStack.Screen
+                    name="settings-help"
+                    component={Settings_Help}
+                />
+                <MainNavStack.Screen
+                    name="settings-verify"
+                    component={Settings_Verify}
+                />
+                <MainNavStack.Screen
+                    name="settings-datasec&impresum"
+                    component={Settings_DataSecurityImpresum}
+                />
+                <MainNavStack.Screen
+                    name="settings-admin"
+                    component={Settings_Admin}
+                />
+
+                <MainNavStack.Screen
+                    name="settings-profile"
+                    component={Settings_Profile}
+                />
 
                 <MainNavStack.Screen name="postCreate" component={PostCreate} />
                 <MainNavStack.Screen

@@ -137,6 +137,8 @@ export default function Landing({ navigation }) {
         //#region Follower/-ing list
         if (!userData.follower && !userData.following) {
             console.log("no follower/-ing");
+            setLoading(false);
+            LOADING = false;
             return;
         }
 

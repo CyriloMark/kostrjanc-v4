@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 import { getDatabase, ref, get, child } from "firebase/database";
 
@@ -42,17 +42,6 @@ export default function Banner(props) {
                 ]}>
                 <View style={styles.signContainer}>
                     <SVG_Pin style={[styles.pin]} fill={style.colors.red} />
-                    {/* <Text
-                        style={[
-                            style.tRed,
-                            style.TsmRg,
-                            {
-                                marginLeft: style.defaultMsm,
-                                textTransform: "uppercase",
-                            },
-                        ]}>
-                        Informacije
-                    </Text> */}
                 </View>
                 {/* Txt Container */}
                 <View style={styles.textContainer}>

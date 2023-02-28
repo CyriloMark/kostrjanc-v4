@@ -23,7 +23,7 @@ export default function InteractionBar({
             <View style={[s.Psm, styles.container]}>
                 {share ? (
                     <Pressable onPress={onShare} style={styles.iconContainer}>
-                        <SVG_Share style={styles.icon} fill={s.colors.sec} />
+                        <SVG_Share style={styles.icon} fill={s.colors.blue} />
                     </Pressable>
                 ) : null}
                 {warn ? (
@@ -33,7 +33,7 @@ export default function InteractionBar({
                             styles.iconContainer,
                             { marginLeft: s.defaultMlg },
                         ]}>
-                        <SVG_Warn style={styles.icon} fill={s.colors.sec} />
+                        <SVG_Warn style={styles.icon} fill={s.colors.blue} />
                     </Pressable>
                 ) : null}
                 {ban ? (
@@ -43,7 +43,7 @@ export default function InteractionBar({
                             styles.iconContainer,
                             { marginLeft: s.defaultMlg },
                         ]}>
-                        <SVG_Ban style={styles.icon} fill={s.colors.sec} />
+                        <SVG_Ban style={styles.icon} fill={s.colors.blue} />
                     </Pressable>
                 ) : null}
             </View>

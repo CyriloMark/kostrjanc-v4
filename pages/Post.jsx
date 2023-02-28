@@ -29,7 +29,7 @@ import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
 import InteractionBar from "../components/InteractionBar";
 import NewCommentButton from "../components/comments/NewCommentButton";
-import CommentAccessoryView from "../components/comments/CommentAccessoryView";
+import AccessoryView from "../components/AccessoryView";
 import SendButton from "../components/comments/SendButton";
 import DeleteButton from "../components/comments/DeleteButton";
 import Refresh from "../components/RefreshControl";
@@ -113,6 +113,7 @@ export default function Post({ navigation, route }) {
     };
 
     const publishComment = () => {
+        if (post.isBanned) return;
         if (
             !(
                 currentCommentInput.length > 0 &&
@@ -401,7 +402,7 @@ export default function Post({ navigation, route }) {
                 </ScrollView>
             </KeyboardAvoidingView>
 
-            <CommentAccessoryView
+            <AccessoryView
                 text={currentCommentInput}
                 onElementPress={l => setCurrentCommentInput(prev => prev + l)}
                 nativeID={"23488388256395198"}

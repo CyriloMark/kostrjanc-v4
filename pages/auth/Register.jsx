@@ -34,6 +34,7 @@ import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import EnterButton from "../../components/auth/EnterButton";
 import Check from "../../components/Check";
+import AccessoryView from "../../components/AccessoryView";
 
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Pencil from "../../assets/svg/Pencil";
@@ -302,6 +303,8 @@ export default function Register({ navigation }) {
                                 editable={currentRegisterState === 0}
                                 placeholder="Wužiwarske mjeno"
                                 keyboardType="default"
+                                value={registerData.name}
+                                inputAccessoryViewID="register_name_InputAccessoryViewID"
                                 textContentType="username"
                                 icon={<SVG_Pencil fill={style.colors.sec} />}
                                 onChangeText={val => {
@@ -399,6 +402,8 @@ export default function Register({ navigation }) {
                                 <TextField
                                     editable={currentRegisterState === 2}
                                     placeholder="Dodaj informacije..."
+                                    value={registerData.description}
+                                    inputAccessoryViewID="register_description_InputAccessoryViewID"
                                     onChangeText={val => {
                                         setRegisterData({
                                             ...registerData,
@@ -676,6 +681,31 @@ export default function Register({ navigation }) {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            {/* Name */}
+            <AccessoryView
+                onElementPress={l =>
+                    setRegisterData(prev => {
+                        return {
+                            ...prev,
+                            name: prev.name + l,
+                        };
+                    })
+                }
+                nativeID={"register_name_InputAccessoryViewID"}
+            />
+            {/* Description */}
+            <AccessoryView
+                onElementPress={l =>
+                    setRegisterData(prev => {
+                        return {
+                            ...prev,
+                            description: prev.description + l,
+                        };
+                    })
+                }
+                nativeID={"register_description_InputAccessoryViewID"}
+            />
         </View>
     );
 }

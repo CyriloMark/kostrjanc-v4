@@ -9,7 +9,6 @@ import {
     Platform,
     ScrollView,
     KeyboardAvoidingView,
-    InputAccessoryView,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -99,7 +98,6 @@ export default function Login({ navigation }) {
                                     placeholder="Email"
                                     keyboardType="email-address"
                                     autoComplete="email"
-                                    inputAccessoryViewID="loginInputAccessoryViewID"
                                     textContentType="email"
                                     icon={
                                         <Text style={[style.tSec, style.Tmd]}>

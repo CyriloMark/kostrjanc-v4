@@ -28,7 +28,7 @@ import InteractionBar from "../components/InteractionBar";
 import NewCommentButton from "../components/comments/NewCommentButton";
 import CheckButton from "../components/event/CheckButton";
 import Tag from "../components/event/Tag";
-import CommentAccessoryView from "../components/comments/CommentAccessoryView";
+import AccessoryView from "../components/AccessoryView";
 import SendButton from "../components/comments/SendButton";
 import DeleteButton from "../components/comments/DeleteButton";
 import ListButton from "../components/event/ListButton";
@@ -237,6 +237,7 @@ export default function Event({ navigation, route }) {
     };
 
     const publishComment = () => {
+        if (event.isBanned) return;
         if (
             !(
                 currentCommentInput.length > 0 &&
@@ -704,7 +705,7 @@ export default function Event({ navigation, route }) {
                 </ScrollView>
             </KeyboardAvoidingView>
 
-            <CommentAccessoryView
+            <AccessoryView
                 text={currentCommentInput}
                 onElementPress={l => setCurrentCommentInput(prev => prev + l)}
                 nativeID={"4127435841768339"}

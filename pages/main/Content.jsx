@@ -16,6 +16,7 @@ import ContentHeader from "../../components/content/ContentHeader";
 import InputField from "../../components/InputField";
 import User from "../../components/cards/User";
 import Refresh from "../../components/RefreshControl";
+import AccessoryView from "../../components/AccessoryView";
 
 import { getDatabase, get, ref, child } from "firebase/database";
 
@@ -48,6 +49,7 @@ export default function Content({ navigation }) {
         wait(1000).then(() => setRefreshing(false));
     }, []);
 
+    const [searchInput, setSearchInput] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [randomUser, setRandomUser] = useState(null);
 
@@ -206,9 +208,12 @@ export default function Content({ navigation }) {
                 ]}>
                 <InputField
                     placeholder="Pytaj za něčim..."
+                    value={searchInput}
+                    inputAccessoryViewID="content_search_InputAccessoryViewID"
                     icon={<SVG_Search fill={style.colors.sec} />}
                     onChangeText={val => {
                         fetchUsers(val);
+                        setSearchInput(val);
                     }}
                     bg={`rgba(${style.colorsRGB.black},.9)`}
                 />
@@ -364,6 +369,17 @@ export default function Content({ navigation }) {
                     />
                 </View>
             </View>
+
+            {/* Search Input */}
+            <AccessoryView
+                onElementPress={l => {
+                    setSearchInput(prev => {
+                        fetchUsers(prev + l);
+                        return prev + l;
+                    });
+                }}
+                nativeID={"content_search_InputAccessoryViewID"}
+            />
         </View>
     );
 }

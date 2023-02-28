@@ -27,9 +27,11 @@ import BackHeader from "../components/BackHeader";
 import EditProfileButton from "../components/profile/EditProfileButton";
 import InputField from "../components/InputField";
 import TextField from "../components/TextField";
+import AccessoryView from "../components/AccessoryView";
+
+import { storeData } from "../constants/storage";
 
 import SVG_Post from "../assets/svg/Post";
-import { getData } from "../constants/storage";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -107,6 +109,7 @@ export default function UserProfileEdit({ navigation, route }) {
         let uid = getAuth().currentUser.uid;
 
         let processDone = [false, false];
+        let newUserData = updatedUserData;
 
         if (pbChanged) {
             const blob = await new Promise((resolve, reject) => {
@@ -130,11 +133,16 @@ export default function UserProfileEdit({ navigation, route }) {
                         .then(() => {
                             Storage.getDownloadURL(pbRef)
                                 .then(url => {
+                                    newUserData.pbUri = url;
                                     set(ref(db, `users/${uid}/pbUri`), url)
                                         .finally(() => {
-                                            if (processDone[1])
+                                            if (processDone[1]) {
+                                                storeData(
+                                                    "userData",
+                                                    newUserData
+                                                );
                                                 navigation.goBack();
-                                            else processDone[0] = true;
+                                            } else processDone[0] = true;
                                         })
                                         .catch(error =>
                                             console.log(
@@ -168,19 +176,27 @@ export default function UserProfileEdit({ navigation, route }) {
                     )
                 );
         }
-        set(ref(db, `users/${uid}/description`), updatedUserData.description)
-            .finally(() => {
-                if (!pbChanged) navigation.goBack();
-                else if (processDone[0]) navigation.goBack();
-                else processDone[1] = true;
-            })
-            .catch(error =>
-                console.log(
-                    "error pages/UserProfileEdit",
-                    "overrideUserData set description",
-                    error.code
-                )
-            );
+        if (userData.description !== updatedUserData.description) {
+            set(
+                ref(db, `users/${uid}/description`),
+                updatedUserData.description
+            )
+                .finally(() => {
+                    if (pbChanged && !processDone[0]) processDone[1] = true;
+                    else {
+                        console.log(newUserData);
+                        storeData("userData", newUserData);
+                        navigation.goBack();
+                    }
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/UserProfileEdit",
+                        "overrideUserData set description",
+                        error.code
+                    )
+                );
+        }
     };
 
     return (
@@ -283,6 +299,8 @@ export default function UserProfileEdit({ navigation, route }) {
                             <TextField
                                 placeholder="Dodaj informacije..."
                                 defaultValue={userData.description}
+                                value={updatedUserData.description}
+                                inputAccessoryViewID="userprofileedit_Description_InputAccessoryViewID"
                                 onChangeText={val => {
                                     setUpdatedUserData({
                                         ...updatedUserData,
@@ -302,6 +320,19 @@ export default function UserProfileEdit({ navigation, route }) {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            {/* Description */}
+            <AccessoryView
+                onElementPress={l => {
+                    setUpdatedUserData(prev => {
+                        return {
+                            ...prev,
+                            description: prev.description + l,
+                        };
+                    });
+                }}
+                nativeID={"userprofileedit_Description_InputAccessoryViewID"}
+            />
         </View>
     );
 }

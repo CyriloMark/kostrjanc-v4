@@ -21,6 +21,7 @@ import { getData } from "../../constants/storage";
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import TextField from "../../components/TextField";
+import AccessoryView from "../../components/AccessoryView";
 
 let banning = false;
 
@@ -199,6 +200,10 @@ export default function Ban({ navigation, route }) {
                         </Text>
                         <TextField
                             placeholder="Dodaj informacije..."
+                            value={banData.description}
+                            inputAccessoryViewID={
+                                "ban_Description_InputAccessoryViewID"
+                            }
                             onChangeText={val => {
                                 setBanData({
                                     ...banData,
@@ -213,6 +218,18 @@ export default function Ban({ navigation, route }) {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            <AccessoryView
+                onElementPress={l => {
+                    setBanData(prev => {
+                        return {
+                            ...prev,
+                            description: prev.description + l,
+                        };
+                    });
+                }}
+                nativeID={"ban_Description_InputAccessoryViewID"}
+            />
         </View>
     );
 }

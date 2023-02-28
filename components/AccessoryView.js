@@ -9,7 +9,7 @@ import {
     Platform,
 } from "react-native";
 
-import * as style from "../../styles";
+import * as style from "../styles";
 
 import Animated, {
     withSpring,
@@ -17,13 +17,9 @@ import Animated, {
     useSharedValue,
 } from "react-native-reanimated";
 
-import SVG_Return from "../../assets/svg/Return";
+import SVG_Return from "../assets/svg/Return";
 
-export default function CommentAccessoryView({
-    nativeID,
-    text,
-    onElementPress,
-}) {
+export default function AccessoryView({ nativeID, onElementPress }) {
     const letters = ["č", "ć", "ě", "ł", "ń", "ó", "ř", "š", "ž"];
     const letters_caps = ["Č", "Ć", "ě", "Ł", "ń", "ó", "ř", "Š", "Ž"];
 
@@ -87,7 +83,10 @@ export default function CommentAccessoryView({
                                       style.allCenter,
                                       { marginLeft: style.defaultMmd },
                                   ]}
-                                  onPress={() => onElementPress(letter)}>
+                                  onPress={() => {
+                                      setCaps(false);
+                                      onElementPress(letter);
+                                  }}>
                                   <Text style={[style.TlgBd, style.tBlue]}>
                                       {letter}
                                   </Text>

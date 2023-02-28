@@ -33,6 +33,8 @@ import {
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import InputField from "../../components/InputField";
+import TextField from "../../components/TextField";
+import AccessoryView from "../../components/AccessoryView";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -315,6 +317,8 @@ export default function PostCreate({ navigation }) {
                                 <InputField
                                     placeholder="Mjeno"
                                     keyboardType="default"
+                                    value={post.title}
+                                    inputAccessoryViewID="post_title_InputAccessoryViewID"
                                     icon={
                                         <SVG_Pencil fill={style.colors.sec} />
                                     }
@@ -336,12 +340,10 @@ export default function PostCreate({ navigation }) {
                                     ]}>
                                     Wopisowanje posta zapodać:
                                 </Text>
-                                <InputField
-                                    placeholder="Wopisowanje"
-                                    keyboardType="default"
-                                    icon={
-                                        <SVG_Pencil fill={style.colors.sec} />
-                                    }
+                                <TextField
+                                    placeholder="Wopisownje posta dodać..."
+                                    value={post.description}
+                                    inputAccessoryViewID="post_description_InputAccessoryViewID"
                                     onChangeText={val => {
                                         setPost({
                                             ...post,
@@ -362,6 +364,31 @@ export default function PostCreate({ navigation }) {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            {/* Title */}
+            <AccessoryView
+                onElementPress={l => {
+                    setPost(prev => {
+                        return {
+                            ...prev,
+                            title: prev.title + l,
+                        };
+                    });
+                }}
+                nativeID={"post_title_InputAccessoryViewID"}
+            />
+            {/* Description */}
+            <AccessoryView
+                onElementPress={l => {
+                    setPost(prev => {
+                        return {
+                            ...prev,
+                            description: prev.description + l,
+                        };
+                    });
+                }}
+                nativeID={"post_description_InputAccessoryViewID"}
+            />
         </View>
     );
 }

@@ -50,6 +50,8 @@ import InputField from "../../components/InputField";
 import Tag from "../../components/event/Tag";
 import Check from "../../components/Check";
 import SelectableButton from "../../components/event/SelectableButton";
+import TextField from "../../components/TextField";
+import AccessoryView from "../../components/AccessoryView";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -57,7 +59,7 @@ const userUploadMetadata = {
 
 const tagLineAmt = 5;
 
-export default function EventCreate() {
+export default function EventCreate({ navigation }) {
     let btnPressed = false;
 
     const [event, setEvent] = useState(Event_Placeholder);
@@ -500,6 +502,8 @@ export default function EventCreate() {
                                 <InputField
                                     placeholder="Mjeno"
                                     keyboardType="default"
+                                    value={event.title}
+                                    inputAccessoryViewID="event_title_InputAccessoryViewID"
                                     icon={
                                         <SVG_Pencil fill={style.colors.sec} />
                                     }
@@ -521,12 +525,10 @@ export default function EventCreate() {
                                     ]}>
                                     Wopisowanje ewenta zapodać:
                                 </Text>
-                                <InputField
-                                    placeholder="Wopisowanje"
-                                    keyboardType="default"
-                                    icon={
-                                        <SVG_Pencil fill={style.colors.sec} />
-                                    }
+                                <TextField
+                                    placeholder="Wopisownje ewenta dodać..."
+                                    value={event.description}
+                                    inputAccessoryViewID="event_description_InputAccessoryViewID"
                                     onChangeText={val => {
                                         setEvent({
                                             ...event,
@@ -1018,6 +1020,31 @@ export default function EventCreate() {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            {/* Title */}
+            <AccessoryView
+                onElementPress={l => {
+                    setEvent(prev => {
+                        return {
+                            ...prev,
+                            title: prev.title + l,
+                        };
+                    });
+                }}
+                nativeID={"event_title_InputAccessoryViewID"}
+            />
+            {/* Description */}
+            <AccessoryView
+                onElementPress={l => {
+                    setEvent(prev => {
+                        return {
+                            ...prev,
+                            description: prev.description + l,
+                        };
+                    });
+                }}
+                nativeID={"event_description_InputAccessoryViewID"}
+            />
         </View>
     );
 }
