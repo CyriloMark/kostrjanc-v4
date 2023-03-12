@@ -16,6 +16,8 @@ import { openLink } from "../../constants";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
 
+import { child, get, getDatabase, ref } from "firebase/database";
+
 import BackHeader from "../../components/BackHeader";
 import WarnButton from "../../components/settings/WarnButton";
 import OptionButton from "../../components/OptionButton";
@@ -34,6 +36,7 @@ export default function Landing({ navigation }) {
         uid: "",
         data: User_Placeholder,
     });
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         getUserData();
@@ -41,7 +44,19 @@ export default function Landing({ navigation }) {
 
     let getUserData = async () => {
         setUserData({
-            uid: await getData("userId"),
+            uid: await getData("userId").then(uid =>
+                get(child(ref(getDatabase()), `users/${uid}/isAdmin`))
+                    .then(isAdmin => {
+                        if (isAdmin) setIsAdmin(true);
+                    })
+                    .catch(error =>
+                        console.log(
+                            "error compontents/settings/index.js",
+                            "checkIfAdmin get isAdmin",
+                            error.code
+                        )
+                    )
+            ),
             data: await getData("userData"),
         });
     };
@@ -74,7 +89,7 @@ export default function Landing({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd>
                 <WarnButton
-                    style={styles.sectionContainer}
+                    style={style.container}
                     text={"Sy zmylk namakał?"}
                     sub={"Přizjeł tutón nam prošu!"}
                     onPress={() =>
@@ -122,12 +137,16 @@ export default function Landing({ navigation }) {
                             navigation.navigate("settings-datasec&impresum")
                         }
                     />
-                    <OptionButton
-                        style={styles.optionButton}
-                        icon={<SVG_Admin fill={style.colors.white} />}
-                        title="Funkcije za admina a moderatora"
-                        onPress={() => navigation.navigate("settings-admin")}
-                    />
+                    {isAdmin ? (
+                        <OptionButton
+                            style={styles.optionButton}
+                            icon={<SVG_Admin fill={style.colors.white} />}
+                            title="Funkcije za admina a moderatora"
+                            onPress={() =>
+                                navigation.navigate("settings-admin")
+                            }
+                        />
+                    ) : null}
                 </View>
 
                 {/* Account */}

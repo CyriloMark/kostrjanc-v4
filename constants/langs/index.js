@@ -2,7 +2,7 @@ import hsb from "./hsb.json";
 import dsb from "./dsb.json";
 import de from "./de.json";
 
-let currentLanguage = 0;
+let currentLanguage = -1;
 
 const langs = {
     0: "hsb",
@@ -11,20 +11,44 @@ const langs = {
 };
 
 export function getCurrentLanguage() {
-    return langs[currentLanguage];
+    console.log("currentLanguage", currentLanguage);
+    return currentLanguage;
 }
 
-export function get(id) {
+export function changeLanguage(language) {
+    currentLanguage = language;
+}
+
+export function get(key) {
     let output = "";
     switch (currentLanguage) {
         case 0:
-            output = hsb[id];
+            output = hsb.app[key];
             break;
         case 1:
-            output = dsb[id];
+            output = dsb.app[key];
             break;
         case 2:
-            output = de[id];
+            output = de.app[key];
+            break;
+
+        default:
+            return false;
+    }
+    return output;
+}
+
+export function getLangSpecific(key, lang) {
+    let output = "";
+    switch (lang) {
+        case 0:
+            output = hsb[key];
+            break;
+        case 1:
+            output = dsb[key];
+            break;
+        case 2:
+            output = de[key];
             break;
 
         default:

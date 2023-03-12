@@ -39,6 +39,7 @@ import {
 import * as style from "./styles";
 
 import { storeData, removeData, hasData } from "./constants/storage";
+import { checkIfLangIsSet } from "./constants/storage/language";
 
 //#region Pages
 import ViewportManager from "./pages/main/ViewportManager";
@@ -48,6 +49,7 @@ import Loading from "./pages/static/Loading";
 import UpdateVersion from "./pages/static/UpdateVersion";
 import ServerStatus from "./pages/static/ServerStatus";
 import Ban from "./pages/static/Ban";
+import LanguageSelect from "./pages/static/LanguageSelect";
 //#endregion
 
 export default function App() {
@@ -60,6 +62,8 @@ export default function App() {
     const [loaded, setLoaded] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
 
+    const [langIsSet, setLangIsSet] = useState(null);
+
     const [banned, setBanned] = useState(false);
     const [isRecentVersion, setIsRecentVersion] = useState(null);
     const [serverStatus, setServerStatus] = useState(null);
@@ -67,10 +71,9 @@ export default function App() {
     const [expoPushToken, setExpoPushToken] = useState("");
 
     useEffect(() => {
-        const auth = getAuth();
         const db = getDatabase();
         //onAuthChange
-        onAuthStateChanged(auth, user => {
+        onAuthStateChanged(getAuth(), user => {
             if (user) {
                 setLoggedIn(true);
                 setLoaded(true);
@@ -98,6 +101,8 @@ export default function App() {
             setBackgroundColorAsync(style.colors.black);
             setButtonStyleAsync("light");
         }
+
+        checkIfLangIsSet().then(state => setLangIsSet(state));
 
         // Server Status - Firebase
         onValue(ref(db, "status"), statusSnap => {
@@ -148,8 +153,22 @@ export default function App() {
 
     // return null;
     if (!fontsLoaded) return <View style={style.bgBlack} />;
-    if (!(loaded && isRecentVersion !== null && serverStatus !== null))
+    if (
+        !(
+            loaded &&
+            isRecentVersion !== null &&
+            serverStatus !== null &&
+            langIsSet !== null
+        )
+    )
         return <Loading />;
+
+    if (langIsSet === false)
+        return (
+            <SafeAreaProvider style={[style.container, style.bgBlack]}>
+                <LanguageSelect onLanguageChange={() => setLangIsSet(true)} />
+            </SafeAreaProvider>
+        );
 
     // Server Status
     if (serverStatus !== "online")
