@@ -51,7 +51,7 @@
         "event_tags_11": "DJ",
         "event_tags_12": "Catering",
         "event_tags_13": "Business",
-        "event_tags_14": "Dorfbewohner",
+        "event_tags_14": "Dorfclub",
         "event_tags_15": "Alkohol",
         "event_tags_16": "Alkoholfrei",
         "event_tags_17": "Gezapftes Bier",
@@ -89,7 +89,7 @@
         "link_title": "Link öffnen?",
         "link_sec": "Möchtest du dich auf eine externe Seite weiterleiten lassen?",
 
-        "input_entertitle_email": "E-Mail eingeben:",
+        "input_entertitle_email": "Email eingeben:",
         "input_entertitle_password": "Passwort eingeben:",
         "input_entertitle_passwordconfirm": "Passwort wiederholen:",
 
@@ -129,7 +129,7 @@
         "verify_criterias_3": "hälst dich an Moralnormen und akzeptiert Rechte und Regeln in und außerhalb von kostrjanc",
         "verify_criterias_4": "und akzeptierst in und außerhalb von kostrjanc jeden Mitmenschen",
 
-        "auth_logout_0_title": "Abmelden",
+        "auth_logout_0_title": "Abmelden?",
         "auth_logout_0_sub": "Willst du dich wirklich von deinem Konto abmelden?",
 
         "auth_delete_0_title": "Konto löschen?",
@@ -155,15 +155,15 @@
 
         "auth_landing_welcome_title": "Willkommen bei",
         "auth_landing_sub_0": "Egal, wie lange du nicht mehr da warst,",
-        "auth_landing_sub_1": "oder ob das sogar erstmals da ist,",
-        "auth_landing_sub_2": "du bist herzlich willkommen!",
-        "auth_landing_begin": "Beginne deinen Weg jetzt mit kostrjanc",
+        "auth_landing_sub_1": "oder ob das sogar erstmals da ist.",
+        "auth_landing_sub_2": "Du bist herzlich willkommen!",
+        "auth_landing_begin": "Beginne deinen Weg jetzt mit kostrjanc:",
         "auth_landing_login": "Mit altem Konto anmelden",
         "auth_landing_register": "Neues Konto eröffnen",
 
         "auth_login_title": "Melde dich mit deinem Konto an:",
         "auth_login_forgetpassword": "Passwort vergessen?",
-        "auth_login_error_login": "Fehler in der Aneldung",
+        "auth_login_error_login": "Fehler in der Anmeldung!",
 
         "auth_register_title": "Schaffe dir ein neues Konto:",
         "auth_register_0_intro": "Überarbeite die Schritte, um mein eigenes Konto zu erstellen und dieses sofort zu personalisieren.",
@@ -178,12 +178,12 @@
         "auth_register_4_agbcheck": "Ich akzeptiere die allgemeinen Geschäftsbedingungen und die Regeln für die Verwendung von kostrjanc.",
         "auth_register_4_checksettingstext": "Bist du einverstanden mit deinen Einstellungen?",
         "auth_register_4_publishtext": "Dann veröffentliche diese und trete kostrjanc bei!",
-        "auth_register_errorregister": "Fehler beim Registrieren",
+        "auth_register_errorregister": "Fehler beim Registrieren!",
 
         "auth_reset_title": "Passwort zurücksetzen:",
-        "auth_reset_error_reset": "Fehler im Zurücksetzen",
-        "auth_reset_error_alreadysend": "Du hast schon das Passwort zurück gesetzt",
-        "auth_reset_confirm_title": "Email wurde abgeschickt",
+        "auth_reset_error_reset": "Fehler im Zurücksetzen!",
+        "auth_reset_error_alreadysend": "Du hast schon das Passwort zurück gesetzt.",
+        "auth_reset_confirm_title": "Email wurde abgeschickt.",
         "auth_reset_confirm_sub": "Eine Email für das Zurücksetzen des Passworts wurde an deine Email geschickt.",
 
         "editprofile_headeredit": "Bearbeiten:",
@@ -224,7 +224,7 @@
         "contentpage_contenthint": "Schau mal bei:",
         "contentpage_searchresulttext": "Suchergebnis:",
 
-        "content_aboutcreator": "Über den Ersteller",
+        "content_aboutcreator": "Über den Ersteller:",
         "content_comments_title": "Kommentare:",
         "content_comments_newcommenttitle": "Neuer Kommentar:",
 
@@ -266,11 +266,11 @@
         "eventcreate_type_title": "Eventart:",
         "eventcreate_entrancefee_title": "Eintrittspreis:",
         "eventcreate_entrancefee_sub": "Den Eintrittspreis eingeben:",
-        "eventcreate_entrancefee_inputplaceholder": "Eintrittspreis im Euro",
-        "eventcreate_website_title": "Website zum Event",
+        "eventcreate_entrancefee_inputplaceholder": "Eintrittspreis in Euro",
+        "eventcreate_website_title": "Website zum Event:",
         "eventcreate_website_sub": "Webseite eingeben:",
         "eventcreate_website_inputplaceholder": "Website / URL",
-        "eventcreate_adbanner_title": "Werbebild / Plakat",
+        "eventcreate_adbanner_title": "Werbebild / Plakat:",
         "eventcreate_adbanner_imghint": "Drücken, dass man Bilder durchsuchen kann",
         "eventcreate_tags_title": "Tags:",
         "eventcreate_publishsuccessful_title": "Erfolgreich veröffentlichtes Event!",
@@ -345,6 +345,24 @@
         "settings_datasecurityimpresum_contact": "Kontakt:",
         "settings_datasecurityimpresum_content_title": "Haftungen für den Inhalt:",
         "settings_datasecurityimpresum_content_sub": "Verantwortlicher für Inhalt nach § 6 MDStV: ___",
-        "settings_datasecurityimpresum_datasecurity_title": "Datenschutz:"
+        "settings_datasecurityimpresum_datasecurity_title": "Datenschutz:",
+
+        "report_title": "Problem melden",
+        "report_sub": "Problem mit",
+        "report_typetitle": "Typ des Problems:",
+        "report_additionalinfomation": "Zusätzliche Informationen angeben:",
+        "report_post": "Post",
+        "report_event": "Event",
+        "report_user": "Benutzer",
+        "report_successful_title": "Erfolgreiches Melden des Problems!",
+        "report_successful_sub": "wurde erfolgreich gemeldet.",
+
+        "banelement_title": "Bann",
+        "banelement_sub_0": "Möchtest du",
+        "banelement_sub_1": "bannen?",
+        "banelement_ban_sub_0": "wird gebannt, nicht der Benutzer.",
+        "banelement_ban_sub_1": "Der Benutzer und alle dazugehörigen Veröffentlichungen werden gebannt.",
+        "banelement_error_title": "Der Bann war nicht erfolgreich!",
+        "banelement_error_sub": "Ein Problem ist entstanden beim Bannen."
     }
 }

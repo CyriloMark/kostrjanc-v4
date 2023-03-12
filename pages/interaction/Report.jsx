@@ -18,6 +18,7 @@ import { ref, set, getDatabase } from "firebase/database";
 import { Report_Placeholder } from "../../constants/content/PlaceholderData";
 import { Report_Types } from "../../constants/content/report";
 import { getData } from "../../constants/storage";
+import { getLangs } from "../../constants/langs";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -36,11 +37,11 @@ export default function Report({ navigation, route }) {
     const itemType = () => {
         switch (type) {
             case 0:
-                return "post";
+                return getLangs("report_post");
             case 1:
-                return "ewent";
+                return getLangs("report_event");
             case 2:
-                return "wužiwar";
+                return getLangs("report_user");
             default:
                 return "";
         }
@@ -81,8 +82,10 @@ export default function Report({ navigation, route }) {
             )
             .finally(() =>
                 Alert.alert(
-                    "Wuspěšnje přizjewjenje problema",
-                    `${post.title} (${itemType()}) je so wuspěšnje přizjewił`,
+                    getLangs("report_successful_title"),
+                    `${post.title} (${itemType()}) ${getLangs(
+                        "report_successful_sub"
+                    )}`,
                     [
                         {
                             text: "Ok",
@@ -105,7 +108,7 @@ export default function Report({ navigation, route }) {
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
-                        title="Problem přizjewić"
+                        title={getLangs("report_title")}
                         onBack={() => navigation.goBack()}
                         showReload={false}
                     />
@@ -128,13 +131,14 @@ export default function Report({ navigation, route }) {
                     snapToAlignment="center"
                     snapToEnd>
                     <Text style={[style.Ttitle, style.tWhite]}>
-                        Problem z "{type === 2 ? item.name : item.title}"{"\n"}(
+                        {getLangs("report_sub")} "
+                        {type === 2 ? item.name : item.title}"{"\n"}(
                         {itemType()})
                     </Text>
                     {/* Type */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Typ problema:
+                            {getLangs("report_typetitle")}
                         </Text>
 
                         <View style={{ marginTop: style.defaultMsm }}>
@@ -156,7 +160,7 @@ export default function Report({ navigation, route }) {
                                             };
                                         })
                                     }
-                                    title={item}
+                                    title={getLangs(item)}
                                 />
                             ))}
                         </View>
@@ -169,10 +173,12 @@ export default function Report({ navigation, route }) {
                                 style.tWhite,
                                 { marginBottom: style.defaultMsm },
                             ]}>
-                            Přidatne informacije zapodać:
+                            {getLangs("report_additionalinfomation")}
                         </Text>
                         <TextField
-                            placeholder="Dodaj informacije..."
+                            placeholder={getLangs(
+                                "input_placeholder_description"
+                            )}
                             value={reportData.description}
                             inputAccessoryViewID={
                                 "report_Description_InputAccessoryViewID"

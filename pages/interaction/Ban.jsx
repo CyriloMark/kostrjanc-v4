@@ -17,6 +17,7 @@ import { ref, set, getDatabase } from "firebase/database";
 
 import { Ban_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
+import { getLangs } from "../../constants/langs";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -34,11 +35,11 @@ export default function Ban({ navigation, route }) {
     const itemType = () => {
         switch (type) {
             case 0:
-                return "post";
+                return getLangs("report_post");
             case 1:
-                return "ewent";
+                return getLangs("report_event");
             case 2:
-                return "wužiwar";
+                return getLangs("report_user");
             default:
                 return "";
         }
@@ -58,27 +59,25 @@ export default function Ban({ navigation, route }) {
         if (banning) return;
 
         Alert.alert(
-            `Chceš "${type === 2 ? item.name : item.title}" banować?`,
+            `${getLangs("banelement_sub_0")} "${
+                type === 2 ? item.name : item.title
+            }" ${getLangs("banelement_sub_1")}`,
             type !== 2
-                ? `${itemType()} so banuje, nic wužiwar`
-                : "Wužiwar a wšitke wozjewjenja so banuja",
+                ? `${itemType()} ${getLangs("banelement_ban_sub_0")}`
+                : getLangs("banelement_ban_sub_1"),
             [
                 {
-                    text: "Ně",
+                    text: getLangs("no"),
                     style: "cancel",
                 },
                 {
-                    text: "Haj",
+                    text: getLangs("yes"),
                     style: "default",
                     isPreferred: true,
                     onPress: async () => {
                         banning = true;
 
                         const db = getDatabase();
-                        // const id = Date.now();
-                        const uid = await getData("userId").catch(() => {
-                            return getAuth().currentUser.uid;
-                        });
 
                         let path = "";
                         switch (type) {
@@ -97,8 +96,8 @@ export default function Ban({ navigation, route }) {
 
                         if (path.length === 0) {
                             Alert.alert(
-                                "Ban njebě wuspěšny",
-                                "Problem je nastał při banowanju",
+                                getLangs("banelement_error_title"),
+                                getLangs("banelement_error_sub"),
                                 [
                                     {
                                         text: "Ok",
@@ -161,7 +160,7 @@ export default function Ban({ navigation, route }) {
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
-                        title="Ban"
+                        title={getLangs("banelement_title")}
                         onBack={() => navigation.goBack()}
                         showReload={false}
                     />
@@ -184,8 +183,8 @@ export default function Ban({ navigation, route }) {
                     snapToAlignment="center"
                     snapToEnd>
                     <Text style={[style.Ttitle, style.tWhite]}>
-                        "{type === 2 ? item.name : item.title}" ({itemType()})
-                        banować
+                        "{type === 2 ? item.name : item.title}" ({itemType()}){" "}
+                        {getLangs("banelement_sub_1")}
                     </Text>
 
                     {/* Description */}
@@ -196,10 +195,12 @@ export default function Ban({ navigation, route }) {
                                 style.tWhite,
                                 { marginBottom: style.defaultMsm },
                             ]}>
-                            Přidatne informacije zapodać:
+                            {getLangs("report_additionalinfomation")}
                         </Text>
                         <TextField
-                            placeholder="Dodaj informacije..."
+                            placeholder={getLangs(
+                                "input_placeholder_description"
+                            )}
                             value={banData.description}
                             inputAccessoryViewID={
                                 "ban_Description_InputAccessoryViewID"

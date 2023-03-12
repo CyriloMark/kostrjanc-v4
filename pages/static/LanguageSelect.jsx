@@ -38,7 +38,13 @@ export default function LanguageSelect({ onLanguageChange }) {
                 snapToAlignment="center"
                 snapToEnd>
                 <Text style={[style.Ttitle, style.tWhite]}>
-                    Wuzwol sej rěč:
+                    {currentLanguage === 0
+                        ? "Wuzwol sej rěč:"
+                        : currentLanguage === 1
+                        ? "Wuzwól sebje rěc:"
+                        : currentLanguage === 2
+                        ? "Wähle deine Sprache:"
+                        : "Wuzwol sej rěč:"}
                 </Text>
 
                 <View style={[styles.langContainer]}>
