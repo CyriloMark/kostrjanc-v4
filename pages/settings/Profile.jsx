@@ -15,6 +15,11 @@ import BackHeader from "../../components/BackHeader";
 import EditProfileButton from "../../components/profile/EditProfileButton";
 import OptionButton from "../../components/OptionButton";
 
+import { getLangs } from "../../constants/langs";
+
+import SVG_Profile from "../../assets/svg/Profile";
+import SVG_Basket from "../../assets/svg/Basket";
+
 export default function Profile({ navigation, route }) {
     const { uid, userData } = route.params;
 
@@ -23,7 +28,7 @@ export default function Profile({ navigation, route }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={"Konto"}
+                    title={getLangs("settings_profile_title")}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
@@ -79,7 +84,7 @@ export default function Profile({ navigation, route }) {
                 <EditProfileButton
                     checked
                     style={[styles.sectionContainer, style.allCenter]}
-                    title={"Wobdźěłać"}
+                    title={getLangs("settings_profile_editbutton")}
                     onPress={() =>
                         navigation.navigate("editProfile", {
                             userData: userData,
@@ -90,35 +95,52 @@ export default function Profile({ navigation, route }) {
                 {/* Stats */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
-                        Statistiki a informacije:
+                        {getLangs("settings_profile_statinfo_title")}
                     </Text>
                     <View style={{ marginTop: style.defaultMmd }}>
                         <Text style={[style.Tmd, style.tWhite]}>
-                            Wužiwarske mjeno: {userData.name}
+                            {getLangs("settings_profile_statinfo_username")}
+                            {""}
+                            {userData.name}
                             {"\n"}
-                            Wužiwarska id: {uid}
+                            {getLangs("settings_profile_statinfo_uid")} {uid}
                             {"\n"}
-                            Wopisownje konta: {userData.description}
+                            {getLangs(
+                                "settings_profile_statinfo_description"
+                            )}{" "}
+                            {userData.description}
                             {"\n"}
                             Expo Push Token: {userData.expoPushToken}
                             {"\n"}
-                            Link k profilnemu wobrazej: {userData.pbUri}
+                            {getLangs("settings_profile_statinfo_pburi")}{" "}
+                            {userData.pbUri}
                             {"\n"}
-                            Mnóstwo sćěhowarjow:{" "}
+                            {getLangs(
+                                "settings_profile_statinfo_amtfollower"
+                            )}{" "}
                             {userData.follower ? userData.follower.length : 0}
                             {"\n"}
-                            Mnóstwo sćěhowanych profilow:{" "}
+                            {getLangs(
+                                "settings_profile_statinfo_amtfollowing"
+                            )}{" "}
                             {userData.following ? userData.following.length : 0}
                             {"\n\n"}
-                            Mnóstwo wozjewjenych postow:{" "}
+                            {getLangs(
+                                "settings_profile_statinfo_amtposts"
+                            )}{" "}
                             {userData.posts ? userData.posts.length : 0}
                             {"\n"}
-                            Mnóstwo wozjewjenych ewentow:{" "}
+                            {getLangs(
+                                "settings_profile_statinfo_amtevents"
+                            )}{" "}
                             {userData.events ? userData.events.length : 0}
                             {"\n\n"}
                             {userData.posts ? (
                                 <Text>
-                                    Lisćina wozjewjenych postow z id:{"\n"}
+                                    {getLangs(
+                                        "settings_profile_statinfo_posts"
+                                    )}
+                                    {"\n"}
                                     {userData.posts.map((p, key) => (
                                         <Text key={key}>
                                             {p}
@@ -132,7 +154,10 @@ export default function Profile({ navigation, route }) {
                             {"\n\n"}
                             {userData.events ? (
                                 <Text>
-                                    Lisćina wozjewjenych ewentow z id:{"\n"}
+                                    {getLangs(
+                                        "settings_profile_statinfo_events"
+                                    )}
+                                    {"\n"}
                                     {userData.events.map((e, key) => (
                                         <Text key={key}>
                                             {e}
@@ -144,14 +169,25 @@ export default function Profile({ navigation, route }) {
                                 </Text>
                             ) : null}
                             {"\n\n"}
-                            Banowany: {userData.isBanned ? "Haj" : "Ně"}
+                            {getLangs("settings_profile_statinfo_banned")}{" "}
+                            {userData.isBanned
+                                ? getLangs("yes")
+                                : getLangs("no")}
                             {"\n"}
-                            Moderator: {userData.isMod ? "Haj" : "Ně"}
+                            {getLangs("settings_profile_statinfo_mod")}{" "}
+                            {userData.isMod ? getLangs("yes") : getLangs("no")}
                             {"\n"}
-                            Business Program Partner:{" "}
-                            {userData.isBuisness ? "Haj" : "Ně"}
+                            {getLangs(
+                                "settings_profile_statinfo_businessprogram"
+                            )}{" "}
+                            {userData.isBuisness
+                                ? getLangs("yes")
+                                : getLangs("no")}
                             {"\n"}
-                            Admin: {userData.isAdmin ? "Haj" : "Ně"}
+                            {getLangs("settings_profile_statinfo_admin")}{" "}
+                            {userData.isAdmin
+                                ? getLangs("yes")
+                                : getLangs("no")}
                         </Text>
                     </View>
                 </View>
@@ -159,17 +195,19 @@ export default function Profile({ navigation, route }) {
                 {/* Actions */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
-                        Interakcije:
+                        {getLangs("settings_profile_interaction_title")}
                     </Text>
                     <OptionButton
                         style={styles.optionButton}
-                        title="So wulogować"
+                        title={getLangs("settings_landing_account_logout")}
+                        icon={<SVG_Profile fill={style.colors.red} />}
                         onPress={Account.logout}
                         red
                     />
                     <OptionButton
                         style={styles.optionButton}
-                        title="Konto wotstronić"
+                        title={getLangs("settings_landing_account_delete")}
+                        icon={<SVG_Basket fill={style.colors.red} />}
                         onPress={() =>
                             Account.deleteAccount(userData.uid, userData.data)
                         }

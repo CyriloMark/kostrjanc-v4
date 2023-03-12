@@ -4,12 +4,6 @@ import de from "./de.json";
 
 let currentLanguage = -1;
 
-const langs = {
-    0: "hsb",
-    1: "dsb",
-    2: "de",
-};
-
 export function getCurrentLanguage() {
     console.log("currentLanguage", currentLanguage);
     return currentLanguage;
@@ -19,7 +13,7 @@ export function changeLanguage(language) {
     currentLanguage = language;
 }
 
-export function get(key) {
+export function getLangs(key) {
     let output = "";
     switch (currentLanguage) {
         case 0:
@@ -38,21 +32,21 @@ export function get(key) {
     return output;
 }
 
-export function getLangSpecific(key, lang) {
+export function getLangsSpecific(key, lang) {
     let output = "";
     switch (lang) {
         case 0:
-            output = hsb[key];
+            output = hsb.app[key];
             break;
         case 1:
-            output = dsb[key];
+            output = dsb.app[key];
             break;
         case 2:
-            output = de[key];
+            output = de.app[key];
             break;
 
         default:
-            break;
+            return false;
     }
     return output;
 }

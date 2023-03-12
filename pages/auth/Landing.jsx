@@ -5,6 +5,8 @@ import * as style from "../../styles";
 
 import AppHeader from "../../components/auth/AppHeader";
 
+import { getLangs } from "../../constants/langs";
+
 import Svg, { Path } from "react-native-svg";
 
 import Animated, {
@@ -137,7 +139,9 @@ export default function Landing({ navigation }) {
                 <Animated.View style={[style.blurBox, blurBoxStyle]} />
 
                 <View style={styles.titleContainer}>
-                    <Text style={[style.Ttitle, style.tWhite]}>Witaj pola</Text>
+                    <Text style={[style.Ttitle, style.tWhite]}>
+                        {getLangs("auth_landing_welcome_title")}
+                    </Text>
                     <View style={[{ flexDirection: "row" }]}>
                         <Text style={[style.Ttitle, style.tBlue]}>
                             kostrjanc
@@ -148,9 +152,11 @@ export default function Landing({ navigation }) {
 
                 <View style={[styles.subContainer, style.pH]}>
                     <Text style={[style.tWhite, style.Tmd]}>
-                        Wšojedne, kak dołho hižo njejsy tu był,{"\n"}
-                        abo hač je to samo prěni raz tu.{"\n"}
-                        Sy wutrobnje witany!
+                        {getLangs("auth_landing_sub_0")}
+                        {"\n"}
+                        {getLangs("auth_landing_sub_1")}
+                        {"\n"}
+                        {getLangs("auth_landing_sub_2")}
                     </Text>
                 </View>
 
@@ -160,7 +166,7 @@ export default function Landing({ navigation }) {
                         style.TlgBd,
                         { width: "100%", marginTop: style.defaultMlg },
                     ]}>
-                    Započinaj twój puć hnydom z kostrjanc:
+                    {getLangs("auth_landing_begin")}
                 </Text>
                 {/* Account View */}
                 <View style={[style.container, style.allCenter, { zIndex: 5 }]}>
@@ -201,7 +207,7 @@ export default function Landing({ navigation }) {
                                     style.border,
                                 ]}>
                                 <Text style={[style.tWhite, style.Tmd]}>
-                                    Z starym kontom so přizjewić
+                                    {getLangs("auth_landing_login")}
                                 </Text>
                             </Pressable>
                         </Animated.View>
@@ -221,7 +227,7 @@ export default function Landing({ navigation }) {
                                     style.border,
                                 ]}>
                                 <Text style={[style.tWhite, style.Tmd]}>
-                                    Nowy konto wotewrić
+                                    {getLangs("auth_landing_register")}
                                 </Text>
                             </Pressable>
                         </Animated.View>

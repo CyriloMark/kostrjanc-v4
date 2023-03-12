@@ -11,9 +11,10 @@ import {
 import * as style from "../../styles";
 
 import { wait } from "../../constants/wait";
-import { getData, removeData, storeData } from "../../constants/storage";
+import { getData, storeData } from "../../constants/storage";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { lerp, sortArrayByDateFromUnderorderedKey } from "../../constants";
+import { getLangs } from "../../constants/langs";
 
 import { getAuth } from "firebase/auth";
 import { get, ref, getDatabase, child } from "firebase/database";
@@ -565,7 +566,7 @@ export default function Landing({ navigation }) {
                         style.tCenter,
                         { marginVertical: style.defaultMmd },
                     ]}>
-                    Wjac wobsahow njedawaja na kostrjanc.
+                    {getLangs("landing_nocontenttext")}
                 </Text>
             </ScrollView>
         </View>

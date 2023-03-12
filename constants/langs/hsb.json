@@ -1,6 +1,7 @@
 {
     "app": {
-
-        "sit_in": "Pódla su"
+        "yes": "Haj",
+        "no": "Ně",
+        "continue": "Dale"
     }
 }

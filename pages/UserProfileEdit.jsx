@@ -20,16 +20,16 @@ import {
 } from "expo-image-picker";
 
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 import * as Storage from "firebase/storage";
 
 import BackHeader from "../components/BackHeader";
 import EditProfileButton from "../components/profile/EditProfileButton";
-import InputField from "../components/InputField";
 import TextField from "../components/TextField";
 import AccessoryView from "../components/AccessoryView";
 
 import { storeData } from "../constants/storage";
+import { getLangs } from "../constants/langs";
 
 import SVG_Post from "../assets/svg/Post";
 
@@ -207,7 +207,9 @@ export default function UserProfileEdit({ navigation, route }) {
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
-                        title={`Wobdźěłać: ${userData.name}`}
+                        title={`${getLangs("editprofile_headeredit")} ${
+                            userData.name
+                        }`}
                         onBack={() => navigation.goBack()}
                         showReload={false}
                     />
@@ -224,7 +226,7 @@ export default function UserProfileEdit({ navigation, route }) {
                     {/* Name */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Moje mjeno:
+                            {getLangs("editprofile_myname")}
                         </Text>
                         <Text style={[style.tBlue, style.Ttitle]}>
                             {userData.name}
@@ -235,15 +237,14 @@ export default function UserProfileEdit({ navigation, route }) {
                                 style.TsmRg,
                                 { marginTop: style.defaultMsm },
                             ]}>
-                            Mjeno njeda so změnić, jenož na priwatne
-                            naprašowanje.
+                            {getLangs("editprofile_namehint")}
                         </Text>
                     </View>
 
                     {/* PB Image */}
                     <View style={[styles.sectionContainer]}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Profilny wobraz:
+                            {getLangs("editprofile_pbtitle")}
                         </Text>
                         <Pressable
                             onPress={openImagePickerAsync}
@@ -282,7 +283,7 @@ export default function UserProfileEdit({ navigation, route }) {
                                                 style.tBlue,
                                                 styles.hintText,
                                             ]}>
-                                            Tłoć, zo wobrazy přepytać móžeš
+                                            {getLangs("editprofile_pbhint")}
                                         </Text>
                                     </View>
                                 )}
@@ -292,12 +293,14 @@ export default function UserProfileEdit({ navigation, route }) {
                     {/* Description */}
                     <View style={[styles.sectionContainer]}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Wopisowanje konta:
+                            {getLangs("editprofile_descriptiontitle")}
                         </Text>
                         <View
                             style={[style.pH, { marginTop: style.defaultMmd }]}>
                             <TextField
-                                placeholder="Dodaj informacije..."
+                                placeholder={getLangs(
+                                    "input_placeholder_description"
+                                )}
                                 defaultValue={userData.description}
                                 value={updatedUserData.description}
                                 inputAccessoryViewID="userprofileedit_Description_InputAccessoryViewID"
@@ -313,7 +316,7 @@ export default function UserProfileEdit({ navigation, route }) {
 
                     <View style={[style.allCenter, styles.button]}>
                         <EditProfileButton
-                            title={"Składować"}
+                            title={getLangs("editprofile_save")}
                             checked={buttonChecked}
                             onPress={overrideUserData}
                         />

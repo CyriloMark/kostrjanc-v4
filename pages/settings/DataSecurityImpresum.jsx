@@ -3,6 +3,8 @@ import { View, Pressable, StyleSheet, ScrollView, Text } from "react-native";
 
 import * as style from "../../styles";
 
+import { getLangs } from "../../constants/langs";
+
 import BackHeader from "../../components/BackHeader";
 
 export default function DataSecurityImpresum({ navigation }) {
@@ -20,7 +22,7 @@ export default function DataSecurityImpresum({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={"Datowy škit/Impresum"}
+                    title={getLangs("settings_datasecurityimpresum_title")}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
@@ -42,10 +44,14 @@ export default function DataSecurityImpresum({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd>
                 <View style={style.container}>
-                    <Text style={[style.Ttitle, style.tWhite]}>Impresum:</Text>
+                    <Text style={[style.Ttitle, style.tWhite]}>
+                        {getLangs(
+                            "settings_datasecurityimpresum_impresum_title"
+                        )}
+                    </Text>
 
                     <Text style={[titleStyles, styles.semiSectionContainer]}>
-                        Podaća po §5 TMG
+                        {getLangs("settings_datasecurityimpresum_p5tgm")}
                     </Text>
 
                     <View style={style.pH}>
@@ -63,7 +69,9 @@ export default function DataSecurityImpresum({ navigation }) {
 
                     {/* Ideja a přesadźenje */}
                     <View style={[styles.semiSectionContainer]}>
-                        <Text style={titleStyles}>Ideja a přesadźenje:</Text>
+                        <Text style={titleStyles}>
+                            {getLangs("settings_datasecurityimpresum_ideas")}
+                        </Text>
                         <View style={style.pH}>
                             <Text style={[textStyles]}>
                                 Mark, Cyril;{"\n"}
@@ -74,11 +82,13 @@ export default function DataSecurityImpresum({ navigation }) {
 
                     {/* Kontakt */}
                     <View style={[styles.semiSectionContainer]}>
-                        <Text style={titleStyles}>Kontakt:</Text>
+                        <Text style={titleStyles}>
+                            {getLangs("settings_datasecurityimpresum_contact")}
+                        </Text>
                         <View style={style.pH}>
                             <Text style={[textStyles]}>
                                 Telefon: +49 179 4361854 {"\n"}
-                                E-Mail: info@kostrjanc.de {"\n"}
+                                Email: info@kostrjanc.de {"\n"}
                                 Internet: kostrjanc.de
                             </Text>
                         </View>
@@ -88,10 +98,12 @@ export default function DataSecurityImpresum({ navigation }) {
                 {/* Rukowanja za wobsah */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.Ttitle, style.tWhite]}>
-                        Rukowanja za wobsah:
+                        {getLangs(
+                            "settings_datasecurityimpresum_content_title"
+                        )}
                     </Text>
                     <Text style={[titleStyles, styles.semiSectionContainer]}>
-                        Zamołwity za wobsah po § 6 MDStV: ___
+                        {getLangs("settings_datasecurityimpresum_content_sub")}
                     </Text>
 
                     <View style={style.pH}>
@@ -124,7 +136,9 @@ export default function DataSecurityImpresum({ navigation }) {
                 {/* Škit datow */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.Ttitle, style.tWhite]}>
-                        Škit datow:
+                        {getLangs(
+                            "settings_datasecurityimpresum_datasecurity_title"
+                        )}
                     </Text>
 
                     <View style={style.pH}>

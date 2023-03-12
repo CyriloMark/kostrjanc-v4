@@ -1,4 +1,5 @@
 import { Alert, Platform, Share } from "react-native";
+import { getLangs } from "./langs";
 
 const staticShareURL = "https://www.kostrjanc.de/";
 
@@ -10,21 +11,27 @@ export async function share(type, id, title) {
             {
                 url: `${staticShareURL}${type === 0 ? "p" : "e"}/${id}`,
                 title: title,
-                message: `Dźělenje wot ${
-                    type === 0 ? "posta" : "ewenta"
-                } z titulom "${title}".\nStrona so wočini wy syći. Zo dóstanješ wšitke funkcije a lěpšu zwobrazliwosć instaluj sej kostrjanc App na twojim šmóratku!`,
+                message: `${getLangs("share_share_0")} ${
+                    type === 0
+                        ? getLangs("share_share_post")
+                        : getLangs("share_share_event")
+                } ${getLangs("share_share_1")} "${title}".\n${getLangs(
+                    "share_share_2"
+                )}`,
             },
             {
                 dialogTitle: title,
-                subject: `Dźělenje wot ${
-                    type === 0 ? "posta" : "ewenta"
-                } z titulom "${title}"`,
+                subject: `${getLangs("share_share_0")} ${
+                    type === 0
+                        ? getLangs("share_share_post")
+                        : getLangs("share_share_event")
+                } ${getLangs("share_share_1")} "${title}".`,
             }
         );
     } catch (e) {
         Alert.alert(
-            "Zmylk w dźělenju",
-            `Dźělenje njebě wuspěšnje. Zmylk: ${error}`,
+            getLangs("share_error_title"),
+            `${getLangs("share_error_sub")} ${e}`,
             [
                 {
                     text: "Ok",

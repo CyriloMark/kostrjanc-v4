@@ -7,6 +7,7 @@ import * as Account from "../../components/settings";
 import { getDatabase, ref, child, get } from "firebase/database";
 
 import { convertTimestampToString } from "../../constants/time";
+import { getLangs } from "../../constants/langs";
 
 import BackHeader from "../../components/BackHeader";
 import DangerButton from "../../components/settings/DangerButton";
@@ -33,7 +34,7 @@ export default function Admin({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={"Admin a moderator"}
+                    title={getLangs("settings_admin_title")}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
@@ -56,14 +57,14 @@ export default function Admin({ navigation }) {
                 snapToEnd>
                 <View style={style.container}>
                     <Text style={[style.Ttitle, style.tWhite]}>
-                        Wobwuk za adminy a moderatory:
+                        {getLangs("settings_admin_h2")}
                     </Text>
                 </View>
 
                 {/* Server Offline */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        Serwer - Offline:
+                        {getLangs("settings_admin_offline_title")}
                     </Text>
                     <Text
                         style={[
@@ -71,12 +72,10 @@ export default function Admin({ navigation }) {
                             style.tWhite,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Tutón wobwuk hasnje serwer na njeznaty čas. Wužiwarjo
-                        njemóža na kostrjanc přistupić. Serwer ma so manuelnje
-                        na online sadźić.
+                        {getLangs("settings_admin_offline_sub")}
                     </Text>
                     <DangerButton
-                        title={"Server na offline sadźić"}
+                        title={getLangs("settings_admin_offline_button")}
                         style={{ marginTop: style.defaultMmd }}
                         onPress={() => Account.setServer("offline")}
                     />
@@ -85,7 +84,7 @@ export default function Admin({ navigation }) {
                 {/* Server Pause */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        Serwer - Pause:
+                        {getLangs("settings_admin_pause_title")}
                     </Text>
                     <Text
                         style={[
@@ -93,13 +92,10 @@ export default function Admin({ navigation }) {
                             style.tWhite,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Tutón wobwuk hasnje serwer na podaty čas. Wužiwarjo
-                        njemóža na kostrjanc přistupić. Serwer ma so tohodla
-                        manuelnje na online sadźić. Čas je móžnosć pokazać, hdy
-                        so předwidźa, zo serwer so zaso na online sadźi.
+                        {getLangs("settings_admin_pause_sub")}
                     </Text>
                     <DangerButton
-                        title={"Server na pause sadźić"}
+                        title={getLangs("settings_admin_pause_button")}
                         style={{ marginTop: style.defaultMmd }}
                         onPress={() => Account.setServer("pause")}
                     />

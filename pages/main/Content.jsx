@@ -21,7 +21,8 @@ import AccessoryView from "../../components/AccessoryView";
 import { getDatabase, get, ref, child } from "firebase/database";
 
 import { wait } from "../../constants/wait";
-import { lerp, splitterForContent } from "../../constants";
+import { lerp } from "../../constants";
+import { getLangs } from "../../constants/langs";
 
 import * as style from "../../styles";
 
@@ -207,7 +208,7 @@ export default function Content({ navigation }) {
                     { width: "100%", marginTop: style.defaultMsm, zIndex: 10 },
                 ]}>
                 <InputField
-                    placeholder="Pytaj za něčim..."
+                    placeholder={getLangs("input_placeholder_search")}
                     value={searchInput}
                     inputAccessoryViewID="content_search_InputAccessoryViewID"
                     icon={<SVG_Search fill={style.colors.sec} />}
@@ -257,7 +258,7 @@ export default function Content({ navigation }) {
                                 alignItems: "center",
                             }}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                Pohladaj raz pola:
+                                {getLangs("contentpage_contenthint")}
                             </Text>
                             <User
                                 onPress={() => {
@@ -279,14 +280,14 @@ export default function Content({ navigation }) {
                                 { marginTop: style.defaultMmd },
                             ]}>
                             {getRandomUser()}
-                            Pytaj za něčim.
+                            {getLangs("contentpage_search")}
                         </Text>
                     )}
 
                     {searchResult.length !== 0 ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                Pytanski wuslědk:
+                                {getLangs("contentpage_searchresulttext")}
                             </Text>
                             {searchResult.map((user, key) => (
                                 <Pressable

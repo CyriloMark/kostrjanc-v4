@@ -4,6 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as style from "../../styles";
 
+import { getLangs } from "../../constants/langs";
+
 import SVG_Ban from "../../assets/svg/Ban";
 
 export default function Ban() {
@@ -59,7 +61,7 @@ export default function Ban() {
                             style.tWhite,
                             { marginTop: style.defaultMlg },
                         ]}>
-                        Ty sy z kostrjanc wuzamknjeny.
+                        {getLangs("ban_title")}
                     </Text>
                     <Text
                         style={[
@@ -68,9 +70,9 @@ export default function Ban() {
                             style.tCenter,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Njejsy so prawje zadźeržał a něk je moderacija tebje
-                        blokěrowała.{"\n"}
-                        Na kostrjanc.de móžeš wo wuswobodźenje prošeć.
+                        {getLangs("ban_sub_0")}
+                        {"\n"}
+                        {getLangs("ban_sub_1")}
                     </Text>
                 </View>
 

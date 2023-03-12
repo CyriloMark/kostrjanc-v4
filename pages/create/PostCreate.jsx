@@ -19,6 +19,7 @@ import * as Storage from "firebase/storage";
 
 import { Post_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
+import { getLangs } from "../../constants/langs";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -164,8 +165,14 @@ export default function PostCreate({ navigation }) {
                                     )
                                     .finally(() => {
                                         Alert.alert(
-                                            "Wuspěšnje wozjewjeny post",
-                                            `Post ${post.title} je so wuspěšnje wozjewił`,
+                                            getLangs(
+                                                "postcreate_publishsuccessful_title"
+                                            ),
+                                            `${getLangs(
+                                                "postcreate_publishsuccessful_sub_0"
+                                            )} ${post.title} ${getLangs(
+                                                "postcreate_publishsuccessful_sub_1"
+                                            )}`,
                                             [
                                                 {
                                                     text: "Ok",
@@ -212,7 +219,7 @@ export default function PostCreate({ navigation }) {
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
-                        title={"Nowy post wozjewić"}
+                        title={getLangs("postcreate_headertitle")}
                         onBack={() => navigation.goBack()}
                         showReload={false}
                     />
@@ -239,7 +246,7 @@ export default function PostCreate({ navigation }) {
                         {/* Title */}
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {post.title.length === 0
-                                ? "Mjeno posta"
+                                ? getLangs("postcreate_posttitle")
                                 : post.title}
                         </Text>
 
@@ -281,7 +288,7 @@ export default function PostCreate({ navigation }) {
                                                 style.tBlue,
                                                 styles.hintText,
                                             ]}>
-                                            Tłoć, zo wobrazy přepytać móžeš
+                                            {getLangs("postcreate_imghint")}
                                         </Text>
                                     </View>
                                 )}
@@ -291,7 +298,7 @@ export default function PostCreate({ navigation }) {
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
                                 {post.description.length === 0
-                                    ? "Wopisowanje wobraza"
+                                    ? getLangs("postcreate_postdescription")
                                     : post.description}
                             </Text>
                         </View>
@@ -300,7 +307,7 @@ export default function PostCreate({ navigation }) {
                     {/* Info Edit */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Wobdźěłanje informacijow:
+                            {getLangs("postcreate_addinformation")}
                         </Text>
                         <View
                             style={[style.pH, { marginTop: style.defaultMmd }]}>
@@ -312,10 +319,12 @@ export default function PostCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Mjeno posta zapodać:
+                                    {getLangs("postcreate_info_title")}
                                 </Text>
                                 <InputField
-                                    placeholder="Mjeno"
+                                    placeholder={getLangs(
+                                        "input_placeholder_contentname"
+                                    )}
                                     keyboardType="default"
                                     value={post.title}
                                     inputAccessoryViewID="post_title_InputAccessoryViewID"
@@ -338,10 +347,12 @@ export default function PostCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Wopisowanje posta zapodać:
+                                    {getLangs("postcreate_info_description")}
                                 </Text>
                                 <TextField
-                                    placeholder="Wopisownje posta dodać..."
+                                    placeholder={getLangs(
+                                        "input_placeholder_description"
+                                    )}
                                     value={post.description}
                                     inputAccessoryViewID="post_description_InputAccessoryViewID"
                                     onChangeText={val => {

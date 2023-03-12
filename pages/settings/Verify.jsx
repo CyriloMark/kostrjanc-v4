@@ -5,6 +5,7 @@ import * as style from "../../styles";
 
 import { verifyCriterias } from "../../constants/settings";
 import { openLink } from "../../constants";
+import { getLangs } from "../../constants/langs";
 
 import BackHeader from "../../components/BackHeader";
 import OptionButton from "../../components/OptionButton";
@@ -18,7 +19,7 @@ export default function Verify({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={"Werifikacija"}
+                    title={getLangs("settings_verify_title")}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
@@ -47,7 +48,7 @@ export default function Verify({ navigation }) {
                 {/* Intro */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        Što je werifikacija?
+                        {getLangs("settings_verify_intro_title")}
                     </Text>
 
                     <Text
@@ -56,18 +57,14 @@ export default function Verify({ navigation }) {
                             style.tWhite,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Jako werifikowana wosoba dóstanješ móžnosć, na kostrjanc
-                        wosebite nadawki spjelnić. Tohorunja maš móžnosć
-                        kostrjanc sobu postajić a maš wosebite prawa, za
-                        agěrowanje w našej app. Werifikowani wužiwarjo namakaja
-                        w app wosebity symbol na jich profilu.
+                        {getLangs("settings_verify_intro_sub")}
                     </Text>
                 </View>
 
                 {/* Criterias */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        Kriterije za werifikaciju:
+                        {getLangs("settings_verify_criterias_title")}
                     </Text>
 
                     <Text
@@ -76,8 +73,7 @@ export default function Verify({ navigation }) {
                             style.tWhite,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Zo móžeš twój konto werifikować, dyrbiš slědowace
-                        kriterije spjelnić:
+                        {getLangs("settings_verify_criterias_sub")}
                     </Text>
 
                     {verifyCriterias.map((crit, key) => (
@@ -98,7 +94,7 @@ export default function Verify({ navigation }) {
                                     style.tWhite,
                                     { marginLeft: style.defaultMmd },
                                 ]}>
-                                {crit}
+                                {getLangs(crit)}
                             </Text>
                         </View>
                     ))}
@@ -107,7 +103,7 @@ export default function Verify({ navigation }) {
                 {/* Send Msg */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        Chceš so werifikować dać?
+                        {getLangs("settings_verify_application_title")}
                     </Text>
                     <Text
                         style={[
@@ -115,16 +111,13 @@ export default function Verify({ navigation }) {
                             style.tWhite,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Jeli trěbne dypki spjeliš, pisaj nam jednu email na
-                        info@kostrjanc.de, a napisaj do titula "werifikacija".
-                        Prošu podaj twoje mjeno a dźeń naroda. Tamny puć je so
-                        přez našu webstronu přez formular přizjewić.
+                        {getLangs("settings_verify_application_sub")}
                     </Text>
 
                     <OptionButton
                         style={{ marginTop: style.defaultMmd }}
                         red
-                        title={"So přez webstronu požadać"}
+                        title={getLangs("settings_verify_application_button")}
                         icon={<SVG_Web fill={style.colors.red} />}
                         onPress={() =>
                             openLink(

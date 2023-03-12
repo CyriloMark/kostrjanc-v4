@@ -20,6 +20,7 @@ import Event from "../Event";
 import Profile from "../Profile";
 
 import Settings from "../settings/Landing";
+import Settings_General from "../settings/General";
 import Settings_Help from "../settings/Help";
 import Settings_Verify from "../settings/Verify";
 import Settings_DataSecurityImpresum from "../settings/DataSecurityImpresum";
@@ -74,6 +75,10 @@ export default function ViewportManager() {
 
                 <MainNavStack.Screen name="settings" component={Settings} />
 
+                <MainNavStack.Screen
+                    name="settings-general"
+                    component={Settings_General}
+                />
                 <MainNavStack.Screen
                     name="settings-help"
                     component={Settings_Help}

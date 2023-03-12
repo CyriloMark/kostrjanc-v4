@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as style from "../../styles";
 
 import { convertTimestampToString } from "../../constants/time";
+import { getLangs } from "../../constants/langs";
 
 export default function ServerStatus(props) {
     // Get Text Hint - Server State
@@ -22,9 +23,7 @@ export default function ServerStatus(props) {
                             style.TsmRg,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Na kostrjanc so dźěła abo jedyn tamny problem wobsteji,{" "}
-                        zo je so dyrbjał serwer hasnyć. Čas, hdy serwer so zaso{" "}
-                        startuje, njemóže so paušalnje prajić.
+                        {getLangs("serverstatus_offline_title")}
                     </Text>
                 );
                 break;
@@ -33,8 +32,7 @@ export default function ServerStatus(props) {
                 output = (
                     <View style={{ marginTop: style.defaultMmd }}>
                         <Text style={[style.tWhite, style.TsmRg]}>
-                            Na kostrjanc so dźěła abo jedyn tamny problem
-                            wobsteji, zo je so dyrbjał serwer hasnyć.
+                            {getLangs("serverstatus_pause_title")}
                         </Text>
                         <Text
                             style={[
@@ -42,12 +40,13 @@ export default function ServerStatus(props) {
                                 style.Tmd,
                                 style.tWhite,
                             ]}>
-                            Čas so na{" "}
+                            {getLangs("serverstatus_pause_time_0")}{" "}
                             <Text style={[style.tBlue, style.TsmLt]}>
                                 {input[1]}
                             </Text>{" "}
-                            trochuje.{"\n"}
-                            Započatk běše w{" "}
+                            {getLangs("serverstatus_pause_time_1")}
+                            {"\n"}
+                            {getLangs("serverstatus_pause_time_2")}{" "}
                             <Text style={[style.tBlue, style.TsmLt]}>
                                 {convertTimestampToString(parseInt(input[2]))}
                             </Text>
@@ -92,7 +91,7 @@ export default function ServerStatus(props) {
 
                 <View style={[styles.layer, { flex: 2 }]}>
                     <Text style={[style.tWhite, style.TlgRg]}>
-                        kostrjanc je tučasnje offline.
+                        {getLangs("serverstatus_title")}
                     </Text>
                     {getText()}
                     <Text
@@ -101,7 +100,7 @@ export default function ServerStatus(props) {
                             style.tWhite,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        My prosymy wo zhrozumjenje.
+                        {getLangs("serverstatus_sub")}
                     </Text>
                 </View>
 

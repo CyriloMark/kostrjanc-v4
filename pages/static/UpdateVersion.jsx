@@ -4,6 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as style from "../../styles";
 
+import { getLangs } from "../../constants/langs";
+
 export default function UpdateVersion(props) {
     return (
         <SafeAreaView style={[style.container, style.bgBlack]}>
@@ -36,9 +38,9 @@ export default function UpdateVersion(props) {
 
                 <View style={[styles.layer, { flex: 2 }]}>
                     <Text style={[style.tWhite, style.TsmRg, style.tCenter]}>
-                        Aplikacija kostrjanc njeje wjac na najnowšim stawje.
+                        {getLangs("updateversion_title")}
                         {"\n"}
-                        Nowa wersija namaka so w{" "}
+                        {getLangs("updateversion_sub")}{" "}
                         {Platform.OS === "ios" ? "App Store" : "Play Store"}.
                     </Text>
 
@@ -49,10 +51,10 @@ export default function UpdateVersion(props) {
                             style.tWhite,
                             { marginTop: style.defaultMmd },
                         ]}>
-                        Client wersija:{" "}
+                        {getLangs("updateversion_clientversion")}{" "}
                         <Text style={style.TsmLt}>{props.versions.client}</Text>
                         {"\n"}
-                        Aktualna wersija:{" "}
+                        {getLangs("updateversion_currentversion")}{" "}
                         <Text style={style.TsmLt}>{props.versions.server}</Text>
                     </Text>
                 </View>

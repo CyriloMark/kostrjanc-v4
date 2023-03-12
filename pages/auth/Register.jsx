@@ -21,6 +21,7 @@ import { getDatabase, ref, set } from "firebase/database";
 import * as Storage from "firebase/storage";
 
 import { getAuthErrorMsg } from "../../constants/error/auth";
+import { getLangs } from "../../constants/langs";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -64,13 +65,17 @@ export default function Register({ navigation }) {
     const [registering, setRegistering] = useState(false);
 
     const setAlert = error => {
-        Alert.alert("Zmylk w přizjewjenju", error, [
-            {
-                text: "Ok",
-                isPreferred: true,
-                style: "cancel",
-            },
-        ]);
+        Alert.alert(
+            getLangs("auth_register_errorregister"),
+            getAuthErrorMsg(error),
+            [
+                {
+                    text: "Ok",
+                    isPreferred: true,
+                    style: "cancel",
+                },
+            ]
+        );
     };
 
     useEffect(() => {
@@ -140,13 +145,14 @@ export default function Register({ navigation }) {
             registerData.password
         )
             .then(userCredential => {
-                sendEmailVerification(userCredential.user).catch(error =>
+                sendEmailVerification(userCredential.user).catch(error => {
+                    setAlert(error.code);
                     console.log(
                         "error auth/Register.jsx",
                         "register() sendEmailVerification",
                         error.code
-                    )
-                );
+                    );
+                });
 
                 const pbImgRef = Storage.ref(
                     storage,
@@ -196,13 +202,14 @@ export default function Register({ navigation }) {
                         )
                     );
             })
-            .catch(error =>
+            .catch(error => {
+                setAlert(error.code);
                 console.log(
                     "error auth/Register.jsx",
                     "register() createUserWithEmailAndPassword",
                     error.code
-                )
-            );
+                );
+            });
     };
 
     // IMG Load + Compress
@@ -262,7 +269,7 @@ export default function Register({ navigation }) {
                     style={[style.container, style.pH, style.oVisible]}>
                     <View style={styles.titleContainer}>
                         <Text style={[style.Ttitle, style.tWhite]}>
-                            Wutwor sej nowy konto:
+                            {getLangs("auth_register_title")}
                         </Text>
                         <Text
                             style={[
@@ -270,8 +277,7 @@ export default function Register({ navigation }) {
                                 style.Tmd,
                                 { marginTop: style.defaultMmd },
                             ]}>
-                            Předźał kroki, zo bych swójski konto wutrowił a
-                            tutón hnydom personalizował.
+                            {getLangs("auth_register_0_intro")}
                         </Text>
                     </View>
 
@@ -281,7 +287,7 @@ export default function Register({ navigation }) {
 
                     <View style={styles.sectionContainer}>
                         <Text style={[style.Ttitle, style.tWhite]}>
-                            Witaj pola{" "}
+                            {getLangs("auth_register_0_welcome")}{" "}
                             <Text style={style.tBlue}>kostrjanc</Text>!
                         </Text>
 
@@ -291,9 +297,7 @@ export default function Register({ navigation }) {
                                 style.Tmd,
                                 { marginTop: style.defaultMmd },
                             ]}>
-                            Wupytaj sej wužiwarske mjeno, tute njedyrbi twoje
-                            prawe mjeno być. Z tutym dyrbja přećeljo tebje zaso
-                            namakać móc.
+                            {getLangs("auth_register_0_usernametext")}
                         </Text>
 
                         {/* Name input */}
@@ -301,7 +305,9 @@ export default function Register({ navigation }) {
                             style={[style.pH, { marginTop: style.defaultMmd }]}>
                             <InputField
                                 editable={currentRegisterState === 0}
-                                placeholder="Wužiwarske mjeno"
+                                placeholder={getLangs(
+                                    "input_placeholder_username"
+                                )}
                                 keyboardType="default"
                                 value={registerData.name}
                                 inputAccessoryViewID="register_name_InputAccessoryViewID"
@@ -322,7 +328,7 @@ export default function Register({ navigation }) {
                     {currentRegisterState >= 1 ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.Ttitle, style.tWhite]}>
-                                Hallo{" "}
+                                {getLangs("auth_register_1_intro")}{" "}
                                 <Text style={style.tBlue}>
                                     {registerData.name}
                                 </Text>
@@ -334,8 +340,7 @@ export default function Register({ navigation }) {
                                     style.tWhite,
                                     { marginTop: style.defaultMmd },
                                 ]}>
-                                Wuzwol sej profilny wobraz. Tutón a twoje mjeno
-                                stej markantej symbolaj twojeho profila.
+                                {getLangs("auth_register_1_pbtext")}
                             </Text>
                             <Pressable
                                 onPress={() => {
@@ -377,7 +382,9 @@ export default function Register({ navigation }) {
                                                     style.tBlue,
                                                     styles.hintText,
                                                 ]}>
-                                                Tłoć, zo wobrazy přepytać móžeš
+                                                {getLangs(
+                                                    "auth_register_1_pbhint"
+                                                )}
                                             </Text>
                                         </View>
                                     )}
@@ -389,9 +396,7 @@ export default function Register({ navigation }) {
                     {currentRegisterState >= 2 ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                Nětko dodaj hišće por informacijow wo tebi, zo
-                                tež wužiwarjo, kiž će hišće njeznaja, kusk
-                                zarjadować móža.
+                                {getLangs("auth_register_2_descriptiontext")}
                             </Text>
 
                             <View
@@ -401,7 +406,9 @@ export default function Register({ navigation }) {
                                 ]}>
                                 <TextField
                                     editable={currentRegisterState === 2}
-                                    placeholder="Dodaj informacije..."
+                                    placeholder={getLangs(
+                                        "input_placeholder_description"
+                                    )}
                                     value={registerData.description}
                                     inputAccessoryViewID="register_description_InputAccessoryViewID"
                                     onChangeText={val => {
@@ -418,8 +425,7 @@ export default function Register({ navigation }) {
                     {currentRegisterState >= 3 ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                Zo móžeš so z kontom wšudźe přizjewić dodaj
-                                přizjewjenske informacije.
+                                {getLangs("auth_register_3_accounttext")}
                             </Text>
                             <View
                                 style={[
@@ -434,11 +440,13 @@ export default function Register({ navigation }) {
                                             style.tWhite,
                                             { marginBottom: style.defaultMsm },
                                         ]}>
-                                        Email zapodać:
+                                        {getLangs("input_entertitle_email")}
                                     </Text>
                                     <InputField
                                         editable={currentRegisterState === 3}
-                                        placeholder="Email"
+                                        placeholder={getLangs(
+                                            "input_placeholder_email"
+                                        )}
                                         keyboardType="email-address"
                                         autoComplete="email"
                                         textContentType="email"
@@ -465,11 +473,13 @@ export default function Register({ navigation }) {
                                             style.tWhite,
                                             { marginBottom: style.defaultMsm },
                                         ]}>
-                                        Hesło zapodać:
+                                        {getLangs("input_entertitle_password")}
                                     </Text>
                                     <InputField
                                         editable={currentRegisterState === 3}
-                                        placeholder="Hesło"
+                                        placeholder={getLangs(
+                                            "input_placeholder_password"
+                                        )}
                                         keyboardType="default"
                                         textContentType="newPassword"
                                         secureTextEntry
@@ -497,11 +507,15 @@ export default function Register({ navigation }) {
                                             style.tWhite,
                                             { marginBottom: style.defaultMsm },
                                         ]}>
-                                        Hesło wospjetować:
+                                        {getLangs(
+                                            "input_entertitle_passwordconfirm"
+                                        )}
                                     </Text>
                                     <InputField
                                         editable={currentRegisterState === 3}
-                                        placeholder="Hesło"
+                                        placeholder={getLangs(
+                                            "input_placeholder_password"
+                                        )}
                                         keyboardType="default"
                                         textContentType="newPassword"
                                         secureTextEntry
@@ -525,9 +539,7 @@ export default function Register({ navigation }) {
                     {currentRegisterState >= 4 ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                Na kóncu prosymy tebje naše powšitkowne
-                                wobchodne wuměnjenja a regule za wužiwanje wot
-                                kostrjanc sej přečitać a akceptować.
+                                {getLangs("auth_register_4_agbtext")}
                             </Text>
 
                             <View
@@ -636,9 +648,7 @@ export default function Register({ navigation }) {
                                             style.Tmd,
                                             style.pH,
                                         ]}>
-                                        Ja akceptuju powšitkowne wobchodne
-                                        wuměnjenja a regule za wužiwanje wot
-                                        kostrjanc.
+                                        {getLangs("auth_register_4_agbcheck")}
                                     </Text>
                                 </View>
 
@@ -646,11 +656,13 @@ export default function Register({ navigation }) {
                                     <View style={styles.sectionContainer}>
                                         <Text
                                             style={[style.TlgRg, style.tWhite]}>
-                                            Sy přezjedny ze swojimi
-                                            zastajenjemi?
+                                            {getLangs(
+                                                "auth_register_4_checksettingstext"
+                                            )}
                                             {"\n"}
-                                            Potom wozwjeł tute a přistup do
-                                            kostrjanc!
+                                            {getLangs(
+                                                "auth_register_4_publishtext"
+                                            )}
                                         </Text>
                                     </View>
                                 ) : null}

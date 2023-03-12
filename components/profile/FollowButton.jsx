@@ -5,6 +5,8 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import * as s from "../../styles";
 
+import { getLangs } from "../../constants/langs";
+
 import SVG_Add from "../../assets/svg/Add";
 import { Rect, Svg } from "react-native-svg";
 
@@ -33,7 +35,7 @@ export default function FollowButton({ style, onPress, checked }) {
                                 s.Tmd,
                                 { marginLeft: s.defaultMmd },
                             ]}>
-                            Wotstronić
+                            {getLangs("followbtn_unfollow")}
                         </Text>
                     </LinearGradient>
                 </Pressable>
@@ -61,7 +63,7 @@ export default function FollowButton({ style, onPress, checked }) {
                                 s.Tmd,
                                 { marginLeft: s.defaultMmd },
                             ]}>
-                            Sćěhować
+                            {getLangs("followbtn_follow")}
                         </Text>
                     </LinearGradient>
                 </Pressable>

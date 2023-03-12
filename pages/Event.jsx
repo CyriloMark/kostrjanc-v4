@@ -47,6 +47,7 @@ import {
 import { openLink } from "../constants";
 import { getData } from "../constants/storage";
 import { share } from "../constants/share";
+import { getLangs } from "../constants/langs";
 
 import MapView, { Marker } from "react-native-maps";
 
@@ -366,7 +367,7 @@ export default function Event({ navigation, route }) {
                     {/* User Container */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Přez awtora:
+                            {getLangs("content_aboutcreator")}
                         </Text>
 
                         <Pressable
@@ -403,7 +404,7 @@ export default function Event({ navigation, route }) {
 
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Přez ewent:
+                            {getLangs("event_about_title")}
                         </Text>
 
                         {/* Live */}
@@ -437,12 +438,12 @@ export default function Event({ navigation, route }) {
                                             styles.rowContainer,
                                         ]}>
                                         <Text style={[style.Tmd, style.tWhite]}>
-                                            Družina:{" "}
-                                            {
+                                            {getLangs("event_about_type")}{" "}
+                                            {getLangs(
                                                 Event_Types[
                                                     event.eventOptions.type
                                                 ]
-                                            }
+                                            )}
                                         </Text>
                                     </View>
                                 ) : null}
@@ -456,7 +457,7 @@ export default function Event({ navigation, route }) {
                                             styles.rowContainer,
                                         ]}>
                                         <Text style={[style.Tmd, style.tWhite]}>
-                                            Zastup:{" "}
+                                            {getLangs("event_about_entranefee")}{" "}
                                             {event.eventOptions.entrance_fee}€
                                         </Text>
                                     </View>
@@ -470,7 +471,7 @@ export default function Event({ navigation, route }) {
                                             openLink(event.eventOptions.website)
                                         }>
                                         <Text style={[style.Tmd, style.tWhite]}>
-                                            Webstrona:{" "}
+                                            {getLangs("event_about_website")}{" "}
                                             {event.eventOptions.website}
                                         </Text>
                                     </Pressable>
@@ -522,7 +523,9 @@ export default function Event({ navigation, route }) {
                                                     style={{
                                                         margin: style.defaultMsm,
                                                     }}
-                                                    title={Event_Tags[tag]}
+                                                    title={getLangs(
+                                                        Event_Tags[tag]
+                                                    )}
                                                 />
                                             )
                                         )}
@@ -535,7 +538,7 @@ export default function Event({ navigation, route }) {
                     {/* Checks */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Štó je pódla:
+                            {getLangs("event_checkstitle")}
                         </Text>
                         <View
                             style={{
@@ -555,7 +558,9 @@ export default function Event({ navigation, route }) {
                                 onPress={() =>
                                     navigation.navigate("userList", {
                                         users: checksUserListData,
-                                        title: "Što je pódla",
+                                        title: getLangs(
+                                            "event_checkspagetitle"
+                                        ),
                                         needData: false,
                                     })
                                 }
@@ -590,7 +595,7 @@ export default function Event({ navigation, route }) {
                     {/* Comments Container */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Komentary:
+                            {getLangs("content_comments_title")}
                         </Text>
                         <View style={{ marginTop: style.defaultMmd }}>
                             <NewCommentButton onPress={openCommentInput} />
@@ -606,7 +611,9 @@ export default function Event({ navigation, route }) {
                             {/* Title */}
                             {commentVisible ? (
                                 <Text style={[style.tWhite, style.TlgBd]}>
-                                    Nowy komentar:
+                                    {getLangs(
+                                        "content_comments_newcommenttitle"
+                                    )}
                                 </Text>
                             ) : null}
                             {/* Input */}
@@ -679,7 +686,7 @@ export default function Event({ navigation, route }) {
                     {/* Interaction Container */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Funkcije za wužiwarja:
+                            {getLangs("interactionbar_title")}
                         </Text>
                         <InteractionBar
                             style={{ marginTop: style.defaultMsm }}

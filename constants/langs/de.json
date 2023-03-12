@@ -93,10 +93,18 @@
         "input_entertitle_password": "Passwort eingeben:",
         "input_entertitle_passwordconfirm": "Passwort wiederholen:",
 
+        "input_placeholder_email": "Email",
+        "input_placeholder_password": "Passwort",
+        "input_placeholder_username": "Benutzername",
+        "input_placeholder_description": "Füge Informationen hinzu...",
+        "input_placeholder_search": "Suche nach etwas...",
+        "input_placeholder_entercomment": "Gib dein Kommentar ein...",
+        "input_placeholder_contentname": "Titel",
+
         "newcomment_type": "Schreib etwas...",
 
         "checkbtn_check": "Ich bin dabei!",
-        "checkbtn_uncheck": "Ich bin nicht mehr dabei.",
+        "checkbtn_uncheck": "Ich bin nicht dabei.",
 
         "followbtn_follow": "Folgen",
         "followbtn_unfollow": "Entfolgen",
@@ -110,10 +118,10 @@
         "share_error_sub": "Das Teilen war nicht erfolgreich. Fehler:",
 
         "help_links_0": "Besuche doch mal kostrjanc.de, unsere Seite im Internet!",
-        "help_links_1": "Hast du Fragen? Dann besuche kostrjanc.de und frage uns!",
+        "help_links_1": "Hast du Fragen?\nDann besuche kostrjanc.de und frage uns!",
         "help_links_2": "Hast du einen Fehler gefunden, dann melde dich bitte bei uns",
-        "help_links_3": "Willst du auf kostrjanc werben? Melde dich unter dem Link!",
-        "help_links_4": "Bist du ein Admin oder ein Moderator? Dann benutze das Dashboard im Netz!",
+        "help_links_3": "Willst du auf kostrjanc werben?\nMelde dich unter dem Link!",
+        "help_links_4": "Bist du ein Admin oder ein Moderator?\nDann benutze das Dashboard im Netz!",
 
         "verify_criterias_0": "Alter von 18 Jahren",
         "verify_criterias_1": "hast eine besondere Beziehung zu kostrjanc oder besitzt einen Sonderstatus in der Gesellschaft",
@@ -145,13 +153,6 @@
 
         "auth_copyid_successful": "Deine Id wurde kopiert!",
 
-        "input_placeholder_email": "Email",
-        "input_placeholder_password": "Passwort",
-        "input_placeholder_username": "Benutzername",
-        "input_placeholder_description": "Füge Informationen hinzu...",
-        "input_placeholder_search": "Suche nach etwas...",
-        "input_placeholder_entercomment": "Gib dein Kommentar ein...",
-
         "auth_landing_welcome_title": "Willkommen bei",
         "auth_landing_sub_0": "Egal, wie lange du nicht mehr da warst,",
         "auth_landing_sub_1": "oder ob das sogar erstmals da ist,",
@@ -175,7 +176,7 @@
         "auth_register_3_accounttext": "Damit du dich mit dem Konto überall anmelden kannst füge deine Anmeldeinformationen hinzu.",
         "auth_register_4_agbtext": "Abschließend bitten wir dich, unsere allgemeinen Geschäftsbedingungen und die Regeln für die Verwendung von kostrjanc durchzulesen und zu akzeptieren.",
         "auth_register_4_agbcheck": "Ich akzeptiere die allgemeinen Geschäftsbedingungen und die Regeln für die Verwendung von kostrjanc.",
-        "auth_register_4_checksettingstext": "Bist du einverstanden mit deinen Einstellungen",
+        "auth_register_4_checksettingstext": "Bist du einverstanden mit deinen Einstellungen?",
         "auth_register_4_publishtext": "Dann veröffentliche diese und trete kostrjanc bei!",
         "auth_register_errorregister": "Fehler beim Registrieren",
 
@@ -221,7 +222,7 @@
 
         "contentpage_search": "Suche nach etwas.",
         "contentpage_contenthint": "Schau mal bei:",
-        "contentpage_searchresulttext": "Suchergebnis",
+        "contentpage_searchresulttext": "Suchergebnis:",
 
         "content_aboutcreator": "Über den Ersteller",
         "content_comments_title": "Kommentare:",
@@ -238,7 +239,7 @@
         "postcreate_posttitle": "Titel",
         "postcreate_imghint": "Drücken, dass man Bilder durchsuchen kann",
         "postcreate_postdescription": "Bildbeschreibung",
-        "postcreate_addinformation": "Informationen bearbeiten",
+        "postcreate_addinformation": "Informationen bearbeiten:",
         "postcreate_info_title": "Titel vom Post eingeben:",
         "postcreate_info_description": "Beschreibung vom Post eingeben:",
         "postcreate_publishsuccessful_title": "Erfolgreich veröffentlichter Post!",
@@ -274,6 +275,76 @@
         "eventcreate_tags_title": "Tags:",
         "eventcreate_publishsuccessful_title": "Erfolgreich veröffentlichtes Event!",
         "eventcreate_publishsuccessful_sub_0": "Event",
-        "eventcreate_publishsuccessful_sub_1": "wurde erfolgreich veröffentlicht."
+        "eventcreate_publishsuccessful_sub_1": "wurde erfolgreich veröffentlicht.",
+
+        "settings_landing_title": "Einstellungen",
+        "settings_landing_bugbutton_title": "Hast du den Fehler gefunden?",
+        "settings_landing_bugbutton_sub": "Melde diesen uns bitte!",
+        "settings_landing_aplication_title": "Applikation:",
+        "settings_landing_aplication_general": "Allgemeine Einstellungen",
+        "settings_landing_aplication_notifications": "Nachrichten von kostrjanc",
+        "settings_landing_kostrjanc_title": "Über kostrjanc:",
+        "settings_landing_kostrjanc_help": "Hilfe",
+        "settings_landing_kostrjanc_verify": "Verifizierung",
+        "settings_landing_kostrjanc_datasecurityimpresum": "Datenschutz und Impressum",
+        "settings_landing_kostrjanc_admin": "Funktionen für Admin und Moderator",
+        "settings_landing_account_title": "Konto:",
+        "settings_landing_account_logout": "Ausloggen",
+        "settings_landing_account_delete": "Konto löschen",
+
+        "settings_help_title": "Hilfe",
+        "settings_help_sub_0": "Für Hilfe bieten wir auf unserer Webseite verschiedene Sektionen an.",
+        "settings_help_sub_1": "Wenn die Frage nicht beantwortet wird, bieten wir uns an, Email mit der Bewerbung zu schreiben.",
+
+        "settings_verify_title": "Verifizierung",
+        "settings_verify_intro_title": "Was ist Verifizierung?",
+        "settings_verify_intro_sub": "Als verifizierte Person erhält man die Möglichkeit, pro Kornblumen besondere Aufgaben zu erfüllen. Ebenfalls hast du die Möglichkeit, in kostrjanc mitzubestimmen und hast besondere Rechte, für das Agieren in unserer App. Verifizierte Nutzer finden in der App ein besonderes Symbol auf ihrem Profil.",
+        "settings_verify_criterias_title": "Kriterien für die Verifizierung:",
+        "settings_verify_criterias_sub": "Damit du dein Konto verifizieren kannst, musst du folgende Kriterien erfüllen:",
+        "settings_verify_application_title": "Willst du dich verifizieren lassen?",
+        "settings_verify_application_sub": "Falls du die nötigen Punkte verlässt, schreib uns eine Email an info@kostrjanc.de, und schreib in den Titel 'Verifikation'. Bitte gib deinen Namen und den Tag der Geburt an. Ein anderer Weg ist sich über unsere Webseite über das Formular anzumelden.",
+        "settings_verify_application_button": "Sich über die Website bewerben",
+
+        "settings_general_title": "Allgemein",
+        "settings_general_changelang_title": "Sprache ändern:",
+        "settings_general_changelang_alert_title": "Sprache ändern?",
+        "settings_general_changelang_alert_sub": "Bist du dir sicher, dass du die Sprache wechseln möchtest? Nach der Änderung muss die Appation neu gestartet werden.",
+
+        "settings_admin_title": "Admin und Moderator",
+        "settings_admin_h2": "Bereich für Admins und Moderatoren:",
+        "settings_admin_offline_title": "Server - Offline:",
+        "settings_admin_offline_sub": "Dieser Bereich schaltet den Server auf unbekannte Zeit aus. Nutzer können derzeit nicht auf kostrjanc zugreifen. Server muss manuell auf online gesetzen werden.",
+        "settings_admin_offline_button": "Server auf offline setzen",
+        "settings_admin_pause_title": "Server - Pause:",
+        "settings_admin_pause_sub": "Dieser Bereich schaltet den Server auf die angegebene Zeit aus. Nutzer können derzeit nicht auf kostrjanc zugreifen. Server mus trotzdem manuell wieder auf online gesetzen werden. Die Zeit gibt an, wann es wird vorgesehen ist, dass der Server wieder auf online gesetzt wird.",
+        "settings_admin_pause_button": "Server auf pause setzen",
+
+        "settings_profile_title": "Konto",
+        "settings_profile_editbutton": "Bearbeiten",
+        "settings_profile_statinfo_title": "Statistiken und Informationen:",
+        "settings_profile_statinfo_username": "Benutzername:",
+        "settings_profile_statinfo_uid": "Nutzer-Id:",
+        "settings_profile_statinfo_description": "Kontobeschreibungen:",
+        "settings_profile_statinfo_pburi": "Link zum Profilbild:",
+        "settings_profile_statinfo_amtfollower": "Anzahl der Follower:",
+        "settings_profile_statinfo_amtfollowing": "Anzahl der folgenden Profile:",
+        "settings_profile_statinfo_amtposts": "Anzahl der veröffentlichten Posts:",
+        "settings_profile_statinfo_amtevents": "Anzahl der veröffentlichten Events:",
+        "settings_profile_statinfo_posts": "Liste der veröffentlichten Posts mit Id:",
+        "settings_profile_statinfo_events": "Liste der veröffentlichten Events mit Id:",
+        "settings_profile_statinfo_banned": "Gebannt:",
+        "settings_profile_statinfo_mod": "Moderator:",
+        "settings_profile_statinfo_businessprogram": "Business Programm Partner:",
+        "settings_profile_statinfo_admin": "Admin:",
+        "settings_profile_interaction_title": "Interaktionen:",
+
+        "settings_datasecurityimpresum_title": "Datenschutz / Impressum",
+        "settings_datasecurityimpresum_impresum_title": "Impressum:",
+        "settings_datasecurityimpresum_p5tgm": "Angaben nach § 5 TMG",
+        "settings_datasecurityimpresum_ideas": "Idee und Umsetzung:",
+        "settings_datasecurityimpresum_contact": "Kontakt:",
+        "settings_datasecurityimpresum_content_title": "Haftungen für den Inhalt:",
+        "settings_datasecurityimpresum_content_sub": "Verantwortlicher für Inhalt nach § 6 MDStV: ___",
+        "settings_datasecurityimpresum_datasecurity_title": "Datenschutz:"
     }
 }

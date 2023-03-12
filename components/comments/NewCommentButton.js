@@ -5,6 +5,8 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import * as s from "../../styles";
 
+import { getLangs } from "../../constants/langs";
+
 import SVG_Add from "../../assets/svg/Add";
 
 export default function NewCommentButton({ style, onPress }) {
@@ -22,7 +24,7 @@ export default function NewCommentButton({ style, onPress }) {
                     />
                     <Text
                         style={[s.tWhite, s.Tmd, { marginLeft: s.defaultMmd }]}>
-                        Napisaj něšto...
+                        {getLangs("newcomment_type")}
                     </Text>
                 </LinearGradient>
             </Pressable>

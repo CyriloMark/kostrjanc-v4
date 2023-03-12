@@ -1,24 +1,21 @@
 import { Alert } from "react-native";
 import { openURL } from "expo-linking";
+import { getLangs } from "./langs";
 
 export function openLink(link) {
-    Alert.alert(
-        "Link wočinić?",
-        "Chceš so na eksternu stronu dale wodźić dać?",
-        [
-            {
-                text: "Ně",
-                style: "destructive",
+    Alert.alert(getLangs("link_title"), getLangs("link_sec"), [
+        {
+            text: getLangs("no"),
+            style: "destructive",
+        },
+        {
+            text: getLangs("yes"),
+            style: "default",
+            onPress: () => {
+                openURL(link);
             },
-            {
-                text: "Haj",
-                style: "default",
-                onPress: () => {
-                    openURL(link);
-                },
-            },
-        ]
-    );
+        },
+    ]);
 }
 
 export function arraySplitter(data, coloums) {

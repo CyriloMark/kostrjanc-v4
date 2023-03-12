@@ -5,6 +5,8 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import * as s from "../../styles";
 
+import { getLangs } from "../../constants/langs";
+
 export default function CheckButton({ style, onPress, checked }) {
     if (checked) {
         //Checked
@@ -19,7 +21,7 @@ export default function CheckButton({ style, onPress, checked }) {
                         end={{ x: 0.5, y: 2.5 }}
                         locations={[0, 0.75]}>
                         <Text style={[s.tBlack, s.Tmd]}>
-                            Njejsym wjac pódla.
+                            {getLangs("checkbtn_uncheck")}
                         </Text>
                     </LinearGradient>
                 </Pressable>
@@ -37,7 +39,9 @@ export default function CheckButton({ style, onPress, checked }) {
                         colors={[s.colors.blue, s.colors.sec]}
                         end={{ x: -0.5, y: 0.5 }}
                         locations={[0, 0.75]}>
-                        <Text style={[s.tWhite, s.Tmd]}>Ja sym pódla!</Text>
+                        <Text style={[s.tWhite, s.Tmd]}>
+                            {getLangs("checkbtn_check")}
+                        </Text>
                     </LinearGradient>
                 </Pressable>
             </View>

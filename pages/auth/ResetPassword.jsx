@@ -15,6 +15,7 @@ import {
 import * as style from "../../styles";
 
 import { getAuthErrorMsg } from "../../constants/error/auth";
+import { getLangs } from "../../constants/langs";
 
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
@@ -33,18 +34,22 @@ export default function ResetPassword({ navigation }) {
     const [dataFull, setDataFull] = useState(false);
 
     const setAlert = error => {
-        Alert.alert("Zmylk we wróčosadźenju", getAuthErrorMsg(error), [
-            {
-                text: "Ok",
-                isPreferred: true,
-                style: "cancel",
-            },
-        ]);
+        Alert.alert(
+            getLangs("auth_reset_error_reset"),
+            getAuthErrorMsg(error),
+            [
+                {
+                    text: "Ok",
+                    isPreferred: true,
+                    style: "cancel",
+                },
+            ]
+        );
     };
 
     const reset = () => {
         if (reseted) {
-            setAlert("Sy hižo hesło wróčo sadźił.");
+            setAlert(getLangs("auth_reset_error_alreadysend"));
             return;
         }
         reseted = true;
@@ -52,8 +57,8 @@ export default function ResetPassword({ navigation }) {
         sendPasswordResetEmail(auth, resetEmail)
             .then(() => {
                 Alert.alert(
-                    "Email je so wotpósłała",
-                    "Email za wróčosadźenje hesła je so na twoju mailku pósłała.",
+                    getLangs("auth_reset_confirm_title"),
+                    getLangs("auth_reset_confirm_sub"),
                     [
                         {
                             text: "Ok",
@@ -99,7 +104,7 @@ export default function ResetPassword({ navigation }) {
                         style={[style.container, style.pH, style.oVisible]}>
                         <View style={styles.titleContainer}>
                             <Text style={[style.Ttitle, style.tWhite]}>
-                                Hesło wróčo sadźić:
+                                {getLangs("auth_reset_title")}
                             </Text>
                         </View>
 
@@ -112,10 +117,12 @@ export default function ResetPassword({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Email zapodać:
+                                    {getLangs("input_entertitle_email")}
                                 </Text>
                                 <InputField
-                                    placeholder="Email"
+                                    placeholder={getLangs(
+                                        "input_placeholder_email"
+                                    )}
                                     keyboardType="email-address"
                                     autoComplete="email"
                                     inputAccessoryViewID="loginInputAccessoryViewID"

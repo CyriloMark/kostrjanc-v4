@@ -24,6 +24,7 @@ import {
 import { wait } from "../constants/wait";
 import { getData } from "../constants/storage";
 import { share } from "../constants/share";
+import { getLangs } from "../constants/langs";
 
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
@@ -247,7 +248,7 @@ export default function Post({ navigation, route }) {
                     {/* User Container */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Přez awtora:
+                            {getLangs("content_aboutcreator")}
                         </Text>
 
                         <Pressable
@@ -283,7 +284,7 @@ export default function Post({ navigation, route }) {
                     {/* Comments Container */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Komentary:
+                            {getLangs("content_comments_title")}
                         </Text>
                         <View style={{ marginTop: style.defaultMmd }}>
                             <NewCommentButton onPress={openCommentInput} />
@@ -299,7 +300,9 @@ export default function Post({ navigation, route }) {
                             {/* Title */}
                             {commentVisible ? (
                                 <Text style={[style.tWhite, style.TlgBd]}>
-                                    Nowy komentar:
+                                    {getLangs(
+                                        "content_comments_newcommenttitle"
+                                    )}
                                 </Text>
                             ) : null}
                             {/* Input */}
@@ -376,7 +379,7 @@ export default function Post({ navigation, route }) {
                     {/* Interaction Container */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Funkcije za wužiwarja:
+                            {getLangs("interactionbar_title")}
                         </Text>
                         <InteractionBar
                             style={{ marginTop: style.defaultMsm }}

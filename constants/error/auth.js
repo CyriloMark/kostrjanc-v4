@@ -1,41 +1,43 @@
+import { getLangs } from "../langs";
+
 export const getAuthErrorMsg = error => {
     let msg = "";
     switch (error) {
         case "auth/already-initialized":
-            msg = "Sy hižo přizjewjeny! Startuj aplikaciju znowa!";
+            msg = getLangs("auth_errormsg_0");
             break;
         case "auth/credential-already-in-use":
-            msg = "Twoje daty so hižo za druhi konto wužija!";
+            msg = getLangs("auth_errormsg_1");
             break;
         case "auth/email-already-in-use":
-            msg = "Twoja email so hižo za druhi konto wužija!";
+            msg = getLangs("auth_errormsg_2");
             break;
         case "auth/internal-error":
-            msg = "Zmylk wot serwera!";
+            msg = getLangs("auth_errormsg_3");
             break;
         case "auth/invalid-user-token":
-            msg = "Wužiwarja njedawa!";
+            msg = getLangs("auth_errormsg_4");
             break;
         case "auth/invalid-email":
-            msg = "Zapodata email njeeksistuje!";
+            msg = getLangs("auth_errormsg_5");
             break;
         case "auth/wrong-password":
-            msg = "Twoje zapodate daty su wopak!";
+            msg = getLangs("auth_errormsg_6");
             break;
         case "auth/unverified-email":
-            msg = "Twoja email njeje hišće werifikowana!";
+            msg = getLangs("auth_errormsg_7");
             break;
         case "auth/user-not-found":
-            msg = "Zapodateho wužiwarja njedawa!";
+            msg = getLangs("auth_errormsg_8");
             break;
         case "auth/user-disabled":
-            msg = "Zapodaty wužiwar nima přistup na kostrjanc!";
+            msg = getLangs("auth_errormsg_9");
             break;
         case "auth/already-initialized":
-            msg = "Aplikacija je hižo aktiwna. Startuj aplikaciju znowa!";
+            msg = getLangs("auth_errormsg_10");
             break;
         case "auth/missing-email":
-            msg = "Zapodaj jednu email!";
+            msg = getLangs("auth_errormsg_11");
             break;
         default:
             msg = error;

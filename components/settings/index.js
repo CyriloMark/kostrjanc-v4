@@ -6,20 +6,21 @@ import * as Storage from "firebase/storage";
 
 import { getAuthErrorMsg } from "../../constants/error/auth";
 import { removeData } from "../../constants/storage";
+import { getLangs } from "../../constants/langs";
 
 import { setStringAsync } from "expo-clipboard";
 
 export function logout() {
     Alert.alert(
-        "Wotzjewić?",
-        "Chceš ty so woprawdźe z twojeho konta wotzjewić?",
+        getLangs("auth_logout_0_title"),
+        getLangs("auth_logout_0_sub"),
         [
             {
-                text: "Ně",
+                text: getLangs("no"),
                 style: "destructive",
             },
             {
-                text: "Haj",
+                text: getLangs("yes"),
                 style: "default",
                 onPress: () => {
                     signOut(getAuth()).catch(error => {
@@ -36,178 +37,171 @@ export function logout() {
 
 export function deleteAccount(uid, userData) {
     Alert.alert(
-        "Konto wotstronić?",
-        "Chceš ty woprawdźe twój konto wotstronić?",
+        getLangs("auth_delete_0_title"),
+        getLangs("auth_delete_0_sub"),
         [
             {
-                text: "Ně",
+                text: getLangs("no"),
                 style: "destructive",
             },
             {
-                text: "Haj",
+                text: getLangs("yes"),
                 style: "default",
                 onPress: () => {
-                    Alert.alert(
-                        "Sy sej woprawdźe wěsty, twój konto je za přeco fuk!",
-                        "",
-                        [
-                            {
-                                text: "Ně",
-                                style: "destructive",
-                            },
-                            {
-                                text: "Haj",
-                                style: "default",
-                                onPress: () => {
-                                    const db = getDatabase();
-                                    const storage = Storage.getStorage();
+                    Alert.alert(getLangs("auth_delete_1_title"), "", [
+                        {
+                            text: getLangs("no"),
+                            style: "destructive",
+                        },
+                        {
+                            text: getLangs("yes"),
+                            style: "default",
+                            onPress: () => {
+                                const db = getDatabase();
+                                const storage = Storage.getStorage();
 
-                                    //#region Remove Follower/-ing
-                                    if (userData.follower) {
-                                        userData.follower.forEach(user =>
-                                            get(
-                                                child(
-                                                    ref(db),
-                                                    `users/${user}/following`
-                                                )
+                                //#region Remove Follower/-ing
+                                if (userData.follower) {
+                                    userData.follower.forEach(user =>
+                                        get(
+                                            child(
+                                                ref(db),
+                                                `users/${user}/following`
                                             )
-                                                .then(followingSnap => {
-                                                    let newList =
-                                                        followingSnap.val();
-                                                    newList.splice(
-                                                        a.indexOf(uid),
-                                                        1
-                                                    );
-                                                    set(
-                                                        ref(
-                                                            db,
-                                                            `users/${user}/following`
-                                                        ),
-                                                        newList
-                                                    ).catch(error =>
-                                                        console.log(
-                                                            "error comps/settings/index.js",
-                                                            "deleteAccount remove follower users",
-                                                            error.code
-                                                        )
-                                                    );
-                                                })
-                                                .catch(error =>
+                                        )
+                                            .then(followingSnap => {
+                                                let newList =
+                                                    followingSnap.val();
+                                                newList.splice(
+                                                    a.indexOf(uid),
+                                                    1
+                                                );
+                                                set(
+                                                    ref(
+                                                        db,
+                                                        `users/${user}/following`
+                                                    ),
+                                                    newList
+                                                ).catch(error =>
                                                     console.log(
                                                         "error comps/settings/index.js",
-                                                        "deleteAccount get follower users",
+                                                        "deleteAccount remove follower users",
                                                         error.code
                                                     )
-                                                )
-                                        );
-                                    }
-                                    if (userData.following) {
-                                        userData.following.forEach(user =>
-                                            get(
-                                                child(
-                                                    ref(db),
-                                                    `users/${user}/follower`
-                                                )
-                                            )
-                                                .then(followerSnap => {
-                                                    let newList =
-                                                        followerSnap.val();
-                                                    newList.splice(
-                                                        a.indexOf(uid),
-                                                        1
-                                                    );
-                                                    set(
-                                                        ref(
-                                                            db,
-                                                            `users/${user}/follower`
-                                                        ),
-                                                        newList
-                                                    ).catch(error =>
-                                                        console.log(
-                                                            "error comps/settings/index.js",
-                                                            "deleteAccount remove Following users",
-                                                            error.code
-                                                        )
-                                                    );
-                                                })
-                                                .catch(error =>
-                                                    console.log(
-                                                        "error comps/settings/index.js",
-                                                        "deleteAccount get following users",
-                                                        error.code
-                                                    )
-                                                )
-                                        );
-                                    }
-                                    //#endregion
-
-                                    //#region Remove Posts & Events
-                                    if (userData.posts) {
-                                        userData.posts.forEach(post => {
-                                            set(
-                                                ref(db, `posts/${post}`),
-                                                null
-                                            ).catch(error =>
+                                                );
+                                            })
+                                            .catch(error =>
                                                 console.log(
                                                     "error comps/settings/index.js",
-                                                    "deleteAccount delete Posts",
-                                                    error.code
-                                                )
-                                            );
-                                            Storage.deleteObject(
-                                                Storage.ref(
-                                                    storage,
-                                                    `posts_pics/${post}`
-                                                )
-                                            );
-                                        });
-                                    }
-                                    if (userData.events) {
-                                        userData.events.forEach(event =>
-                                            set(
-                                                ref(db, `events/${event}`),
-                                                null
-                                            ).catch(error =>
-                                                console.log(
-                                                    "error comps/settings/index.js",
-                                                    "deleteAccount delete Events",
+                                                    "deleteAccount get follower users",
                                                     error.code
                                                 )
                                             )
-                                        );
-                                    }
-                                    //#endregion
-
-                                    Storage.deleteObject(
-                                        Storage.ref(
-                                            storage,
-                                            `profile_pics/${uid}`
-                                        )
-                                    ).catch(error =>
-                                        console.log(
-                                            "error comps/settings/index.js",
-                                            "deleteAccount delete user pb pic",
-                                            error.code
-                                        )
                                     );
+                                }
+                                if (userData.following) {
+                                    userData.following.forEach(user =>
+                                        get(
+                                            child(
+                                                ref(db),
+                                                `users/${user}/follower`
+                                            )
+                                        )
+                                            .then(followerSnap => {
+                                                let newList =
+                                                    followerSnap.val();
+                                                newList.splice(
+                                                    a.indexOf(uid),
+                                                    1
+                                                );
+                                                set(
+                                                    ref(
+                                                        db,
+                                                        `users/${user}/follower`
+                                                    ),
+                                                    newList
+                                                ).catch(error =>
+                                                    console.log(
+                                                        "error comps/settings/index.js",
+                                                        "deleteAccount remove Following users",
+                                                        error.code
+                                                    )
+                                                );
+                                            })
+                                            .catch(error =>
+                                                console.log(
+                                                    "error comps/settings/index.js",
+                                                    "deleteAccount get following users",
+                                                    error.code
+                                                )
+                                            )
+                                    );
+                                }
+                                //#endregion
 
-                                    set(ref(db, `users/${uid}`), null)
-                                        .finally(() => {
-                                            deleteUser(getAuth().currentUser);
-                                            removeData("userId");
-                                            removeData("userData");
-                                        })
-                                        .catch(error =>
+                                //#region Remove Posts & Events
+                                if (userData.posts) {
+                                    userData.posts.forEach(post => {
+                                        set(
+                                            ref(db, `posts/${post}`),
+                                            null
+                                        ).catch(error =>
                                             console.log(
                                                 "error comps/settings/index.js",
-                                                "deleteAccount delete User",
+                                                "deleteAccount delete Posts",
                                                 error.code
                                             )
                                         );
-                                },
+                                        Storage.deleteObject(
+                                            Storage.ref(
+                                                storage,
+                                                `posts_pics/${post}`
+                                            )
+                                        );
+                                    });
+                                }
+                                if (userData.events) {
+                                    userData.events.forEach(event =>
+                                        set(
+                                            ref(db, `events/${event}`),
+                                            null
+                                        ).catch(error =>
+                                            console.log(
+                                                "error comps/settings/index.js",
+                                                "deleteAccount delete Events",
+                                                error.code
+                                            )
+                                        )
+                                    );
+                                }
+                                //#endregion
+
+                                Storage.deleteObject(
+                                    Storage.ref(storage, `profile_pics/${uid}`)
+                                ).catch(error =>
+                                    console.log(
+                                        "error comps/settings/index.js",
+                                        "deleteAccount delete user pb pic",
+                                        error.code
+                                    )
+                                );
+
+                                set(ref(db, `users/${uid}`), null)
+                                    .finally(() => {
+                                        deleteUser(getAuth().currentUser);
+                                        removeData("userId");
+                                        removeData("userData");
+                                    })
+                                    .catch(error =>
+                                        console.log(
+                                            "error comps/settings/index.js",
+                                            "deleteAccount delete User",
+                                            error.code
+                                        )
+                                    );
                             },
-                        ]
-                    );
+                        },
+                    ]);
                 },
             },
         ]
@@ -219,36 +213,38 @@ export function setServer(opt) {
 
     let offline = () => {
         Alert.alert(
-            "Chceš serwer na 'offline' stajić?",
-            "Chceš woprawdźe serwer hasnyć? Po tym nichtó wjac přistup na serwer nima",
+            getLangs("auth_server_offline_0_title"),
+            getLangs("auth_server_offline_0_sub"),
             [
                 {
                     style: "destructive",
-                    text: "Ně",
+                    text: getLangs("no"),
                     isPreferred: true,
                 },
                 {
                     style: "default",
-                    text: "Haj",
+                    text: getLangs("yes"),
                     onPress: () => {
                         Alert.prompt(
-                            "Chceš WOPRAWDŹE serwer na 'offline' sadźić?",
-                            "Zapodaj 'offline'",
+                            getLangs("auth_server_offline_1_title"),
+                            getLangs("auth_server_offline_1_sub"),
                             [
                                 {
                                     style: "destructive",
-                                    text: "Ně",
+                                    text: getLangs("no"),
                                     isPreferred: true,
                                 },
                                 {
                                     style: "default",
-                                    text: "Haj",
+                                    text: getLangs("continue"),
                                     onPress: input => {
                                         if (input === "offline")
                                             set(ref(db, `status`), "offline")
                                                 .finally(() => {
                                                     Alert.alert(
-                                                        "Serwer je so wuspěšnje na 'offline' sadźił.",
+                                                        getLangs(
+                                                            "auth_server_offline_successful"
+                                                        ),
                                                         "",
                                                         [
                                                             {
@@ -278,43 +274,47 @@ export function setServer(opt) {
 
     let pause = () => {
         Alert.alert(
-            "Chceš serwer na 'pause' stajić?",
-            "Chceš woprawdźe serwer hasnyć? Po tym nichtó wjac přistup na serwer nima",
+            getLangs("auth_server_pause_0_title"),
+            getLangs("auth_server_pause_0_sub"),
             [
                 {
                     style: "destructive",
-                    text: "Ně",
+                    text: getLangs("no"),
                     isPreferred: true,
                 },
                 {
                     style: "default",
-                    text: "Haj",
+                    text: getLangs("yes"),
                     onPress: () => {
                         Alert.prompt(
-                            "Kak dółho budźe serwer hasnjeny?",
-                            "Zapodaj čas, kak dółho ma serwer hasnjeny być. Prošu mysli na to, zo ma so serwer manuelnje zaso na online sadźić!",
+                            getLangs("auth_server_pause_1_title"),
+                            getLangs("auth_server_pause_1_sub"),
                             [
                                 {
                                     style: "destructive",
-                                    text: "Ně",
+                                    text: getLangs("no"),
                                     isPreferred: true,
                                 },
                                 {
                                     style: "default",
-                                    text: "Dale",
+                                    text: getLangs("continue"),
                                     onPress: time => {
                                         Alert.prompt(
-                                            `Chceš WOPRAWDŹE serwer na 'pause' za ${time} sadźić?`,
-                                            "Zapodaj 'pause'",
+                                            `${getLangs(
+                                                "auth_server_pause_2_title_0"
+                                            )} ${time} ${getLangs(
+                                                "auth_server_pause_2_title_1"
+                                            )}`,
+                                            getLangs("auth_server_pause_2_sub"),
                                             [
                                                 {
                                                     style: "destructive",
-                                                    text: "Ně",
+                                                    text: getLangs("no"),
                                                     isPreferred: true,
                                                 },
                                                 {
                                                     style: "default",
-                                                    text: "Haj",
+                                                    text: getLangs("continue"),
                                                     onPress: input => {
                                                         if (input === "pause")
                                                             set(
@@ -326,7 +326,9 @@ export function setServer(opt) {
                                                             )
                                                                 .finally(() => {
                                                                     Alert.alert(
-                                                                        "Serwer je so wuspěšnje na 'pause' sadźił.",
+                                                                        getLangs(
+                                                                            "auth_server_pause_successful"
+                                                                        ),
                                                                         "",
                                                                         [
                                                                             {
@@ -372,7 +374,7 @@ export function setServer(opt) {
 
 export async function copyUIDToClipboard(uid) {
     setStringAsync(uid);
-    Alert.alert("Twoja id je so kopěrowała!", "id: " + uid, [
+    Alert.alert(getLangs("auth_copyid_successful"), "id: " + uid, [
         {
             text: "Ok",
             style: "cancel",

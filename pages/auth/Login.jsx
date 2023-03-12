@@ -14,6 +14,7 @@ import {
 import * as style from "../../styles";
 
 import { getAuthErrorMsg } from "../../constants/error/auth";
+import { getLangs } from "../../constants/langs";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
@@ -45,7 +46,7 @@ export default function Login({ navigation }) {
     };
 
     const setAlert = error => {
-        Alert.alert("Zmylk w přizjewjenju", error, [
+        Alert.alert(getLangs("auth_login_error_login"), error, [
             {
                 text: "Ok",
                 isPreferred: true,
@@ -79,7 +80,7 @@ export default function Login({ navigation }) {
                         style={[style.container, style.pH, style.oVisible]}>
                         <View style={styles.titleContainer}>
                             <Text style={[style.Ttitle, style.tWhite]}>
-                                Přizjew so z twojim kontom:
+                                {getLangs("auth_login_title")}
                             </Text>
                         </View>
 
@@ -92,10 +93,12 @@ export default function Login({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Email zapodać:
+                                    {getLangs("input_entertitle_email")}
                                 </Text>
                                 <InputField
-                                    placeholder="Email"
+                                    placeholder={getLangs(
+                                        "input_placeholder_email"
+                                    )}
                                     keyboardType="email-address"
                                     autoComplete="email"
                                     textContentType="email"
@@ -121,10 +124,12 @@ export default function Login({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Hesło zapodać:
+                                    {getLangs("input_entertitle_password")}
                                 </Text>
                                 <InputField
-                                    placeholder="Hesło"
+                                    placeholder={getLangs(
+                                        "input_placeholder_password"
+                                    )}
                                     keyboardType="default"
                                     textContentType="password"
                                     secureTextEntry
@@ -150,7 +155,7 @@ export default function Login({ navigation }) {
                                         style.Tmd,
                                         style.tCenter,
                                     ]}>
-                                    Hesło zabył?
+                                    {getLangs("auth_login_forgetpassword")}
                                 </Text>
                             </Pressable>
                         </View>

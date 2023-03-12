@@ -15,6 +15,7 @@ import * as Account from "../../components/settings";
 import { openLink } from "../../constants";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
+import { getLangs } from "../../constants/langs";
 
 import { child, get, getDatabase, ref } from "firebase/database";
 
@@ -44,7 +45,7 @@ export default function Landing({ navigation }) {
 
     let getUserData = async () => {
         setUserData({
-            uid: await getData("userId").then(uid =>
+            uid: await getData("userId").then(uid => {
                 get(child(ref(getDatabase()), `users/${uid}/isAdmin`))
                     .then(isAdmin => {
                         if (isAdmin) setIsAdmin(true);
@@ -55,8 +56,9 @@ export default function Landing({ navigation }) {
                             "checkIfAdmin get isAdmin",
                             error.code
                         )
-                    )
-            ),
+                    );
+                return uid;
+            }),
             data: await getData("userData"),
         });
     };
@@ -66,7 +68,7 @@ export default function Landing({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={"Zastajenja"}
+                    title={getLangs("settings_landing_title")}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
@@ -90,8 +92,8 @@ export default function Landing({ navigation }) {
                 snapToEnd>
                 <WarnButton
                     style={style.container}
-                    text={"Sy zmylk namakał?"}
-                    sub={"Přizjeł tutón nam prošu!"}
+                    text={getLangs("settings_landing_bugbutton_title")}
+                    sub={getLangs("settings_landing_bugbutton_sub")}
                     onPress={() =>
                         openLink("https://kostrjanc.de/pomoc/formular#bugs")
                     }
@@ -99,39 +101,50 @@ export default function Landing({ navigation }) {
 
                 {/* Client */}
                 <View style={styles.sectionContainer}>
-                    <Text style={[style.tWhite, style.TlgBd]}>Aplikacija:</Text>
+                    <Text style={[style.tWhite, style.TlgBd]}>
+                        {getLangs("settings_landing_aplication_title")}
+                    </Text>
                     <OptionButton
                         style={styles.optionButton}
                         icon={<SVG_Settings fill={style.colors.white} />}
-                        title="Powšitkowne zastajenja"
+                        title={getLangs("settings_landing_aplication_general")}
+                        onPress={() =>
+                            navigation.navigate("settings-general", {
+                                uid: userData.uid,
+                            })
+                        }
                     />
                     <OptionButton
                         style={styles.optionButton}
                         icon={<SVG_Recent fill={style.colors.white} />}
-                        title="Powěsće wot kostrjanc"
+                        title={getLangs(
+                            "settings_landing_aplication_notifications"
+                        )}
                     />
                 </View>
 
                 {/* about kostrjanc */}
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
-                        Přez kostrjanc:
+                        {getLangs("settings_landing_kostrjanc_title")}
                     </Text>
                     <OptionButton
                         style={styles.optionButton}
-                        title="Pomoc"
+                        title={getLangs("settings_landing_kostrjanc_help")}
                         icon={<SVG_Search fill={style.colors.white} />}
                         onPress={() => navigation.navigate("settings-help")}
                     />
                     <OptionButton
                         style={styles.optionButton}
                         icon={<SVG_Moderator fill={style.colors.white} />}
-                        title="Werifikacija"
+                        title={getLangs("settings_landing_kostrjanc_verify")}
                         onPress={() => navigation.navigate("settings-verify")}
                     />
                     <OptionButton
                         style={styles.optionButton}
-                        title="Datowy škit a impresum"
+                        title={getLangs(
+                            "settings_landing_kostrjanc_datasecurityimpresum"
+                        )}
                         icon={<SVG_Ban fill={style.colors.white} />}
                         onPress={() =>
                             navigation.navigate("settings-datasec&impresum")
@@ -141,7 +154,7 @@ export default function Landing({ navigation }) {
                         <OptionButton
                             style={styles.optionButton}
                             icon={<SVG_Admin fill={style.colors.white} />}
-                            title="Funkcije za admina a moderatora"
+                            title={getLangs("settings_landing_kostrjanc_admin")}
                             onPress={() =>
                                 navigation.navigate("settings-admin")
                             }
@@ -151,7 +164,9 @@ export default function Landing({ navigation }) {
 
                 {/* Account */}
                 <View style={styles.sectionContainer}>
-                    <Text style={[style.tWhite, style.TlgBd]}>Konto:</Text>
+                    <Text style={[style.tWhite, style.TlgBd]}>
+                        {getLangs("settings_landing_account_title")}
+                    </Text>
 
                     {/* Account */}
                     <Pressable
@@ -195,14 +210,14 @@ export default function Landing({ navigation }) {
 
                     <OptionButton
                         style={styles.optionButton}
-                        title="So wulogować"
+                        title={getLangs("settings_landing_account_logout")}
                         onPress={Account.logout}
                         icon={<SVG_Profile fill={style.colors.red} />}
                         red
                     />
                     <OptionButton
                         style={styles.optionButton}
-                        title="Konto wotstronić"
+                        title={getLangs("settings_landing_account_delete")}
                         icon={<SVG_Basket fill={style.colors.red} />}
                         onPress={() =>
                             Account.deleteAccount(userData.uid, userData.data)
@@ -215,7 +230,7 @@ export default function Landing({ navigation }) {
                 {/* Footer */}
                 <View style={[styles.sectionContainer, style.allCenter]}>
                     <Text style={[style.TsmLt, style.tWhite, style.tCenter]}>
-                        wersija {require("../../app.json").expo.version}
+                        Version {require("../../app.json").expo.version}
                         {"\n"}
                         Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 All
                         Rights Reserved

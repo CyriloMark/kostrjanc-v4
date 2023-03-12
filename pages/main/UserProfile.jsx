@@ -20,6 +20,7 @@ import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { wait } from "../../constants/wait";
 import { arraySplitter, sortArrayByDate } from "../../constants";
 import { storeData, getData } from "../../constants/storage";
+import { getLangs } from "../../constants/langs";
 
 import BackHeader from "../../components/BackHeader";
 import PostPreview from "../../components/profile/PostPreview";
@@ -235,7 +236,7 @@ export default function UserProfile({ navigation }) {
                             onPress={() =>
                                 navigation.push("userList", {
                                     users: user.follower,
-                                    title: "Sćěhowarjo",
+                                    title: getLangs("profile_follower"),
                                     needData: true,
                                 })
                             }
@@ -252,7 +253,7 @@ export default function UserProfile({ navigation }) {
                                     style.TsmLt,
                                     { marginTop: style.defaultMsm },
                                 ]}>
-                                Sćěhowarjo
+                                {getLangs("profile_follower")}
                             </Text>
                         </Pressable>
 
@@ -261,7 +262,7 @@ export default function UserProfile({ navigation }) {
                             onPress={() =>
                                 navigation.push("userList", {
                                     users: user.following,
-                                    title: "Sćěhuje",
+                                    title: getLangs("profile_following"),
                                     needData: true,
                                 })
                             }
@@ -278,7 +279,7 @@ export default function UserProfile({ navigation }) {
                                     style.TsmLt,
                                     { marginTop: style.defaultMsm },
                                 ]}>
-                                Sćěhuje
+                                {getLangs("profile_following")}
                             </Text>
                         </Pressable>
 
@@ -297,7 +298,7 @@ export default function UserProfile({ navigation }) {
                                     style.TsmLt,
                                     { marginTop: style.defaultMsm },
                                 ]}>
-                                Wozjewjenja
+                                {getLangs("profile_contentlist")}
                             </Text>
                         </View>
                     </View>
@@ -340,7 +341,7 @@ export default function UserProfile({ navigation }) {
 
                 <View style={styles.editButton}>
                     <EditProfileButton
-                        title={"Wobdźěłać"}
+                        title={getLangs("profile_editbuttontext")}
                         checked
                         onPress={() =>
                             navigation.navigate("editProfile", {

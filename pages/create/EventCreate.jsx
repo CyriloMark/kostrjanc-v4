@@ -26,6 +26,7 @@ import {
     convertTimestampToString,
 } from "../../constants/time";
 import { Event_Types, mapTypes, Event_Tags } from "../../constants/event";
+import { getLangs } from "../../constants/langs";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -260,8 +261,14 @@ export default function EventCreate({ navigation }) {
                                         )
                                         .finally(() =>
                                             Alert.alert(
-                                                "Wuspěšnje wozjewjeny ewent",
-                                                `Ewent ${post.title} je so wuspěšnje wozjewił`,
+                                                getLangs(
+                                                    "eventcreate_publishsuccessful_title"
+                                                ),
+                                                `${getLangs(
+                                                    "eventcreate_publishsuccessful_sub_0"
+                                                )} ${post.title} ${getLangs(
+                                                    "eventcreate_publishsuccessful_sub_1"
+                                                )}`,
                                                 [
                                                     {
                                                         text: "Ok",
@@ -302,7 +309,7 @@ export default function EventCreate({ navigation }) {
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
-                        title={"Nowy post wozjewić"}
+                        title={getLangs("eventcreate_headertitle")}
                         onBack={() => navigation.goBack()}
                         showReload={false}
                     />
@@ -329,7 +336,7 @@ export default function EventCreate({ navigation }) {
                         {/* Title */}
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {event.title.length === 0
-                                ? "Mjeno ewenta"
+                                ? getLangs("eventcreate_eventtitle")
                                 : event.title}
                         </Text>
 
@@ -366,7 +373,7 @@ export default function EventCreate({ navigation }) {
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
                                 {event.description.length === 0
-                                    ? "Wopisowanje ewenta"
+                                    ? getLangs("eventcreate_eventdescription")
                                     : event.description}
                             </Text>
                         </View>
@@ -374,7 +381,7 @@ export default function EventCreate({ navigation }) {
 
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Přez ewent:
+                            {getLangs("event_about_title")}
                         </Text>
 
                         {/* Time Start-End */}
@@ -398,8 +405,10 @@ export default function EventCreate({ navigation }) {
                                     styles.rowContainer,
                                 ]}>
                                 <Text style={[style.Tmd, style.tWhite]}>
-                                    Družina:{" "}
-                                    {Event_Types[event.eventOptions.type]}
+                                    {getLangs("event_about_type")}{" "}
+                                    {getLangs(
+                                        Event_Types[event.eventOptions.type]
+                                    )}
                                 </Text>
                             </View>
                         ) : null}
@@ -413,7 +422,8 @@ export default function EventCreate({ navigation }) {
                                     styles.rowContainer,
                                 ]}>
                                 <Text style={[style.Tmd, style.tWhite]}>
-                                    Zastup: {event.eventOptions.entrance_fee}€
+                                    {getLangs("event_about_entranefee")}{" "}
+                                    {event.eventOptions.entrance_fee}€
                                 </Text>
                             </View>
                         ) : null}
@@ -427,7 +437,8 @@ export default function EventCreate({ navigation }) {
                                     openLink(event.eventOptions.website)
                                 }>
                                 <Text style={[style.Tmd, style.tWhite]}>
-                                    Webstrona: {event.eventOptions.website}
+                                    {getLangs("event_about_website")}{" "}
+                                    {event.eventOptions.website}
                                 </Text>
                             </Pressable>
                         ) : null}
@@ -474,7 +485,7 @@ export default function EventCreate({ navigation }) {
                                     <Tag
                                         key={key}
                                         style={{ margin: style.defaultMsm }}
-                                        title={Event_Tags[tag]}
+                                        title={getLangs(Event_Tags[tag])}
                                     />
                                 ))}
                             </View>
@@ -484,7 +495,7 @@ export default function EventCreate({ navigation }) {
                     {/* Info Edit */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Wobdźěłanje informacijow:
+                            {getLangs("eventcreate_addinformation")}
                         </Text>
 
                         <View
@@ -497,10 +508,12 @@ export default function EventCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Mjeno ewenta zapodać:
+                                    {getLangs("eventcreate_info_title")}
                                 </Text>
                                 <InputField
-                                    placeholder="Mjeno"
+                                    placeholder={getLangs(
+                                        "input_placeholder_contentname"
+                                    )}
                                     keyboardType="default"
                                     value={event.title}
                                     inputAccessoryViewID="event_title_InputAccessoryViewID"
@@ -523,10 +536,12 @@ export default function EventCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Wopisowanje ewenta zapodać:
+                                    {getLangs("eventcreate_info_description")}
                                 </Text>
                                 <TextField
-                                    placeholder="Wopisownje ewenta dodać..."
+                                    placeholder={getLangs(
+                                        "input_placeholder_description"
+                                    )}
                                     value={event.description}
                                     inputAccessoryViewID="event_description_InputAccessoryViewID"
                                     onChangeText={val => {
@@ -546,10 +561,12 @@ export default function EventCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Časy ewenta:
+                                    {getLangs("eventcreate_info_times")}
                                 </Text>
                                 <InputField
-                                    placeholder="Spočatk"
+                                    placeholder={getLangs(
+                                        "eventcreate_info_times_start"
+                                    )}
                                     keyboardType="default"
                                     icon={
                                         <SVG_Recent fill={style.colors.sec} />
@@ -565,7 +582,9 @@ export default function EventCreate({ navigation }) {
 
                                 <View style={{ marginTop: style.defaultMsm }}>
                                     <InputField
-                                        placeholder="Kónc"
+                                        placeholder={getLangs(
+                                            "eventcreate_info_times_end"
+                                        )}
                                         keyboardType="default"
                                         icon={
                                             <SVG_Flag fill={style.colors.sec} />
@@ -587,14 +606,13 @@ export default function EventCreate({ navigation }) {
                     {/* Add Data */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Přidatne podaća:
+                            {getLangs("eventcreate_eventdata_title")}
                             <Text style={style.tBlue}>*</Text>
                         </Text>
                         {/* Checkable Items */}
                         <View style={styles.underSectionContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                Wuzwol sej informacije kiž chceš přidatnje
-                                dodać:
+                                {getLangs("eventcreate_eventdata_sub")}
                             </Text>
                             {/* Type */}
                             <View
@@ -616,7 +634,7 @@ export default function EventCreate({ navigation }) {
                                 />
                                 <Text
                                     style={[style.tWhite, style.Tmd, style.pH]}>
-                                    Typ ewenta
+                                    {getLangs("eventcreate_eventdata_type")}
                                 </Text>
                             </View>
                             {/* Entrance fee */}
@@ -640,7 +658,9 @@ export default function EventCreate({ navigation }) {
                                 />
                                 <Text
                                     style={[style.tWhite, style.Tmd, style.pH]}>
-                                    Zastupne košty
+                                    {getLangs(
+                                        "eventcreate_eventdata_entrancefee"
+                                    )}
                                 </Text>
                             </View>
                             {/* Website */}
@@ -663,7 +683,7 @@ export default function EventCreate({ navigation }) {
                                 />
                                 <Text
                                     style={[style.tWhite, style.Tmd, style.pH]}>
-                                    Webstrona k ewenće
+                                    {getLangs("eventcreate_eventdata_website")}
                                 </Text>
                             </View>
                             {/* Type */}
@@ -686,7 +706,7 @@ export default function EventCreate({ navigation }) {
                                 />
                                 <Text
                                     style={[style.tWhite, style.Tmd, style.pH]}>
-                                    Wabjenski wobraz / plakat
+                                    {getLangs("eventcreate_eventdata_adbanner")}
                                 </Text>
                             </View>
                             {/* Tags */}
@@ -709,7 +729,7 @@ export default function EventCreate({ navigation }) {
                                 />
                                 <Text
                                     style={[style.tWhite, style.Tmd, style.pH]}>
-                                    Přidatne Tags
+                                    {getLangs("eventcreate_eventdata_tags")}
                                 </Text>
                             </View>
                         </View>
@@ -719,8 +739,8 @@ export default function EventCreate({ navigation }) {
                                 style.tWhite,
                                 { marginTop: style.defaultMmd },
                             ]}>
-                            <Text style={style.tBlue}>*</Text> Wšitke podaća pod
-                            tutej kategoriji su opcionalne a njedyrbja so podać.
+                            <Text style={style.tBlue}>*</Text>{" "}
+                            {getLangs("eventcreate_eventdata_hint")}
                         </Text>
                     </View>
 
@@ -728,10 +748,10 @@ export default function EventCreate({ navigation }) {
                     {checkedCategories.type ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                Typ ewenta:
+                                {getLangs("eventcreate_type_title")}
                             </Text>
                             <View style={{ marginTop: style.defaultMsm }}>
-                                {arraySplitter(Event_Types, 2).map(
+                                {arraySplitter(Event_Types, 1).map(
                                     (list, listKey) => (
                                         <View
                                             key={listKey}
@@ -741,7 +761,7 @@ export default function EventCreate({ navigation }) {
                                             {list.map((type, key) => (
                                                 <SelectableButton
                                                     key={key}
-                                                    title={type}
+                                                    title={getLangs(type)}
                                                     checked={
                                                         event.eventOptions
                                                             .type !== undefined
@@ -779,7 +799,7 @@ export default function EventCreate({ navigation }) {
                     {checkedCategories.entrance_fee ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                Zastupna płaćizna:
+                                {getLangs("eventcreate_entrancefee_title")}
                             </Text>
 
                             <View
@@ -793,10 +813,12 @@ export default function EventCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Zastupnu płaćiznu zapodać:
+                                    {getLangs("eventcreate_entrancefee_sub")}
                                 </Text>
                                 <InputField
-                                    placeholder="Zastupna płaćizna w Euro"
+                                    placeholder={getLangs(
+                                        "eventcreate_entrancefee_inputplaceholder"
+                                    )}
                                     keyboardType="numeric"
                                     icon={<SVG_Cash fill={style.colors.sec} />}
                                     onChangeText={val => {
@@ -819,7 +841,7 @@ export default function EventCreate({ navigation }) {
                     {checkedCategories.website ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                Webstrona k ewenće:
+                                {getLangs("eventcreate_website_title")}
                             </Text>
 
                             <View
@@ -833,10 +855,12 @@ export default function EventCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    Webstronu zapodać:
+                                    {getLangs("eventcreate_website_sub")}
                                 </Text>
                                 <InputField
-                                    placeholder="Webstrona / URL"
+                                    placeholder={getLangs(
+                                        "eventcreate_website_inputplaceholder"
+                                    )}
                                     keyboardType="url"
                                     icon={<SVG_Web fill={style.colors.sec} />}
                                     onChangeText={val => {
@@ -859,7 +883,7 @@ export default function EventCreate({ navigation }) {
                     {checkedCategories.adBanner ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                Wabjenski plakat / wobraz:
+                                {getLangs("eventcreate_adbanner_title")}
                             </Text>
 
                             {/* Img */}
@@ -912,7 +936,9 @@ export default function EventCreate({ navigation }) {
                                                     style.tBlue,
                                                     styles.hintText,
                                                 ]}>
-                                                Tłoć, zo wobrazy přepytać móžeš
+                                                {getLangs(
+                                                    "eventcreate_adbanner_imghint"
+                                                )}
                                             </Text>
                                         </View>
                                     )}
@@ -925,7 +951,7 @@ export default function EventCreate({ navigation }) {
                     {checkedCategories.tags ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
-                                Tags:
+                                {getLangs("eventcreate_tags_title")}
                             </Text>
 
                             <View style={{ marginTop: style.defaultMmd }}>
@@ -959,7 +985,7 @@ export default function EventCreate({ navigation }) {
                                                               )
                                                             : false
                                                     }
-                                                    title={tag}
+                                                    title={getLangs(tag)}
                                                     style={styles.typeItem}
                                                     onPress={() => {
                                                         let t = [].concat(

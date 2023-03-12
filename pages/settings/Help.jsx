@@ -5,6 +5,7 @@ import * as style from "../../styles";
 
 import { helpLinks } from "../../constants/settings";
 import { openLink } from "../../constants";
+import { getLangs } from "../../constants/langs";
 
 import BackHeader from "../../components/BackHeader";
 import OptionButton from "../../components/OptionButton";
@@ -17,7 +18,7 @@ export default function Help({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={"Pomoc"}
+                    title={getLangs("settings_help_title")}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
@@ -40,7 +41,7 @@ export default function Help({ navigation }) {
                 snapToEnd>
                 <View>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        Za pomoc poskićimy na našej webstronje wšelkace sekcije.
+                        {getLangs("settings_help_sub_0")}
                     </Text>
                     <Text
                         style={[
@@ -48,8 +49,7 @@ export default function Help({ navigation }) {
                             style.tWhite,
                             styles.smallSectionContainer,
                         ]}>
-                        Jeli so prašenje njewotmółwi, poskićimy nam napisać
-                        email z požadanjom.
+                        {getLangs("settings_help_sub_1")}
                     </Text>
                 </View>
 
@@ -70,7 +70,7 @@ export default function Help({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    {link.title}
+                                    {getLangs(link.title)}
                                 </Text>
                             </View>
                             <OptionButton

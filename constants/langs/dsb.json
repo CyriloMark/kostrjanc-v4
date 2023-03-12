@@ -1,6 +1,7 @@
 {
     "app": {
-
-        "sit_in": "Pśi tom su"
+        "yes": "Ja",
+        "no": "Nein",
+        "continue": "Weiter"
     }
 }
