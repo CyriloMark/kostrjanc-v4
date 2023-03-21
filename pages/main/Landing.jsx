@@ -574,7 +574,7 @@ export default function Landing({ navigation }) {
 }
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-    const paddingToBottom = 100;
+    const paddingToBottom = 500;
     return (
         layoutMeasurement.height + contentOffset.y >=
         contentSize.height - paddingToBottom

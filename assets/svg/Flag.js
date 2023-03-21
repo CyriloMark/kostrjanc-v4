@@ -10,7 +10,7 @@ export default function Flag(props) {
             style={props.style}
             viewBox="0 0 500 500"
             stroke={colors.black}
-            strokeWidth={25}>
+            strokeWidth={15}>
             <Rect width={50} height={500} fill={props.fill} />
             <Path d={path} fill={props.fill} />
         </Svg>

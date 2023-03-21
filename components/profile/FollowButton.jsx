@@ -23,12 +23,14 @@ export default function FollowButton({ style, onPress, checked }) {
                         colors={[s.colors.red, s.colors.white]}
                         end={{ x: 0.5, y: 2.5 }}
                         locations={[0, 0.75]}>
-                        <Svg
-                            style={[s.boxShadow, s.oVisible, styles.icon]}
-                            viewBox="0 0 5 5"
-                            fill={s.colors.white}>
-                            <Rect y={2} height={1} width={5} rx={0.25} />
-                        </Svg>
+                        <View>
+                            <Svg
+                                style={[s.boxShadow, s.oVisible, styles.icon]}
+                                viewBox="0 0 5 5"
+                                fill={s.colors.white}>
+                                <Rect y={2} height={1} width={5} rx={0.25} />
+                            </Svg>
+                        </View>
                         <Text
                             style={[
                                 s.tWhite,
@@ -53,10 +55,12 @@ export default function FollowButton({ style, onPress, checked }) {
                         colors={[s.colors.blue, s.colors.sec]}
                         end={{ x: -0.5, y: 0.5 }}
                         locations={[0, 0.75]}>
-                        <SVG_Add
-                            style={[s.boxShadow, s.oVisible, styles.icon]}
-                            fill={s.colors.white}
-                        />
+                        <View>
+                            <SVG_Add
+                                style={[s.boxShadow, s.oVisible, styles.icon]}
+                                fill={s.colors.white}
+                            />
+                        </View>
                         <Text
                             style={[
                                 s.tWhite,

@@ -28,15 +28,11 @@ export default function SelectableButton({ checked, style, onPress, title }) {
         return (
             <View style={style}>
                 <Pressable
-                    style={[styles.container, s.oHidden]}
+                    style={[styles.container, s.oHidden, s.border]}
                     onPress={onPress}>
-                    <LinearGradient
-                        style={[s.Pmd, s.allCenter]}
-                        colors={[s.colors.blue, s.colors.sec]}
-                        end={{ x: -0.5, y: 0.5 }}
-                        locations={[0, 0.75]}>
+                    <View style={[s.Pmd, s.allCenter]}>
                         <Text style={[s.tWhite, s.Tmd]}>{title}</Text>
-                    </LinearGradient>
+                    </View>
                 </Pressable>
             </View>
         );
@@ -45,7 +41,8 @@ export default function SelectableButton({ checked, style, onPress, title }) {
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 25,
+        borderRadius: 10,
         width: "100%",
+        borderColor: s.colors.blue,
     },
 });

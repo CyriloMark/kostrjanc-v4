@@ -103,7 +103,7 @@ export default function Post(props) {
                 </View>
 
                 {/* Text */}
-                <View style={styles.textContainer}>
+                <View style={[styles.textContainer]}>
                     <Text style={[style.Tmd, style.tWhite]}>{post.title}</Text>
                 </View>
             </Pressable>

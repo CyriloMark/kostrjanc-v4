@@ -79,10 +79,11 @@ export default function AddButton({ checked, style, onPress }) {
                             </Pressable>
                         </Animated.View>
 
-                        <View style={[s.Plg, s.allCenter, s.allMax]}>
+                        <View style={[s.allCenter, s.allMax]}>
                             <Animated.View
                                 style={[
                                     s.allMax,
+                                    s.Plg,
                                     s.allCenter,
                                     rotationAnimation,
                                 ]}>

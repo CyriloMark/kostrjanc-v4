@@ -21,7 +21,7 @@ export default function AppHeader(props) {
                     <Rect
                         x={0}
                         y={1}
-                        width={7 * clamp(Math.random(), 0.6, 1)}
+                        width={7}
                         rx={0.5}
                         height={1}
                         fill={style.colors.blue}></Rect>
@@ -29,14 +29,14 @@ export default function AppHeader(props) {
                         x={0}
                         y={3}
                         rx={0.5}
-                        width={7 * clamp(Math.random(), 0.4, 0.8)}
+                        width={4}
                         height={1}
                         fill={style.colors.sec}></Rect>
                     <Rect
                         x={0}
                         y={5}
                         rx={0.5}
-                        width={7 * clamp(Math.random(), 0.6, 1)}
+                        width={6}
                         height={1}
                         fill={style.colors.blue}></Rect>
                 </Svg>

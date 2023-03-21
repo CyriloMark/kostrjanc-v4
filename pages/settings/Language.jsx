@@ -21,7 +21,7 @@ import {
 import { langs } from "../../assets/svg/flags";
 import { save } from "../../constants/storage/language";
 
-export default function General({ navigation }) {
+export default function Language({ navigation }) {
     const [currentLanguage, setCurrentLanguage] = useState(
         getCurrentLanguage()
     );
@@ -29,8 +29,8 @@ export default function General({ navigation }) {
     const onLanguageChange = id => {
         if (currentLanguage === id) return;
         Alert.alert(
-            getLangsSpecific("settings_general_changelang_alert_title", id),
-            getLangsSpecific("settings_general_changelang_alert_sub", id),
+            getLangsSpecific("settings_lang_changelang_alert_title", id),
+            getLangsSpecific("settings_lang_changelang_alert_sub", id),
             [
                 {
                     text: getLangsSpecific("no", id),
@@ -55,7 +55,7 @@ export default function General({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={getLangs("settings_general_title")}
+                    title={getLangs("settings_lang_title")}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
@@ -77,9 +77,18 @@ export default function General({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd>
                 {/* Lang Select */}
-                <View style={[style.container]}>
+                <View>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        {getLangs("settings_general_changelang_title")}
+                        {getLangs("settings_lang_changelang_title")}
+                    </Text>
+
+                    <Text
+                        style={[
+                            style.Tmd,
+                            style.tWhite,
+                            { marginTop: style.defaultMsm },
+                        ]}>
+                        {getLangs("settings_lang_changelang_sub")}
                     </Text>
 
                     <View style={styles.langContainer}>
@@ -89,11 +98,15 @@ export default function General({ navigation }) {
                                 onPress={() => onLanguageChange(lang.id)}
                                 style={[styles.langElementContainer]}>
                                 <View
-                                    style={
-                                        currentLanguage === lang.id
-                                            ? styles.langBorder
-                                            : null
-                                    }>
+                                    style={[
+                                        styles.langBorder,
+                                        {
+                                            borderColor:
+                                                currentLanguage === lang.id
+                                                    ? style.colors.red
+                                                    : style.colors.blue,
+                                        },
+                                    ]}>
                                     <View style={styles.langFlag}>
                                         {lang.flag}
                                     </View>
@@ -122,7 +135,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         marginTop: style.defaultMmd,
-        ...style.container,
     },
     langElementContainer: {
         flexDirection: "column",
@@ -130,7 +142,6 @@ const styles = StyleSheet.create({
         ...style.Psm,
     },
     langBorder: {
-        borderColor: style.colors.blue,
         ...style.border,
         padding: 2,
     },
@@ -139,7 +150,6 @@ const styles = StyleSheet.create({
         aspectRatio: 5 / 3,
     },
     langText: {
-        ...style.container,
         ...style.allCenter,
         marginTop: style.defaultMsm,
     },

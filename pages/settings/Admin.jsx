@@ -55,7 +55,7 @@ export default function Admin({ navigation }) {
                 automaticallyAdjustContentInsets
                 snapToAlignment="center"
                 snapToEnd>
-                <View style={style.container}>
+                <View>
                     <Text style={[style.Ttitle, style.tWhite]}>
                         {getLangs("settings_admin_h2")}
                     </Text>
@@ -110,7 +110,6 @@ export default function Admin({ navigation }) {
                             <View
                                 style={[
                                     styles.logElementContainer,
-                                    style.container,
                                     key != logs.length - 1
                                         ? { marginBottom: style.defaultMmd }
                                         : null,
@@ -164,6 +163,7 @@ const styles = StyleSheet.create({
     },
 
     logElementContainer: {
+        width: "100%",
         flexDirection: "column",
         borderColor: "transparent",
         borderBottomColor: style.colors.white,

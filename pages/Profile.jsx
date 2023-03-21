@@ -275,6 +275,12 @@ export default function Profile({ navigation, route }) {
             </Pressable>
 
             <ScrollView
+                scrollEnabled
+                automaticallyAdjustKeyboardInsets
+                automaticallyAdjustContentInsets
+                keyboardDismissMode="interactive"
+                snapToAlignment="center"
+                snapToEnd
                 ref={scrollRef}
                 style={[
                     style.container,
@@ -282,14 +288,9 @@ export default function Profile({ navigation, route }) {
                     style.oVisible,
                     { marginTop: style.defaultMsm },
                 ]}
-                scrollEnabled
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
-                automaticallyAdjustKeyboardInsets
-                automaticallyAdjustContentInsets
-                snapToAlignment="center"
-                snapToEnd
                 refreshControl={
                     Platform.OS === "ios" ? (
                         <Refresh

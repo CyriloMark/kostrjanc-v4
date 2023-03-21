@@ -14,11 +14,13 @@ import SVG_Live from "../../assets/svg/Live";
 
 import { checkIfLive } from "../../constants/event";
 import { convertTimestampToString } from "../../constants/time";
+import { getData } from "../../constants/storage";
+import { getLangs } from "../../constants/langs";
 
 export default function Event(props) {
     const [event, setEvent] = useState(Event_Placeholder);
     const [isLive, setIsLive] = useState(false);
-    const [imgUris, setImgUris] = useState(null);
+    const [imgUris, setImgUris] = useState([]);
 
     const loadData = () => {
         const db = getDatabase();
@@ -50,102 +52,54 @@ export default function Event(props) {
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
                 );
-                // getChecksUris(
-                //     eventSnap.hasChild("checks") ? eventData["checks"] : []
-                // );
+                getChecksUris(
+                    eventSnap.hasChild("checks") ? eventData["checks"] : []
+                );
             })
             .catch(error =>
                 console.log("cards/Event.jsx", "get event", error.code)
             );
     };
 
-    let getChecksUris = d => {
-        setImgUris([
-            "https://www.colorhexa.com/587db0.png",
-            "https://www.colorhexa.com/587db0.png",
-            "https://www.colorhexa.com/587db0.png",
-        ]);
-        return;
-        // Wenn login drin ist
-        const IMGamt = 3;
+    let getChecksUris = async d => {
+        if (d.length === 0) return;
+        const IMG_Amt = 3;
 
-        let finalList = [];
         let uriList = [];
 
-        const db = getDatabase();
-        get(child(ref(db), "users/" + getAuth().currentUser.uid + "/following"))
-            .then(snapshot => {
-                if (snapshot.exists()) {
-                    const ids = snapshot.val();
-                    d.forEach(el => {
-                        if (ids.includes(el)) finalList.push(el);
-                    });
-                }
-            })
-            .finally(() => {
-                get(
-                    child(
-                        ref(db),
-                        "users/" + getAuth().currentUser.uid + "/follower"
-                    )
-                )
-                    .then(snapshot => {
-                        if (snapshot.exists()) {
-                            const ids = snapshot.val();
-                            d.forEach(el => {
-                                if (ids.includes(el) && !finalList.includes(el))
-                                    finalList.push(el);
-                            });
-                        }
-                    })
-                    .finally(() => {
-                        if (finalList.length > IMGamt) {
-                            finalList.splice(
-                                IMGamt - 1,
-                                finalList.length - IMGamt
-                            );
-                        } else if (
-                            finalList.length < IMGamt &&
-                            d.length >= IMGamt
-                        ) {
-                            let otherChecks = d.filter(
-                                i => !finalList.includes(i)
-                            );
-                            for (let i = 0; i < IMGamt - finalList.length; i++)
-                                finalList.push(otherChecks[i]);
-                        } else if (
-                            finalList.length < IMGamt &&
-                            d.length <= IMGamt
-                        ) {
-                            let otherChecks = d.filter(
-                                i => !finalList.includes(i)
-                            );
-                            otherChecks.forEach(a => finalList.push(a));
-                        }
+        // const db = getDatabase();
 
-                        for (let i = 0; i < finalList.length; i++) {
-                            get(
-                                child(
-                                    ref(db),
-                                    "users/" + finalList[i] + "/pbUri"
-                                )
-                            )
-                                .then(snap => {
-                                    uriList.push(snap.val());
-                                })
-                                .finally(() => {
-                                    if (finalList.length - 1 === i)
-                                        setImgUris(uriList);
-                                })
-                                .catch(error =>
-                                    console.log(
-                                        "error EventCard getUsersPBUri",
-                                        error.code
-                                    )
-                                );
-                        }
-                    });
-            });
+        const userData = await getData("userData");
+        const followeringList = [
+            ...(userData.follower ? userData.follower : []),
+            ...(userData.following ? userData.following : []),
+        ];
+        const userFilteredList = followeringList
+            .filter(function (item, pos) {
+                return followeringList.indexOf(item) == pos;
+            })
+            .filter(function (item) {
+                return d.includes(item);
+            })
+            .slice(0, IMG_Amt);
+
+        const db = getDatabase();
+        for (let i = 0; i < userFilteredList.length; i++) {
+            get(child(ref(db), `users/${userFilteredList[i]}/pbUri`))
+                .then(pbSnap => {
+                    uriList.push(pbSnap.val());
+                })
+                .finally(() => {
+                    if (userFilteredList.length - 1 === i) setImgUris(uriList);
+                })
+                .catch(error =>
+                    console.log(
+                        "error comps/cards/Event.jsx",
+                        "getChecksUris getPbs",
+                        error.code
+                    )
+                );
+        }
     };
 
     useEffect(() => {
@@ -205,33 +159,39 @@ export default function Event(props) {
                 </View>
 
                 {/* Checks PBs */}
-                <View style={[styles.checksContainer]}>
-                    {imgUris
-                        ? imgUris.map((el, key) => (
-                              <Image
-                                  key={key}
-                                  resizeMode="cover"
-                                  source={{ uri: el }}
-                                  style={[
-                                      styles.checksImg,
-                                      style.allMax,
-                                      style.boxShadow,
-                                      key === 0
-                                          ? null
-                                          : {
-                                                marginLeft:
-                                                    -style.defaultMmd * 2,
-                                            },
-                                      {
-                                          zIndex: 10 - key,
-                                          opacity:
-                                              1 - parseFloat("." + key * 2),
-                                      },
-                                  ]}
-                              />
-                          ))
-                        : null}
-                </View>
+                {imgUris.length > 0 ? (
+                    <View style={[styles.checksContainer]}>
+                        <Text
+                            style={[
+                                style.TsmRg,
+                                style.tWhite,
+                                { marginRight: style.defaultMmd },
+                            ]}>
+                            {getLangs("event_checkshint")}
+                        </Text>
+                        {imgUris.map((el, key) => (
+                            <Image
+                                key={key}
+                                resizeMode="cover"
+                                source={{ uri: el }}
+                                style={[
+                                    styles.checksImg,
+                                    style.allMax,
+                                    style.boxShadow,
+                                    key === 0
+                                        ? null
+                                        : {
+                                              marginLeft: -style.defaultMmd * 2,
+                                          },
+                                    {
+                                        zIndex: 10 - key,
+                                        opacity: 1 - parseFloat(`.${key}`),
+                                    },
+                                ]}
+                            />
+                        ))}
+                    </View>
+                ) : null}
             </Pressable>
         </View>
     );
@@ -279,6 +239,7 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "row",
         marginTop: style.defaultMsm,
+        alignItems: "center",
     },
     checksImg: {
         aspectRatio: 1,

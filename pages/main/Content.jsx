@@ -6,7 +6,6 @@ import {
     View,
     Text,
     ScrollView,
-    RefreshControl,
     Image,
     Platform,
 } from "react-native";
@@ -17,12 +16,16 @@ import InputField from "../../components/InputField";
 import User from "../../components/cards/User";
 import Refresh from "../../components/RefreshControl";
 import AccessoryView from "../../components/AccessoryView";
+import Post from "../../components/content/Post";
+import Event from "../../components/content/Event";
+import Event_Card from "../../components/cards/Event";
 
 import { getDatabase, get, ref, child } from "firebase/database";
 
 import { wait } from "../../constants/wait";
 import { lerp } from "../../constants";
 import { getLangs } from "../../constants/langs";
+import { splitterForContent } from "../../constants";
 
 import * as style from "../../styles";
 
@@ -38,8 +41,9 @@ import Animated, {
     Easing,
 } from "react-native-reanimated";
 
-let UsersData = null;
+const RANDOM_CONTENT_ENABLED = false;
 
+let UsersData = null;
 export default function Content({ navigation }) {
     const contentScrollRef = useRef();
 
@@ -53,6 +57,17 @@ export default function Content({ navigation }) {
     const [searchInput, setSearchInput] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [randomUser, setRandomUser] = useState(null);
+    const [randomContent, setRandomContent] = useState([
+        { type: 1, id: 1659542896411 },
+        { type: 0, id: 1676725986448 },
+        { type: 1, id: 1666550251147 },
+        { type: 0, id: 1677070056622 },
+        { type: 1, id: 1676895652707 },
+        { type: 0, id: 1677062177271 },
+        { type: 0, id: 1677075681244 },
+        { type: 1, id: 1659542990210 },
+        { type: 1, id: 1676895716716 },
+    ]);
 
     let getSearchResult = text => {
         let output = [];
@@ -322,10 +337,90 @@ export default function Content({ navigation }) {
                             ))}
                         </View>
                     ) : null}
+
+                    {/* Random Content */}
+                    {randomContent.length !== 0 && RANDOM_CONTENT_ENABLED ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("contentpage_randomresulttext")}
+                            </Text>
+                            <View style={{ marginTop: style.defaultMsm }}>
+                                {splitterForContent(randomContent, 3).map(
+                                    (line, lineKey) => (
+                                        <View
+                                            key={lineKey}
+                                            style={
+                                                styles.randomContentLineContainer
+                                            }>
+                                            {line.map((item, key) =>
+                                                item.type === 0 ? (
+                                                    <Post
+                                                        key={key}
+                                                        id={item.id}
+                                                        style={
+                                                            styles.randomContentElement
+                                                        }
+                                                        onPress={() =>
+                                                            navigation.navigate(
+                                                                "postView",
+                                                                {
+                                                                    id: item.id,
+                                                                }
+                                                            )
+                                                        }
+                                                    />
+                                                ) : line.length === 1 ? (
+                                                    <Event_Card
+                                                        key={key}
+                                                        style={
+                                                            styles.randomContentElement
+                                                        }
+                                                        id={item.id}
+                                                        onPress={() =>
+                                                            navigation.navigate(
+                                                                "eventView",
+                                                                {
+                                                                    id: item.id,
+                                                                }
+                                                            )
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <Event
+                                                        style={
+                                                            styles.randomContentElement
+                                                        }
+                                                        key={key}
+                                                        id={item.id}
+                                                        onPress={() =>
+                                                            navigation.navigate(
+                                                                "eventView",
+                                                                {
+                                                                    id: item.id,
+                                                                }
+                                                            )
+                                                        }
+                                                    />
+                                                )
+                                            )}
+                                        </View>
+                                    )
+                                )}
+                            </View>
+                        </View>
+                    ) : null}
                 </Pressable>
+
+                <View style={{ marginTop: style.defaultMlg * 3 }} />
             </ScrollView>
 
-            <View style={[styles.addBtnContainer, style.allCenter]}>
+            {/* Box */}
+            <View
+                style={[
+                    styles.addBtnContainer,
+                    style.allCenter,
+                    style.boxShadow,
+                ]}>
                 <View style={{ position: "relative" }}>
                     {/* Left Box / Post */}
                     <Animated.View style={[styles.sideBox, leftBoxStyles]}>
@@ -429,5 +524,14 @@ const styles = StyleSheet.create({
         borderColor: style.colors.blue,
         backgroundColor: `rgba(${style.colorsRGB.black}, .75)`,
         borderRadius: 10,
+    },
+
+    randomContentLineContainer: {
+        width: "100%",
+        flexDirection: "row",
+    },
+    randomContentElement: {
+        flex: 1,
+        margin: style.defaultMsm,
     },
 });

@@ -407,16 +407,6 @@ export default function Event({ navigation, route }) {
                             {getLangs("event_about_title")}
                         </Text>
 
-                        {/* Live */}
-                        {isLive ? (
-                            <View style={styles.underSectionContainer}>
-                                <SVG_Live
-                                    style={styles.timeIcon}
-                                    fill={style.colors.red}
-                                />
-                            </View>
-                        ) : null}
-
                         {/* Time Start-End */}
                         <View
                             style={[
@@ -424,7 +414,18 @@ export default function Event({ navigation, route }) {
                                 styles.rowContainer,
                             ]}>
                             <Text style={[style.tWhite, style.Tmd]}>
-                                {convertTimestampToString(event.starting)} -{" "}
+                                {convertTimestampToString(event.starting)}{" "}
+                            </Text>
+                            {isLive ? (
+                                <SVG_Live
+                                    style={styles.timeIcon}
+                                    fill={style.colors.red}
+                                />
+                            ) : (
+                                <Text style={[style.tWhite, style.Tmd]}>-</Text>
+                            )}
+                            <Text style={[style.tWhite, style.Tmd]}>
+                                {" "}
                                 {convertTimestampToString(event.ending)}
                             </Text>
                         </View>
@@ -654,7 +655,7 @@ export default function Event({ navigation, route }) {
                                     />
                                     <SendButton
                                         onPress={publishComment}
-                                        style={{ marginLeft: style.defaultMsm }}
+                                        style={{ marginLeft: style.defaultMmd }}
                                     />
                                 </View>
                             ) : null}

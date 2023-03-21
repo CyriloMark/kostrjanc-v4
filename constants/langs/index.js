@@ -5,7 +5,6 @@ import de from "./de.json";
 let currentLanguage = -1;
 
 export function getCurrentLanguage() {
-    console.log("currentLanguage", currentLanguage);
     return currentLanguage;
 }
 

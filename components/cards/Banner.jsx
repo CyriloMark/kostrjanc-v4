@@ -49,6 +49,15 @@ export default function Banner(props) {
                     <Text style={[style.TlgRg, style.tRed]}>
                         {banner.title}
                     </Text>
+                    {/* Title */}
+                    <Text
+                        style={[
+                            style.TsmRg,
+                            style.tRed,
+                            { marginTop: style.defaultMsm },
+                        ]}>
+                        {banner.description}
+                    </Text>
                 </View>
             </View>
         </View>

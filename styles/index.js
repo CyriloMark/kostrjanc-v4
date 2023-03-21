@@ -8,7 +8,7 @@ export const colors = {
     //new
     blue: "#5884B0",
     sec: "#143C63",
-    red: "#B06E6A",
+    red: "#e23b32",
     black: "#060A0D",
     white: "#CCE6FF",
 };
@@ -16,7 +16,7 @@ export const colors = {
 export const colorsRGB = {
     blue: "88, 132, 176",
     sec: "20, 60, 99",
-    red: "176, 110, 106",
+    red: "226, 59, 50",
     black: "6, 10, 13",
     white: "204, 230, 255",
 };
@@ -108,7 +108,7 @@ export const boxShadow = {
     },
     shadowOpacity: 0.25,
     shadowRadius: 5,
-    elevation: 5,
+    elevation: 2,
 };
 
 export const oVisible = {

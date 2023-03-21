@@ -31,9 +31,10 @@ import { getLangs } from "../../constants/langs";
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Flag from "../../assets/svg/Flag";
-import SVG_Recent from "../../assets/svg/Search";
+import SVG_Time from "../../assets/svg/Time";
 import SVG_Cash from "../../assets/svg/Cash";
 import SVG_Web from "../../assets/svg/Web";
+import SVG_Pin2_0 from "../../assets/svg/Pin2.0";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -362,12 +363,13 @@ export default function EventCreate({ navigation }) {
                                 }}
                                 onRegionChange={result => setPin(result)}
                                 initialRegion={event.geoCords}>
-                                <Marker
+                                {/* <Marker
                                     focusable
                                     title={event.title}
                                     coordinate={pin}
-                                />
+                                /> */}
                             </MapView>
+                            <SVG_Pin2_0 style={styles.mapPin} />
                         </View>
 
                         <View style={styles.textContainer}>
@@ -561,16 +563,16 @@ export default function EventCreate({ navigation }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    {getLangs("eventcreate_info_times")}
+                                    {getLangs("eventcreate_info_times")} (
+                                    {getLangs("eventcreate_info_times_hint")}{" "}
+                                    DD.MM.YYYY hh:mm)
                                 </Text>
                                 <InputField
                                     placeholder={getLangs(
                                         "eventcreate_info_times_start"
                                     )}
                                     keyboardType="default"
-                                    icon={
-                                        <SVG_Recent fill={style.colors.sec} />
-                                    }
+                                    icon={<SVG_Time fill={style.colors.sec} />}
                                     onChangeText={val => {
                                         setEvent({
                                             ...event,
@@ -772,7 +774,10 @@ export default function EventCreate({ navigation }) {
                                                               )
                                                             : false
                                                     }
-                                                    style={styles.typeItem}
+                                                    style={[
+                                                        styles.typeItem,
+                                                        { flex: 1 },
+                                                    ]}
                                                     onPress={() => {
                                                         setEvent(prev => {
                                                             return {
@@ -954,86 +959,154 @@ export default function EventCreate({ navigation }) {
                                 {getLangs("eventcreate_tags_title")}
                             </Text>
 
-                            <View style={{ marginTop: style.defaultMmd }}>
-                                <ScrollView
-                                    showsHorizontalScrollIndicator={false}
-                                    showsVerticalScrollIndicator={false}
-                                    horizontal
-                                    bounces
-                                    keyboardDismissMode="interactive"
-                                    style={{ width: "100%" }}
-                                    contentContainerStyle={{
-                                        flexDirection: "column",
-                                    }}>
-                                    {splitArrayIntoNEqualy(
-                                        Event_Tags,
-                                        tagLineAmt
-                                    ).map((line, lineKey) => (
-                                        <View
-                                            key={lineKey}
-                                            style={styles.tagLineContainer}>
-                                            {line.map((tag, key) => (
-                                                <Tag
-                                                    key={key}
-                                                    checked={
-                                                        event.eventOptions
-                                                            .tags !== undefined
-                                                            ? event.eventOptions.tags.includes(
-                                                                  Event_Tags.indexOf(
-                                                                      tag
-                                                                  )
-                                                              )
-                                                            : false
-                                                    }
-                                                    title={getLangs(tag)}
-                                                    style={styles.typeItem}
-                                                    onPress={() => {
-                                                        let t = [].concat(
+                            {Platform.OS === "ios" ? (
+                                <View style={{ marginTop: style.defaultMmd }}>
+                                    <ScrollView
+                                        showsHorizontalScrollIndicator={false}
+                                        showsVerticalScrollIndicator={false}
+                                        horizontal
+                                        scrollEnabled
+                                        automaticallyAdjustKeyboardInsets
+                                        automaticallyAdjustContentInsets
+                                        hitSlop={25}
+                                        bounces
+                                        nestedScrollEnabled
+                                        keyboardDismissMode="interactive"
+                                        style={{ width: "100%" }}
+                                        contentContainerStyle={{
+                                            flexDirection: "column",
+                                        }}>
+                                        {splitArrayIntoNEqualy(
+                                            Event_Tags,
+                                            tagLineAmt
+                                        ).map((line, lineKey) => (
+                                            <View
+                                                key={lineKey}
+                                                style={styles.tagLineContainer}>
+                                                {line.map((tag, key) => (
+                                                    <Tag
+                                                        key={key}
+                                                        checked={
                                                             event.eventOptions
-                                                                .tags
-                                                                ? event
-                                                                      .eventOptions
-                                                                      .tags
-                                                                : []
-                                                        );
-                                                        if (
-                                                            !t.includes(
-                                                                Event_Tags.indexOf(
-                                                                    tag
-                                                                )
-                                                            )
-                                                        )
-                                                            t.push(
-                                                                Event_Tags.indexOf(
-                                                                    tag
-                                                                )
+                                                                .tags !==
+                                                            undefined
+                                                                ? event.eventOptions.tags.includes(
+                                                                      Event_Tags.indexOf(
+                                                                          tag
+                                                                      )
+                                                                  )
+                                                                : false
+                                                        }
+                                                        title={getLangs(tag)}
+                                                        style={[
+                                                            styles.typeItem,
+                                                            { flex: 1 },
+                                                        ]}
+                                                        onPress={() => {
+                                                            let t = [].concat(
+                                                                event
+                                                                    .eventOptions
+                                                                    .tags
+                                                                    ? event
+                                                                          .eventOptions
+                                                                          .tags
+                                                                    : []
                                                             );
-                                                        else
-                                                            t.splice(
-                                                                t.indexOf(
+                                                            if (
+                                                                !t.includes(
                                                                     Event_Tags.indexOf(
                                                                         tag
                                                                     )
-                                                                ),
-                                                                1
-                                                            );
+                                                                )
+                                                            )
+                                                                t.push(
+                                                                    Event_Tags.indexOf(
+                                                                        tag
+                                                                    )
+                                                                );
+                                                            else
+                                                                t.splice(
+                                                                    t.indexOf(
+                                                                        Event_Tags.indexOf(
+                                                                            tag
+                                                                        )
+                                                                    ),
+                                                                    1
+                                                                );
 
-                                                        setEvent(prev => {
-                                                            return {
-                                                                ...prev,
-                                                                eventOptions: {
-                                                                    ...prev.eventOptions,
-                                                                    tags: t,
-                                                                },
-                                                            };
-                                                        });
-                                                    }}
-                                                />
-                                            ))}
-                                        </View>
+                                                            setEvent(prev => {
+                                                                return {
+                                                                    ...prev,
+                                                                    eventOptions:
+                                                                        {
+                                                                            ...prev.eventOptions,
+                                                                            tags: t,
+                                                                        },
+                                                                };
+                                                            });
+                                                        }}
+                                                    />
+                                                ))}
+                                            </View>
+                                        ))}
+                                    </ScrollView>
+                                </View>
+                            ) : (
+                                <View style={styles.androidTagsView}>
+                                    {Event_Tags.map((tag, key) => (
+                                        <Tag
+                                            key={key}
+                                            checked={
+                                                event.eventOptions.tags !==
+                                                undefined
+                                                    ? event.eventOptions.tags.includes(
+                                                          Event_Tags.indexOf(
+                                                              tag
+                                                          )
+                                                      )
+                                                    : false
+                                            }
+                                            title={getLangs(tag)}
+                                            style={styles.typeItem}
+                                            onPress={() => {
+                                                let t = [].concat(
+                                                    event.eventOptions.tags
+                                                        ? event.eventOptions
+                                                              .tags
+                                                        : []
+                                                );
+                                                if (
+                                                    !t.includes(
+                                                        Event_Tags.indexOf(tag)
+                                                    )
+                                                )
+                                                    t.push(
+                                                        Event_Tags.indexOf(tag)
+                                                    );
+                                                else
+                                                    t.splice(
+                                                        t.indexOf(
+                                                            Event_Tags.indexOf(
+                                                                tag
+                                                            )
+                                                        ),
+                                                        1
+                                                    );
+
+                                                setEvent(prev => {
+                                                    return {
+                                                        ...prev,
+                                                        eventOptions: {
+                                                            ...prev.eventOptions,
+                                                            tags: t,
+                                                        },
+                                                    };
+                                                });
+                                            }}
+                                        />
                                     ))}
-                                </ScrollView>
-                            </View>
+                                </View>
+                            )}
                         </View>
                     ) : null}
 
@@ -1084,6 +1157,13 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 10,
         marginTop: style.defaultMmd,
+    },
+    mapPin: {
+        width: 25,
+        height: 25,
+        zIndex: 99,
+        position: "absolute",
+        ...style.boxShadow,
     },
     textContainer: {
         // paddingHorizontal: style.Psm.paddingHorizontal,
@@ -1141,7 +1221,6 @@ const styles = StyleSheet.create({
     },
     typeItem: {
         margin: style.defaultMsm,
-        flex: 1,
     },
 
     imageOutlineContainer: {
@@ -1179,7 +1258,11 @@ const styles = StyleSheet.create({
     },
 
     tagLineContainer: {
-        flex: 1,
         flexDirection: "row",
+    },
+    androidTagsView: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginTop: style.defaultMmd,
     },
 });

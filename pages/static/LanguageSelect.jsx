@@ -54,11 +54,15 @@ export default function LanguageSelect({ onLanguageChange }) {
                             onPress={() => setCurrentLanguage(lang.id)}
                             style={[styles.langElementContainer]}>
                             <View
-                                style={
-                                    currentLanguage === lang.id
-                                        ? styles.langBorder
-                                        : null
-                                }>
+                                style={[
+                                    styles.langBorder,
+                                    {
+                                        borderColor:
+                                            currentLanguage === lang.id
+                                                ? style.colors.red
+                                                : style.colors.blue,
+                                    },
+                                ]}>
                                 <View style={styles.langFlag}>{lang.flag}</View>
                             </View>
                             <View style={styles.langText}>
@@ -92,7 +96,6 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         marginTop: style.defaultMlg,
         width: "100%",
-        flex: 1,
     },
     langElementContainer: {
         flexDirection: "column",
@@ -100,7 +103,6 @@ const styles = StyleSheet.create({
         ...style.Psm,
     },
     langBorder: {
-        borderColor: style.colors.blue,
         ...style.border,
         padding: 2,
     },
@@ -109,7 +111,6 @@ const styles = StyleSheet.create({
         aspectRatio: 5 / 3,
     },
     langText: {
-        ...style.container,
         ...style.allCenter,
         marginTop: style.defaultMsm,
     },

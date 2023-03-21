@@ -1,6 +1,6 @@
 {
   "name": "kostrjanc",
-  "version": "0.7.4b",
+  "version": "0.8.5c",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",

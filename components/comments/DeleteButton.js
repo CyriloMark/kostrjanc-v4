@@ -34,8 +34,12 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
     },
     icon: {
+        flex: 1,
         aspectRatio: 1,
-        maxWidth: 12,
-        maxHeight: 12,
+        aspectRatio: 1,
+        minWidth: 12,
+        minHeight: 12,
+        maxWidth: 24,
+        maxHeight: 24,
     },
 });

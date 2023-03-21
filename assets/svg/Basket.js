@@ -1,13 +1,44 @@
-import Svg, { Rect, Path } from "react-native-svg"
+import Svg, { Line, Path } from "react-native-svg";
 
 export default function Basket(props) {
-
-    const basketPath = "M360,100h-35V425c0,13.81-11.19,25-25,25s-25-11.19-25-25V100h-49V425c0,13.81-11.19,25-25,25s-25-11.19-25-25V100h-51V425c0,13.81-11.19,25-25,25s-25-11.19-25-25V100H40C17.91,100,0,122.39,0,150v250c0,55.23,35.82,100,80,100h240c44.18,0,80-44.77,80-100V150c0-27.61-17.91-50-40-50Z";
-
     return (
-        <Svg style={props.style} viewBox="0 0 400 500">
-            <Rect y="0" width="400" height="80" rx="40" ry="40" fill={props.fill} />
-            <Path d={basketPath} fill={props.fill} />
+        <Svg style={props.style} viewBox="0 0 350 500">
+            <Path
+                d={
+                    "m300,150v256.46c0,24.01-19.53,43.54-43.54,43.54H93.54c-24.01,0-43.54-19.53-43.54-43.54V150h250m50-50H0v306.46c0,51.66,41.88,93.54,93.54,93.54h162.92c51.66,0,93.54-41.88,93.54-93.54V100h0Z"
+                }
+                fill={props.fill}
+            />
+            <Line
+                x1={128}
+                y1={189}
+                x2={128}
+                y2={411}
+                stroke={props.fill}
+                strokeLinecap={"round"}
+                strokeWidth={50}
+            />
+            <Line
+                x1={228}
+                y1={189}
+                x2={228}
+                y2={411}
+                stroke={props.fill}
+                strokeLinecap={"round"}
+                strokeWidth={50}
+            />
+            <Path
+                d={
+                    "m168,0h20c22.08,0,40,17.92,40,40h-100c0-22.08,17.92-40,40-40Z"
+                }
+                fill={props.fill}
+            />
+            <Path
+                d={
+                    "m25,40h300c13.8,0,25,11.2,25,25v25H0v-25c0-13.8,11.2-25,25-25Z"
+                }
+                fill={props.fill}
+            />
         </Svg>
-    )
+    );
 }

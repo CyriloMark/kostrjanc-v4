@@ -17,7 +17,7 @@ import OptionButton from "../../components/OptionButton";
 
 import { getLangs } from "../../constants/langs";
 
-import SVG_Profile from "../../assets/svg/Profile";
+import SVG_Logout from "../../assets/svg/Logout";
 import SVG_Basket from "../../assets/svg/Basket";
 
 export default function Profile({ navigation, route }) {
@@ -51,12 +51,7 @@ export default function Profile({ navigation, route }) {
                 snapToEnd>
                 {/* Profile Header */}
                 <Pressable
-                    style={[
-                        style.Pmd,
-                        style.border,
-                        style.container,
-                        styles.accountContainer,
-                    ]}
+                    style={[style.Pmd, style.border, styles.accountContainer]}
                     onLongPress={() => Account.copyUIDToClipboard(uid)}>
                     <View style={[styles.accountImageContainer, style.oHidden]}>
                         <Image
@@ -99,8 +94,7 @@ export default function Profile({ navigation, route }) {
                     </Text>
                     <View style={{ marginTop: style.defaultMmd }}>
                         <Text style={[style.Tmd, style.tWhite]}>
-                            {getLangs("settings_profile_statinfo_username")}
-                            {""}
+                            {getLangs("settings_profile_statinfo_username")}{" "}
                             {userData.name}
                             {"\n"}
                             {getLangs("settings_profile_statinfo_uid")} {uid}
@@ -200,7 +194,7 @@ export default function Profile({ navigation, route }) {
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_logout")}
-                        icon={<SVG_Profile fill={style.colors.red} />}
+                        icon={<SVG_Logout fill={style.colors.red} />}
                         onPress={Account.logout}
                         red
                     />

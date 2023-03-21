@@ -36,14 +36,16 @@ export default function EditProfileButton({ checked, title, style, onPress }) {
                 style={[styles.container, s.oHidden, bgAnimationStyles]}>
                 <Pressable onPress={onPress}>
                     <LinearGradient
-                        style={[s.Pmd, s.allCenter, styles.inner]}
+                        style={[s.Pmd, styles.inner]}
                         colors={[s.colors.blue, s.colors.sec]}
                         end={{ x: -0.5, y: 0.5 }}
                         locations={[0, 0.75]}>
-                        <SVG_Pencil
-                            style={[s.boxShadow, s.oVisible, styles.icon]}
-                            fill={s.colors.white}
-                        />
+                        <View>
+                            <SVG_Pencil
+                                style={[s.boxShadow, s.oVisible, styles.icon]}
+                                fill={s.colors.white}
+                            />
+                        </View>
                         <Text
                             style={[
                                 s.tWhite,
@@ -62,12 +64,13 @@ export default function EditProfileButton({ checked, title, style, onPress }) {
 const styles = StyleSheet.create({
     container: {
         maxHeight: 58,
-        maxWidth: Dimensions.get("screen").width / 2,
+        // maxWidth: Dimensions.get("screen").width / 2,
+        maxWidth: "100%",
         borderRadius: 25,
     },
     inner: {
         flexDirection: "row",
-        justifyContent: "center",
+        ...s.allCenter,
     },
     icon: {
         aspectRatio: 1,

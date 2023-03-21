@@ -15,7 +15,7 @@ import * as Account from "../../components/settings";
 import { openLink } from "../../constants";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
-import { getLangs } from "../../constants/langs";
+import { getCurrentLanguage, getLangs } from "../../constants/langs";
 
 import { child, get, getDatabase, ref } from "firebase/database";
 
@@ -23,14 +23,14 @@ import BackHeader from "../../components/BackHeader";
 import WarnButton from "../../components/settings/WarnButton";
 import OptionButton from "../../components/OptionButton";
 
-import SVG_Settings from "../../assets/svg/Settings";
 import SVG_Recent from "../../assets/svg/Recent";
 import SVG_Search from "../../assets/svg/Search";
 import SVG_Moderator from "../../assets/svg/Moderator";
 import SVG_Ban from "../../assets/svg/Ban";
 import SVG_Admin from "../../assets/svg/Admin";
-import SVG_Profile from "../../assets/svg/Profile";
+import SVG_Logout from "../../assets/svg/Logout";
 import SVG_Basket from "../../assets/svg/Basket";
+import * as flags from "../../assets/svg/flags";
 
 export default function Landing({ navigation }) {
     const [userData, setUserData] = useState({
@@ -47,8 +47,10 @@ export default function Landing({ navigation }) {
         setUserData({
             uid: await getData("userId").then(uid => {
                 get(child(ref(getDatabase()), `users/${uid}/isAdmin`))
-                    .then(isAdmin => {
-                        if (isAdmin) setIsAdmin(true);
+                    .then(isAdm => {
+                        const val = isAdm.val();
+                        if (val === null) setIsAdmin(false);
+                        else setIsAdmin(val);
                     })
                     .catch(error =>
                         console.log(
@@ -91,7 +93,6 @@ export default function Landing({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd>
                 <WarnButton
-                    style={style.container}
                     text={getLangs("settings_landing_bugbutton_title")}
                     sub={getLangs("settings_landing_bugbutton_sub")}
                     onPress={() =>
@@ -106,10 +107,10 @@ export default function Landing({ navigation }) {
                     </Text>
                     <OptionButton
                         style={styles.optionButton}
-                        icon={<SVG_Settings fill={style.colors.white} />}
-                        title={getLangs("settings_landing_aplication_general")}
+                        icon={flags.langs[getCurrentLanguage()].flag}
+                        title={getLangs("settings_landing_aplication_lang")}
                         onPress={() =>
-                            navigation.navigate("settings-general", {
+                            navigation.navigate("settings-language", {
                                 uid: userData.uid,
                             })
                         }
@@ -150,7 +151,7 @@ export default function Landing({ navigation }) {
                             navigation.navigate("settings-datasec&impresum")
                         }
                     />
-                    {isAdmin ? (
+                    {isAdmin === true ? (
                         <OptionButton
                             style={styles.optionButton}
                             icon={<SVG_Admin fill={style.colors.white} />}
@@ -212,7 +213,7 @@ export default function Landing({ navigation }) {
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_logout")}
                         onPress={Account.logout}
-                        icon={<SVG_Profile fill={style.colors.red} />}
+                        icon={<SVG_Logout fill={style.colors.red} />}
                         red
                     />
                     <OptionButton

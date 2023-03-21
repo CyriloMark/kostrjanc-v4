@@ -5,9 +5,6 @@ import * as s from "../../styles";
 
 import MapView from "react-native-maps";
 
-import SVG_Pin from "../../assets/svg/Pin";
-import { getAuth } from "firebase/auth";
-
 export default function EventPreview({ style, onPress, data }) {
     return (
         <View style={style}>
@@ -23,14 +20,6 @@ export default function EventPreview({ style, onPress, data }) {
                     onPress={onPress}
                     scrollEnabled={false}
                 />
-
-                {/* Pin Container */}
-
-                {/*data.checks.includes(getAuth().currentUser.uid) ?
-                    <View style={styles.pinContainer}>
-                        <SVG_Pin style={[styles.pin]} fill={s.colors.black} />
-                    </View> : null
-    */}
             </Pressable>
         </View>
     );

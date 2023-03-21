@@ -40,7 +40,7 @@ export default function AccessoryView({ nativeID, onElementPress }) {
     useEffect(() => {
         capsRotation.value = withSpring(!caps ? 0 : 180, {
             stiffness: 90,
-            damping: 10,
+            damping: 15,
         });
     }, [caps]);
 

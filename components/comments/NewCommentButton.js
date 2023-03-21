@@ -18,10 +18,12 @@ export default function NewCommentButton({ style, onPress }) {
                     colors={[s.colors.blue, s.colors.sec]}
                     end={{ x: -0.5, y: 0.5 }}
                     locations={[0, 0.75]}>
-                    <SVG_Add
-                        style={[s.boxShadow, s.oVisible, styles.icon]}
-                        fill={s.colors.white}
-                    />
+                    <View>
+                        <SVG_Add
+                            style={[s.boxShadow, s.oVisible, styles.icon]}
+                            fill={s.colors.white}
+                        />
+                    </View>
                     <Text
                         style={[s.tWhite, s.Tmd, { marginLeft: s.defaultMmd }]}>
                         {getLangs("newcomment_type")}

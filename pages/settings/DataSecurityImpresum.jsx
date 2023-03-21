@@ -43,7 +43,7 @@ export default function DataSecurityImpresum({ navigation }) {
                 automaticallyAdjustContentInsets
                 snapToAlignment="center"
                 snapToEnd>
-                <View style={style.container}>
+                <View>
                     <Text style={[style.Ttitle, style.tWhite]}>
                         {getLangs(
                             "settings_datasecurityimpresum_impresum_title"

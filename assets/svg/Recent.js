@@ -1,13 +1,18 @@
-import Svg, { Path } from "react-native-svg";
-import { colors } from "../../styles";
+import Svg, { Path, Circle } from "react-native-svg";
 
 export default function Recent(props) {
     const recentPath =
-        "M400,0H100A100,100,0,0,0,0,100V400H400A100,100,0,0,0,500,300V100A100,100,0,0,0,400,0Zm2,254c0,27.61-26.86,50-60,50H102V154c0-27.61,26.86-50,60-50H342c33.14,0,60,22.39,60,50Z";
+        "m283.03,117.7c10.03,50.11,49.61,89.69,99.72,99.72v80.4c0,42.56-34.62,77.18-77.18,77.18H25v-180.11c0-42.56,34.62-77.18,77.18-77.18h180.84m22.53-25H102.18C45.75,92.7,0,138.45,0,194.89v205.11h305.56c56.44,0,102.18-45.75,102.18-102.18v-102.93c-56.43,0-102.18-45.75-102.18-102.18h0Z";
 
     return (
         <Svg style={props.style} viewBox="0 0 500 400">
-            <Path d={recentPath} fill={props.fill} />
+            <Path
+                d={recentPath}
+                fill={props.fill}
+                stroke={props.fill}
+                strokeWidth={25}
+            />
+            <Circle cx={"408.25"} cy={"92.25"} r={"75"} fill={props.fill} />
         </Svg>
     );
 }

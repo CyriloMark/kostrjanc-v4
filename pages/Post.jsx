@@ -308,6 +308,7 @@ export default function Post({ navigation, route }) {
                             {/* Input */}
                             <TextInput
                                 ref={commentInputRef}
+                                hitSlop={10}
                                 inputAccessoryViewID={"23488388256395198"}
                                 allowFontScaling
                                 autoCapitalize="none"
@@ -347,7 +348,7 @@ export default function Post({ navigation, route }) {
                                     />
                                     <SendButton
                                         onPress={publishComment}
-                                        style={{ marginLeft: style.defaultMsm }}
+                                        style={{ marginLeft: style.defaultMmd }}
                                     />
                                 </View>
                             ) : null}

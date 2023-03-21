@@ -58,7 +58,6 @@ export default function Help({ navigation }) {
                         <View
                             key={key}
                             style={[
-                                style.container,
                                 styles.smallSectionContainer,
                                 styles.border,
                                 style.border,
