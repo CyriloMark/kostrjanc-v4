@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     View,
     ScrollView,
@@ -44,7 +44,7 @@ import {
     UIImagePickerPresentationStyle,
 } from "expo-image-picker";
 
-import MapView, { Marker } from "react-native-maps";
+import MapView from "react-native-maps";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -55,6 +55,8 @@ import SelectableButton from "../../components/event/SelectableButton";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
 
+import DateTimePicker from "@react-native-community/datetimepicker";
+
 const userUploadMetadata = {
     contentType: "image/jpeg",
 };
@@ -63,6 +65,8 @@ const tagLineAmt = 5;
 
 export default function EventCreate({ navigation }) {
     let btnPressed = false;
+
+    const mapRef = useRef();
 
     const [event, setEvent] = useState(Event_Placeholder);
     const [pin, setPin] = useState(initialRegion);
@@ -80,7 +84,20 @@ export default function EventCreate({ navigation }) {
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
         let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) return;
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na galeriju přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -140,8 +157,34 @@ export default function EventCreate({ navigation }) {
         checkButton();
     }, [event]);
 
+    const setUnfullfilledAlert = () => {
+        let missing = "";
+
+        if (event.title.length === 0)
+            missing += `\n${getLangs("missing_title")}`;
+        if (event.description.length === 0)
+            missing += `\n${getLangs("missing_description")}`;
+        if (!event.starting) missing += `\n${getLangs("missing_start")}`;
+        if (!event.ending) missing += `\n${getLangs("missing_end")}`;
+
+        Alert.alert(
+            getLangs("missing_alert_title"),
+            `${getLangs("missing_alert_sub")}${missing}`,
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+            ]
+        );
+    };
+
     const publishEvent = async () => {
-        if (!buttonChecked) return;
+        if (!buttonChecked) {
+            setUnfullfilledAlert();
+            return;
+        }
         if (btnPressed) return;
         btnPressed = true;
 
@@ -219,8 +262,27 @@ export default function EventCreate({ navigation }) {
                             checkedCategories.adBanner &&
                             event.eventOptions.adBanner
                         )
-                    )
+                    ) {
+                        Alert.alert(
+                            getLangs("eventcreate_publishsuccessful_title"),
+                            `${getLangs(
+                                "eventcreate_publishsuccessful_sub_0"
+                            )} ${event.title} ${getLangs(
+                                "eventcreate_publishsuccessful_sub_1"
+                            )}`,
+                            [
+                                {
+                                    text: "Ok",
+                                    isPreferred: true,
+                                    style: "cancel",
+                                    onPress: () => {
+                                        navigation.goBack();
+                                    },
+                                },
+                            ]
+                        );
                         return;
+                    }
 
                     const storage = Storage.getStorage();
 
@@ -267,7 +329,7 @@ export default function EventCreate({ navigation }) {
                                                 ),
                                                 `${getLangs(
                                                     "eventcreate_publishsuccessful_sub_0"
-                                                )} ${post.title} ${getLangs(
+                                                )} ${event.title} ${getLangs(
                                                     "eventcreate_publishsuccessful_sub_1"
                                                 )}`,
                                                 [
@@ -349,6 +411,7 @@ export default function EventCreate({ navigation }) {
                                 style.oHidden,
                             ]}>
                             <MapView
+                                ref={mapRef}
                                 style={style.allMax}
                                 userInterfaceStyle="dark"
                                 showsUserLocation
@@ -361,6 +424,12 @@ export default function EventCreate({ navigation }) {
                                         return cur === 0 ? 1 : 0;
                                     });
                                 }}
+                                onPress={ev =>
+                                    mapRef.current.animateToRegion(
+                                        ev.nativeEvent.coordinate,
+                                        250
+                                    )
+                                }
                                 onRegionChange={result => setPin(result)}
                                 initialRegion={event.geoCords}>
                                 {/* <Marker
@@ -383,6 +452,17 @@ export default function EventCreate({ navigation }) {
 
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
+                            {getLangs("hint_title")}
+                        </Text>
+                        <View style={styles.textContainer}>
+                            <Text style={[style.Tmd, style.tWhite]}>
+                                {getLangs("eventcreate_maphint")}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("event_about_title")}
                         </Text>
 
@@ -393,8 +473,13 @@ export default function EventCreate({ navigation }) {
                                 styles.rowContainer,
                             ]}>
                             <Text style={[style.tWhite, style.Tmd]}>
-                                {convertTimestampToString(event.starting)} -{" "}
-                                {convertTimestampToString(event.ending)}
+                                {event.starting === null
+                                    ? getLangs("eventcreate_nostart")
+                                    : convertTimestampToString(event.starting)}
+                                {" - "}
+                                {event.ending === null
+                                    ? getLangs("eventcreate_noend")
+                                    : convertTimestampToString(event.ending)}
                             </Text>
                         </View>
 
@@ -516,6 +601,7 @@ export default function EventCreate({ navigation }) {
                                     placeholder={getLangs(
                                         "input_placeholder_contentname"
                                     )}
+                                    autoCapitalize="sentences"
                                     keyboardType="default"
                                     value={event.title}
                                     inputAccessoryViewID="event_title_InputAccessoryViewID"
@@ -564,6 +650,310 @@ export default function EventCreate({ navigation }) {
                                         { marginBottom: style.defaultMsm },
                                     ]}>
                                     {getLangs("eventcreate_info_times")} (
+                                    {getLangs("eventcreate_info_times_hint")})
+                                </Text>
+
+                                <View style={{ maxHeight: 58 }}>
+                                    <View
+                                        style={[
+                                            styles.timesInputContainer,
+                                            style.border,
+                                            style.oHidden,
+                                            style.allMax,
+                                            style.Pmd,
+                                        ]}>
+                                        <View
+                                            style={[
+                                                styles.timesIcon,
+                                                style.allCenter,
+                                            ]}>
+                                            <SVG_Time fill={style.colors.sec} />
+                                        </View>
+                                        <View
+                                            style={[
+                                                styles.timesInnerContainer,
+                                                style.tWhite,
+                                                style.Tmd,
+                                                style.pH,
+                                            ]}>
+                                            {Platform.OS === "ios" ? (
+                                                <DateTimePicker
+                                                    value={
+                                                        new Date(event.starting)
+                                                    }
+                                                    mode="datetime"
+                                                    firstDayOfWeek={1}
+                                                    onChange={(
+                                                        ev,
+                                                        selectedDate
+                                                    ) =>
+                                                        setEvent(cur => {
+                                                            return {
+                                                                ...cur,
+                                                                starting:
+                                                                    selectedDate.getTime(),
+                                                            };
+                                                        })
+                                                    }
+                                                    minimumDate={
+                                                        new Date(Date.now())
+                                                    }
+                                                    maximumDate={
+                                                        new Date(
+                                                            2100,
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0,
+                                                            0
+                                                        )
+                                                    }
+                                                />
+                                            ) : (
+                                                <>
+                                                    <DateTimePicker
+                                                        value={
+                                                            new Date(
+                                                                event.starting
+                                                            )
+                                                        }
+                                                        is24Hour
+                                                        mode="date"
+                                                        minimumDate={
+                                                            new Date(Date.now())
+                                                        }
+                                                        onChange={(
+                                                            ev,
+                                                            selectedDate
+                                                        ) =>
+                                                            setEvent(cur => {
+                                                                return {
+                                                                    ...cur,
+                                                                    starting:
+                                                                        selectedDate.getTime(),
+                                                                };
+                                                            })
+                                                        }
+                                                        maximumDate={
+                                                            new Date(
+                                                                2100,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            )
+                                                        }
+                                                    />
+                                                    <DateTimePicker
+                                                        value={
+                                                            new Date(
+                                                                event.starting
+                                                            )
+                                                        }
+                                                        is24Hour
+                                                        mode="time"
+                                                        style={{
+                                                            marginLeft:
+                                                                style.defaultMsm,
+                                                        }}
+                                                        minimumDate={
+                                                            new Date(Date.now())
+                                                        }
+                                                        onChange={(
+                                                            ev,
+                                                            selectedDate
+                                                        ) =>
+                                                            setEvent(cur => {
+                                                                return {
+                                                                    ...cur,
+                                                                    starting:
+                                                                        selectedDate.getTime(),
+                                                                };
+                                                            })
+                                                        }
+                                                        maximumDate={
+                                                            new Date(
+                                                                2100,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            )
+                                                        }
+                                                    />
+                                                </>
+                                            )}
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <View style={{ marginTop: style.defaultMsm }}>
+                                    <View style={{ maxHeight: 58 }}>
+                                        <View
+                                            style={[
+                                                styles.timesInputContainer,
+                                                style.border,
+                                                style.oHidden,
+                                                style.allMax,
+                                                style.Pmd,
+                                            ]}>
+                                            <View
+                                                style={[
+                                                    styles.timesIcon,
+                                                    style.allCenter,
+                                                ]}>
+                                                <SVG_Flag
+                                                    fill={style.colors.sec}
+                                                />
+                                            </View>
+                                            <View
+                                                style={[
+                                                    styles.timesInnerContainer,
+                                                    style.tWhite,
+                                                    style.Tmd,
+                                                    style.pH,
+                                                ]}>
+                                                {Platform.OS === "ios" ? (
+                                                    <DateTimePicker
+                                                        value={
+                                                            new Date(
+                                                                event.ending
+                                                            )
+                                                        }
+                                                        mode="datetime"
+                                                        firstDayOfWeek={1}
+                                                        onChange={(
+                                                            ev,
+                                                            selectedDate
+                                                        ) =>
+                                                            setEvent(cur => {
+                                                                return {
+                                                                    ...cur,
+                                                                    ending: selectedDate.getTime(),
+                                                                };
+                                                            })
+                                                        }
+                                                        minimumDate={
+                                                            new Date(
+                                                                event.starting
+                                                                    ? event.starting
+                                                                    : Date.now()
+                                                            )
+                                                        }
+                                                        maximumDate={
+                                                            new Date(
+                                                                2100,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                0
+                                                            )
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <DateTimePicker
+                                                            value={
+                                                                new Date(
+                                                                    event.ending
+                                                                )
+                                                            }
+                                                            is24Hour
+                                                            mode="date"
+                                                            minimumDate={
+                                                                new Date(
+                                                                    event.starting
+                                                                        ? event.starting
+                                                                        : Date.now()
+                                                                )
+                                                            }
+                                                            onChange={(
+                                                                ev,
+                                                                selectedDate
+                                                            ) =>
+                                                                setEvent(
+                                                                    cur => {
+                                                                        return {
+                                                                            ...cur,
+                                                                            ending: selectedDate.getTime(),
+                                                                        };
+                                                                    }
+                                                                )
+                                                            }
+                                                            maximumDate={
+                                                                new Date(
+                                                                    2100,
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    0
+                                                                )
+                                                            }
+                                                        />
+                                                        <DateTimePicker
+                                                            value={
+                                                                new Date(
+                                                                    event.ending
+                                                                )
+                                                            }
+                                                            is24Hour
+                                                            mode="time"
+                                                            style={{
+                                                                marginLeft:
+                                                                    style.defaultMsm,
+                                                            }}
+                                                            minimumDate={
+                                                                new Date(
+                                                                    event.starting
+                                                                        ? event.starting
+                                                                        : Date.now()
+                                                                )
+                                                            }
+                                                            onChange={(
+                                                                ev,
+                                                                selectedDate
+                                                            ) =>
+                                                                setEvent(
+                                                                    cur => {
+                                                                        return {
+                                                                            ...cur,
+                                                                            ending: selectedDate.getTime(),
+                                                                        };
+                                                                    }
+                                                                )
+                                                            }
+                                                            maximumDate={
+                                                                new Date(
+                                                                    2100,
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    0
+                                                                )
+                                                            }
+                                                        />
+                                                    </>
+                                                )}
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+
+                            {/* Times Manual */}
+                            {/* <View style={{ marginTop: style.defaultMmd }}>
+                                <Text
+                                    style={[
+                                        style.Tmd,
+                                        style.tWhite,
+                                        { marginBottom: style.defaultMsm },
+                                    ]}>
+                                    {getLangs("eventcreate_info_times")} (
                                     {getLangs("eventcreate_info_times_hint")}{" "}
                                     DD.MM.YYYY hh:mm)
                                 </Text>
@@ -601,7 +991,7 @@ export default function EventCreate({ navigation }) {
                                         }}
                                     />
                                 </View>
-                            </View>
+                            </View> */}
                         </View>
                     </View>
 
@@ -1163,6 +1553,11 @@ const styles = StyleSheet.create({
         height: 25,
         zIndex: 99,
         position: "absolute",
+        transform: [
+            {
+                translateY: -8,
+            },
+        ],
         ...style.boxShadow,
     },
     textContainer: {
@@ -1264,5 +1659,25 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         marginTop: style.defaultMmd,
+    },
+
+    timesInputContainer: {
+        flexDirection: "row",
+        borderRadius: 10,
+        zIndex: 10,
+        borderColor: style.colors.sec,
+        alignItems: "center",
+        maxHeight: 58,
+    },
+    timesInnerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    timesIcon: {
+        aspectRatio: 1,
+        height: "100%",
+        maxHeight: 24,
+        maxWidth: 24,
+        marginRight: style.defaultMsm,
     },
 });

@@ -39,6 +39,7 @@ import AccessoryView from "../../components/AccessoryView";
 
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Pencil from "../../assets/svg/Pencil";
+import SVG_Email from "../../assets/svg/Email";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -169,7 +170,9 @@ export default function Register({ navigation }) {
                                         name: registerData.name,
                                         description: registerData.description,
                                         pbUri: url,
-                                        follower: [],
+                                        follower: [
+                                            "Co2jZnyLZaf04HihTPtrzDNzaBG2",
+                                        ],
                                         following: [],
                                         posts: [],
                                         events: [],
@@ -215,7 +218,20 @@ export default function Register({ navigation }) {
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
         let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) return;
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na galeriju přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -247,6 +263,45 @@ export default function Register({ navigation }) {
             pbUri: croppedPicker.uri,
         });
         setPbImageUri(pickerResult.assets[0].uri);
+    };
+
+    const setUnfullfilledAlert = () => {
+        let missing = "";
+
+        switch (currentRegisterState) {
+            case 0:
+                missing += `\n${getLangs("missing_name")} [3 - 32]`;
+                break;
+            case 1:
+                missing += `\n${getLangs("missing_pbimg")}`;
+                break;
+            case 2:
+                missing += `\n${getLangs("missing_description")}`;
+                break;
+            case 3:
+                if (!registerData.email.match(emailRegex))
+                    missing += `\n${getLangs("missing_email")}`;
+                if (!registerData.password.match(savePasswordRegex))
+                    missing += `\n${getLangs("missing_goodpassword")}`;
+                if (registerData.password !== registerData.passwordConfirm)
+                    missing += `\n${getLangs("missing_equalpassword")}`;
+                break;
+            case 4:
+                missing += `\n${getLangs("missing_agb")}`;
+                break;
+        }
+
+        Alert.alert(
+            getLangs("missing_alert_title"),
+            `${getLangs("missing_alert_sub")}${missing}`,
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+            ]
+        );
     };
 
     return (
@@ -451,10 +506,9 @@ export default function Register({ navigation }) {
                                         autoComplete="email"
                                         textContentType="email"
                                         icon={
-                                            <Text
-                                                style={[style.tSec, style.Tmd]}>
-                                                @
-                                            </Text>
+                                            <SVG_Email
+                                                fill={style.colors.sec}
+                                            />
                                         }
                                         onChangeText={val => {
                                             setRegisterData({
@@ -487,7 +541,7 @@ export default function Register({ navigation }) {
                                             "minlength: 8; required: lower; required: upper; required: digit; required: special;"
                                         }
                                         icon={
-                                            <SVG_Pencil
+                                            <SVG_Email
                                                 fill={style.colors.sec}
                                             />
                                         }
@@ -547,86 +601,70 @@ export default function Register({ navigation }) {
                                     style.pH,
                                     { marginTop: style.defaultMmd },
                                 ]}>
-                                <View
-                                    style={[styles.agbContainer, style.border]}>
-                                    <ScrollView style={[style.Psm]}>
-                                        <Text
-                                            style={[style.tWhite, style.TsmRg]}>
-                                            Eiusmod labore laborum fugiat esse
-                                            proident eu aute anim eiusmod anim
-                                            minim nulla. Reprehenderit
-                                            reprehenderit sint veniam irure ea
-                                            culpa minim mollit reprehenderit
-                                            aute. Pariatur non eiusmod
-                                            exercitation dolore anim proident
-                                            nostrud aliqua. Laboris nisi
-                                            voluptate id labore anim
-                                            exercitation laboris laboris nulla.
-                                            Labore velit magna voluptate do ut
-                                            cillum consequat consectetur duis.
-                                            Eiusmod labore laborum fugiat esse
-                                            proident eu aute anim eiusmod anim
-                                            minim nulla. Reprehenderit
-                                            reprehenderit sint veniam irure ea
-                                            culpa minim mollit reprehenderit
-                                            aute. Pariatur non eiusmod
-                                            exercitation dolore anim proident
-                                            nostrud aliqua. Laboris nisi
-                                            voluptate id labore anim
-                                            exercitation laboris laboris nulla.
-                                            Labore velit magna voluptate do ut
-                                            cillum consequat consectetur duis.
-                                            Eiusmod labore laborum fugiat esse
-                                            proident eu aute anim eiusmod anim
-                                            minim nulla. Reprehenderit
-                                            reprehenderit sint veniam irure ea
-                                            culpa minim mollit reprehenderit
-                                            aute. Pariatur non eiusmod
-                                            exercitation dolore anim proident
-                                            nostrud aliqua. Laboris nisi
-                                            voluptate id labore anim
-                                            exercitation laboris laboris nulla.
-                                            Labore velit magna voluptate do ut
-                                            cillum consequat consectetur duis.
-                                            Eiusmod labore laborum fugiat esse
-                                            proident eu aute anim eiusmod anim
-                                            minim nulla. Reprehenderit
-                                            reprehenderit sint veniam irure ea
-                                            culpa minim mollit reprehenderit
-                                            aute. Pariatur non eiusmod
-                                            exercitation dolore anim proident
-                                            nostrud aliqua. Laboris nisi
-                                            voluptate id labore anim
-                                            exercitation laboris laboris nulla.
-                                            Labore velit magna voluptate do ut
-                                            cillum consequat consectetur duis.
-                                            Eiusmod labore laborum fugiat esse
-                                            proident eu aute anim eiusmod anim
-                                            minim nulla. Reprehenderit
-                                            reprehenderit sint veniam irure ea
-                                            culpa minim mollit reprehenderit
-                                            aute. Pariatur non eiusmod
-                                            exercitation dolore anim proident
-                                            nostrud aliqua. Laboris nisi
-                                            voluptate id labore anim
-                                            exercitation laboris laboris nulla.
-                                            Labore velit magna voluptate do ut
-                                            cillum consequat consectetur duis.
-                                            Eiusmod labore laborum fugiat esse
-                                            proident eu aute anim eiusmod anim
-                                            minim nulla. Reprehenderit
-                                            reprehenderit sint veniam irure ea
-                                            culpa minim mollit reprehenderit
-                                            aute. Pariatur non eiusmod
-                                            exercitation dolore anim proident
-                                            nostrud aliqua. Laboris nisi
-                                            voluptate id labore anim
-                                            exercitation laboris laboris nulla.
-                                            Labore velit magna voluptate do ut
-                                            cillum consequat consectetur duis.
-                                        </Text>
-                                    </ScrollView>
-                                </View>
+                                <Text
+                                    style={[
+                                        style.tWhite,
+                                        style.TsmRg,
+                                        { opacity: 0.5 },
+                                    ]}>
+                                    Eiusmod labore laborum fugiat esse proident
+                                    eu aute anim eiusmod anim minim nulla.
+                                    Reprehenderit reprehenderit sint veniam
+                                    irure ea culpa minim mollit reprehenderit
+                                    aute. Pariatur non eiusmod exercitation
+                                    dolore anim proident nostrud aliqua. Laboris
+                                    nisi voluptate id labore anim exercitation
+                                    laboris laboris nulla. Labore velit magna
+                                    voluptate do ut cillum consequat consectetur
+                                    duis. Eiusmod labore laborum fugiat esse
+                                    proident eu aute anim eiusmod anim minim
+                                    nulla. Reprehenderit reprehenderit sint
+                                    veniam irure ea culpa minim mollit
+                                    reprehenderit aute. Pariatur non eiusmod
+                                    exercitation dolore anim proident nostrud
+                                    aliqua. Laboris nisi voluptate id labore
+                                    anim exercitation laboris laboris nulla.
+                                    Labore velit magna voluptate do ut cillum
+                                    consequat consectetur duis. Eiusmod labore
+                                    laborum fugiat esse proident eu aute anim
+                                    eiusmod anim minim nulla. Reprehenderit
+                                    reprehenderit sint veniam irure ea culpa
+                                    minim mollit reprehenderit aute. Pariatur
+                                    non eiusmod exercitation dolore anim
+                                    proident nostrud aliqua. Laboris nisi
+                                    voluptate id labore anim exercitation
+                                    laboris laboris nulla. Labore velit magna
+                                    voluptate do ut cillum consequat consectetur
+                                    duis. Eiusmod labore laborum fugiat esse
+                                    proident eu aute anim eiusmod anim minim
+                                    nulla. Reprehenderit reprehenderit sint
+                                    veniam irure ea culpa minim mollit
+                                    reprehenderit aute. Pariatur non eiusmod
+                                    exercitation dolore anim proident nostrud
+                                    aliqua. Laboris nisi voluptate id labore
+                                    anim exercitation laboris laboris nulla.
+                                    Labore velit magna voluptate do ut cillum
+                                    consequat consectetur duis. Eiusmod labore
+                                    laborum fugiat esse proident eu aute anim
+                                    eiusmod anim minim nulla. Reprehenderit
+                                    reprehenderit sint veniam irure ea culpa
+                                    minim mollit reprehenderit aute. Pariatur
+                                    non eiusmod exercitation dolore anim
+                                    proident nostrud aliqua. Laboris nisi
+                                    voluptate id labore anim exercitation
+                                    laboris laboris nulla. Labore velit magna
+                                    voluptate do ut cillum consequat consectetur
+                                    duis. Eiusmod labore laborum fugiat esse
+                                    proident eu aute anim eiusmod anim minim
+                                    nulla. Reprehenderit reprehenderit sint
+                                    veniam irure ea culpa minim mollit
+                                    reprehenderit aute. Pariatur non eiusmod
+                                    exercitation dolore anim proident nostrud
+                                    aliqua. Laboris nisi voluptate id labore
+                                    anim exercitation laboris laboris nulla.
+                                    Labore velit magna voluptate do ut cillum
+                                    consequat consectetur duis.
+                                </Text>
                                 <View style={styles.checkContainer}>
                                     <Check
                                         color={1}
@@ -686,7 +724,7 @@ export default function Register({ navigation }) {
                                             return val + 1;
                                         });
                                     }
-                                }
+                                } else setUnfullfilledAlert();
                             }}
                             checked={buttonChecked}
                         />

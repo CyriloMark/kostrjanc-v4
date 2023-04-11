@@ -67,7 +67,7 @@ export default function UserList({ navigation, route }) {
                     style.container,
                     style.pH,
                     style.oVisible,
-                    { marginTop: style.defaultMsm },
+                    { marginVertical: style.defaultMsm },
                 ]}
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}

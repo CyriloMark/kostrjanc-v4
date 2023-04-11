@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import { Pressable, View, StyleSheet, Text, Dimensions } from "react-native";
+import React from "react";
+import { Pressable, View, StyleSheet, Text } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -37,7 +37,8 @@ export default function NewCommentButton({ style, onPress }) {
 const styles = StyleSheet.create({
     container: {
         maxHeight: 58,
-        maxWidth: Dimensions.get("screen").width / 2,
+        // maxWidth: Dimensions.get("screen").width,
+        maxWidth: "100%",
         borderRadius: 25,
     },
     inner: {

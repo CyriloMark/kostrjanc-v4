@@ -6,10 +6,13 @@ import {
     ScrollView,
     Text,
     Image,
+    Alert,
 } from "react-native";
 
 import * as style from "../../styles";
 import * as Account from "../../components/settings";
+
+import { setStringAsync } from "expo-clipboard";
 
 import BackHeader from "../../components/BackHeader";
 import EditProfileButton from "../../components/profile/EditProfileButton";
@@ -17,11 +20,57 @@ import OptionButton from "../../components/OptionButton";
 
 import { getLangs } from "../../constants/langs";
 
+import SVG_Copy from "../../assets/svg/Share";
 import SVG_Logout from "../../assets/svg/Logout";
 import SVG_Basket from "../../assets/svg/Basket";
 
 export default function Profile({ navigation, route }) {
     const { uid, userData } = route.params;
+
+    const copy = async () => {
+        const output = `${getLangs("settings_profile_statinfo_username")} ${
+            userData.name
+        }\n${getLangs("settings_profile_statinfo_uid")} ${uid}\n${getLangs(
+            "settings_profile_statinfo_description"
+        )} ${userData.description}\n${getLangs(
+            "settings_profile_statinfo_amtfollower"
+        )} ${userData.follower ? userData.follower.length : 0}\n${getLangs(
+            "settings_profile_statinfo_amtfollowing"
+        )} ${userData.following ? userData.following.length : 0}\n\n${getLangs(
+            "settings_profile_statinfo_amtposts"
+        )} ${userData.posts ? userData.posts.length : 0}\n${getLangs(
+            "settings_profile_statinfo_amtevents"
+        )} ${userData.events ? userData.events.length : 0}\n\n${getLangs(
+            "settings_profile_statinfo_posts"
+        )}\n
+        ${userData.posts.map(
+            (p, key) => `${p}${key !== userData.posts.length - 1 ? ", " : ""}`
+        )}\n\n${getLangs("settings_profile_statinfo_events")}\n
+        ${userData.events.map(
+            (e, key) => `${e}${key !== userData.events.length - 1 ? ", " : ""}`
+        )}\n\n${getLangs("settings_profile_statinfo_banned")} ${
+            userData.isBanned ? getLangs("yes") : getLangs("no")
+        }\n${getLangs("settings_profile_statinfo_mod")} ${
+            userData.isMod ? getLangs("yes") : getLangs("no")
+        }\n${getLangs("settings_profile_statinfo_businessprogram")} ${
+            userData.isBuisness ? getLangs("yes") : getLangs("no")
+        }\n${getLangs("settings_profile_statinfo_admin")} ${
+            userData.isAdmin ? getLangs("yes") : getLangs("no")
+        }`;
+
+        await setStringAsync(output);
+        Alert.alert(
+            getLangs("settings_profile_copy_title"),
+            getLangs("settings_profile_copy_sub"),
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+            ]
+        );
+    };
 
     return (
         <View style={[style.container, style.bgBlack]}>
@@ -104,11 +153,6 @@ export default function Profile({ navigation, route }) {
                             )}{" "}
                             {userData.description}
                             {"\n"}
-                            Expo Push Token: {userData.expoPushToken}
-                            {"\n"}
-                            {getLangs("settings_profile_statinfo_pburi")}{" "}
-                            {userData.pbUri}
-                            {"\n"}
                             {getLangs(
                                 "settings_profile_statinfo_amtfollower"
                             )}{" "}
@@ -184,6 +228,23 @@ export default function Profile({ navigation, route }) {
                                 : getLangs("no")}
                         </Text>
                     </View>
+                    <OptionButton
+                        style={styles.optionButton}
+                        title={getLangs("settings_profile_account_copy")}
+                        icon={
+                            <SVG_Copy
+                                style={{
+                                    transform: [
+                                        {
+                                            scale: 0.9,
+                                        },
+                                    ],
+                                }}
+                                fill={style.colors.white}
+                            />
+                        }
+                        onPress={copy}
+                    />
                 </View>
 
                 {/* Actions */}
@@ -194,7 +255,18 @@ export default function Profile({ navigation, route }) {
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_logout")}
-                        icon={<SVG_Logout fill={style.colors.red} />}
+                        icon={
+                            <SVG_Logout
+                                style={{
+                                    transform: [
+                                        {
+                                            scaleX: -1,
+                                        },
+                                    ],
+                                }}
+                                fill={style.colors.red}
+                            />
+                        }
                         onPress={Account.logout}
                         red
                     />

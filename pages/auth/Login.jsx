@@ -19,6 +19,7 @@ import { getLangs } from "../../constants/langs";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
+import SVG_Email from "../../assets/svg/Email";
 
 import BackHeader from "../../components/BackHeader";
 import InputField from "../../components/InputField";
@@ -59,6 +60,24 @@ export default function Login({ navigation }) {
         if (loginData.email.match(emailRegex)) setDataFull(true);
         else setDataFull(false);
     }, [loginData]);
+
+    const setUnfullfilledAlert = () => {
+        let missing = "";
+        if (!loginData.email.match(emailRegex))
+            missing += `\n${getLangs("missing_email")}`;
+
+        Alert.alert(
+            getLangs("missing_alert_title"),
+            `${getLangs("missing_alert_sub")}${missing}`,
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+            ]
+        );
+    };
 
     return (
         <View style={[style.container, style.bgBlack]}>
@@ -102,11 +121,7 @@ export default function Login({ navigation }) {
                                     keyboardType="email-address"
                                     autoComplete="email"
                                     textContentType="email"
-                                    icon={
-                                        <Text style={[style.tSec, style.Tmd]}>
-                                            @
-                                        </Text>
-                                    }
+                                    icon={<SVG_Email fill={style.colors.sec} />}
                                     onChangeText={val => {
                                         setLoginData({
                                             ...loginData,
@@ -151,7 +166,7 @@ export default function Login({ navigation }) {
                                 onPress={() => navigation.navigate("reset")}>
                                 <Text
                                     style={[
-                                        style.tBlue,
+                                        style.tWhite,
                                         style.Tmd,
                                         style.tCenter,
                                     ]}>
@@ -164,6 +179,7 @@ export default function Login({ navigation }) {
                             <EnterButton
                                 onPress={() => {
                                     if (dataFull) login();
+                                    else setUnfullfilledAlert();
                                 }}
                                 checked={dataFull}
                             />

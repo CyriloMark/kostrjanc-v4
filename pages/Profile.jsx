@@ -480,6 +480,8 @@ export default function Profile({ navigation, route }) {
                         }
                     />
                 </View>
+
+                <View style={styles.sectionContainer} />
             </ScrollView>
         </View>
     );

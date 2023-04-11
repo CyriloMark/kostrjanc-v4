@@ -1,13 +1,16 @@
 import React from "react";
 
-import { SafeAreaView } from "react-native-safe-area-context";
+// import { View } from "react-native";
+import {
+    SafeAreaView,
+    useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import * as style from "../../styles";
 
-import {
-    CardStyleInterpolators,
-    createStackNavigator,
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import BottomTransitionBar from "../../components/BottomTransitionBar";
 
 //#region Pages
 import Landing from "./Landing";
@@ -41,14 +44,16 @@ import Ban from "../interaction/Ban";
 const MainNavStack = createStackNavigator();
 
 export default function ViewportManager() {
+    const insets = useSafeAreaInsets();
+
     return (
         <SafeAreaView style={[style.container]}>
             <MainNavStack.Navigator
                 screenOptions={{
                     animationEnabled: true,
                     gestureEnabled: true,
-                    cardStyleInterpolator:
-                        CardStyleInterpolators.forHorizontalIOS,
+                    // cardStyleInterpolator:
+                    //     CardStyleInterpolators.forHorizontalIOS,
                     headerShown: false,
                     cardOverlayEnabled: true,
                     cardShadowEnabled: true,
@@ -120,6 +125,8 @@ export default function ViewportManager() {
                 <MainNavStack.Screen name="report" component={Report} />
                 <MainNavStack.Screen name="ban" component={Ban} />
             </MainNavStack.Navigator>
+
+            <BottomTransitionBar style={{ bottom: insets.bottom }} />
         </SafeAreaView>
     );
 }

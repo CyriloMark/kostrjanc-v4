@@ -24,8 +24,31 @@ export const convertTextIntoTimestamp = val => {
 
     if (dateSplit.length != 5) return null;
 
+    const getYear = () => {
+        let out = "";
+        switch (dateSplit[2].length) {
+            case 1:
+                out = `200${dateSplit[2]}`;
+                break;
+            case 2:
+                out = `20${dateSplit[2]}`;
+                break;
+            case 3:
+                out = `2${dateSplit[2]}`;
+                break;
+            case 4:
+                out = dateSplit[2];
+                break;
+            default:
+                break;
+        }
+        return out;
+    };
+
+    const year = getYear();
+
     const dateFormat = new Date(
-        dateSplit[2],
+        year,
         dateSplit[1] - 1,
         dateSplit[0],
         dateSplit[3],

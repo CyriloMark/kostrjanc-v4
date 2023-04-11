@@ -22,7 +22,7 @@ export default function TextField(props) {
                 ]}>
                 <TextInput
                     allowFontScaling
-                    autoCapitalize="none"
+                    autoCapitalize="sentences"
                     autoCorrect={false}
                     cursorColor={style.colors.blue}
                     multiline

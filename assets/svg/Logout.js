@@ -2,19 +2,7 @@ import Svg, { Path, Line } from "react-native-svg";
 
 export default function Logout(props) {
     return (
-        <Svg
-            viewBox="0 0 375 500"
-            scaleX={-1}
-            style={[
-                props.style,
-                {
-                    transform: [
-                        {
-                            scaleX: -1,
-                        },
-                    ],
-                },
-            ]}>
+        <Svg viewBox="0 0 375 500" scaleX={-1} style={props.style}>
             <Path
                 d={
                     "m287.5,487.5H69.83c-31.66,0-57.33-25.68-57.33-57.36V69.86c0-31.68,25.67-57.36,57.33-57.36h217.67"

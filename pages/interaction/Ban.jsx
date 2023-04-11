@@ -242,6 +242,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     button: {
-        marginTop: style.defaultMlg,
+        marginVertical: style.defaultMlg,
     },
 });

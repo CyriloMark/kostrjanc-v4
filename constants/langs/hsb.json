@@ -89,6 +89,8 @@
         "link_title": "Link wočinić?",
         "link_sec": "Chceš so na eksternu stronu dale wodźić dać?",
 
+        "hint_title": "Pokiw:",
+
         "input_entertitle_email": "Email zapodać:",
         "input_entertitle_password": "Hesło zapodać:",
         "input_entertitle_passwordconfirm": "Hesło wospjetować:",
@@ -158,7 +160,7 @@
         "auth_landing_sub_1": "abo hač je to samo prěni raz tu.",
         "auth_landing_sub_2": "Sy wutrobnje witany!",
         "auth_landing_begin": "Započinaj twój puć hnydom z kostrjanc:",
-        "auth_landing_login": "Z starym kontom so přizjewić",
+        "auth_landing_login": "So přizjewić",
         "auth_landing_register": "Nowy konto wotewrić",
 
         "auth_login_title": "Přizjew so z twojim kontom:",
@@ -258,7 +260,7 @@
         "eventcreate_info_times": "Časy ewenta:",
         "eventcreate_info_times_start": "Spočatk",
         "eventcreate_info_times_end": "Kónc",
-        "eventcreate_info_times_hint": "forma:",
+        "eventcreate_info_times_hint": "spočatk a kónc",
         "eventcreate_eventdata_title": "Přidatne podaća:",
         "eventcreate_eventdata_sub": "Wuzwol sej informacije kiž chceš přidatnje dodać:",
         "eventcreate_eventdata_type": "Typ ewenta",
@@ -280,6 +282,9 @@
         "eventcreate_publishsuccessful_title": "Wuspěšnje wozjewjeny ewent!",
         "eventcreate_publishsuccessful_sub_0": "Ewent",
         "eventcreate_publishsuccessful_sub_1": "je so wuspěšnje wozjewił.",
+        "eventcreate_nostart": "Žadyn spočatk podaty",
+        "eventcreate_noend": "Žadyn kónc podaty",
+        "eventcreate_maphint": "Zoomuj a přesuń kartu, zo poziciju pokazowaka změniš. Pokazowak pokaza na měnstnosć ewenta.",
 
         "settings_landing_title": "Zastajenja",
         "settings_landing_bugbutton_title": "Sy zmylk namakał?",
@@ -342,6 +347,9 @@
         "settings_profile_statinfo_businessprogram": "Business Program partner:",
         "settings_profile_statinfo_admin": "Admin:",
         "settings_profile_interaction_title": "Interakcije:",
+        "settings_profile_account_copy": "Daty kopěrować",
+        "settings_profile_copy_title": "Wuspěšnje kopěrowane",
+        "settings_profile_copy_sub": "Twoje daty su so wuspěšnje kopěrowali.",
 
         "settings_datasecurityimpresum_title": "Datowy škit / Impresum",
         "settings_datasecurityimpresum_impresum_title": "Impresum:",
@@ -368,6 +376,20 @@
         "banelement_ban_sub_0": "so banuje, nic wužiwar.",
         "banelement_ban_sub_1": "Wužiwar a wšitke wozjewjenja so banuja.",
         "banelement_error_title": "Ban njebě wuspěšny!",
-        "banelement_error_sub": "Problem je nastał při banowanju."
+        "banelement_error_sub": "Problem je nastał při banowanju.",
+
+        "missing_alert_title": "Zapodaj trěbne informacije.",
+        "missing_alert_sub": "Faluja hišće:",
+        "missing_title": "titul",
+        "missing_description": "wopisanje",
+        "missing_img": "wobraz",
+        "missing_start": "spočatk",
+        "missing_end": "kónc",
+        "missing_email": "walidna email",
+        "missing_name": "mjeno",
+        "missing_pbimg": "profilny wobraz",
+        "missing_equalpassword": "indentiskej hesłje",
+        "missing_goodpassword": "mócne hesło [wulke małke pismiki, ličby, wosebite znamja]",
+        "missing_agb": "přiznaće powšitkownych wobchodnowych wuměnjenjow"
     }
 }

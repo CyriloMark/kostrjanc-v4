@@ -80,6 +80,8 @@ export default function Help({ navigation }) {
                         </View>
                     ))}
                 </View>
+
+                <View style={styles.sectionContainer} />
             </ScrollView>
         </View>
     );

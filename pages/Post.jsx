@@ -7,7 +7,6 @@ import {
     Text,
     TextInput,
     Image,
-    RefreshControl,
     Platform,
     KeyboardAvoidingView,
 } from "react-native";
@@ -150,6 +149,18 @@ export default function Post({ navigation, route }) {
             });
     };
 
+    const removeComment = comment => {
+        const newCommentList = post.comments.filter(c => c !== comment);
+        setPost(cur => {
+            return {
+                ...cur,
+                comments: newCommentList,
+            };
+        });
+
+        set(ref(getDatabase(), `posts/${id}/comments`), newCommentList);
+    };
+
     useEffect(() => {
         loadData();
         getIfAdmin();
@@ -286,7 +297,11 @@ export default function Post({ navigation, route }) {
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("content_comments_title")}
                         </Text>
-                        <View style={{ marginTop: style.defaultMmd }}>
+                        <View
+                            style={{
+                                marginTop: style.defaultMmd,
+                                flexDirection: "row",
+                            }}>
                             <NewCommentButton onPress={openCommentInput} />
                         </View>
 
@@ -372,6 +387,7 @@ export default function Post({ navigation, route }) {
                                             : null
                                     }
                                     commentData={comment}
+                                    onRemove={() => removeComment(comment)}
                                 />
                             ))}
                         </View>
@@ -403,6 +419,8 @@ export default function Post({ navigation, route }) {
                             }
                         />
                     </View>
+
+                    <View style={styles.sectionContainer} />
                 </ScrollView>
             </KeyboardAvoidingView>
 
@@ -465,5 +483,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "100%",
         maxHeight: 58,
+        alignItems: "center",
     },
 });

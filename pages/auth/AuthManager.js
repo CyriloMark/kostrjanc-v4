@@ -1,6 +1,9 @@
 import React from "react";
 
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+    SafeAreaView,
+    useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import * as style from "../../styles";
 
@@ -8,6 +11,8 @@ import {
     CardStyleInterpolators,
     createStackNavigator,
 } from "@react-navigation/stack";
+
+import BottomTransitionBar from "../../components/BottomTransitionBar";
 
 //#region Pages
 import Landing from "./Landing";
@@ -20,6 +25,8 @@ import ResetPassword from "./ResetPassword";
 const AuthNavStack = createStackNavigator();
 
 export default function AuthManager() {
+    const insets = useSafeAreaInsets();
+
     return (
         <SafeAreaView style={[style.container]}>
             <AuthNavStack.Navigator
@@ -40,6 +47,8 @@ export default function AuthManager() {
                 <AuthNavStack.Screen name="register" component={Register} />
                 <AuthNavStack.Screen name="reset" component={ResetPassword} />
             </AuthNavStack.Navigator>
+
+            <BottomTransitionBar style={{ bottom: insets.bottom }} />
         </SafeAreaView>
     );
 }

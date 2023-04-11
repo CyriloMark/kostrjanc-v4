@@ -225,6 +225,6 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        marginTop: style.defaultMlg,
+        marginVertical: style.defaultMlg,
     },
 });

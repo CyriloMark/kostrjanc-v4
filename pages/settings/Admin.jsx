@@ -151,6 +151,8 @@ export default function Admin({ navigation }) {
                         ))}
                     </View>
                 </View>
+
+                <View style={styles.sectionContainer} />
             </ScrollView>
         </View>
     );

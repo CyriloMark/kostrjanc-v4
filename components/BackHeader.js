@@ -1,12 +1,5 @@
 import React from "react";
-import {
-    View,
-    StyleSheet,
-    Text,
-    Image,
-    Pressable,
-    Platform,
-} from "react-native";
+import { View, StyleSheet, Text, Pressable, Platform } from "react-native";
 
 import * as style from "../styles";
 

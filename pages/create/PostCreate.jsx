@@ -50,8 +50,21 @@ export default function PostCreate({ navigation }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) return;
+        let permissionResult = await requestMediaLibraryPermissionsAsync(true);
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na galeriju přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -97,12 +110,37 @@ export default function PostCreate({ navigation }) {
         setButtonChecked(inputValid);
     };
 
+    const setUnfullfilledAlert = () => {
+        let missing = "";
+        if (post.title.length === 0)
+            missing += `\n${getLangs("missing_title")}`;
+        if (post.description.length === 0)
+            missing += `\n${getLangs("missing_description")}`;
+        if (post.imgUri === Post_Placeholder.imgUri)
+            missing += `\n${getLangs("missing_img")}`;
+
+        Alert.alert(
+            getLangs("missing_alert_title"),
+            `${getLangs("missing_alert_sub")}${missing}`,
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+            ]
+        );
+    };
+
     useEffect(() => {
         checkButton();
     }, [post]);
 
     const publishPost = async () => {
-        if (!buttonChecked) return;
+        if (!buttonChecked) {
+            setUnfullfilledAlert();
+            return;
+        }
         if (btnPressed) return;
         btnPressed = true;
 
@@ -325,6 +363,7 @@ export default function PostCreate({ navigation }) {
                                     placeholder={getLangs(
                                         "input_placeholder_contentname"
                                     )}
+                                    autoCapitalize="sentences"
                                     keyboardType="default"
                                     value={post.title}
                                     inputAccessoryViewID="post_title_InputAccessoryViewID"

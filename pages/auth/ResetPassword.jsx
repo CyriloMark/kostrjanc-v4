@@ -9,7 +9,6 @@ import {
     Platform,
     ScrollView,
     KeyboardAvoidingView,
-    InputAccessoryView,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -22,6 +21,8 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import BackHeader from "../../components/BackHeader";
 import InputField from "../../components/InputField";
 import EnterButton from "../../components/auth/EnterButton";
+
+import SVG_Email from "../../assets/svg/Email";
 
 let reseted = false;
 
@@ -42,6 +43,24 @@ export default function ResetPassword({ navigation }) {
                     text: "Ok",
                     isPreferred: true,
                     style: "cancel",
+                },
+            ]
+        );
+    };
+
+    const setUnfullfilledAlert = () => {
+        let missing = "";
+        if (!resetPWData.email.match(emailRegex))
+            missing += `\n${getLangs("missing_email")}`;
+
+        Alert.alert(
+            getLangs("missing_alert_title"),
+            `${getLangs("missing_alert_sub")}${missing}`,
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
                 },
             ]
         );
@@ -127,11 +146,7 @@ export default function ResetPassword({ navigation }) {
                                     autoComplete="email"
                                     inputAccessoryViewID="loginInputAccessoryViewID"
                                     textContentType="email"
-                                    icon={
-                                        <Text style={[style.tSec, style.Tmd]}>
-                                            @
-                                        </Text>
-                                    }
+                                    icon={<SVG_Email fill={style.colors.sec} />}
                                     onChangeText={val => {
                                         setResetPWData({
                                             ...resetPWData,
@@ -145,7 +160,8 @@ export default function ResetPassword({ navigation }) {
                         <View style={[style.allCenter, styles.button]}>
                             <EnterButton
                                 onPress={() => {
-                                    if (dataFull) login();
+                                    if (dataFull) reset();
+                                    else setUnfullfilledAlert();
                                 }}
                                 checked={dataFull}
                             />

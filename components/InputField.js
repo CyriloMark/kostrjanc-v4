@@ -19,8 +19,7 @@ export default function InputField(props) {
                 <View style={[styles.icon, s.allCenter]}>{props.icon}</View>
                 <TextInput
                     allowFontScaling
-                    autoCapitalize="none"
-                    autoCorrect={false}
+                    autoCorrect
                     cursorColor={s.colors.blue}
                     multiline={false}
                     numberOfLines={1}

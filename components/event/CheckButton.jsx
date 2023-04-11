@@ -7,6 +7,9 @@ import * as s from "../../styles";
 
 import { getLangs } from "../../constants/langs";
 
+import SVG_Add from "../../assets/svg/Add";
+import SVG_Basket from "../../assets/svg/Basket";
+
 export default function CheckButton({ style, onPress, checked }) {
     if (checked) {
         //Checked
@@ -16,11 +19,22 @@ export default function CheckButton({ style, onPress, checked }) {
                     style={[styles.container, s.oHidden]}
                     onPress={onPress}>
                     <LinearGradient
-                        style={[s.Pmd, s.allCenter]}
+                        style={[s.Pmd, s.allCenter, styles.inner]}
                         colors={[s.colors.red, s.colors.white]}
                         end={{ x: 0.5, y: 2.5 }}
                         locations={[0, 0.75]}>
-                        <Text style={[s.tBlack, s.Tmd]}>
+                        <View>
+                            <SVG_Basket
+                                style={[s.boxShadow, s.oVisible, styles.icon]}
+                                fill={s.colors.white}
+                            />
+                        </View>
+                        <Text
+                            style={[
+                                s.tWhite,
+                                s.Tmd,
+                                { marginLeft: s.defaultMmd },
+                            ]}>
                             {getLangs("checkbtn_uncheck")}
                         </Text>
                     </LinearGradient>
@@ -35,11 +49,22 @@ export default function CheckButton({ style, onPress, checked }) {
                     style={[styles.container, s.oHidden]}
                     onPress={onPress}>
                     <LinearGradient
-                        style={[s.Pmd, s.allCenter]}
+                        style={[s.Pmd, s.allCenter, styles.inner]}
                         colors={[s.colors.blue, s.colors.sec]}
                         end={{ x: -0.5, y: 0.5 }}
                         locations={[0, 0.75]}>
-                        <Text style={[s.tWhite, s.Tmd]}>
+                        <View>
+                            <SVG_Add
+                                style={[s.boxShadow, s.oVisible, styles.icon2]}
+                                fill={s.colors.white}
+                            />
+                        </View>
+                        <Text
+                            style={[
+                                s.tWhite,
+                                s.Tmd,
+                                { marginLeft: s.defaultMmd },
+                            ]}>
                             {getLangs("checkbtn_check")}
                         </Text>
                     </LinearGradient>
@@ -52,7 +77,22 @@ export default function CheckButton({ style, onPress, checked }) {
 const styles = StyleSheet.create({
     container: {
         maxHeight: 58,
-        maxWidth: Dimensions.get("screen").width / 2,
+        // maxWidth: Dimensions.get("screen").width,
+        maxWidth: "100%",
         borderRadius: 25,
+    },
+    inner: {
+        flexDirection: "row",
+        justifyContent: "center",
+    },
+    icon2: {
+        aspectRatio: 1,
+        maxWidth: 12,
+        maxHeight: 12,
+    },
+    icon: {
+        aspectRatio: 1,
+        maxWidth: 18,
+        maxHeight: 18,
     },
 });

@@ -1,8 +1,6 @@
 import React from "react";
 import { Pressable, View, StyleSheet } from "react-native";
 
-import { LinearGradient } from "expo-linear-gradient";
-
 import * as s from "../styles/index";
 
 import SVG_Share from "../assets/svg/Share";

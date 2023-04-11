@@ -6,7 +6,6 @@ import {
     Pressable,
     Text,
     Image,
-    RefreshControl,
     TextInput,
     Platform,
     KeyboardAvoidingView,
@@ -272,6 +271,18 @@ export default function Event({ navigation, route }) {
                 const db = getDatabase();
                 set(ref(db, `events/${id}/comments`), a);
             });
+    };
+
+    const removeComment = comment => {
+        const newCommentList = post.comments.filter(c => c !== comment);
+        setPost(cur => {
+            return {
+                ...cur,
+                comments: newCommentList,
+            };
+        });
+
+        set(ref(getDatabase(), `posts/${id}/comments`), newCommentList);
     };
 
     return (
@@ -553,19 +564,21 @@ export default function Event({ navigation, route }) {
                                     getAuth().currentUser.uid
                                 )}
                             />
-                            <ListButton
-                                title={event.checks.length}
-                                style={{ marginLeft: style.defaultMsm }}
-                                onPress={() =>
-                                    navigation.navigate("userList", {
-                                        users: checksUserListData,
-                                        title: getLangs(
-                                            "event_checkspagetitle"
-                                        ),
-                                        needData: false,
-                                    })
-                                }
-                            />
+                            {checksUserListData.length !== 0 ? (
+                                <ListButton
+                                    title={event.checks.length}
+                                    style={{ marginLeft: style.defaultMsm }}
+                                    onPress={() =>
+                                        navigation.navigate("userList", {
+                                            users: checksUserListData,
+                                            title: getLangs(
+                                                "event_checkspagetitle"
+                                            ),
+                                            needData: false,
+                                        })
+                                    }
+                                />
+                            ) : null}
                         </View>
 
                         <View
@@ -598,7 +611,11 @@ export default function Event({ navigation, route }) {
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("content_comments_title")}
                         </Text>
-                        <View style={{ marginTop: style.defaultMmd }}>
+                        <View
+                            style={{
+                                marginTop: style.defaultMmd,
+                                flexDirection: "row",
+                            }}>
                             <NewCommentButton onPress={openCommentInput} />
                         </View>
 
@@ -679,6 +696,7 @@ export default function Event({ navigation, route }) {
                                             : null
                                     }
                                     commentData={comment}
+                                    onRemove={() => removeComment(comment)}
                                 />
                             ))}
                         </View>
@@ -710,6 +728,8 @@ export default function Event({ navigation, route }) {
                             }
                         />
                     </View>
+
+                    <View style={styles.sectionContainer} />
                 </ScrollView>
             </KeyboardAvoidingView>
 
@@ -832,5 +852,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "100%",
         maxHeight: 58,
+        alignItems: "center",
     },
 });

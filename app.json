@@ -3,7 +3,7 @@
     "name": "kostrjanc",
     "slug": "kostrjanc",
     "owner": "kostrjanc",
-    "version": "0.8.5c",
+    "version": "0.8.6c",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
     "splash": {
@@ -40,6 +40,12 @@
     "description": "",
     "githubUrl": "https://github.com/CyriloMark/kostrjanc",
     "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Berechtigung, damit Fotos hochgeladen und geteilt werden dürfen."
+        }
+      ],
       [
         "expo-notifications",
         {

@@ -213,7 +213,18 @@ export default function Landing({ navigation }) {
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_logout")}
                         onPress={Account.logout}
-                        icon={<SVG_Logout fill={style.colors.red} />}
+                        icon={
+                            <SVG_Logout
+                                style={{
+                                    transform: [
+                                        {
+                                            scaleX: -1,
+                                        },
+                                    ],
+                                }}
+                                fill={style.colors.red}
+                            />
+                        }
                         red
                     />
                     <OptionButton
@@ -237,6 +248,8 @@ export default function Landing({ navigation }) {
                         Rights Reserved
                     </Text>
                 </View>
+
+                <View style={styles.sectionContainer} />
             </ScrollView>
         </View>
     );

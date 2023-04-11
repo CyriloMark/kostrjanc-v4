@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
     addBtnContainer: {
         position: "absolute",
         width: "100%",
-        bottom: Platform.OS === "ios" ? style.defaultMsm : style.defaultMlg,
+        bottom: Platform.OS === "ios" ? style.defaultMmd : style.defaultMlg,
         minHeight: 72,
     },
 

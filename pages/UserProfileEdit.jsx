@@ -8,6 +8,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     Image,
+    Alert,
 } from "react-native";
 
 import * as style from "../styles";
@@ -49,7 +50,20 @@ export default function UserProfileEdit({ navigation, route }) {
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
         let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) return;
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na galeriju přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -77,7 +91,7 @@ export default function UserProfileEdit({ navigation, route }) {
         );
 
         pbChanged = true;
-        setPbImageUri(pickerResult.assets[0].uri);
+        setPbImageUri(croppedPicker.uri);
     };
 
     const checkButton = () => {

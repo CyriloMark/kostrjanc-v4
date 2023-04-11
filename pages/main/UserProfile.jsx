@@ -372,9 +372,8 @@ const styles = StyleSheet.create({
     },
 
     editButton: {
-        marginTop: style.defaultMlg,
+        marginVertical: style.defaultMlg,
         alignSelf: "center",
-        marginBottom: style.defaultMmd,
     },
 
     statsContainer: {
