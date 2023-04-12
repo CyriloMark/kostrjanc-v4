@@ -2,8 +2,8 @@
   "expo": {
     "name": "kostrjanc",
     "slug": "kostrjanc",
-    "owner": "kostrjanc",
-    "version": "0.8.6c",
+    "owner": "lauske",
+    "version": "0.9.0b",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
     "splash": {
@@ -32,7 +32,10 @@
         "backgroundColor": "#060A0D"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "de.kostrjanc"
+      "package": "de.kostrjanc",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/icons/favicon.png"
@@ -53,6 +56,11 @@
           "color": "#5884B0"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4ee68e59-b2ec-411a-ae50-8664781a1a67"
+      }
+    }
   }
 }
