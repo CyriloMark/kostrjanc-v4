@@ -240,6 +240,12 @@
         "event_checkstitle": "Wer ist dabei:",
         "event_checkspagetitle": "Wer ist dabei",
 
+        "landingcreate_title": "Neue Veröffentlichung:",
+        "landingcreate_post_title": "Neuer Post",
+        "landingcreate_post_sub": "Möchtes du ein Post veröffentlichen?\nDieser beinhaltet ein Bild mit einem Titel und zusätzlichem Text.",
+        "landingcreate_event_title": "Neues Event",
+        "landingcreate_event_sub": "Möchtes du ein Event veröffentlichen?\nDieser beinhaltet einen Standort mit einem Titel und zusätzlichen Informationen.",
+
         "postcreate_headertitle": "Neuen Post veröffentlichen",
         "postcreate_posttitle": "Titel",
         "postcreate_imghint": "Drücken, dass man Bilder durchsuchen kann",
@@ -285,6 +291,8 @@
         "eventcreate_nostart": "Kein Anfang angegeben",
         "eventcreate_noend": "Kein Ende angegeben",
         "eventcreate_maphint": "Zoome und verschiebe die Karte, damit du die Position des Zeigers änderst. Der Zeiger deuted auf den Ort des Events.",
+        "eventcreate_date": "Datum",
+        "eventcreate_time": "Zeit",
 
         "settings_landing_title": "Einstellungen",
         "settings_landing_bugbutton_title": "Hast du den Fehler gefunden?",

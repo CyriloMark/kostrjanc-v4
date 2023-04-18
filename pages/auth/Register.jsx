@@ -323,7 +323,7 @@ export default function Register({ navigation }) {
                     snapToEnd
                     style={[style.container, style.pH, style.oVisible]}>
                     <View style={styles.titleContainer}>
-                        <Text style={[style.Ttitle, style.tWhite]}>
+                        <Text style={[style.Ttitle2, style.tWhite]}>
                             {getLangs("auth_register_title")}
                         </Text>
                         <Text
@@ -341,7 +341,7 @@ export default function Register({ navigation }) {
                     />
 
                     <View style={styles.sectionContainer}>
-                        <Text style={[style.Ttitle, style.tWhite]}>
+                        <Text style={[style.Ttitle2, style.tWhite]}>
                             {getLangs("auth_register_0_welcome")}{" "}
                             <Text style={style.tBlue}>kostrjanc</Text>!
                         </Text>
@@ -363,6 +363,7 @@ export default function Register({ navigation }) {
                                 placeholder={getLangs(
                                     "input_placeholder_username"
                                 )}
+                                maxLength={32}
                                 keyboardType="default"
                                 value={registerData.name}
                                 inputAccessoryViewID="register_name_InputAccessoryViewID"
@@ -382,7 +383,7 @@ export default function Register({ navigation }) {
 
                     {currentRegisterState >= 1 ? (
                         <View style={styles.sectionContainer}>
-                            <Text style={[style.Ttitle, style.tWhite]}>
+                            <Text style={[style.Ttitle2, style.tWhite]}>
                                 {getLangs("auth_register_1_intro")}{" "}
                                 <Text style={style.tBlue}>
                                     {registerData.name}
@@ -464,6 +465,7 @@ export default function Register({ navigation }) {
                                     placeholder={getLangs(
                                         "input_placeholder_description"
                                     )}
+                                    maxLength={512}
                                     value={registerData.description}
                                     inputAccessoryViewID="register_description_InputAccessoryViewID"
                                     onChangeText={val => {
@@ -502,6 +504,7 @@ export default function Register({ navigation }) {
                                         placeholder={getLangs(
                                             "input_placeholder_email"
                                         )}
+                                        maxLength={128}
                                         keyboardType="email-address"
                                         autoComplete="email"
                                         textContentType="email"
@@ -534,6 +537,7 @@ export default function Register({ navigation }) {
                                         placeholder={getLangs(
                                             "input_placeholder_password"
                                         )}
+                                        maxLength={128}
                                         keyboardType="default"
                                         textContentType="newPassword"
                                         secureTextEntry
@@ -570,6 +574,7 @@ export default function Register({ navigation }) {
                                         placeholder={getLangs(
                                             "input_placeholder_password"
                                         )}
+                                        maxLength={128}
                                         keyboardType="default"
                                         textContentType="newPassword"
                                         secureTextEntry

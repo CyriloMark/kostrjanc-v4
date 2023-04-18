@@ -22,19 +22,15 @@ export default function DataSecurityImpresum({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={getLangs("settings_datasecurityimpresum_title")}
+                    // title={getLangs("settings_datasecurityimpresum_title")}
+                    title={""}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
             </Pressable>
 
             <ScrollView
-                style={[
-                    style.container,
-                    style.pH,
-                    style.oVisible,
-                    { marginTop: style.defaultMsm },
-                ]}
+                style={[style.container, style.pH, style.oVisible]}
                 keyboardDismissMode="interactive"
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}
@@ -44,7 +40,7 @@ export default function DataSecurityImpresum({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd>
                 <View>
-                    <Text style={[style.Ttitle, style.tWhite]}>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs(
                             "settings_datasecurityimpresum_impresum_title"
                         )}
@@ -97,7 +93,7 @@ export default function DataSecurityImpresum({ navigation }) {
 
                 {/* Rukowanja za wobsah */}
                 <View style={styles.sectionContainer}>
-                    <Text style={[style.Ttitle, style.tWhite]}>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs(
                             "settings_datasecurityimpresum_content_title"
                         )}
@@ -135,7 +131,7 @@ export default function DataSecurityImpresum({ navigation }) {
 
                 {/* Škit datow */}
                 <View style={styles.sectionContainer}>
-                    <Text style={[style.Ttitle, style.tWhite]}>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs(
                             "settings_datasecurityimpresum_datasecurity_title"
                         )}

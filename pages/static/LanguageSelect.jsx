@@ -22,22 +22,14 @@ export default function LanguageSelect({ onLanguageChange }) {
 
     return (
         <SafeAreaView style={[style.container, style.bgBlack]}>
-            <ScrollView
+            <View
                 style={[
                     style.container,
                     style.pH,
                     style.oVisible,
-                    { marginTop: style.defaultMsm },
-                ]}
-                keyboardDismissMode="interactive"
-                scrollEnabled={false}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                automaticallyAdjustKeyboardInsets
-                automaticallyAdjustContentInsets
-                snapToAlignment="center"
-                snapToEnd>
-                <Text style={[style.Ttitle, style.tWhite]}>
+                    { justifyContent: "center" },
+                ]}>
+                <Text style={[style.Ttitle2, style.tWhite]}>
                     {currentLanguage === 0
                         ? "Wuzwol sej rěč:"
                         : currentLanguage === 1
@@ -80,7 +72,7 @@ export default function LanguageSelect({ onLanguageChange }) {
                         onPress={check}
                     />
                 </View>
-            </ScrollView>
+            </View>
         </SafeAreaView>
     );
 }
@@ -88,7 +80,7 @@ export default function LanguageSelect({ onLanguageChange }) {
 const styles = StyleSheet.create({
     sectionContainer: {
         width: "100%",
-        marginTop: style.defaultMlg,
+        marginTop: style.defaultMlg * 3,
     },
 
     langContainer: {

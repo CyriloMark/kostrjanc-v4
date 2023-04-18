@@ -8,7 +8,10 @@ import {
 
 import * as style from "../../styles";
 
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+    CardStyleInterpolators,
+    createStackNavigator,
+} from "@react-navigation/stack";
 
 import BottomTransitionBar from "../../components/BottomTransitionBar";
 
@@ -30,6 +33,7 @@ import Settings_DataSecurityImpresum from "../settings/DataSecurityImpresum";
 import Settings_Admin from "../settings/Admin";
 import Settings_Profile from "../settings/Profile";
 
+import LandingCreate from "../create/LandingCreate";
 import PostCreate from "../create/PostCreate";
 import EventCreate from "../create/EventCreate";
 
@@ -39,6 +43,7 @@ import ImageFullscreen from "../ImageFullscreen";
 import UserList from "../UserList";
 import Report from "../interaction/Report";
 import Ban from "../interaction/Ban";
+import { Platform } from "react-native";
 //#endregion
 
 const MainNavStack = createStackNavigator();
@@ -51,9 +56,9 @@ export default function ViewportManager() {
             <MainNavStack.Navigator
                 screenOptions={{
                     animationEnabled: true,
-                    gestureEnabled: true,
-                    // cardStyleInterpolator:
-                    //     CardStyleInterpolators.forHorizontalIOS,
+                    gestureEnabled: Platform.OS === "ios",
+                    cardStyleInterpolator:
+                        CardStyleInterpolators.forHorizontalIOS,
                     headerShown: false,
                     cardOverlayEnabled: true,
                     cardShadowEnabled: true,
@@ -106,6 +111,10 @@ export default function ViewportManager() {
                     component={Settings_Profile}
                 />
 
+                <MainNavStack.Screen
+                    name="landingCreate"
+                    component={LandingCreate}
+                />
                 <MainNavStack.Screen name="postCreate" component={PostCreate} />
                 <MainNavStack.Screen
                     name="eventCreate"

@@ -58,15 +58,14 @@ export default function Content({ navigation }) {
     const [searchResult, setSearchResult] = useState([]);
     const [randomUser, setRandomUser] = useState(null);
     const [randomContent, setRandomContent] = useState([
-        { type: 1, id: 1659542896411 },
-        { type: 0, id: 1676725986448 },
-        { type: 1, id: 1666550251147 },
-        { type: 0, id: 1677070056622 },
-        { type: 1, id: 1676895652707 },
-        { type: 0, id: 1677062177271 },
-        { type: 0, id: 1677075681244 },
-        { type: 1, id: 1659542990210 },
-        { type: 1, id: 1676895716716 },
+        { type: 1, id: 1679743329565 },
+        { type: 0, id: 1679746265991 },
+        { type: 0, id: 1681071258512 },
+        { type: 1, id: 1679743805709 },
+        { type: 0, id: 1679742742556 },
+        { type: 0, id: 1679742606487 },
+        { type: 0, id: 1679743122410 },
+        { type: 1, id: 1679746016972 },
     ]);
 
     let getSearchResult = text => {
@@ -231,6 +230,7 @@ export default function Content({ navigation }) {
                         fetchUsers(val);
                         setSearchInput(val);
                     }}
+                    maxLength={32}
                     bg={`rgba(${style.colorsRGB.black},.9)`}
                 />
             </View>
@@ -415,14 +415,14 @@ export default function Content({ navigation }) {
             </ScrollView>
 
             {/* Box */}
-            <View
+            {/* <View
                 style={[
                     styles.addBtnContainer,
                     style.allCenter,
                     style.boxShadow,
                 ]}>
                 <View style={{ position: "relative" }}>
-                    {/* Left Box / Post */}
+                    // Left Box / Post
                     <Animated.View style={[styles.sideBox, leftBoxStyles]}>
                         <Pressable
                             onPress={() => navigation.navigate("postCreate")}
@@ -440,7 +440,7 @@ export default function Content({ navigation }) {
                         </Pressable>
                     </Animated.View>
 
-                    {/* Right Box / Event */}
+                    // Right Box / Event
                     <Animated.View style={[styles.sideBox, rightBoxStyles]}>
                         <Pressable
                             onPress={() => navigation.navigate("eventCreate")}
@@ -464,6 +464,18 @@ export default function Content({ navigation }) {
                         style={{ zIndex: 2 }}
                     />
                 </View>
+            </View> */}
+            <View
+                style={[
+                    styles.addBtnContainer,
+                    style.allCenter,
+                    style.boxShadow,
+                ]}>
+                <AddButton
+                    checked={false}
+                    onPress={() => navigation.navigate("landingCreate")}
+                    style={{ zIndex: 2 }}
+                />
             </View>
 
             {/* Search Input */}

@@ -23,7 +23,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kostrjanc"
+      "bundleIdentifier": "de.zsl.kostrjanc"
     },
     "android": {
       "googleServicesFile": "./google-services.json",

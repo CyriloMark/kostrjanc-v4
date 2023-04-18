@@ -497,12 +497,7 @@ export default function Landing({ navigation }) {
             </Pressable>
 
             <ScrollView
-                style={[
-                    style.container,
-                    style.pH,
-                    style.oVisible,
-                    { marginTop: style.defaultMsm },
-                ]}
+                style={[style.container, style.pH, style.oVisible]}
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}

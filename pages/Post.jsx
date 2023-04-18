@@ -157,7 +157,6 @@ export default function Post({ navigation, route }) {
                 comments: newCommentList,
             };
         });
-
         set(ref(getDatabase(), `posts/${id}/comments`), newCommentList);
     };
 
@@ -189,9 +188,10 @@ export default function Post({ navigation, route }) {
                         })
                     }>
                     <BackHeader
-                        title={post.title}
+                        // title={post.title}
+                        title={""}
                         onBack={() => navigation.goBack()}
-                        onRefresh={loadData}
+                        onReload={loadData}
                         showReload
                     />
                 </Pressable>
@@ -204,12 +204,7 @@ export default function Post({ navigation, route }) {
                     snapToAlignment="center"
                     snapToEnd
                     ref={scrollRef}
-                    style={[
-                        style.container,
-                        style.pH,
-                        style.oVisible,
-                        { marginTop: style.defaultMsm },
-                    ]}
+                    style={[style.container, style.pH, style.oVisible]}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
@@ -224,7 +219,7 @@ export default function Post({ navigation, route }) {
                     {/* Image Container */}
                     <View>
                         {/* Title */}
-                        <Text style={[style.tWhite, style.TlgBd]}>
+                        <Text style={[style.tWhite, style.Ttitle2]}>
                             {post.title}
                         </Text>
 

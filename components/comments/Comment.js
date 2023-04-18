@@ -30,6 +30,7 @@ import SVG_Basket from "../../assets/svg/Basket";
 import { getData } from "../../constants/storage";
 
 let VIBRATED = false;
+const REMOVE_ENABLED = false;
 
 const TRANSLATE_X_THRESHOLD = Dimensions.get("window").width * 0.3;
 
@@ -45,7 +46,10 @@ export default function Comment({ style, commentData, onRemove }) {
         get(child(db, "users/" + commentData.creator)).then(userSnap => {
             if (!userSnap.exists()) return;
             const userData = userSnap.val();
-            setUser(userData);
+            setUser({
+                name: userData["name"],
+                pbUri: userData["pbUri"],
+            });
         });
     };
 
@@ -139,7 +143,7 @@ export default function Comment({ style, commentData, onRemove }) {
         <View style={style}>
             <PanGestureHandler
                 onGestureEvent={onGesture}
-                enabled={clientIsAdmin}>
+                enabled={clientIsAdmin && REMOVE_ENABLED}>
                 <Animated.View
                     style={[{ width: "100%", position: "relative" }, panStyle]}>
                     {/* Header */}

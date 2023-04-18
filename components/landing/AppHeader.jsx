@@ -15,7 +15,7 @@ export default function AppHeader(props) {
             colors={[style.colors.black, "transparent"]}
             style={[styles.container, style.Pmd, style.allCenter]}>
             <Pressable
-                style={[styles.btnContainer, style.allCenter]}
+                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
                 onPress={props.onContentPress}>
                 <Svg viewBox="0 0 7 7">
                     <Rect
@@ -53,7 +53,8 @@ export default function AppHeader(props) {
                 <Text style={[style.TlgBd, style.tWhite]}>kostrjanc</Text>
             </Pressable>
 
-            <View style={[styles.btnContainer, style.allCenter]}>
+            <View
+                style={[styles.btnContainer, style.allCenter, style.boxShadow]}>
                 <Pressable
                     style={styles.pbContainer}
                     onPress={props.onUserPress}>

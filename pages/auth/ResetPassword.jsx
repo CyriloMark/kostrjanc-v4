@@ -122,7 +122,7 @@ export default function ResetPassword({ navigation }) {
                         snapToEnd
                         style={[style.container, style.pH, style.oVisible]}>
                         <View style={styles.titleContainer}>
-                            <Text style={[style.Ttitle, style.tWhite]}>
+                            <Text style={[style.Ttitle2, style.tWhite]}>
                                 {getLangs("auth_reset_title")}
                             </Text>
                         </View>
@@ -144,6 +144,7 @@ export default function ResetPassword({ navigation }) {
                                     )}
                                     keyboardType="email-address"
                                     autoComplete="email"
+                                    maxLength={128}
                                     inputAccessoryViewID="loginInputAccessoryViewID"
                                     textContentType="email"
                                     icon={<SVG_Email fill={style.colors.sec} />}

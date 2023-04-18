@@ -158,21 +158,17 @@ export default function UserProfile({ navigation }) {
                     })
                 }>
                 <BackHeader
-                    title={user.name}
+                    // title={user.name}
+                    title={""}
                     onBack={() => navigation.goBack()}
-                    onRefresh={loadUser}
+                    onReload={loadUser}
                     showReload
                 />
             </Pressable>
 
             <ScrollView
                 ref={scrollRef}
-                style={[
-                    style.container,
-                    style.pH,
-                    style.oVisible,
-                    { marginTop: style.defaultMsm },
-                ]}
+                style={[style.container, style.pH, style.oVisible]}
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
@@ -214,7 +210,7 @@ export default function UserProfile({ navigation }) {
                     <Text
                         style={[
                             style.tWhite,
-                            style.TlgBd,
+                            style.Ttitle2,
                             { marginTop: style.defaultMmd },
                         ]}>
                         {user.name}

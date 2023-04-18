@@ -34,19 +34,15 @@ export default function Admin({ navigation }) {
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
-                    title={getLangs("settings_admin_title")}
+                    // title={getLangs("settings_admin_title")}
+                    title={""}
                     onBack={() => navigation.goBack()}
                     showReload={false}
                 />
             </Pressable>
 
             <ScrollView
-                style={[
-                    style.container,
-                    style.pH,
-                    style.oVisible,
-                    { marginTop: style.defaultMsm },
-                ]}
+                style={[style.container, style.pH, style.oVisible]}
                 keyboardDismissMode="interactive"
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}
@@ -56,7 +52,7 @@ export default function Admin({ navigation }) {
                 snapToAlignment="center"
                 snapToEnd>
                 <View>
-                    <Text style={[style.Ttitle, style.tWhite]}>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs("settings_admin_h2")}
                     </Text>
                 </View>

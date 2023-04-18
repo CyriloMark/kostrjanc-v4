@@ -20,7 +20,7 @@ export default function ContentHeader(props) {
                 { zIndex: 10 },
             ]}>
             <Pressable
-                style={[styles.btnContainer, style.allCenter]}
+                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
                 onPress={props.onSettingsPress}>
                 <SVG_Settings fill={style.colors.blue} />
             </Pressable>
@@ -46,7 +46,7 @@ export default function ContentHeader(props) {
             </View>
 
             <Pressable
-                style={[styles.btnContainer, style.allCenter]}
+                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
                 onPress={props.onBack}>
                 <SVG_Return fill={style.colors.blue} rotation={0} />
             </Pressable>
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     shBox: {
         borderRadius: 10,
         marginLeft: style.defaultMmd,
+        minHeight: 32,
     },
     shText: {
         textTransform: "uppercase",

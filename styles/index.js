@@ -79,6 +79,10 @@ export const TlgBd = {
     fontFamily: "Barlow_Bold",
     fontSize: 24,
 };
+export const Ttitle2 = {
+    fontFamily: "Barlow_Bold",
+    fontSize: 36,
+};
 export const Ttitle = {
     fontFamily: "Barlow_Bold",
     fontSize: 58,

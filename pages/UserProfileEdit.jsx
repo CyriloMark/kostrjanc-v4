@@ -242,7 +242,7 @@ export default function UserProfileEdit({ navigation, route }) {
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("editprofile_myname")}
                         </Text>
-                        <Text style={[style.tBlue, style.Ttitle]}>
+                        <Text style={[style.tBlue, style.Ttitle2]}>
                             {userData.name}
                         </Text>
                         <Text

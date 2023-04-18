@@ -274,15 +274,14 @@ export default function Event({ navigation, route }) {
     };
 
     const removeComment = comment => {
-        const newCommentList = post.comments.filter(c => c !== comment);
-        setPost(cur => {
+        const newCommentList = event.comments.filter(c => c !== comment);
+        setEvent(cur => {
             return {
                 ...cur,
                 comments: newCommentList,
             };
         });
-
-        set(ref(getDatabase(), `posts/${id}/comments`), newCommentList);
+        set(ref(getDatabase(), `events/${id}/comments`), newCommentList);
     };
 
     return (
@@ -293,9 +292,10 @@ export default function Event({ navigation, route }) {
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
-                        title={event.title}
+                        // title={event.title}
+                        title={""}
                         onBack={() => navigation.goBack()}
-                        onRefresh={loadData}
+                        onReload={loadData}
                         showReload
                     />
                 </Pressable>
@@ -307,12 +307,7 @@ export default function Event({ navigation, route }) {
                     keyboardDismissMode="interactive"
                     snapToAlignment="center"
                     snapToEnd
-                    style={[
-                        style.container,
-                        style.pH,
-                        style.oVisible,
-                        { marginTop: style.defaultMsm },
-                    ]}
+                    style={[style.container, style.pH, style.oVisible]}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
@@ -327,7 +322,7 @@ export default function Event({ navigation, route }) {
                     {/* Map Container */}
                     <View>
                         {/* Title */}
-                        <Text style={[style.tWhite, style.TlgBd]}>
+                        <Text style={[style.tWhite, style.Ttitle2]}>
                             {event.title}
                         </Text>
 
@@ -484,7 +479,20 @@ export default function Event({ navigation, route }) {
                                         }>
                                         <Text style={[style.Tmd, style.tWhite]}>
                                             {getLangs("event_about_website")}{" "}
-                                            {event.eventOptions.website}
+                                            <Text
+                                                style={[
+                                                    style.tBlue,
+                                                    {
+                                                        textDecorationStyle:
+                                                            "solid",
+                                                        textDecorationLine:
+                                                            "underline",
+                                                        textDecorationColor:
+                                                            style.colors.blue,
+                                                    },
+                                                ]}>
+                                                {event.eventOptions.website}
+                                            </Text>
                                         </Text>
                                     </Pressable>
                                 ) : null}

@@ -59,3 +59,20 @@ export const convertTextIntoTimestamp = val => {
     const a = Date.parse(dateFormat);
     return a;
 };
+
+export const convertTimestampToDate = id => {
+    const date = new Date(id);
+    return (
+        date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear()
+    );
+};
+export const convertTimestampToTime = id => {
+    const date = new Date(id);
+    return (
+        date.getHours() +
+        ":" +
+        (date.getMinutes().toString().length === 1
+            ? "0" + date.getMinutes()
+            : date.getMinutes())
+    );
+};

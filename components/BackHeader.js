@@ -14,7 +14,7 @@ export default function BackHeader(props) {
             colors={[style.colors.black, "transparent"]}
             style={[styles.container, style.Pmd, style.allCenter]}>
             <Pressable
-                style={[styles.btnContainer, style.allCenter]}
+                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
                 onPress={props.onBack}>
                 <SVG_Return fill={style.colors.blue} rotation={180} />
             </Pressable>
@@ -40,8 +40,12 @@ export default function BackHeader(props) {
             {/* Android Only No refreshControl -> refresh btn */}
             {Platform.OS === "android" && props.showReload ? (
                 <Pressable
-                    style={[styles.btnContainer, style.allCenter]}
-                    onPress={props.onReloadPress}>
+                    style={[
+                        styles.btnContainer,
+                        style.allCenter,
+                        style.boxShadow,
+                    ]}
+                    onPress={props.onReload}>
                     <SVG_Reload fill={style.colors.blue} rotation={180} />
                 </Pressable>
             ) : (

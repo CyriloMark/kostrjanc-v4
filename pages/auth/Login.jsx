@@ -98,7 +98,7 @@ export default function Login({ navigation }) {
                         snapToEnd
                         style={[style.container, style.pH, style.oVisible]}>
                         <View style={styles.titleContainer}>
-                            <Text style={[style.Ttitle, style.tWhite]}>
+                            <Text style={[style.Ttitle2, style.tWhite]}>
                                 {getLangs("auth_login_title")}
                             </Text>
                         </View>
@@ -118,6 +118,7 @@ export default function Login({ navigation }) {
                                     placeholder={getLangs(
                                         "input_placeholder_email"
                                     )}
+                                    maxLength={128}
                                     keyboardType="email-address"
                                     autoComplete="email"
                                     textContentType="email"
@@ -145,6 +146,7 @@ export default function Login({ navigation }) {
                                     placeholder={getLangs(
                                         "input_placeholder_password"
                                     )}
+                                    maxLength={128}
                                     keyboardType="default"
                                     textContentType="password"
                                     secureTextEntry

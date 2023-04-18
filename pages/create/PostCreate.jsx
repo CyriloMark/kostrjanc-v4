@@ -264,12 +264,7 @@ export default function PostCreate({ navigation }) {
                 </Pressable>
 
                 <ScrollView
-                    style={[
-                        style.container,
-                        style.pH,
-                        style.oVisible,
-                        { marginTop: style.defaultMsm },
-                    ]}
+                    style={[style.container, style.pH, style.oVisible]}
                     keyboardDismissMode="interactive"
                     scrollEnabled
                     showsHorizontalScrollIndicator={false}
@@ -282,7 +277,7 @@ export default function PostCreate({ navigation }) {
                     {/* Image Container */}
                     <View>
                         {/* Title */}
-                        <Text style={[style.tWhite, style.TlgBd]}>
+                        <Text style={[style.tWhite, style.Ttitle2]}>
                             {post.title.length === 0
                                 ? getLangs("postcreate_posttitle")
                                 : post.title}
@@ -366,6 +361,7 @@ export default function PostCreate({ navigation }) {
                                     autoCapitalize="sentences"
                                     keyboardType="default"
                                     value={post.title}
+                                    maxLength={32}
                                     inputAccessoryViewID="post_title_InputAccessoryViewID"
                                     icon={
                                         <SVG_Pencil fill={style.colors.sec} />
@@ -393,6 +389,7 @@ export default function PostCreate({ navigation }) {
                                         "input_placeholder_description"
                                     )}
                                     value={post.description}
+                                    maxLength={512}
                                     inputAccessoryViewID="post_description_InputAccessoryViewID"
                                     onChangeText={val => {
                                         setPost({

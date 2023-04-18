@@ -130,10 +130,9 @@ export default function Report({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    <Text style={[style.Ttitle, style.tWhite]}>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs("report_sub")} "
-                        {type === 2 ? item.name : item.title}"{"\n"}(
-                        {itemType()})
+                        {type === 2 ? item.name : item.title}" ({itemType()})
                     </Text>
                     {/* Type */}
                     <View style={styles.sectionContainer}>
@@ -183,6 +182,7 @@ export default function Report({ navigation, route }) {
                             inputAccessoryViewID={
                                 "report_Description_InputAccessoryViewID"
                             }
+                            maxLength={512}
                             onChangeText={val => {
                                 setReportData({
                                     ...reportData,

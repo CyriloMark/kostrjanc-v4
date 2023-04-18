@@ -22,8 +22,9 @@ import { getData } from "../../constants/storage";
 import { arraySplitter, splitArrayIntoNEqualy } from "../../constants";
 import { initialRegion } from "../../constants/event";
 import {
-    convertTextIntoTimestamp,
+    convertTimestampToDate,
     convertTimestampToString,
+    convertTimestampToTime,
 } from "../../constants/time";
 import { Event_Types, mapTypes, Event_Tags } from "../../constants/event";
 import { getLangs } from "../../constants/langs";
@@ -55,7 +56,9 @@ import SelectableButton from "../../components/event/SelectableButton";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
 
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+    DateTimePickerAndroid,
+} from "@react-native-community/datetimepicker";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -80,6 +83,11 @@ export default function EventCreate({ navigation }) {
     });
 
     const [buttonChecked, setButtonChecked] = useState(false);
+
+    const openDatePickerAndroid = options => {
+        if (Platform.OS !== "android") return;
+        DateTimePickerAndroid.open(options);
+    };
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
@@ -370,7 +378,9 @@ export default function EventCreate({ navigation }) {
                 style={style.allMax}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 {/* Header */}
-                <Pressable style={{ zIndex: 10 }}>
+                <Pressable
+                    style={{ zIndex: 10 }}
+                    onPress={openDatePickerAndroid}>
                     <BackHeader
                         title={getLangs("eventcreate_headertitle")}
                         onBack={() => navigation.goBack()}
@@ -379,12 +389,7 @@ export default function EventCreate({ navigation }) {
                 </Pressable>
 
                 <ScrollView
-                    style={[
-                        style.container,
-                        style.pH,
-                        style.oVisible,
-                        { marginTop: style.defaultMsm },
-                    ]}
+                    style={[style.container, style.pH, style.oVisible]}
                     keyboardDismissMode="interactive"
                     scrollEnabled
                     showsHorizontalScrollIndicator={false}
@@ -397,7 +402,7 @@ export default function EventCreate({ navigation }) {
                     {/* Map Container */}
                     <View>
                         {/* Title */}
-                        <Text style={[style.tWhite, style.TlgBd]}>
+                        <Text style={[style.tWhite, style.Ttitle2]}>
                             {event.title.length === 0
                                 ? getLangs("eventcreate_eventtitle")
                                 : event.title}
@@ -605,6 +610,7 @@ export default function EventCreate({ navigation }) {
                                     keyboardType="default"
                                     value={event.title}
                                     inputAccessoryViewID="event_title_InputAccessoryViewID"
+                                    maxLength={32}
                                     icon={
                                         <SVG_Pencil fill={style.colors.sec} />
                                     }
@@ -631,6 +637,7 @@ export default function EventCreate({ navigation }) {
                                         "input_placeholder_description"
                                     )}
                                     value={event.description}
+                                    maxLength={512}
                                     inputAccessoryViewID="event_description_InputAccessoryViewID"
                                     onChangeText={val => {
                                         setEvent({
@@ -683,6 +690,8 @@ export default function EventCreate({ navigation }) {
                                                     }
                                                     mode="datetime"
                                                     firstDayOfWeek={1}
+                                                    display="default"
+                                                    locale="de-DE"
                                                     onChange={(
                                                         ev,
                                                         selectedDate
@@ -711,78 +720,131 @@ export default function EventCreate({ navigation }) {
                                                 />
                                             ) : (
                                                 <>
-                                                    <DateTimePicker
-                                                        value={
-                                                            new Date(
-                                                                event.starting
-                                                            )
-                                                        }
-                                                        is24Hour
-                                                        mode="date"
-                                                        minimumDate={
-                                                            new Date(Date.now())
-                                                        }
-                                                        onChange={(
-                                                            ev,
-                                                            selectedDate
-                                                        ) =>
-                                                            setEvent(cur => {
-                                                                return {
-                                                                    ...cur,
-                                                                    starting:
-                                                                        selectedDate.getTime(),
-                                                                };
-                                                            })
-                                                        }
-                                                        maximumDate={
-                                                            new Date(
-                                                                2100,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                0
-                                                            )
-                                                        }
-                                                    />
-                                                    <DateTimePicker
-                                                        value={
-                                                            new Date(
-                                                                event.starting
-                                                            )
-                                                        }
-                                                        is24Hour
-                                                        mode="time"
-                                                        style={{
-                                                            marginLeft:
-                                                                style.defaultMsm,
-                                                        }}
-                                                        minimumDate={
-                                                            new Date(Date.now())
-                                                        }
-                                                        onChange={(
-                                                            ev,
-                                                            selectedDate
-                                                        ) =>
-                                                            setEvent(cur => {
-                                                                return {
-                                                                    ...cur,
-                                                                    starting:
-                                                                        selectedDate.getTime(),
-                                                                };
-                                                            })
-                                                        }
-                                                        maximumDate={
-                                                            new Date(
-                                                                2100,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                0
-                                                            )
-                                                        }
-                                                    />
+                                                    <Pressable
+                                                        style={[
+                                                            styles.timesContainerAndroid,
+                                                            style.Psm,
+                                                            style.bgBlue,
+                                                        ]}
+                                                        onPress={() => {
+                                                            openDatePickerAndroid(
+                                                                {
+                                                                    value: new Date(
+                                                                        event.starting
+                                                                    ),
+                                                                    is24Hour: true,
+                                                                    mode: "date",
+                                                                    locale: "de-DE",
+                                                                    minimumDate:
+                                                                        new Date(
+                                                                            Date.now()
+                                                                        ),
+                                                                    maximumDate:
+                                                                        new Date(
+                                                                            2100,
+                                                                            0,
+                                                                            0,
+                                                                            0,
+                                                                            0,
+                                                                            0
+                                                                        ),
+                                                                    onChange: (
+                                                                        ev,
+                                                                        selectedDate
+                                                                    ) =>
+                                                                        setEvent(
+                                                                            cur => {
+                                                                                return {
+                                                                                    ...cur,
+                                                                                    starting:
+                                                                                        selectedDate.getTime(),
+                                                                                };
+                                                                            }
+                                                                        ),
+                                                                }
+                                                            );
+                                                        }}>
+                                                        <Text
+                                                            style={[
+                                                                style.Tmd,
+                                                                style.tWhite,
+                                                            ]}>
+                                                            {event.starting
+                                                                ? convertTimestampToDate(
+                                                                      event.starting
+                                                                  )
+                                                                : getLangs(
+                                                                      "eventcreate_date"
+                                                                  )}
+                                                        </Text>
+                                                    </Pressable>
+                                                    <Pressable
+                                                        style={[
+                                                            styles.timesContainerAndroid,
+                                                            style.Psm,
+                                                            style.bgBlue,
+                                                            {
+                                                                marginLeft:
+                                                                    style.defaultMsm,
+                                                            },
+                                                        ]}
+                                                        onPress={() => {
+                                                            openDatePickerAndroid(
+                                                                {
+                                                                    value: new Date(
+                                                                        event.starting
+                                                                    ),
+
+                                                                    is24Hour: true,
+                                                                    mode: "time",
+                                                                    locale: "de-DE",
+                                                                    style: {
+                                                                        marginLeft:
+                                                                            style.defaultMsm,
+                                                                    },
+                                                                    minimumDate:
+                                                                        new Date(
+                                                                            Date.now()
+                                                                        ),
+                                                                    maximumDate:
+                                                                        new Date(
+                                                                            2100,
+                                                                            0,
+                                                                            0,
+                                                                            0,
+                                                                            0,
+                                                                            0
+                                                                        ),
+                                                                    onChange: (
+                                                                        ev,
+                                                                        selectedDate
+                                                                    ) =>
+                                                                        setEvent(
+                                                                            cur => {
+                                                                                return {
+                                                                                    ...cur,
+                                                                                    starting:
+                                                                                        selectedDate.getTime(),
+                                                                                };
+                                                                            }
+                                                                        ),
+                                                                }
+                                                            );
+                                                        }}>
+                                                        <Text
+                                                            style={[
+                                                                style.Tmd,
+                                                                style.tWhite,
+                                                            ]}>
+                                                            {event.starting
+                                                                ? convertTimestampToTime(
+                                                                      event.starting
+                                                                  )
+                                                                : getLangs(
+                                                                      "eventcreate_time"
+                                                                  )}
+                                                        </Text>
+                                                    </Pressable>
                                                 </>
                                             )}
                                         </View>
@@ -824,6 +886,7 @@ export default function EventCreate({ navigation }) {
                                                         }
                                                         mode="datetime"
                                                         firstDayOfWeek={1}
+                                                        locale="de-DE"
                                                         onChange={(
                                                             ev,
                                                             selectedDate
@@ -855,88 +918,136 @@ export default function EventCreate({ navigation }) {
                                                     />
                                                 ) : (
                                                     <>
-                                                        <DateTimePicker
-                                                            value={
-                                                                new Date(
-                                                                    event.ending
-                                                                )
-                                                            }
-                                                            is24Hour
-                                                            mode="date"
-                                                            minimumDate={
-                                                                new Date(
-                                                                    event.starting
-                                                                        ? event.starting
-                                                                        : Date.now()
-                                                                )
-                                                            }
-                                                            onChange={(
-                                                                ev,
-                                                                selectedDate
-                                                            ) =>
-                                                                setEvent(
-                                                                    cur => {
-                                                                        return {
-                                                                            ...cur,
-                                                                            ending: selectedDate.getTime(),
-                                                                        };
+                                                        <Pressable
+                                                            style={[
+                                                                styles.timesContainerAndroid,
+                                                                style.Psm,
+                                                                style.bgBlue,
+                                                            ]}
+                                                            onPress={() => {
+                                                                openDatePickerAndroid(
+                                                                    {
+                                                                        value: new Date(
+                                                                            event.ending
+                                                                        ),
+
+                                                                        is24Hour: true,
+                                                                        mode: "date",
+                                                                        locale: "de-DE",
+                                                                        minimumDate:
+                                                                            new Date(
+                                                                                event.starting
+                                                                                    ? event.starting
+                                                                                    : Date.now()
+                                                                            ),
+                                                                        maximumDate:
+                                                                            new Date(
+                                                                                2100,
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                0
+                                                                            ),
+                                                                        onChange:
+                                                                            (
+                                                                                ev,
+                                                                                selectedDate
+                                                                            ) =>
+                                                                                setEvent(
+                                                                                    cur => {
+                                                                                        return {
+                                                                                            ...cur,
+                                                                                            ending: selectedDate.getTime(),
+                                                                                        };
+                                                                                    }
+                                                                                ),
                                                                     }
-                                                                )
-                                                            }
-                                                            maximumDate={
-                                                                new Date(
-                                                                    2100,
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    0
-                                                                )
-                                                            }
-                                                        />
-                                                        <DateTimePicker
-                                                            value={
-                                                                new Date(
-                                                                    event.ending
-                                                                )
-                                                            }
-                                                            is24Hour
-                                                            mode="time"
-                                                            style={{
-                                                                marginLeft:
-                                                                    style.defaultMsm,
-                                                            }}
-                                                            minimumDate={
-                                                                new Date(
-                                                                    event.starting
-                                                                        ? event.starting
-                                                                        : Date.now()
-                                                                )
-                                                            }
-                                                            onChange={(
-                                                                ev,
-                                                                selectedDate
-                                                            ) =>
-                                                                setEvent(
-                                                                    cur => {
-                                                                        return {
-                                                                            ...cur,
-                                                                            ending: selectedDate.getTime(),
-                                                                        };
+                                                                );
+                                                            }}>
+                                                            <Text
+                                                                style={[
+                                                                    style.Tmd,
+                                                                    style.tWhite,
+                                                                ]}>
+                                                                {event.ending
+                                                                    ? convertTimestampToDate(
+                                                                          event.ending
+                                                                      )
+                                                                    : getLangs(
+                                                                          "eventcreate_date"
+                                                                      )}
+                                                            </Text>
+                                                        </Pressable>
+                                                        <Pressable
+                                                            style={[
+                                                                styles.timesContainerAndroid,
+                                                                style.Psm,
+                                                                style.bgBlue,
+                                                                {
+                                                                    marginLeft:
+                                                                        style.defaultMsm,
+                                                                },
+                                                            ]}
+                                                            onPress={() => {
+                                                                openDatePickerAndroid(
+                                                                    {
+                                                                        value: new Date(
+                                                                            event.ending
+                                                                        ),
+                                                                        is24Hour: true,
+                                                                        mode: "time",
+                                                                        locale: "de-DE",
+                                                                        style: {
+                                                                            marginLeft:
+                                                                                style.defaultMsm,
+                                                                        },
+                                                                        minimumDate:
+                                                                            new Date(
+                                                                                event.starting
+                                                                                    ? event.starting
+                                                                                    : Date.now()
+                                                                            ),
+
+                                                                        maximumDate:
+                                                                            new Date(
+                                                                                2100,
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                0
+                                                                            ),
+                                                                        onChange:
+                                                                            (
+                                                                                ev,
+                                                                                selectedDate
+                                                                            ) =>
+                                                                                setEvent(
+                                                                                    cur => {
+                                                                                        return {
+                                                                                            ...cur,
+                                                                                            ending: selectedDate.getTime(),
+                                                                                        };
+                                                                                    }
+                                                                                ),
                                                                     }
-                                                                )
-                                                            }
-                                                            maximumDate={
-                                                                new Date(
-                                                                    2100,
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    0
-                                                                )
-                                                            }
-                                                        />
+                                                                );
+                                                            }}>
+                                                            <Text
+                                                                style={[
+                                                                    style.Tmd,
+                                                                    style.tWhite,
+                                                                ]}>
+                                                                {event.ending
+                                                                    ? convertTimestampToTime(
+                                                                          event.ending
+                                                                      )
+                                                                    : getLangs(
+                                                                          "eventcreate_time"
+                                                                      )}
+                                                            </Text>
+                                                        </Pressable>
                                                     </>
                                                 )}
                                             </View>
@@ -1216,6 +1327,7 @@ export default function EventCreate({ navigation }) {
                                     )}
                                     keyboardType="numeric"
                                     icon={<SVG_Cash fill={style.colors.sec} />}
+                                    maxLength={8}
                                     onChangeText={val => {
                                         setEvent(prev => {
                                             return {
@@ -1257,6 +1369,7 @@ export default function EventCreate({ navigation }) {
                                         "eventcreate_website_inputplaceholder"
                                     )}
                                     keyboardType="url"
+                                    maxLength={128}
                                     icon={<SVG_Web fill={style.colors.sec} />}
                                     onChangeText={val => {
                                         setEvent(prev => {
@@ -1679,5 +1792,8 @@ const styles = StyleSheet.create({
         maxHeight: 24,
         maxWidth: 24,
         marginRight: style.defaultMsm,
+    },
+    timesContainerAndroid: {
+        borderRadius: 10,
     },
 });

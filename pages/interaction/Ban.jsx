@@ -182,7 +182,7 @@ export default function Ban({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    <Text style={[style.Ttitle, style.tWhite]}>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
                         "{type === 2 ? item.name : item.title}" ({itemType()}){" "}
                         {getLangs("banelement_sub_1")}
                     </Text>
@@ -205,6 +205,7 @@ export default function Ban({ navigation, route }) {
                             inputAccessoryViewID={
                                 "ban_Description_InputAccessoryViewID"
                             }
+                            maxLength={512}
                             onChangeText={val => {
                                 setBanData({
                                     ...banData,

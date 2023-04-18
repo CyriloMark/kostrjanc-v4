@@ -12,7 +12,7 @@ export default function Pin2_0(props) {
             />
             <Polygon
                 points={"225 275 175 275 175 450 200 500 225 450 225 275"}
-                fill={colors.white}
+                fill={colors.black}
             />
         </Svg>
     );

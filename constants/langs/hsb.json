@@ -240,6 +240,12 @@
         "event_checkstitle": "Štó je pódla:",
         "event_checkspagetitle": "Štó je pódla",
 
+        "landingcreate_title": "Nowe wozjewjenje:",
+        "landingcreate_post_title": "Nowy post",
+        "landingcreate_post_sub": "Chceš nowy post wozjewić?\nTutón wopřija wobraz z titulom a přidatnym tekstom.",
+        "landingcreate_event_title": "Nowy ewent",
+        "landingcreate_event_sub": "Chceš nowy ewent wozjewić?\nTutón wopřija městnosć na karće z titulom a přidatnymi informacijemi.",
+
         "postcreate_headertitle": "Nowy post wozjewić",
         "postcreate_posttitle": "Titul",
         "postcreate_imghint": "Tłoć, zo wobrazy přepytać móžeš",
@@ -285,6 +291,8 @@
         "eventcreate_nostart": "Žadyn spočatk podaty",
         "eventcreate_noend": "Žadyn kónc podaty",
         "eventcreate_maphint": "Zoomuj a přesuń kartu, zo poziciju pokazowaka změniš. Pokazowak pokaza na měnstnosć ewenta.",
+        "eventcreate_date": "Datum",
+        "eventcreate_time": "Čas",
 
         "settings_landing_title": "Zastajenja",
         "settings_landing_bugbutton_title": "Sy zmylk namakał?",

@@ -267,9 +267,10 @@ export default function Profile({ navigation, route }) {
                     })
                 }>
                 <BackHeader
-                    title={user.name}
+                    // title={user.name}
+                    title={""}
                     onBack={() => navigation.goBack()}
-                    onRefresh={loadUser}
+                    onReload={loadUser}
                     showReload
                 />
             </Pressable>
@@ -282,12 +283,7 @@ export default function Profile({ navigation, route }) {
                 snapToAlignment="center"
                 snapToEnd
                 ref={scrollRef}
-                style={[
-                    style.container,
-                    style.pH,
-                    style.oVisible,
-                    { marginTop: style.defaultMsm },
-                ]}
+                style={[style.container, style.pH, style.oVisible]}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
@@ -324,7 +320,7 @@ export default function Profile({ navigation, route }) {
                     <Text
                         style={[
                             style.tWhite,
-                            style.TlgBd,
+                            style.Ttitle2,
                             { marginTop: style.defaultMmd },
                         ]}>
                         {user.name}

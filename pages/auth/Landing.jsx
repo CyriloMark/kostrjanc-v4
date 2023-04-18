@@ -152,6 +152,11 @@ const styles = StyleSheet.create({
     },
     sideBoxIcon: {
         ...style.allMax,
+        transform: [
+            {
+                scaleX: 1,
+            },
+        ],
     },
 
     footerContainer: {
