@@ -121,7 +121,7 @@ export default function Login({ navigation }) {
                                     maxLength={128}
                                     keyboardType="email-address"
                                     autoComplete="email"
-                                    textContentType="email"
+                                    textContentType="emailAddress"
                                     icon={<SVG_Email fill={style.colors.sec} />}
                                     onChangeText={val => {
                                         setLoginData({

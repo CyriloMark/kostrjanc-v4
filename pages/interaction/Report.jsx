@@ -83,7 +83,7 @@ export default function Report({ navigation, route }) {
             .finally(() =>
                 Alert.alert(
                     getLangs("report_successful_title"),
-                    `${post.title} (${itemType()}) ${getLangs(
+                    `${item.title} (${itemType()}) ${getLangs(
                         "report_successful_sub"
                     )}`,
                     [

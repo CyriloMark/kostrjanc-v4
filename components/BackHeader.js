@@ -14,23 +14,23 @@ export default function BackHeader(props) {
             colors={[style.colors.black, "transparent"]}
             style={[styles.container, style.Pmd, style.allCenter]}>
             <Pressable
-                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
+                style={[styles.btnContainer, style.allCenter]}
                 onPress={props.onBack}>
-                <SVG_Return fill={style.colors.blue} rotation={180} />
+                <SVG_Return
+                    fill={style.colors.blue}
+                    rotation={180}
+                    style={style.boxShadow}
+                />
             </Pressable>
 
-            <View
-                style={[
-                    styles.titleContainer,
-                    style.allCenter,
-                    style.boxShadow,
-                ]}>
+            <View style={[styles.titleContainer, style.allCenter]}>
                 <Text
                     numberOfLines={1}
                     ellipsizeMode="tail"
                     style={[
                         style.TlgBd,
                         style.tWhite,
+                        style.boxShadow,
                         { marginHorizontal: style.defaultMmd },
                     ]}>
                     {props.title}
@@ -40,13 +40,13 @@ export default function BackHeader(props) {
             {/* Android Only No refreshControl -> refresh btn */}
             {Platform.OS === "android" && props.showReload ? (
                 <Pressable
-                    style={[
-                        styles.btnContainer,
-                        style.allCenter,
-                        style.boxShadow,
-                    ]}
+                    style={[styles.btnContainer, style.allCenter]}
                     onPress={props.onReload}>
-                    <SVG_Reload fill={style.colors.blue} rotation={180} />
+                    <SVG_Reload
+                        fill={style.colors.blue}
+                        style={style.boxShadow}
+                        rotation={180}
+                    />
                 </Pressable>
             ) : (
                 <View style={styles.btnContainer} />

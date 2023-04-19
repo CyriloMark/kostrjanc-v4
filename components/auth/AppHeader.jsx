@@ -12,14 +12,11 @@ export default function AppHeader() {
         <LinearGradient
             colors={[style.colors.black, "transparent"]}
             style={[styles.container, style.Pmd, style.allCenter]}>
-            <View
-                style={[
-                    styles.titleContainer,
-                    style.allCenter,
-                    style.boxShadow,
-                ]}>
+            <View style={[styles.titleContainer, style.allCenter]}>
                 <SVG_kostrjanc fill={style.colors.blue} style={styles.icon} />
-                <Text style={[style.TlgBd, style.tWhite]}>kostrjanc</Text>
+                <Text style={[style.TlgBd, style.tWhite, style.boxShadow]}>
+                    kostrjanc
+                </Text>
             </View>
         </LinearGradient>
     );
@@ -40,5 +37,6 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         flex: 0.1,
         marginRight: style.defaultMmd,
+        ...style.boxShadow,
     },
 });

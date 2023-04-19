@@ -17,12 +17,21 @@ Notifications.setNotificationHandler({
 
 import { useFonts } from "expo-font";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 //#region Firebase
 import { firebaseApp } from "./constants/firebaseApp";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, get, child, set, onValue } from "firebase/database";
+import {
+    getReactNativePersistence,
+    initializeAuth,
+} from "firebase/auth/react-native";
 const app = initializeApp(firebaseApp);
+initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+});
 //#endregion
 
 //#region Navigation

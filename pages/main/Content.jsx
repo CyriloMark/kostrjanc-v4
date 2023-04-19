@@ -465,12 +465,7 @@ export default function Content({ navigation }) {
                     />
                 </View>
             </View> */}
-            <View
-                style={[
-                    styles.addBtnContainer,
-                    style.allCenter,
-                    style.boxShadow,
-                ]}>
+            <View style={[styles.addBtnContainer, style.allCenter]}>
                 <AddButton
                     checked={false}
                     onPress={() => navigation.navigate("landingCreate")}

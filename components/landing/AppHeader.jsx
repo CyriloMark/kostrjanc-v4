@@ -15,9 +15,9 @@ export default function AppHeader(props) {
             colors={[style.colors.black, "transparent"]}
             style={[styles.container, style.Pmd, style.allCenter]}>
             <Pressable
-                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
+                style={[styles.btnContainer, style.allCenter]}
                 onPress={props.onContentPress}>
-                <Svg viewBox="0 0 7 7">
+                <Svg viewBox="0 0 7 7" style={style.boxShadow}>
                     <Rect
                         x={0}
                         y={1}
@@ -44,17 +44,12 @@ export default function AppHeader(props) {
 
             <Pressable
                 onPress={props.onCenterPress}
-                style={[
-                    styles.titleContainer,
-                    style.allCenter,
-                    style.boxShadow,
-                ]}>
+                style={[styles.titleContainer, style.allCenter]}>
                 <SVG_kostrjanc fill={style.colors.blue} style={styles.icon} />
                 <Text style={[style.TlgBd, style.tWhite]}>kostrjanc</Text>
             </Pressable>
 
-            <View
-                style={[styles.btnContainer, style.allCenter, style.boxShadow]}>
+            <View style={[styles.btnContainer, style.allCenter]}>
                 <Pressable
                     style={styles.pbContainer}
                     onPress={props.onUserPress}>
@@ -93,6 +88,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         flex: 0.1,
         marginRight: style.defaultMmd,
+        ...style.boxShadow,
     },
 
     pbContainer: {

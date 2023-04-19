@@ -20,24 +20,25 @@ export default function ContentHeader(props) {
                 { zIndex: 10 },
             ]}>
             <Pressable
-                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
+                style={[styles.btnContainer, style.allCenter]}
                 onPress={props.onSettingsPress}>
-                <SVG_Settings fill={style.colors.blue} />
+                <SVG_Settings
+                    fill={style.colors.blue}
+                    style={style.boxShadow}
+                />
             </Pressable>
 
-            <View
-                style={[
-                    styles.titleContainer,
-                    style.allCenter,
-                    style.boxShadow,
-                ]}>
-                <Text style={[style.TlgBd, style.tWhite]}>kostrjanc</Text>
+            <View style={[styles.titleContainer, style.allCenter]}>
+                <Text style={[style.TlgBd, style.tWhite, style.boxShadow]}>
+                    kostrjanc
+                </Text>
                 <View
                     style={[
                         style.allCenter,
                         styles.shBox,
                         style.bgBlue,
                         style.Psm,
+                        style.boxShadow,
                     ]}>
                     <Text style={[style.TsmRg, style.tWhite, styles.shText]}>
                         studio
@@ -46,9 +47,13 @@ export default function ContentHeader(props) {
             </View>
 
             <Pressable
-                style={[styles.btnContainer, style.allCenter, style.boxShadow]}
+                style={[styles.btnContainer, style.allCenter]}
                 onPress={props.onBack}>
-                <SVG_Return fill={style.colors.blue} rotation={0} />
+                <SVG_Return
+                    fill={style.colors.blue}
+                    style={style.boxShadow}
+                    rotation={0}
+                />
             </Pressable>
         </LinearGradient>
     );

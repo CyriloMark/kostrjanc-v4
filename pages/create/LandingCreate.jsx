@@ -18,10 +18,7 @@ export default function LandingCreate({ navigation }) {
         <View style={[style.container, style.bgBlack]}>
             {/* Header */}
             <Pressable style={{ zIndex: 10 }}>
-                <BackHeader
-                    title={""}
-                    onBack={() => navigation.goBack()}
-                />
+                <BackHeader title={""} onBack={() => navigation.goBack()} />
             </Pressable>
 
             <View style={[style.container, style.pH, style.oVisible]}>
@@ -57,16 +54,18 @@ export default function LandingCreate({ navigation }) {
                                     style={[
                                         style.tWhite,
                                         style.Ttitle2,
+                                        style.boxShadow,
                                         { marginVertical: style.defaultMmd },
                                     ]}>
-                                        {
-                                            getLangs("landingcreate_post_title")
-                                        }
+                                    {getLangs("landingcreate_post_title")}
                                 </Text>
-                                <Text style={[style.tWhite, style.Tmd]}>
-                                    {
-                                        getLangs("landingcreate_post_sub")
-                                    }
+                                <Text
+                                    style={[
+                                        style.tWhite,
+                                        style.Tmd,
+                                        style.boxShadow,
+                                    ]}>
+                                    {getLangs("landingcreate_post_sub")}
                                 </Text>
                             </View>
                             <View style={styles.elementSection2}>
@@ -95,11 +94,7 @@ export default function LandingCreate({ navigation }) {
                             start={{ x: -1, y: -2.5 }}
                             end={{ x: 1.5, y: 3 }}
                             locations={[0, 0.5, 1]}>
-                            <View
-                                style={[
-                                    styles.elementSection1,
-                                    style.boxShadow,
-                                ]}>
+                            <View style={[styles.elementSection1]}>
                                 <SVG_Event
                                     style={styles.icon}
                                     fill={style.colors.white}
@@ -108,16 +103,18 @@ export default function LandingCreate({ navigation }) {
                                     style={[
                                         style.tWhite,
                                         style.Ttitle2,
+                                        style.boxShadow,
                                         { marginVertical: style.defaultMmd },
                                     ]}>
-                                        {
-                                            getLangs("landingcreate_event_title")
-                                        }
+                                    {getLangs("landingcreate_event_title")}
                                 </Text>
-                                <Text style={[style.tWhite, style.Tmd]}>
-                                    {
-                                        getLangs("landingcreate_event_sub")
-                                    }
+                                <Text
+                                    style={[
+                                        style.tWhite,
+                                        style.Tmd,
+                                        style.boxShadow,
+                                    ]}>
+                                    {getLangs("landingcreate_event_sub")}
                                 </Text>
                             </View>
                             <View style={styles.elementSection2}>
@@ -173,5 +170,6 @@ const styles = StyleSheet.create({
     icon: {
         width: 32,
         height: 32,
+        ...style.boxShadow,
     },
 });
