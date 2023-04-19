@@ -6,7 +6,6 @@ import {
     Pressable,
     Text,
     Image,
-    RefreshControl,
     Platform,
 } from "react-native";
 
@@ -27,6 +26,9 @@ import PostPreview from "../../components/profile/PostPreview";
 import EventPreview from "../../components/profile/EventPreview";
 import EditProfileButton from "../../components/profile/EditProfileButton";
 import Refresh from "../../components/RefreshControl";
+
+import SVG_Admin from "../../assets/svg/Admin";
+import SVG_Verify from "../../assets/svg/Moderator";
 
 export default function UserProfile({ navigation }) {
     const scrollRef = useRef();
@@ -207,14 +209,27 @@ export default function UserProfile({ navigation }) {
                     </Pressable>
 
                     {/* Name */}
-                    <Text
-                        style={[
-                            style.tWhite,
-                            style.Ttitle2,
-                            { marginTop: style.defaultMmd },
-                        ]}>
-                        {user.name}
-                    </Text>
+                    <View style={styles.nameContainer}>
+                        {user.isAdmin ? (
+                            <View style={styles.nameIcon}>
+                                <SVG_Admin
+                                    fill={style.colors.red}
+                                    style={style.allMax}
+                                />
+                            </View>
+                        ) : user.isMod ? (
+                            <View style={styles.nameIcon}>
+                                <SVG_Verify
+                                    fill={style.colors.red}
+                                    style={style.allMax}
+                                />
+                            </View>
+                        ) : null}
+
+                        <Text style={[style.tWhite, style.Ttitle2]}>
+                            {user.name}
+                        </Text>
+                    </View>
 
                     {/* Description */}
                     <View style={styles.textContainer}>
@@ -362,6 +377,17 @@ const styles = StyleSheet.create({
         maxHeight: 152,
         borderRadius: 100,
         aspectRatio: 1,
+    },
+    nameContainer: {
+        flexDirection: "row",
+        marginTop: style.defaultMmd,
+        ...style.allCenter,
+    },
+    nameIcon: {
+        width: 24,
+        height: 24,
+        marginRight: style.defaultMmd,
+        marginTop: style.defaultMsm,
     },
     textContainer: {
         marginTop: style.defaultMmd,

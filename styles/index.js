@@ -61,7 +61,8 @@ export const Plg = {
 
 export const TsmLt = {
     fontFamily: "RobotoMono_Thin",
-    fontSize: 12,
+    fontSize: 13,
+    // fontSize: 12,
 };
 export const TsmRg = {
     fontFamily: "Barlow_Regular",

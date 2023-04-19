@@ -59,6 +59,7 @@ import UpdateVersion from "./pages/static/UpdateVersion";
 import ServerStatus from "./pages/static/ServerStatus";
 import Ban from "./pages/static/Ban";
 import LanguageSelect from "./pages/static/LanguageSelect";
+import TestView from "./pages/static/TestView";
 //#endregion
 
 export default function App() {
@@ -72,6 +73,7 @@ export default function App() {
     const [loggedIn, setLoggedIn] = useState(false);
 
     const [langIsSet, setLangIsSet] = useState(null);
+    const [testIsChecked, setTestIsChecked] = useState(false);
 
     const [banned, setBanned] = useState(false);
     const [isRecentVersion, setIsRecentVersion] = useState(null);
@@ -82,28 +84,32 @@ export default function App() {
     useEffect(() => {
         const db = getDatabase();
         //onAuthChange
-        onAuthStateChanged(getAuth(), user => {
-            if (user) {
-                setLoggedIn(true);
-                setLoaded(true);
+        onAuthStateChanged(
+            getAuth(),
+            user => {
+                if (user) {
+                    setLoggedIn(true);
+                    setLoaded(true);
 
-                get(child(ref(db), `users/${user.uid}/isAdmin`)).then(
-                    isAdminSnap => {
-                        if (isAdminSnap.exists()) {
-                            const isAdmin = isAdminSnap.val();
-                            if (isAdmin) storeData("userIsAdmin", true);
-                            else if (hasData("userIsAdmin"))
-                                removeData("userIsAdmin");
+                    get(child(ref(db), `users/${user.uid}/isAdmin`)).then(
+                        isAdminSnap => {
+                            if (isAdminSnap.exists()) {
+                                const isAdmin = isAdminSnap.val();
+                                if (isAdmin) storeData("userIsAdmin", true);
+                                else if (hasData("userIsAdmin"))
+                                    removeData("userIsAdmin");
+                            }
                         }
-                    }
-                );
+                    );
 
-                // Ban Check
-            } else {
-                setLoggedIn(false);
-                setLoaded(true);
-            }
-        });
+                    // Ban Check
+                } else {
+                    setLoggedIn(false);
+                    setLoaded(true);
+                }
+            },
+            error => console.log("error App.js", "onAuthChange", error.code)
+        );
 
         // Android Bottom Nav Bar - Color
         if (Platform.OS === "android") {
@@ -178,6 +184,14 @@ export default function App() {
                 <LanguageSelect onLanguageChange={() => setLangIsSet(true)} />
             </SafeAreaProvider>
         );
+
+    if (!testIsChecked) {
+        return (
+            <SafeAreaProvider style={[style.container, style.bgBlack]}>
+                <TestView onCheck={() => setTestIsChecked(true)} />
+            </SafeAreaProvider>
+        );
+    }
 
     // Server Status
     if (serverStatus !== "online")

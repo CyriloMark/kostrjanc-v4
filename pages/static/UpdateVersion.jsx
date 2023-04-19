@@ -62,7 +62,7 @@ export default function UpdateVersion(props) {
                 {/* Footer */}
                 <View style={[styles.layer, { flex: 1 }]}>
                     <Text style={[style.tWhite, style.TsmLt, style.tCenter]}>
-                        wersija {props.versions.server}
+                        Version {props.versions.server}
                         {"\n"}
                         Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 all
                         rights reserved

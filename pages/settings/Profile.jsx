@@ -52,8 +52,6 @@ export default function Profile({ navigation, route }) {
             userData.isBanned ? getLangs("yes") : getLangs("no")
         }\n${getLangs("settings_profile_statinfo_mod")} ${
             userData.isMod ? getLangs("yes") : getLangs("no")
-        }\n${getLangs("settings_profile_statinfo_businessprogram")} ${
-            userData.isBuisness ? getLangs("yes") : getLangs("no")
         }\n${getLangs("settings_profile_statinfo_admin")} ${
             userData.isAdmin ? getLangs("yes") : getLangs("no")
         }`;
@@ -214,13 +212,6 @@ export default function Profile({ navigation, route }) {
                             {"\n"}
                             {getLangs("settings_profile_statinfo_mod")}{" "}
                             {userData.isMod ? getLangs("yes") : getLangs("no")}
-                            {"\n"}
-                            {getLangs(
-                                "settings_profile_statinfo_businessprogram"
-                            )}{" "}
-                            {userData.isBuisness
-                                ? getLangs("yes")
-                                : getLangs("no")}
                             {"\n"}
                             {getLangs("settings_profile_statinfo_admin")}{" "}
                             {userData.isAdmin

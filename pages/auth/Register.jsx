@@ -178,7 +178,6 @@ export default function Register({ navigation }) {
                                         events: [],
                                         isMod: false,
                                         isBanned: false,
-                                        isBuisness: false,
                                         isAdmin: false,
                                     }
                                 ).catch(error =>

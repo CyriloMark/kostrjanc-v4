@@ -281,7 +281,7 @@
         "eventcreate_entrancefee_inputplaceholder": "Eintrittspreis in Euro",
         "eventcreate_website_title": "Website zum Event:",
         "eventcreate_website_sub": "Webseite eingeben:",
-        "eventcreate_website_inputplaceholder": "Website / URL",
+        "eventcreate_website_inputplaceholder": "vollständige URL",
         "eventcreate_adbanner_title": "Werbebild / Plakat:",
         "eventcreate_adbanner_imghint": "Drücken, dass man Bilder durchsuchen kann",
         "eventcreate_tags_title": "Tags:",
@@ -311,15 +311,15 @@
 
         "settings_help_title": "Hilfe",
         "settings_help_sub_0": "Für Hilfe bieten wir auf unserer Webseite verschiedene Sektionen an.",
-        "settings_help_sub_1": "Wenn die Frage nicht beantwortet wird, bieten wir uns an, Email mit der Bewerbung zu schreiben.",
+        "settings_help_sub_1": "Wenn deine Frage nicht beantwortet wird, bieten wir uns an, Email mit der Bewerbung zu schreiben.",
 
         "settings_verify_title": "Verifizierung",
         "settings_verify_intro_title": "Was ist Verifizierung?",
-        "settings_verify_intro_sub": "Als verifizierte Person erhält man die Möglichkeit, pro Kornblumen besondere Aufgaben zu erfüllen. Ebenfalls hast du die Möglichkeit, in kostrjanc mitzubestimmen und hast besondere Rechte, für das Agieren in unserer App. Verifizierte Nutzer finden in der App ein besonderes Symbol auf ihrem Profil.",
+        "settings_verify_intro_sub": "Als verifizierte Person erhält man die Möglichkeit, auf kostrjanc besondere Aufgaben zu erfüllen. Ebenfalls hast du die Möglichkeit, in kostrjanc mitzubestimmen und hast besondere Rechte, für das Agieren in unserer App. Verifizierte Nutzer finden in der App ein besonderes Symbol auf ihrem Profil.",
         "settings_verify_criterias_title": "Kriterien für die Verifizierung:",
         "settings_verify_criterias_sub": "Damit du dein Konto verifizieren kannst, musst du folgende Kriterien erfüllen:",
         "settings_verify_application_title": "Willst du dich verifizieren lassen?",
-        "settings_verify_application_sub": "Falls du die nötigen Punkte verlässt, schreib uns eine Email an info@kostrjanc.de, und schreib in den Titel 'Verifikation'. Bitte gib deinen Namen und den Tag der Geburt an. Ein anderer Weg ist sich über unsere Webseite über das Formular anzumelden.",
+        "settings_verify_application_sub": "Falls du die nötigen Punkte erfüllst, schreib uns eine Email an info@kostrjanc.de, und schreib in den Titel 'Verifikation'. Bitte gib deinen Namen und den Tag der Geburt an. Ein anderer Weg ist sich über unsere Webseite über das Formular anzumelden.",
         "settings_verify_application_button": "Sich über die Website bewerben",
 
         "settings_lang_title": "Sprache ändern",

@@ -20,8 +20,8 @@ import Animated, {
 import SVG_Return from "../assets/svg/Return";
 
 export default function AccessoryView({ nativeID, onElementPress }) {
-    const letters = ["č", "ć", "ě", "ł", "ń", "ó", "ř", "š", "ž"];
-    const letters_caps = ["Č", "Ć", "ě", "Ł", "ń", "ó", "ř", "Š", "Ž"];
+    const letters = ["č", "ć", "ě", "ł", "ń", "ó", "ř", "š", "ž", "ź"];
+    const letters_caps = ["Č", "Ć", "ě", "Ł", "ń", "ó", "ř", "Š", "Ž", "ź"];
 
     //#region caps Button
     const capsRotation = useSharedValue(0);
