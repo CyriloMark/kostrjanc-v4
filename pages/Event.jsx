@@ -48,10 +48,10 @@ import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker } from "../components/beta/MapView";
 
 export default function Event({ navigation, route }) {
-    const mapRef = useRef();
+    // const mapRef = useRef();                                 <------------------------- BETA
     const commentInputRef = useRef();
 
     const [refreshing, setRefreshing] = useState(false);
@@ -108,7 +108,7 @@ export default function Event({ navigation, route }) {
                     isBanned: false,
                 });
 
-                mapRef.current.animateToRegion(eventData["geoCords"], 2000);
+                // mapRef.current.animateToRegion(eventData["geoCords"], 2000);
 
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
@@ -334,7 +334,7 @@ export default function Event({ navigation, route }) {
                                 style.oHidden,
                             ]}>
                             <MapView
-                                ref={mapRef}
+                                // ref={mapRef}
                                 style={style.allMax}
                                 userInterfaceStyle="dark"
                                 showsUserLocation
@@ -347,12 +347,12 @@ export default function Event({ navigation, route }) {
                                     });
                                 }}
                                 focusable={false}
-                                onPress={() => {
-                                    mapRef.current.animateToRegion(
-                                        event.geoCords,
-                                        1000
-                                    );
-                                }}
+                                // onPress={() => {
+                                //     mapRef.current.animateToRegion(
+                                //         event.geoCords,
+                                //         1000
+                                //     );
+                                // }}
                                 initialRegion={event.geoCords}>
                                 <Marker
                                     focusable

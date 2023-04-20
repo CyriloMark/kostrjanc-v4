@@ -3,7 +3,7 @@ import { View, Pressable, StyleSheet } from "react-native";
 
 import * as s from "../../styles";
 
-import MapView from "react-native-maps";
+import MapView from "../beta/MapView";
 
 export default function EventPreview({ style, onPress, data }) {
     return (

@@ -245,6 +245,9 @@
         "landingcreate_post_sub": "Chceš nowy post wozjewić?\nTutón wopřija wobraz z titulom a přidatnym tekstom.",
         "landingcreate_event_title": "Nowy ewent",
         "landingcreate_event_sub": "Chceš nowy ewent wozjewić?\nTutón wopřija městnosć na karće z titulom a přidatnymi informacijemi.",
+        "landingcreate_error_title": "Wozjewjenje njeje móžne.",
+        "landingcreate_error_sub_p": "Wozjewjenje wot posta njeje móžne.",
+        "landingcreate_error_sub_e": "Wozjewjenje wot ewenta njeje móžne.",
 
         "postcreate_headertitle": "Nowy post wozjewić",
         "postcreate_posttitle": "Titul",

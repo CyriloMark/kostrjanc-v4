@@ -225,7 +225,7 @@ export default function Content({ navigation }) {
                     placeholder={getLangs("input_placeholder_search")}
                     value={searchInput}
                     inputAccessoryViewID="content_search_InputAccessoryViewID"
-                    icon={<SVG_Search fill={style.colors.sec} />}
+                    icon={<SVG_Search fill={style.colors.blue} />}
                     onChangeText={val => {
                         fetchUsers(val);
                         setSearchInput(val);

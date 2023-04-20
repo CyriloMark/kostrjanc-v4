@@ -24,12 +24,13 @@ export default function InputField(props) {
                     multiline={false}
                     numberOfLines={1}
                     maxLength={128}
+                    hitSlop={40}
                     keyboardAppearance="dark"
                     keyboardType="default"
                     placeholder={props.placeholder}
                     style={[s.allMax, s.tWhite, s.Tmd, s.pH]}
                     onChangeText={val => props.onChangeText(val)}
-                    placeholderTextColor={s.colors.sec}
+                    placeholderTextColor={s.colors.blue}
                     scrollEnabled
                     selectTextOnFocus
                     inputAccessoryViewID={
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderRadius: 10,
         zIndex: 10,
-        borderColor: s.colors.sec,
+        borderColor: s.colors.blue,
         alignItems: "center",
         maxHeight: 58,
     },

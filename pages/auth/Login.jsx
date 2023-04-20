@@ -122,7 +122,9 @@ export default function Login({ navigation }) {
                                     keyboardType="email-address"
                                     autoComplete="email"
                                     textContentType="emailAddress"
-                                    icon={<SVG_Email fill={style.colors.sec} />}
+                                    icon={
+                                        <SVG_Email fill={style.colors.blue} />
+                                    }
                                     onChangeText={val => {
                                         setLoginData({
                                             ...loginData,
@@ -151,7 +153,7 @@ export default function Login({ navigation }) {
                                     textContentType="password"
                                     secureTextEntry
                                     icon={
-                                        <SVG_Pencil fill={style.colors.sec} />
+                                        <SVG_Pencil fill={style.colors.blue} />
                                     }
                                     onChangeText={val => {
                                         setLoginData({
@@ -165,6 +167,7 @@ export default function Login({ navigation }) {
                             {/* Reset PW */}
                             <Pressable
                                 style={{ marginTop: style.defaultMlg }}
+                                hitSlop={40}
                                 onPress={() => navigation.navigate("reset")}>
                                 <Text
                                     style={[

@@ -83,6 +83,7 @@ export default function Landing({ navigation }) {
                     {/* Register */}
                     <Pressable
                         style={{ marginTop: style.defaultMlg }}
+                        hitSlop={40}
                         onPress={() => navigation.navigate("register")}>
                         <Text style={[style.tWhite, style.Tmd, style.tCenter]}>
                             {getLangs("auth_landing_register")}

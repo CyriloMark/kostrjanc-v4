@@ -32,7 +32,7 @@
         "backgroundColor": "#060A0D"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "de.kostrjanc",
+      "package": "de.zsl.kostrjanc",
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ]

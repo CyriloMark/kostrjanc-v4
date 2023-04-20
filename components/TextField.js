@@ -15,7 +15,7 @@ export default function TextField(props) {
                     style.Pmd,
                     {
                         zIndex: 10,
-                        borderColor: style.colors.sec,
+                        borderColor: style.colors.blue,
                         alignItems: "center",
                     },
                     props.bg ? { backgroundColor: props.bg } : null,
@@ -27,13 +27,14 @@ export default function TextField(props) {
                     cursorColor={style.colors.blue}
                     multiline
                     numberOfLines={3}
+                    hitSlop={40}
                     maxLength={props.maxLength ? props.maxLength : 512}
                     keyboardAppearance="dark"
                     keyboardType="default"
                     placeholder={props.placeholder}
                     style={[style.allMax, style.tWhite, style.Tmd]}
                     onChangeText={val => props.onChangeText(val)}
-                    placeholderTextColor={style.colors.sec}
+                    placeholderTextColor={style.colors.blue}
                     scrollEnabled
                     selectTextOnFocus
                     textAlign="left"

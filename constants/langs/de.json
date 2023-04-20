@@ -245,6 +245,9 @@
         "landingcreate_post_sub": "Möchtes du ein Post veröffentlichen?\nDieser beinhaltet ein Bild mit einem Titel und zusätzlichem Text.",
         "landingcreate_event_title": "Neues Event",
         "landingcreate_event_sub": "Möchtes du ein Event veröffentlichen?\nDieser beinhaltet einen Standort mit einem Titel und zusätzlichen Informationen.",
+        "landingcreate_error_title": "Veröffentlichen ist nicht möglich.",
+        "landingcreate_error_sub_p": "Veröffentlichen von Posts ist nicht möglich.",
+        "landingcreate_error_sub_e": "Veröffentlichen von Events ist nicht möglich.",
 
         "postcreate_headertitle": "Neuen Post veröffentlichen",
         "postcreate_posttitle": "Titel",

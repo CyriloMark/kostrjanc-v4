@@ -367,7 +367,7 @@ export default function Register({ navigation }) {
                                 value={registerData.name}
                                 inputAccessoryViewID="register_name_InputAccessoryViewID"
                                 textContentType="username"
-                                icon={<SVG_Pencil fill={style.colors.sec} />}
+                                icon={<SVG_Pencil fill={style.colors.blue} />}
                                 onChangeText={val => {
                                     setRegisterData(data => {
                                         return {
@@ -509,7 +509,7 @@ export default function Register({ navigation }) {
                                         textContentType="emailAddress"
                                         icon={
                                             <SVG_Email
-                                                fill={style.colors.sec}
+                                                fill={style.colors.blue}
                                             />
                                         }
                                         onChangeText={val => {
@@ -545,7 +545,7 @@ export default function Register({ navigation }) {
                                         }
                                         icon={
                                             <SVG_Email
-                                                fill={style.colors.sec}
+                                                fill={style.colors.blue}
                                             />
                                         }
                                         onChangeText={val => {
@@ -579,7 +579,7 @@ export default function Register({ navigation }) {
                                         secureTextEntry
                                         icon={
                                             <SVG_Pencil
-                                                fill={style.colors.sec}
+                                                fill={style.colors.blue}
                                             />
                                         }
                                         onChangeText={val => {

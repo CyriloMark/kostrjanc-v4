@@ -8,7 +8,7 @@ import * as style from "../../styles";
 
 import { Event_Placeholder } from "../../constants/content/PlaceholderData";
 
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker } from "../beta/MapView";
 
 import SVG_Live from "../../assets/svg/Live";
 

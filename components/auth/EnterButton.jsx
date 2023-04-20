@@ -33,6 +33,7 @@ export default function EnterButton({ checked, style, onPress }) {
     return (
         <View style={style}>
             <Animated.View
+                accessibilityLabel={"Pokročować"}
                 style={[styles.container, s.oHidden, bgAnimationStyles]}>
                 <Pressable onPress={onPress}>
                     <LinearGradient

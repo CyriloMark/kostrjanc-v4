@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:919686819174:android:9c507bbb3ee490f5c6aca7",
+        "mobilesdk_app_id": "1:919686819174:android:e794bfb626e04889c6aca7",
         "android_client_info": {
-          "package_name": "de.kostrjanc"
+          "package_name": "de.zsl.kostrjanc"
         }
       },
       "oauth_client": [
@@ -21,7 +21,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyApONpMWGTNAJ0NmfmmlRwXvIeXf2ESJ0w"
+          "current_key": "AIzaSyBQq8qlKB9h7qjOgL47a1FX6gOKgRRYNdI"
         }
       ],
       "services": {

@@ -147,7 +147,9 @@ export default function ResetPassword({ navigation }) {
                                     maxLength={128}
                                     inputAccessoryViewID="loginInputAccessoryViewID"
                                     textContentType="emailAddress"
-                                    icon={<SVG_Email fill={style.colors.sec} />}
+                                    icon={
+                                        <SVG_Email fill={style.colors.blue} />
+                                    }
                                     onChangeText={val => {
                                         setResetPWData({
                                             ...resetPWData,

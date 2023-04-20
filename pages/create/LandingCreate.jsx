@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, View, StyleSheet, Text } from "react-native";
+import { Pressable, View, StyleSheet, Text, Alert } from "react-native";
 
 import * as style from "../../styles";
 
@@ -13,7 +13,28 @@ import SVG_Post from "../../assets/svg/Post";
 import SVG_Event from "../../assets/svg/Event";
 import SVG_Return from "../../assets/svg/Return";
 
+const POST_ENABLED = true;
+const EVENT_ENABLED = false;
+
 export default function LandingCreate({ navigation }) {
+    const setErrorAlert = mode => {
+        Alert.alert(
+            getLangs("landingcreate_error_title"),
+            mode === 0
+                ? getLangs("landingcreate_error_sub_p")
+                : mode === 1
+                ? getLangs("landingcreate_error_sub_e")
+                : "",
+            [
+                {
+                    text: "Ok",
+                    isPreferred: true,
+                    style: "cancel",
+                },
+            ]
+        );
+    };
+
     return (
         <View style={[style.container, style.bgBlack]}>
             {/* Header */}
@@ -32,7 +53,10 @@ export default function LandingCreate({ navigation }) {
                 <View style={[style.pH, styles.sectionContainer]}>
                     <Pressable
                         style={[styles.elementContainer, style.oHidden]}
-                        onPress={() => navigation.navigate("postCreate")}>
+                        onPress={() => {
+                            if (POST_ENABLED) navigation.navigate("postCreate");
+                            else setErrorAlert(0);
+                        }}>
                         <LinearGradient
                             style={[styles.elementInnerContainer, style.Plg]}
                             colors={[style.colors.blue, style.colors.sec]}
@@ -83,7 +107,11 @@ export default function LandingCreate({ navigation }) {
                 <View style={[style.pH, styles.sectionContainer]}>
                     <Pressable
                         style={[styles.elementContainer, style.oHidden]}
-                        onPress={() => navigation.navigate("eventCreate")}>
+                        onPress={() => {
+                            if (EVENT_ENABLED)
+                                navigation.navigate("eventCreate");
+                            else setErrorAlert(1);
+                        }}>
                         <LinearGradient
                             style={[styles.elementInnerContainer, style.Plg]}
                             colors={[

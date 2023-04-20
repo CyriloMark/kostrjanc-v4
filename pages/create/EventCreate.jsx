@@ -45,7 +45,7 @@ import {
     UIImagePickerPresentationStyle,
 } from "expo-image-picker";
 
-import MapView from "react-native-maps";
+import MapView from "../../components/beta/MapView";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -612,7 +612,7 @@ export default function EventCreate({ navigation }) {
                                     inputAccessoryViewID="event_title_InputAccessoryViewID"
                                     maxLength={32}
                                     icon={
-                                        <SVG_Pencil fill={style.colors.sec} />
+                                        <SVG_Pencil fill={style.colors.blue} />
                                     }
                                     onChangeText={val => {
                                         setEvent({
@@ -1326,7 +1326,7 @@ export default function EventCreate({ navigation }) {
                                         "eventcreate_entrancefee_inputplaceholder"
                                     )}
                                     keyboardType="numeric"
-                                    icon={<SVG_Cash fill={style.colors.sec} />}
+                                    icon={<SVG_Cash fill={style.colors.blue} />}
                                     maxLength={8}
                                     onChangeText={val => {
                                         setEvent(prev => {
@@ -1370,7 +1370,7 @@ export default function EventCreate({ navigation }) {
                                     )}
                                     keyboardType="url"
                                     maxLength={128}
-                                    icon={<SVG_Web fill={style.colors.sec} />}
+                                    icon={<SVG_Web fill={style.colors.blue} />}
                                     onChangeText={val => {
                                         setEvent(prev => {
                                             return {

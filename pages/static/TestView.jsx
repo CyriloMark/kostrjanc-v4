@@ -11,10 +11,11 @@ import EnterButton from "../../components/auth/EnterButton";
 import { ScrollView } from "react-native";
 
 const missingFkt = [
-    "Voluptate irure mollit occaecat in ut ea ex est quis nulla.",
-    "Esse consectetur cillum eiusmod magna et dolor tempor laboris amet aute nisi voluptate.",
-    "Duis sint est reprehenderit eiusmod sunt eiusmod adipisicing.",
-    "Nisi elit irure consequat sunt voluptate dolor Lorem id enim incididunt non qui incididunt.",
+    "Zmylk w fukciji kartow → karty su hasnjene",
+    "Komentary njedaja so wotstronić",
+    "Algorytmus hłowneje strony njeje dospowny",
+    "Powěsćowe zastajenja",
+    "Rěč: delnoserbšćina",
 ];
 
 export default function TestView(props) {

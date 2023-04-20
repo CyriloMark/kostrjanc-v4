@@ -364,7 +364,7 @@ export default function PostCreate({ navigation }) {
                                     maxLength={32}
                                     inputAccessoryViewID="post_title_InputAccessoryViewID"
                                     icon={
-                                        <SVG_Pencil fill={style.colors.sec} />
+                                        <SVG_Pencil fill={style.colors.blue} />
                                     }
                                     onChangeText={val => {
                                         setPost({
