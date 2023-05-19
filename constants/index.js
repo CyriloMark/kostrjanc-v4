@@ -130,3 +130,32 @@ export function sortArrayByDateFromUnderorderedKey(data, sortingKey) {
     }
     return dates.reverse();
 }
+
+/**
+ *
+ * @param {*} number An integer
+ * @param {*[]} array Array in form: [{start: x, end: y}, {start: x, end: y}, ...]
+ * @returns bool, true if number is between 2 and 3; 4 and 5; ...
+ */
+export function checkNumberInRanges(number, array) {
+    if (array.length === 0) return true;
+    console.log("a", number, array);
+    // Flatten the array into a single array of all numbers
+    const flattenedArray = array.flatMap(obj => [obj.start, obj.end]);
+    // Sort the flattened array by number
+    flattenedArray.sort((a, b) => a - b);
+
+    // Start by assuming the number is not in any of the ranges
+    let isInRange = false;
+
+    // Iterate over the sorted array, skipping the first element
+    for (let i = 1; i < flattenedArray.length; i += 2) {
+        // Check if the number is between the current range
+        if (number > flattenedArray[i - 1] && number < flattenedArray[i]) {
+            isInRange = true;
+            break;
+        }
+    }
+
+    return isInRange;
+}

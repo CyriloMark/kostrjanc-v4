@@ -23,10 +23,12 @@ export default function InputField(props) {
                     cursorColor={s.colors.blue}
                     multiline={false}
                     numberOfLines={1}
-                    maxLength={128}
+                    maxLength={props.maxLength ? props.maxLength : 128}
                     hitSlop={40}
                     keyboardAppearance="dark"
-                    keyboardType="default"
+                    keyboardType={
+                        props.keyboardType ? props.keyboardType : "default"
+                    }
                     placeholder={props.placeholder}
                     style={[s.allMax, s.tWhite, s.Tmd, s.pH]}
                     onChangeText={val => props.onChangeText(val)}

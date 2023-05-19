@@ -12,7 +12,6 @@ import {
 
 import * as style from "../../styles";
 
-import { getAuth } from "firebase/auth";
 import { ref, set, getDatabase } from "firebase/database";
 
 import { Ban_Placeholder } from "../../constants/content/PlaceholderData";
@@ -122,29 +121,61 @@ export default function Ban({ navigation, route }) {
                         // Ban Posts
                         if (item.posts ? true : false)
                             item.posts.forEach(e =>
-                                set(ref(db, `posts/${e}/isBanned`), true).catch(
-                                    error =>
+                                set(ref(db, `posts/${e}/isBanned`), true)
+                                    .catch(error =>
                                         console.log(
                                             "error pages/interaction/Ban.jsx",
                                             "ban set user posts banned",
                                             error.code
                                         )
-                                )
+                                    )
+                                    .finally(() => {
+                                        Alert.alert(
+                                            getLangs(
+                                                "banelement_success_title"
+                                            ),
+                                            "",
+                                            [
+                                                {
+                                                    isPreferred: true,
+                                                    text: "Ok",
+                                                    style: "cancel",
+                                                    onPress: () =>
+                                                        navigation.goBack(),
+                                                },
+                                            ]
+                                        );
+                                    })
                             );
 
                         // Ban Events
                         if (item.events ? true : false)
                             item.events.forEach(e =>
-                                set(
-                                    ref(db, `events/${e}/isBanned`),
-                                    true
-                                ).catch(error =>
-                                    console.log(
-                                        "error pages/interaction/Ban.jsx",
-                                        "ban set user events banned",
-                                        error.code
+                                set(ref(db, `events/${e}/isBanned`), true)
+                                    .catch(error =>
+                                        console.log(
+                                            "error pages/interaction/Ban.jsx",
+                                            "ban set user events banned",
+                                            error.code
+                                        )
                                     )
-                                )
+                                    .finally(() => {
+                                        Alert.alert(
+                                            getLangs(
+                                                "banelement_success_title"
+                                            ),
+                                            "",
+                                            [
+                                                {
+                                                    isPreferred: true,
+                                                    text: "Ok",
+                                                    style: "cancel",
+                                                    onPress: () =>
+                                                        navigation.goBack(),
+                                                },
+                                            ]
+                                        );
+                                    })
                             );
                     },
                 },

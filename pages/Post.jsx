@@ -24,6 +24,7 @@ import { wait } from "../constants/wait";
 import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
+import { checkLinkedUser } from "../constants/content/linking";
 
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
@@ -84,6 +85,8 @@ export default function Post({ navigation, route }) {
                         : [],
                     isBanned: false,
                 });
+
+                getIfCreatorIsClient(postData.creator);
 
                 get(child(ref(db), "users/" + postData["creator"]))
                     .then(userSnap => {
@@ -173,6 +176,14 @@ export default function Post({ navigation, route }) {
         });
     };
 
+    const [clientIsCreator, setClientIsCreator] = useState(false);
+    const getIfCreatorIsClient = async creator => {
+        await getData("userId").then(id => {
+            if (id === creator) return setClientIsCreator(true);
+            return setClientIsCreator(false);
+        });
+    };
+
     return (
         <View style={[style.container, style.bgBlack]}>
             <KeyboardAvoidingView
@@ -246,7 +257,26 @@ export default function Post({ navigation, route }) {
 
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                {post.description}
+                                {checkLinkedUser(post.description).map(
+                                    (el, key) =>
+                                        !el.isLinked ? (
+                                            <Text key={key}>{el.text}</Text>
+                                        ) : (
+                                            <Text
+                                                key={key}
+                                                style={style.tBlue}
+                                                onPress={() =>
+                                                    navigation.navigate(
+                                                        "profileView",
+                                                        {
+                                                            id: el.id,
+                                                        }
+                                                    )
+                                                }>
+                                                {el.text}
+                                            </Text>
+                                        )
+                                )}
                             </Text>
                         </View>
                     </View>
@@ -383,6 +413,11 @@ export default function Post({ navigation, route }) {
                                     }
                                     commentData={comment}
                                     onRemove={() => removeComment(comment)}
+                                    onCommentUserPress={id =>
+                                        navigation.navigate("profileView", {
+                                            id: id,
+                                        })
+                                    }
                                 />
                             ))}
                         </View>
@@ -398,6 +433,7 @@ export default function Post({ navigation, route }) {
                             ban={clientIsAdmin}
                             share
                             warn
+                            del={clientIsCreator}
                             onShare={() => share(0, id, post.title)}
                             onWarn={() =>
                                 navigation.navigate("report", {
@@ -408,6 +444,12 @@ export default function Post({ navigation, route }) {
                             onBan={() =>
                                 navigation.navigate("ban", {
                                     item: post,
+                                    type: 0,
+                                    id: post.id,
+                                })
+                            }
+                            onDelete={() =>
+                                navigation.navigate("delete", {
                                     type: 0,
                                     id: post.id,
                                 })

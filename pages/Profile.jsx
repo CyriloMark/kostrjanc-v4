@@ -7,6 +7,7 @@ import {
     Text,
     Image,
     Platform,
+    Alert,
 } from "react-native";
 
 import * as style from "../styles";
@@ -175,6 +176,19 @@ export default function Profile({ navigation, route }) {
         getIfAdmin();
     }, []);
 
+    const alertForRoles = () => {
+        Alert.alert(
+            user.name,
+            `${user.name} ${getLangs("profile_role_sub_0")} ${
+                user.isAdmin === true
+                    ? getLangs("profile_role_admin")
+                    : user.isMod === true
+                    ? getLangs("profile_role_mod")
+                    : ""
+            } ${getLangs("profile_role_sub_1")}`
+        );
+    };
+
     const [clientIsAdmin, setClintIsAdmin] = useState(false);
     const getIfAdmin = async () => {
         await getData("userIsAdmin").then(isAdmin => {
@@ -321,19 +335,23 @@ export default function Profile({ navigation, route }) {
                     {/* Name */}
                     <View style={styles.nameContainer}>
                         {user.isAdmin ? (
-                            <View style={styles.nameIcon}>
+                            <Pressable
+                                style={styles.nameIcon}
+                                onPress={alertForRoles}>
                                 <SVG_Admin
                                     fill={style.colors.red}
                                     style={style.allMax}
                                 />
-                            </View>
+                            </Pressable>
                         ) : user.isMod ? (
-                            <View style={styles.nameIcon}>
+                            <Pressable
+                                style={styles.nameIcon}
+                                onPress={alertForRoles}>
                                 <SVG_Verify
                                     fill={style.colors.red}
                                     style={style.allMax}
                                 />
-                            </View>
+                            </Pressable>
                         ) : null}
 
                         <Text style={[style.tWhite, style.Ttitle2]}>

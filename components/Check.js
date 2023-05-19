@@ -16,7 +16,7 @@ export default function Check({ checked, style, onPress, color }) {
                     styles.container,
                     s.border,
                     {
-                        borderColor: color ? s.colors.sec : s.colors.red,
+                        borderColor: color ? s.colors.blue : s.colors.red,
                     },
                 ]}
                 onPress={onPress}>

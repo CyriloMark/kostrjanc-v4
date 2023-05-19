@@ -6,7 +6,7 @@ import * as style from "../styles";
 
 export default function TextField(props) {
     return (
-        <View style={[props.style, { maxHeight: 152 }]}>
+        <View style={[props.style, { position: "relative" }]}>
             <View
                 style={[
                     styles.container,
@@ -21,6 +21,7 @@ export default function TextField(props) {
                     props.bg ? { backgroundColor: props.bg } : null,
                 ]}>
                 <TextInput
+                    {...props}
                     allowFontScaling
                     autoCapitalize="sentences"
                     autoCorrect={false}
@@ -31,17 +32,25 @@ export default function TextField(props) {
                     maxLength={props.maxLength ? props.maxLength : 512}
                     keyboardAppearance="dark"
                     keyboardType="default"
-                    placeholder={props.placeholder}
-                    style={[style.allMax, style.tWhite, style.Tmd]}
-                    onChangeText={val => props.onChangeText(val)}
+                    defaultValue={props.defaultValue ? props.defaultValue : ""}
+                    placeholder={props.placeholder ? props.placeholder : ""}
+                    style={[styles.input, style.tWhite, style.Tmd]}
+                    onChangeText={val => {
+                        props.onChangeText(val);
+                    }}
                     placeholderTextColor={style.colors.blue}
+                    inputAccessoryViewID={
+                        props.inputAccessoryViewID
+                            ? props.inputAccessoryViewID
+                            : null
+                    }
+                    editable={props.editable ? props.editable : true}
                     scrollEnabled
                     selectTextOnFocus
                     textAlign="left"
                     value={props.value}
                     textAlignVertical="top"
                     textBreakStrategy="simple"
-                    {...props}
                 />
             </View>
         </View>
@@ -51,7 +60,10 @@ export default function TextField(props) {
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        height: "100%",
+        minHeight: 152,
         borderRadius: 10,
+    },
+    input: {
+        width: "100%",
     },
 });

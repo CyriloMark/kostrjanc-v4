@@ -30,16 +30,6 @@ import { splitterForContent } from "../../constants";
 import * as style from "../../styles";
 
 import SVG_Search from "../../assets/svg/Search";
-import SVG_Post from "../../assets/svg/Post";
-import SVG_Event from "../../assets/svg/Event";
-
-import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
-    withSpring,
-    Easing,
-} from "react-native-reanimated";
 
 const RANDOM_CONTENT_ENABLED = false;
 
@@ -148,67 +138,6 @@ export default function Content({ navigation }) {
             );
     };
 
-    //#region anim
-
-    const [createViewVisible, setCreateViewVisible] = useState(false);
-
-    const leftBoxOpacity = useSharedValue(0);
-    const leftBoxOffsetX = useSharedValue(0);
-    const leftBoxOffsetY = useSharedValue(0);
-
-    const rightBoxOpacity = useSharedValue(0);
-    const rightBoxOffsetX = useSharedValue(0);
-    const rightBoxOffsetY = useSharedValue(0);
-
-    const leftBoxStyles = useAnimatedStyle(() => {
-        return {
-            top: withSpring(leftBoxOffsetY.value, {
-                damping: 10,
-                stiffness: 90,
-            }),
-            left: withSpring(leftBoxOffsetX.value, {
-                damping: 10,
-                stiffness: 90,
-            }),
-            opacity: withTiming(leftBoxOpacity.value, {
-                duration: 100,
-                easing: Easing.ease,
-            }),
-        };
-    });
-
-    const rightBoxStyles = useAnimatedStyle(() => {
-        return {
-            top: withSpring(rightBoxOffsetY.value, {
-                damping: 10,
-                stiffness: 90,
-            }),
-            right: withSpring(rightBoxOffsetX.value, {
-                damping: 10,
-                stiffness: 90,
-            }),
-            opacity: withTiming(rightBoxOpacity.value, {
-                duration: 100,
-                easing: Easing.ease,
-            }),
-        };
-    });
-
-    const toggleAccountView = () => {
-        setCreateViewVisible(val => {
-            leftBoxOffsetX.value = val ? 0 : -72;
-            leftBoxOffsetY.value = val ? 0 : -72;
-            leftBoxOpacity.value = val ? 0 : 1;
-
-            rightBoxOffsetX.value = val ? 0 : -72;
-            rightBoxOffsetY.value = val ? 0 : -72;
-            rightBoxOpacity.value = val ? 0 : 1;
-
-            return !val;
-        });
-    };
-    //#endregion
-
     return (
         <View style={[style.container, style.bgBlack]}>
             <ContentHeader
@@ -260,10 +189,7 @@ export default function Content({ navigation }) {
                     ) : null
                 }>
                 <Pressable
-                    onPress={() => {
-                        Keyboard.dismiss();
-                        if (createViewVisible) toggleAccountView();
-                    }}
+                    onPress={Keyboard.dismiss}
                     style={{ alignItems: "center" }}>
                     {randomUser ? (
                         <View

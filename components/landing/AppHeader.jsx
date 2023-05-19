@@ -4,9 +4,9 @@ import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 import * as style from "../../styles";
 
 import SVG_kostrjanc from "../../assets/svg/kostrjanc";
+import SVG_Content from "../../assets/svg/Content";
 import { Svg, Rect } from "react-native-svg";
 
-import { clamp } from "../../constants/clamp";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function AppHeader(props) {
@@ -17,7 +17,8 @@ export default function AppHeader(props) {
             <Pressable
                 style={[styles.btnContainer, style.allCenter]}
                 onPress={props.onContentPress}>
-                <Svg viewBox="0 0 7 7" style={style.boxShadow}>
+                <SVG_Content style={style.boxShadow} fill={style.colors.blue} />
+                {/* <Svg viewBox="0 0 7 7" style={style.boxShadow}>
                     <Rect
                         x={0}
                         y={1}
@@ -39,7 +40,7 @@ export default function AppHeader(props) {
                         width={6}
                         height={1}
                         fill={style.colors.blue}></Rect>
-                </Svg>
+                </Svg> */}
             </Pressable>
 
             <Pressable

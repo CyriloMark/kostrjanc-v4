@@ -47,6 +47,7 @@ import { openLink } from "../constants";
 import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
+import { checkLinkedUser } from "../constants/content/linking";
 
 import MapView, { Marker } from "../components/beta/MapView";
 
@@ -107,6 +108,8 @@ export default function Event({ navigation, route }) {
                         : [],
                     isBanned: false,
                 });
+
+                getIfCreatorIsClient(eventData.creator);
 
                 // mapRef.current.animateToRegion(eventData["geoCords"], 2000);
 
@@ -233,6 +236,14 @@ export default function Event({ navigation, route }) {
         await getData("userIsAdmin").then(isAdmin => {
             if (isAdmin === null) return setClintIsAdmin(false);
             return setClintIsAdmin(isAdmin);
+        });
+    };
+
+    const [clientIsCreator, setClientIsCreator] = useState(false);
+    const getIfCreatorIsClient = async creator => {
+        await getData("userId").then(id => {
+            if (id === creator) return setClientIsCreator(true);
+            return setClientIsCreator(false);
         });
     };
 
@@ -365,7 +376,26 @@ export default function Event({ navigation, route }) {
 
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                {event.description}
+                                {checkLinkedUser(event.description).map(
+                                    (el, key) =>
+                                        !el.isLinked ? (
+                                            <Text key={key}>{el.text}</Text>
+                                        ) : (
+                                            <Text
+                                                key={key}
+                                                style={style.tBlue}
+                                                onPress={() =>
+                                                    navigation.navigate(
+                                                        "profileView",
+                                                        {
+                                                            id: el.id,
+                                                        }
+                                                    )
+                                                }>
+                                                {el.text}
+                                            </Text>
+                                        )
+                                )}
                             </Text>
                         </View>
                     </View>
@@ -705,6 +735,11 @@ export default function Event({ navigation, route }) {
                                     }
                                     commentData={comment}
                                     onRemove={() => removeComment(comment)}
+                                    onCommentUserPress={id =>
+                                        navigation.navigate("profileView", {
+                                            id: id,
+                                        })
+                                    }
                                 />
                             ))}
                         </View>
@@ -720,6 +755,7 @@ export default function Event({ navigation, route }) {
                             ban={clientIsAdmin}
                             share
                             warn
+                            del={clientIsCreator}
                             onShare={() => share(1, id, event.title)}
                             onWarn={() =>
                                 navigation.navigate("report", {
@@ -730,6 +766,12 @@ export default function Event({ navigation, route }) {
                             onBan={() =>
                                 navigation.navigate("ban", {
                                     item: event,
+                                    type: 1,
+                                    id: event.id,
+                                })
+                            }
+                            onDelete={() =>
+                                navigation.navigate("delete", {
                                     type: 1,
                                     id: event.id,
                                 })

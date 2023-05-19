@@ -38,14 +38,14 @@ const userUploadMetadata = {
     contentType: "image/jpeg",
 };
 
+let pbChanged = false;
+
 export default function UserProfileEdit({ navigation, route }) {
     const { userData } = route.params;
 
     const [updatedUserData, setUpdatedUserData] = useState(userData);
     const [buttonChecked, setButtonChecked] = useState(false);
     const [pbImageUri, setPbImageUri] = useState(userData.pbUri);
-
-    let pbChanged = false;
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
@@ -91,6 +91,7 @@ export default function UserProfileEdit({ navigation, route }) {
         );
 
         pbChanged = true;
+        setButtonChecked(true);
         setPbImageUri(croppedPicker.uri);
     };
 
@@ -98,7 +99,7 @@ export default function UserProfileEdit({ navigation, route }) {
         let inputValid = false;
         if (updatedUserData.description != userData.description)
             inputValid = true;
-
+        if (pbChanged) inputValid = true;
         if (
             !(
                 updatedUserData.description.length > 0 &&
@@ -106,7 +107,6 @@ export default function UserProfileEdit({ navigation, route }) {
             )
         )
             inputValid = false;
-        if (!pbImageUri) inputValid = false;
 
         setButtonChecked(inputValid);
     };

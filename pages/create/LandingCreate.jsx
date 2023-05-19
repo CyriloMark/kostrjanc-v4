@@ -14,7 +14,7 @@ import SVG_Event from "../../assets/svg/Event";
 import SVG_Return from "../../assets/svg/Return";
 
 const POST_ENABLED = true;
-const EVENT_ENABLED = false;
+const EVENT_ENABLED = true;
 
 export default function LandingCreate({ navigation }) {
     const setErrorAlert = mode => {

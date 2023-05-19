@@ -44,7 +44,16 @@ export default function BackHeader(props) {
                     onPress={props.onReload}>
                     <SVG_Reload
                         fill={style.colors.blue}
-                        style={style.boxShadow}
+                        style={[
+                            style.boxShadow,
+                            {
+                                transform: [
+                                    {
+                                        scale: 0.9,
+                                    },
+                                ],
+                            },
+                        ]}
                         rotation={180}
                     />
                 </Pressable>

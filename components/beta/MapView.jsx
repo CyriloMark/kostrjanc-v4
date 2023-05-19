@@ -3,12 +3,14 @@ import { View, Pressable, Text } from "react-native";
 
 import * as style from "../../styles";
 
+import { getLangs } from "../../constants/langs";
+
 export default function MapView(props) {
     return (
         <Pressable {...props}>
             <View style={[style.allMax, style.allCenter, style.bgBlue]}>
                 <Text style={[style.TlgBd, style.tWhite]}>
-                    Žana karta wužijomna.
+                    {getLangs("no_map")}
                 </Text>
             </View>
         </Pressable>

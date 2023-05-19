@@ -104,6 +104,9 @@
         "input_placeholder_contentname": "Titul",
 
         "newcomment_type": "Pisaj něšto...",
+        "comment_title": "Komentar wotstronić?",
+        "comment_sub_0": "Komentar wot",
+        "comment_sub_1": "woprawdźe wotstronić?",
 
         "checkbtn_check": "Ja sym pódla!",
         "checkbtn_uncheck": "Njejsym wjac pódla.",
@@ -217,6 +220,11 @@
         "profile_following": "Sćěhuje",
         "profile_contentlist": "Wozjewjenja",
         "profile_editbuttontext": "Wobdźěłać",
+
+        "profile_role_sub_0": "je:",
+        "profile_role_sub_1": "na kostrjanc.",
+        "profile_role_admin": "admin",
+        "profile_role_mod": "moderator",
 
         "interactionbar_title": "Funkcije za wužiwarja:",
 
@@ -386,8 +394,19 @@
         "banelement_sub_1": "banować?",
         "banelement_ban_sub_0": "so banuje, nic wužiwar.",
         "banelement_ban_sub_1": "Wužiwar a wšitke wozjewjenja so banuja.",
+        "banelement_success_title": "Wobsah je so wuspěšnje banował.",
         "banelement_error_title": "Ban njebě wuspěšny!",
         "banelement_error_sub": "Problem je nastał při banowanju.",
+
+        "delete_title": "Wotstronić",
+        "delete_sub": " wotstronić?",
+        "delete_hint": " je po tym wotstronjeny. Wšitke tomu słušace daty njejsu wjac za wužiwarjow spřistupnojomne. Sy sej wěsty, zo chceš wotstronić?",
+        "delete_post": "Post",
+        "delete_event": "Ewent",
+        "delete_alert_sub_p": "Chceš post woprawdźe wotstronić?",
+        "delete_alert_sub_e": "Chceš ewent woprawdźe wotstronić?",
+        "delete_successful_title": "Wuspěšnje wotstronjenje!",
+        "delete_successful_sub": " je so wuspěšnje wotstronił.",
 
         "missing_alert_title": "Zapodaj trěbne informacije.",
         "missing_alert_sub": "Faluja hišće:",
@@ -401,6 +420,15 @@
         "missing_pbimg": "profilny wobraz",
         "missing_equalpassword": "indentiskej hesłje",
         "missing_goodpassword": "mócne hesło [wulke małke pismiki, ličby, wosebite znamja]",
-        "missing_agb": "přiznaće powšitkownych wobchodnowych wuměnjenjow"
+        "missing_agb": "přiznaće powšitkownych wobchodnowych wuměnjenjow",
+
+        "no_map": "Žana karta wužijomna.",
+
+        "testview_title": "Witaj při zawrjenym beta-tesće.",
+        "testview_sub_0": "Sy wuzwoleny za testowanje kostrjanc. My prosymy wo diskretny test a konstruktiwnu kritiku. Při prašenjach abo namjetach prosymy wo powěsć na ",
+        "testview_sub_1": ". Při powěsći přidaj prošu wersiju, z kotrejž dźěłaš.",
+        "testview_missing_title": "Funkcije, kiž faluja:",
+        "testview_thx": "Dźakuju za twoju prócu!"
+
     }
 }

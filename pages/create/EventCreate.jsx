@@ -45,7 +45,8 @@ import {
     UIImagePickerPresentationStyle,
 } from "expo-image-picker";
 
-import MapView from "../../components/beta/MapView";
+// import MapView from "../../components/beta/MapView";
+import MapView from "react-native-maps";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -636,6 +637,7 @@ export default function EventCreate({ navigation }) {
                                     placeholder={getLangs(
                                         "input_placeholder_description"
                                     )}
+                                    userLinkable
                                     value={event.description}
                                     maxLength={512}
                                     inputAccessoryViewID="event_description_InputAccessoryViewID"
@@ -674,7 +676,9 @@ export default function EventCreate({ navigation }) {
                                                 styles.timesIcon,
                                                 style.allCenter,
                                             ]}>
-                                            <SVG_Time fill={style.colors.sec} />
+                                            <SVG_Time
+                                                fill={style.colors.blue}
+                                            />
                                         </View>
                                         <View
                                             style={[
@@ -867,7 +871,7 @@ export default function EventCreate({ navigation }) {
                                                     style.allCenter,
                                                 ]}>
                                                 <SVG_Flag
-                                                    fill={style.colors.sec}
+                                                    fill={style.colors.blue}
                                                 />
                                             </View>
                                             <View
@@ -1778,7 +1782,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         borderRadius: 10,
         zIndex: 10,
-        borderColor: style.colors.sec,
+        borderColor: style.colors.blue,
         alignItems: "center",
         maxHeight: 58,
     },

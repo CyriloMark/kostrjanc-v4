@@ -73,7 +73,7 @@ export default function ResetPassword({ navigation }) {
         }
         reseted = true;
         const auth = getAuth();
-        sendPasswordResetEmail(auth, resetEmail)
+        sendPasswordResetEmail(auth, resetPWData.email)
             .then(() => {
                 Alert.alert(
                     getLangs("auth_reset_confirm_title"),
@@ -144,6 +144,7 @@ export default function ResetPassword({ navigation }) {
                                     )}
                                     keyboardType="email-address"
                                     autoComplete="email"
+                                    autoCapitalize="none"
                                     maxLength={128}
                                     inputAccessoryViewID="loginInputAccessoryViewID"
                                     textContentType="emailAddress"

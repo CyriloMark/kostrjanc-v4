@@ -3,7 +3,7 @@
     "name": "kostrjanc",
     "slug": "kostrjanc",
     "owner": "lauske",
-    "version": "0.9.0b",
+    "version": "0.9.1b",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
     "splash": {
@@ -35,7 +35,8 @@
       "package": "de.zsl.kostrjanc",
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/icons/favicon.png"

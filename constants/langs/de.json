@@ -104,6 +104,10 @@
         "input_placeholder_contentname": "Titel",
 
         "newcomment_type": "Schreib etwas...",
+        "comment_title": "Kommentar entfernen?",
+        "comment_sub_0": "Kommentar von",
+        "comment_sub_1": "wirklich entfernen?",
+
 
         "checkbtn_check": "Ich bin dabei!",
         "checkbtn_uncheck": "Ich bin nicht dabei.",
@@ -217,6 +221,11 @@
         "profile_following": "Folgt",
         "profile_contentlist": "Veröffentlichungen",
         "profile_editbuttontext": "Bearbeiten",
+
+        "profile_role_sub_0": "ist:",
+        "profile_role_sub_1": "auf kostrjanc.",
+        "profile_role_admin": "Admin",
+        "profile_role_mod": "Moderator",
 
         "interactionbar_title": "Funktionen für Nutzer:",
 
@@ -386,8 +395,19 @@
         "banelement_sub_1": "bannen?",
         "banelement_ban_sub_0": "wird gebannt, nicht der Benutzer.",
         "banelement_ban_sub_1": "Der Benutzer und alle dazugehörigen Veröffentlichungen werden gebannt.",
+        "banelement_success_title": "Der Inhalt wurde erfolgreich gebannt.",
         "banelement_error_title": "Der Bann war nicht erfolgreich!",
         "banelement_error_sub": "Ein Problem ist entstanden beim Bannen.",
+
+        "delete_title": "Entfernen?",
+        "delete_sub": " entfernen?",
+        "delete_hint": " ist danach entfernt. Alle dazugehörige Daten sind für andere Benutzer nicht mehr zugänglich. Bist du dir sicher, dass du entfernen möchtest?",
+        "delete_post": "Post",
+        "delete_event": "Event",
+        "delete_alert_sub_p": "Willst den Post wirklich entfernen?",
+        "delete_alert_sub_e": "Willst du das Event wirklich entfernen?",
+        "delete_successful_title": "Entfernen erfolgreich!",
+        "delete_successful_sub": " wurde erfolgreich entfernt.",
 
         "missing_alert_title": "Gib alle nötigen Informationen ein.",
         "missing_alert_sub": "Fehlen noch:",
@@ -401,6 +421,14 @@
         "missing_pbimg": "Profilbild",
         "missing_equalpassword": "identische Passwörter",
         "missing_goodpassword": "starkes Passwort [Groß- und Kleinbuchstaben, Nummern, Sonderzeichen]",
-        "missing_agb": "Akzeptieren von den allgemeinen Geschäftsbedingungen"
+        "missing_agb": "Akzeptieren von den allgemeinen Geschäftsbedingungen",
+        
+        "no_map": "Keine Karte verfügbar.",
+
+        "testview_title": "Willkommen im geschlossenen Beta-Test.",
+        "testview_sub_0": "Du bist bestimmt zum Testen von kostrjanc. Wir bitten um einen diskreten Test und konstruktive Krittik. Bei Fragen oder Bemerkungen bitten wir dich, dass du uns eine Email an ",
+        "testview_sub_1": " schickst . Bei einer Nachricht gib bitte die aktuelle Version mit an.",
+        "testview_missing_title": "Funktionen, welche noch fehlen:",
+        "testview_thx": "Danke für deine Hilfe!"
     }
 }

@@ -506,6 +506,7 @@ export default function Register({ navigation }) {
                                         maxLength={128}
                                         keyboardType="email-address"
                                         autoComplete="email"
+                                        autoCapitalize="none"
                                         textContentType="emailAddress"
                                         icon={
                                             <SVG_Email
@@ -539,12 +540,13 @@ export default function Register({ navigation }) {
                                         maxLength={128}
                                         keyboardType="default"
                                         textContentType="newPassword"
+                                        autoCapitalize="none"
                                         secureTextEntry
                                         passwordRules={
                                             "minlength: 8; required: lower; required: upper; required: digit; required: special;"
                                         }
                                         icon={
-                                            <SVG_Email
+                                            <SVG_Pencil
                                                 fill={style.colors.blue}
                                             />
                                         }
@@ -575,6 +577,7 @@ export default function Register({ navigation }) {
                                         )}
                                         maxLength={128}
                                         keyboardType="default"
+                                        autoCapitalize="none"
                                         textContentType="newPassword"
                                         secureTextEntry
                                         icon={

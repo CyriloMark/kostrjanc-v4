@@ -3,15 +3,18 @@ import { Pressable, View, StyleSheet } from "react-native";
 
 import * as s from "../styles/index";
 
+import SVG_Basket from "../assets/svg/Basket";
 import SVG_Share from "../assets/svg/Share";
 import SVG_Warn from "../assets/svg/Warn";
 import SVG_Ban from "../assets/svg/Ban";
 
 export default function InteractionBar({
     style,
+    del,
     share,
     warn,
     ban,
+    onDelete,
     onShare,
     onWarn,
     onBan,
@@ -42,6 +45,16 @@ export default function InteractionBar({
                             { marginLeft: s.defaultMlg },
                         ]}>
                         <SVG_Ban style={styles.icon} fill={s.colors.blue} />
+                    </Pressable>
+                ) : null}
+                {del ? (
+                    <Pressable
+                        onPress={onDelete}
+                        style={[
+                            styles.iconContainer,
+                            { marginLeft: s.defaultMlg },
+                        ]}>
+                        <SVG_Basket style={styles.icon} fill={s.colors.red} />
                     </Pressable>
                 ) : null}
             </View>

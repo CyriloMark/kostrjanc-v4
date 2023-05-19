@@ -119,6 +119,7 @@ export default function Login({ navigation }) {
                                         "input_placeholder_email"
                                     )}
                                     maxLength={128}
+                                    autoCapitalize="none"
                                     keyboardType="email-address"
                                     autoComplete="email"
                                     textContentType="emailAddress"
@@ -148,6 +149,7 @@ export default function Login({ navigation }) {
                                     placeholder={getLangs(
                                         "input_placeholder_password"
                                     )}
+                                    autoCapitalize="none"
                                     maxLength={128}
                                     keyboardType="default"
                                     textContentType="password"

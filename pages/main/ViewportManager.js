@@ -1,6 +1,6 @@
 import React from "react";
 
-// import { View } from "react-native";
+import { Platform } from "react-native";
 import {
     SafeAreaView,
     useSafeAreaInsets,
@@ -43,7 +43,7 @@ import ImageFullscreen from "../ImageFullscreen";
 import UserList from "../UserList";
 import Report from "../interaction/Report";
 import Ban from "../interaction/Ban";
-import { Platform } from "react-native";
+import Delete from "../interaction/Delete";
 //#endregion
 
 const MainNavStack = createStackNavigator();
@@ -133,6 +133,7 @@ export default function ViewportManager() {
                 <MainNavStack.Screen name="userList" component={UserList} />
                 <MainNavStack.Screen name="report" component={Report} />
                 <MainNavStack.Screen name="ban" component={Ban} />
+                <MainNavStack.Screen name="delete" component={Delete} />
             </MainNavStack.Navigator>
 
             <BottomTransitionBar style={{ bottom: insets.bottom }} />

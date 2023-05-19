@@ -1,24 +1,41 @@
 import React from "react";
-import { View, Image, StyleSheet, Text } from "react-native";
+import { View, Image, StyleSheet, Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as style from "../../styles";
 
-import { getLangs } from "../../constants/langs";
+import { getLangs, getCurrentLanguage } from "../../constants/langs";
+import { openLink } from "../../constants";
 
 import AppHeader from "../../components/auth/AppHeader";
 import EnterButton from "../../components/auth/EnterButton";
-import { ScrollView } from "react-native";
 
-const missingFkt = [
+const missingFktHSB = [
     "Zmylk w fukciji kartow → karty su hasnjene",
-    "Komentary njedaja so wotstronić",
     "Algorytmus hłowneje strony njeje dospowny",
     "Powěsćowe zastajenja",
     "Rěč: delnoserbšćina",
 ];
+const missingFktDE = [
+    "Fehler bei den Karten → Karten sind nicht vefügbar",
+    "Algorythmus der Hauptseite ist nicht final",
+    "Einstellungen von Benachrichtigungen",
+    "Sprache: Niedersorbisch",
+];
 
 export default function TestView(props) {
+    const getLangCriterias = () => {
+        switch (getCurrentLanguage()) {
+            case 0:
+                return missingFktHSB;
+            case 1:
+                return [];
+            case 2:
+                return missingFktDE;
+            default:
+                break;
+        }
+    };
     return (
         <SafeAreaView style={[style.container, style.bgBlack]}>
             <AppHeader />
@@ -33,7 +50,7 @@ export default function TestView(props) {
                         style.tWhite,
                         { marginTop: style.defaultMsm },
                     ]}>
-                    Witaj při zawrjenym beta-tesće.
+                    {getLangs("testview_title")}
                 </Text>
                 <Text
                     style={[
@@ -41,9 +58,7 @@ export default function TestView(props) {
                         style.tWhite,
                         { marginTop: style.defaultMmd },
                     ]}>
-                    Sy wuzwoleny za testowanje kostrjanc. My prosymy wo
-                    diskretny test a konstruktiwnu kritiku. Při prašenjach abo
-                    namjetach prosymy wo powěsć na{" "}
+                    {getLangs("testview_sub_0")}
                     <Text
                         style={[
                             style.tBlue,
@@ -52,10 +67,11 @@ export default function TestView(props) {
                                 textDecorationLine: "underline",
                                 textDecorationColor: style.colors.blue,
                             },
-                        ]}>
+                        ]}
+                        onPress={() => openLink("mailto:info@kostrjanc.de")}>
                         info@kostrjanc.de
                     </Text>
-                    . Při powěsći přidaj prošu wersiju, z kotrejž dźěłaš.
+                    {getLangs("testview_sub_1")}
                 </Text>
 
                 <Text
@@ -73,9 +89,9 @@ export default function TestView(props) {
 
                 <View style={{ marginTop: style.defaultMlg }}>
                     <Text style={[style.TlgBd, style.tWhite]}>
-                        Funkcije, kiž faluja:
+                        {getLangs("testview_missing_title")}
                     </Text>
-                    {missingFkt.map((fkt, key) => (
+                    {getLangCriterias().map((fkt, key) => (
                         <Text
                             key={key}
                             style={[
@@ -95,7 +111,7 @@ export default function TestView(props) {
                         style.tWhite,
                         { marginTop: style.defaultMlg },
                     ]}>
-                    Dźakuju za twoju prócu!
+                    {getLangs("testview_thx")}
                 </Text>
 
                 <View style={[style.allCenter, styles.button]}>
