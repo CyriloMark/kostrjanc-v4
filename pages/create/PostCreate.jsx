@@ -19,7 +19,7 @@ import { child, get, getDatabase, ref, set } from "firebase/database";
 import * as Storage from "firebase/storage";
 
 import { Post_Placeholder } from "../../constants/content/PlaceholderData";
-import { getData } from "../../constants/storage";
+import { getData, storeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
@@ -47,6 +47,8 @@ const userUploadMetadata = {
 
 let UsersData = null;
 
+let LINKING_ENABLED = false;
+
 export default function PostCreate({ navigation }) {
     let btnPressed = false;
 
@@ -63,21 +65,21 @@ export default function PostCreate({ navigation }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        let permissionResult = await requestMediaLibraryPermissionsAsync(true);
-        if (!permissionResult.granted) {
-            Alert.alert(
-                "kostrjanc njesmě na galeriju přistupić.",
-                `Status: ${permissionResult.status}`,
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                    },
-                ]
-            );
-            return;
-        }
+        // let permissionResult = await requestMediaLibraryPermissionsAsync(true);
+        // if (!permissionResult.granted) {
+        //     Alert.alert(
+        //         "kostrjanc njesmě na galeriju přistupić.",
+        //         `Status: ${permissionResult.status}`,
+        //         [
+        //             {
+        //                 text: "Ok",
+        //                 isPreferred: true,
+        //                 style: "cancel",
+        //             },
+        //         ]
+        //     );
+        //     return;
+        // }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -243,27 +245,51 @@ export default function PostCreate({ navigation }) {
                                             error.code
                                         )
                                     )
-                                    .finally(() => {
-                                        Alert.alert(
-                                            getLangs(
-                                                "postcreate_publishsuccessful_title"
-                                            ),
-                                            `${getLangs(
-                                                "postcreate_publishsuccessful_sub_0"
-                                            )} ${post.title} ${getLangs(
-                                                "postcreate_publishsuccessful_sub_1"
-                                            )}`,
-                                            [
-                                                {
-                                                    text: "Ok",
-                                                    isPreferred: true,
-                                                    style: "cancel",
-                                                    onPress: () => {
-                                                        navigation.goBack();
-                                                    },
-                                                },
-                                            ]
-                                        );
+                                    .then(() => {
+                                        getData("userData")
+                                            .then(data => {
+                                                data.posts = posts;
+                                                storeData("userData", data)
+                                                    .finally(() => {
+                                                        Alert.alert(
+                                                            getLangs(
+                                                                "postcreate_publishsuccessful_title"
+                                                            ),
+                                                            `${getLangs(
+                                                                "postcreate_publishsuccessful_sub_0"
+                                                            )} ${
+                                                                post.title
+                                                            } ${getLangs(
+                                                                "postcreate_publishsuccessful_sub_1"
+                                                            )}`,
+                                                            [
+                                                                {
+                                                                    text: "Ok",
+                                                                    isPreferred: true,
+                                                                    style: "cancel",
+                                                                    onPress:
+                                                                        () => {
+                                                                            navigation.goBack();
+                                                                        },
+                                                                },
+                                                            ]
+                                                        );
+                                                    })
+                                                    .catch(error =>
+                                                        console.log(
+                                                            "error pages/create/PostCreate.jsx",
+                                                            "publishPost storeData userData",
+                                                            error
+                                                        )
+                                                    );
+                                            })
+                                            .catch(error =>
+                                                console.log(
+                                                    "error pages/create/PostCreate.jsx",
+                                                    "publishPost getData userData",
+                                                    error
+                                                )
+                                            );
                                     });
                             })
                             .catch(error =>
@@ -541,7 +567,7 @@ export default function PostCreate({ navigation }) {
                                     }}
                                 />
 
-                                {linkings.length !== 0 ? (
+                                {linkings.length !== 0 && LINKING_ENABLED ? (
                                     <View
                                         style={[
                                             // style.bgRed,
@@ -679,7 +705,7 @@ export default function PostCreate({ navigation }) {
                     </View>
 
                     {/* User Selection */}
-                    {userSelection.visible ? (
+                    {userSelection.visible && LINKING_ENABLED ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 Wuzwolenje Wužiwarja za{" "}

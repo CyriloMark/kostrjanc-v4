@@ -10,28 +10,45 @@ import { openLink } from "../../constants";
 import AppHeader from "../../components/auth/AppHeader";
 import EnterButton from "../../components/auth/EnterButton";
 
+const newFktHSB = [
+    "Nětko so testuje, hač je funkcija kartow zaso móžna. Dla toho smědźa so ewenty zaso wozjewić.",
+    "Wužiwarjo daja so sobu zapřijeć, to pak tučasnje jenož na priwatne naprašowanje. Potom wjedźe link dale k wužiwarjej.",
+    "Wobrazy daja so nětko na kóždym Android modelu wuzwolić. Hdyž to tak njeje prosymy wo spěšny feedback.",
+    "Komentary bychu dyrbjeli so nětko prawje wozjewić. Jeničce profilne wobrazy po wozjewjenju su hišće problematika.",
+    "Moderatory a adminy móža komentary wotstronić, hdyž dołho na tutón tłóča.",
+    "Posty a ewenty daja so nětko wot wužiwarja wotstronić.",
+];
+const newFktDE = [
+    "Jetzt wird getestet, ob die Funktion der Karten wieder möglich ist. Deswegen dürfen Events wieder veröffentlicht werden.",
+    "Nutzer lassen sich verlinken, das aber derzeit nur auf Privatanfrage. Dann führt der Link weiter zum Nutzer.",
+    "Die Bilder können jetzt auf jedem Android Modell hochgeladen werden. Wenn das nicht so ist bitten wir um schnelles Feedback.",
+    "Kommentare müssten nun richtig veröffentlicht werden. Lediglich die Profilbilder nach der Veröffentlichung sind noch eine Problematik.",
+    "Moderatoren und Admins können Kommentare entfernen, wenn sie lange auf diese drücken.",
+    "Posts und Events lassen sich jetzt vom Nutzer löschen.",
+];
+
 const missingFktHSB = [
-    "Zmylk w fukciji kartow → karty su hasnjene",
-    "Algorytmus hłowneje strony njeje dospowny",
+    "Algorytmus hłowneje strony njeje dospowny.",
     "Powěsćowe zastajenja",
     "Rěč: delnoserbšćina",
+    "Tutorial funkcije - informaciske wokna",
 ];
 const missingFktDE = [
-    "Fehler bei den Karten → Karten sind nicht vefügbar",
-    "Algorythmus der Hauptseite ist nicht final",
+    "Algorythmus der Hauptseite ist nicht final.",
     "Einstellungen von Benachrichtigungen",
     "Sprache: Niedersorbisch",
+    "Tutorial Funktion - Informationsfenster",
 ];
 
 export default function TestView(props) {
-    const getLangCriterias = () => {
+    const getLangCriterias = opt => {
         switch (getCurrentLanguage()) {
             case 0:
-                return missingFktHSB;
+                return opt === 0 ? newFktHSB : missingFktHSB;
             case 1:
                 return [];
             case 2:
-                return missingFktDE;
+                return opt === 0 ? newFktDE : missingFktDE;
             default:
                 break;
         }
@@ -89,9 +106,25 @@ export default function TestView(props) {
 
                 <View style={{ marginTop: style.defaultMlg }}>
                     <Text style={[style.TlgBd, style.tWhite]}>
+                        {getLangs("testview_new_title")}
+                    </Text>
+                    {getLangCriterias(0).map((fkt, key) => (
+                        <Text
+                            key={key}
+                            style={[
+                                style.Tmd,
+                                style.tWhite,
+                                { marginTop: style.defaultMsm },
+                            ]}>
+                            {fkt}
+                        </Text>
+                    ))}
+                </View>
+                <View style={{ marginTop: style.defaultMlg }}>
+                    <Text style={[style.TlgBd, style.tWhite]}>
                         {getLangs("testview_missing_title")}
                     </Text>
-                    {getLangCriterias().map((fkt, key) => (
+                    {getLangCriterias(1).map((fkt, key) => (
                         <Text
                             key={key}
                             style={[
@@ -129,6 +162,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     button: {
-        marginTop: style.defaultMlg,
+        marginVertical: style.defaultMlg,
     },
 });

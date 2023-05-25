@@ -29,7 +29,6 @@ export default function Ban({ navigation, route }) {
     const { item, type, id } = route.params;
 
     const [banData, setBanData] = useState(Ban_Placeholder);
-    const [buttonChecked, setButtonChecked] = useState(false);
 
     const itemType = () => {
         switch (type) {
@@ -43,16 +42,6 @@ export default function Ban({ navigation, route }) {
                 return "";
         }
     };
-
-    let checkButton = () => {
-        let inputValid = false;
-        if (banData.description.length !== 0 && item) inputValid = true;
-        setButtonChecked(inputValid);
-    };
-
-    useEffect(() => {
-        checkButton();
-    }, [banData]);
 
     const ban = () => {
         if (banning) return;
@@ -247,7 +236,7 @@ export default function Ban({ navigation, route }) {
                     </View>
 
                     <View style={[style.allCenter, styles.button]}>
-                        <EnterButton onPress={ban} checked={buttonChecked} />
+                        <EnterButton onPress={ban} checked />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

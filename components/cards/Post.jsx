@@ -63,8 +63,9 @@ export default function Post(props) {
         loadData();
     }, []);
 
+    if (post.isBanned) return null;
     return (
-        <View style={props.style}>
+        <View style={[props.style, { marginVertical: style.defaultMmd }]}>
             <Pressable style={styles.container} onPress={props.onPress}>
                 {/* Header */}
                 <View style={[styles.headerContainer, style.Psm]}>

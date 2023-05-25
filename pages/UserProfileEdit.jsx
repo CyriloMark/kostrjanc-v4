@@ -49,21 +49,21 @@ export default function UserProfileEdit({ navigation, route }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) {
-            Alert.alert(
-                "kostrjanc njesmě na galeriju přistupić.",
-                `Status: ${permissionResult.status}`,
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                    },
-                ]
-            );
-            return;
-        }
+        // let permissionResult = await requestMediaLibraryPermissionsAsync();
+        // if (!permissionResult.granted) {
+        //     Alert.alert(
+        //         "kostrjanc njesmě na galeriju přistupić.",
+        //         `Status: ${permissionResult.status}`,
+        //         [
+        //             {
+        //                 text: "Ok",
+        //                 isPreferred: true,
+        //                 style: "cancel",
+        //             },
+        //         ]
+        //     );
+        //     return;
+        // }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -213,6 +213,31 @@ export default function UserProfileEdit({ navigation, route }) {
         }
     };
 
+    const setUnfullfilledAlert = () => {
+        let missing = "";
+        if (updatedUserData.description == userData.description)
+            missing += `\n${getLangs("missing_equaldata")}`;
+        if (
+            !(
+                updatedUserData.description.length > 0 &&
+                updatedUserData.description.length <= 512
+            )
+        )
+            missing += `\n${getLangs("missing_description")}`;
+
+        Alert.alert(
+            getLangs("missing_alert_title"),
+            `${getLangs("missing_alert_sub")}${missing}`,
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+            ]
+        );
+    };
+
     return (
         <View style={[style.container, style.bgBlack]}>
             <KeyboardAvoidingView
@@ -332,7 +357,10 @@ export default function UserProfileEdit({ navigation, route }) {
                         <EditProfileButton
                             title={getLangs("editprofile_save")}
                             checked={buttonChecked}
-                            onPress={overrideUserData}
+                            onPress={() => {
+                                if (buttonChecked) overrideUserData();
+                                else setUnfullfilledAlert();
+                            }}
                         />
                     </View>
                 </ScrollView>

@@ -216,21 +216,21 @@ export default function Register({ navigation }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) {
-            Alert.alert(
-                "kostrjanc njesmě na galeriju přistupić.",
-                `Status: ${permissionResult.status}`,
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                    },
-                ]
-            );
-            return;
-        }
+        // let permissionResult = await requestMediaLibraryPermissionsAsync();
+        // if (!permissionResult.granted) {
+        //     Alert.alert(
+        //         "kostrjanc njesmě na galeriju přistupić.",
+        //         `Status: ${permissionResult.status}`,
+        //         [
+        //             {
+        //                 text: "Ok",
+        //                 isPreferred: true,
+        //                 style: "cancel",
+        //             },
+        //         ]
+        //     );
+        //     return;
+        // }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,

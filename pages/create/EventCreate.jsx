@@ -18,15 +18,21 @@ import { child, get, getDatabase, ref, set } from "firebase/database";
 import * as Storage from "firebase/storage";
 
 import { Event_Placeholder } from "../../constants/content/PlaceholderData";
-import { getData } from "../../constants/storage";
+import { getData, storeData } from "../../constants/storage";
 import { arraySplitter, splitArrayIntoNEqualy } from "../../constants";
-import { initialRegion } from "../../constants/event";
 import {
     convertTimestampToDate,
     convertTimestampToString,
     convertTimestampToTime,
 } from "../../constants/time";
-import { Event_Types, mapTypes, Event_Tags } from "../../constants/event";
+import {
+    Event_Types,
+    mapTypes,
+    Event_Tags,
+    initialRegion,
+    mapStyles,
+    mapStylesDefault,
+} from "../../constants/event";
 import { getLangs } from "../../constants/langs";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
@@ -35,7 +41,7 @@ import SVG_Flag from "../../assets/svg/Flag";
 import SVG_Time from "../../assets/svg/Time";
 import SVG_Cash from "../../assets/svg/Cash";
 import SVG_Web from "../../assets/svg/Web";
-import SVG_Pin2_0 from "../../assets/svg/Pin2.0";
+import SVG_Pin from "../../assets/svg/Pin3.0";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -46,7 +52,11 @@ import {
 } from "expo-image-picker";
 
 // import MapView from "../../components/beta/MapView";
-import MapView from "react-native-maps";
+import MapView, {
+    PROVIDER_DEFAULT,
+    PROVIDER_GOOGLE,
+    Marker,
+} from "react-native-maps";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -92,21 +102,21 @@ export default function EventCreate({ navigation }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) {
-            Alert.alert(
-                "kostrjanc njesmě na galeriju přistupić.",
-                `Status: ${permissionResult.status}`,
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                    },
-                ]
-            );
-            return;
-        }
+        // let permissionResult = await requestMediaLibraryPermissionsAsync();
+        // if (!permissionResult.granted) {
+        //     Alert.alert(
+        //         "kostrjanc njesmě na galeriju přistupić.",
+        //         `Status: ${permissionResult.status}`,
+        //         [
+        //             {
+        //                 text: "Ok",
+        //                 isPreferred: true,
+        //                 style: "cancel",
+        //             },
+        //         ]
+        //     );
+        //     return;
+        // }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -244,9 +254,9 @@ export default function EventCreate({ navigation }) {
             geoCords: pin,
             isBanned: false,
         }).finally(() => {
+            let events = [];
             get(child(ref(db), `users/${uid}/events`))
                 .then(eventsSnap => {
-                    let events = [];
                     if (eventsSnap.exists()) events = eventsSnap.val();
                     events.push(id);
 
@@ -272,24 +282,47 @@ export default function EventCreate({ navigation }) {
                             event.eventOptions.adBanner
                         )
                     ) {
-                        Alert.alert(
-                            getLangs("eventcreate_publishsuccessful_title"),
-                            `${getLangs(
-                                "eventcreate_publishsuccessful_sub_0"
-                            )} ${event.title} ${getLangs(
-                                "eventcreate_publishsuccessful_sub_1"
-                            )}`,
-                            [
-                                {
-                                    text: "Ok",
-                                    isPreferred: true,
-                                    style: "cancel",
-                                    onPress: () => {
-                                        navigation.goBack();
-                                    },
-                                },
-                            ]
-                        );
+                        getData("userData")
+                            .then(data => {
+                                data.events = events;
+                                storeData("userData", data)
+                                    .finally(() =>
+                                        Alert.alert(
+                                            getLangs(
+                                                "eventcreate_publishsuccessful_title"
+                                            ),
+                                            `${getLangs(
+                                                "eventcreate_publishsuccessful_sub_0"
+                                            )} ${event.title} ${getLangs(
+                                                "eventcreate_publishsuccessful_sub_1"
+                                            )}`,
+                                            [
+                                                {
+                                                    text: "Ok",
+                                                    isPreferred: true,
+                                                    style: "cancel",
+                                                    onPress: () => {
+                                                        navigation.goBack();
+                                                    },
+                                                },
+                                            ]
+                                        )
+                                    )
+                                    .catch(error =>
+                                        console.log(
+                                            "error pages/create/EventCreate.jsx",
+                                            "publishEvent storeData userData",
+                                            error
+                                        )
+                                    );
+                            })
+                            .catch(error =>
+                                console.log(
+                                    "error pages/create/EventCreate.jsx",
+                                    "publishEvebt getData userData",
+                                    error
+                                )
+                            );
                         return;
                     }
 
@@ -331,28 +364,52 @@ export default function EventCreate({ navigation }) {
                                                 error.code
                                             )
                                         )
-                                        .finally(() =>
-                                            Alert.alert(
-                                                getLangs(
-                                                    "eventcreate_publishsuccessful_title"
-                                                ),
-                                                `${getLangs(
-                                                    "eventcreate_publishsuccessful_sub_0"
-                                                )} ${event.title} ${getLangs(
-                                                    "eventcreate_publishsuccessful_sub_1"
-                                                )}`,
-                                                [
-                                                    {
-                                                        text: "Ok",
-                                                        isPreferred: true,
-                                                        style: "cancel",
-                                                        onPress: () => {
-                                                            navigation.goBack();
-                                                        },
-                                                    },
-                                                ]
-                                            )
-                                        );
+                                        .then(() => {
+                                            getData("userData")
+                                                .then(data => {
+                                                    data.events = events;
+                                                    storeData("userData", data)
+                                                        .finally(() =>
+                                                            Alert.alert(
+                                                                getLangs(
+                                                                    "eventcreate_publishsuccessful_title"
+                                                                ),
+                                                                `${getLangs(
+                                                                    "eventcreate_publishsuccessful_sub_0"
+                                                                )} ${
+                                                                    event.title
+                                                                } ${getLangs(
+                                                                    "eventcreate_publishsuccessful_sub_1"
+                                                                )}`,
+                                                                [
+                                                                    {
+                                                                        text: "Ok",
+                                                                        isPreferred: true,
+                                                                        style: "cancel",
+                                                                        onPress:
+                                                                            () => {
+                                                                                navigation.goBack();
+                                                                            },
+                                                                    },
+                                                                ]
+                                                            )
+                                                        )
+                                                        .catch(error =>
+                                                            console.log(
+                                                                "error pages/create/EventCreate.jsx",
+                                                                "publishEvent storeData userData",
+                                                                error
+                                                            )
+                                                        );
+                                                })
+                                                .catch(error =>
+                                                    console.log(
+                                                        "error pages/create/EventCreate.jsx",
+                                                        "publishEvebt getData userData",
+                                                        error
+                                                    )
+                                                );
+                                        });
                                 })
                                 .catch(error =>
                                     console.log(
@@ -421,30 +478,39 @@ export default function EventCreate({ navigation }) {
                                 style={style.allMax}
                                 userInterfaceStyle="dark"
                                 showsUserLocation
+                                customMapStyle={mapStylesDefault}
+                                provider={PROVIDER_DEFAULT}
                                 showsScale
-                                mapType={mapTypes[currentMapType]}
                                 accessible={false}
                                 focusable={false}
-                                onLongPress={() => {
-                                    setCurrentMapType(cur => {
-                                        return cur === 0 ? 1 : 0;
-                                    });
-                                }}
-                                onPress={ev =>
-                                    mapRef.current.animateToRegion(
-                                        ev.nativeEvent.coordinate,
-                                        250
-                                    )
-                                }
+                                // mapType={mapTypes[currentMapType]}
+                                // onLongPress={() => {
+                                //     setCurrentMapType(cur => {
+                                //         return cur === 0 ? 1 : 0;
+                                //     });
+                                // }}
+                                // onPress={ev =>
+                                //     mapRef.current.animateToRegion(
+                                //         ev.nativeEvent.coordinate,
+                                //         250
+                                //     )
+                                // }
                                 onRegionChange={result => setPin(result)}
                                 initialRegion={event.geoCords}>
                                 {/* <Marker
                                     focusable
                                     title={event.title}
-                                    coordinate={pin}
-                                /> */}
+                                    coordinate={pin}>
+                                    <SVG_Pin
+                                        fill={style.colors.red}
+                                        style={styles.marker}
+                                    />
+                                </Marker> */}
                             </MapView>
-                            <SVG_Pin2_0 style={styles.mapPin} />
+                            <SVG_Pin
+                                fill={style.colors.red}
+                                style={styles.mapPin}
+                            />
                         </View>
 
                         <View style={styles.textContainer}>
@@ -1666,13 +1732,13 @@ const styles = StyleSheet.create({
         marginTop: style.defaultMmd,
     },
     mapPin: {
-        width: 25,
-        height: 25,
+        width: 32,
+        height: 32,
         zIndex: 99,
         position: "absolute",
         transform: [
             {
-                translateY: -8,
+                translateY: -12,
             },
         ],
         ...style.boxShadow,

@@ -340,12 +340,12 @@
         "settings_lang_changelang_alert_sub": "Sy sej wěsty, zo chceš rěč změnić? Po změnje dyrbi so aplikacija znowa startować.",
 
         "settings_admin_title": "Admin a moderator",
-        "settings_admin_h2": "Wobwuk za adminy a moderatory:",
+        "settings_admin_h2": "Wobłuk za adminy a moderatory:",
         "settings_admin_offline_title": "Serwer - Offline:",
-        "settings_admin_offline_sub": "Tutón wobwuk hasnje serwer na njeznaty čas. Wužiwarjo njemóža na kostrjanc přistupić. Serwer ma so manuelnje na online sadźić.",
+        "settings_admin_offline_sub": "Tutón wobłuk hasnje serwer na njeznaty čas. Wužiwarjo njemóža na kostrjanc přistupić. Serwer ma so manuelnje na online sadźić.",
         "settings_admin_offline_button": "Serwer na offline sadźić",
         "settings_admin_pause_title": "Serwer - Pause:",
-        "settings_admin_pause_sub": "Tutón wobwuk hasnje serwer na podaty čas. Wužiwarjo njemóža na kostrjanc přistupić. Serwer ma so tohodla manuelnje na online sadźić. Čas je móžnosć pokazać, hdy so předwidźa, zo serwer so zaso na online sadźi.",
+        "settings_admin_pause_sub": "Tutón wobłuk hasnje serwer na podaty čas. Wužiwarjo njemóža na kostrjanc přistupić. Serwer ma so tohodla manuelnje na online sadźić. Čas je móžnosć pokazać, hdy so předwidźa, zo serwer so zaso na online sadźi.",
         "settings_admin_pause_button": "Server na pause sadźić",
 
         "settings_profile_title": "Konto",
@@ -421,12 +421,15 @@
         "missing_equalpassword": "indentiskej hesłje",
         "missing_goodpassword": "mócne hesło [wulke małke pismiki, ličby, wosebite znamja]",
         "missing_agb": "přiznaće powšitkownych wobchodnowych wuměnjenjow",
+        "missing_type": "typ",
+        "missing_equaldata": "ničo njeje so změniło",
 
         "no_map": "Žana karta wužijomna.",
 
         "testview_title": "Witaj při zawrjenym beta-tesće.",
         "testview_sub_0": "Sy wuzwoleny za testowanje kostrjanc. My prosymy wo diskretny test a konstruktiwnu kritiku. Při prašenjach abo namjetach prosymy wo powěsć na ",
         "testview_sub_1": ". Při powěsći přidaj prošu wersiju, z kotrejž dźěłaš.",
+        "testview_new_title": "Što je so změniło:",
         "testview_missing_title": "Funkcije, kiž faluja:",
         "testview_thx": "Dźakuju za twoju prócu!"
 

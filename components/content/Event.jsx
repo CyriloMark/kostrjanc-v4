@@ -6,7 +6,7 @@ import { getDatabase, ref, get, child } from "firebase/database";
 
 import * as s from "../../styles";
 
-import MapView, { Marker } from "../beta/MapView";
+import MapView, { Marker } from "react-native-maps";
 
 import { Event_Placeholder } from "../../constants/content/PlaceholderData";
 

@@ -24,7 +24,7 @@ import WarnButton from "../../components/settings/WarnButton";
 import OptionButton from "../../components/OptionButton";
 
 import SVG_Recent from "../../assets/svg/Recent";
-import SVG_Search from "../../assets/svg/Search";
+import SVG_Help from "../../assets/svg/Help";
 import SVG_Moderator from "../../assets/svg/Moderator";
 import SVG_Ban from "../../assets/svg/Ban";
 import SVG_Admin from "../../assets/svg/Admin";
@@ -132,7 +132,7 @@ export default function Landing({ navigation }) {
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_kostrjanc_help")}
-                        icon={<SVG_Search fill={style.colors.white} />}
+                        icon={<SVG_Help fill={style.colors.white} />}
                         onPress={() => navigation.navigate("settings-help")}
                     />
                     <OptionButton

@@ -34,6 +34,7 @@ import ListButton from "../components/event/ListButton";
 import Refresh from "../components/RefreshControl";
 
 import SVG_Live from "../assets/svg/Live";
+import SVG_Pin from "../assets/svg/Pin3.0";
 
 import { convertTimestampToString } from "../constants/time";
 import { wait } from "../constants/wait";
@@ -42,6 +43,7 @@ import {
     Event_Types,
     mapTypes,
     Event_Tags,
+    mapStylesDefault,
 } from "../constants/event";
 import { openLink } from "../constants";
 import { getData } from "../constants/storage";
@@ -49,10 +51,14 @@ import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
 
-import MapView, { Marker } from "../components/beta/MapView";
+import MapView, {
+    Marker,
+    PROVIDER_DEFAULT,
+    PROVIDER_GOOGLE,
+} from "react-native-maps";
 
 export default function Event({ navigation, route }) {
-    // const mapRef = useRef();                                 <------------------------- BETA
+    const mapRef = useRef();
     const commentInputRef = useRef();
 
     const [refreshing, setRefreshing] = useState(false);
@@ -111,7 +117,7 @@ export default function Event({ navigation, route }) {
 
                 getIfCreatorIsClient(eventData.creator);
 
-                // mapRef.current.animateToRegion(eventData["geoCords"], 2000);
+                mapRef.current.animateToRegion(eventData["geoCords"], 2500);
 
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
@@ -345,32 +351,39 @@ export default function Event({ navigation, route }) {
                                 style.oHidden,
                             ]}>
                             <MapView
-                                // ref={mapRef}
+                                ref={mapRef}
                                 style={style.allMax}
                                 userInterfaceStyle="dark"
                                 showsUserLocation
                                 showsScale
-                                mapType={mapTypes[currentMapType]}
+                                customMapStyle={mapStylesDefault}
+                                provider={PROVIDER_DEFAULT}
                                 accessible={false}
-                                onLongPress={() => {
-                                    setCurrentMapType(cur => {
-                                        return cur === 0 ? 1 : 0;
-                                    });
-                                }}
                                 focusable={false}
-                                // onPress={() => {
-                                //     mapRef.current.animateToRegion(
-                                //         event.geoCords,
-                                //         1000
-                                //     );
+                                initialRegion={event.geoCords}
+                                onPress={() => {
+                                    mapRef.current.animateToRegion(
+                                        event.geoCords,
+                                        1000
+                                    );
+                                }}
+                                // mapType={mapTypes[currentMapType]}
+                                // onLongPress={() => {
+                                //     setCurrentMapType(cur => {
+                                //         return cur === 0 ? 1 : 0;
+                                //     });
                                 // }}
-                                initialRegion={event.geoCords}>
+                            >
                                 <Marker
                                     focusable
                                     draggable={false}
                                     title={event.title}
-                                    coordinate={event.geoCords}
-                                />
+                                    coordinate={event.geoCords}>
+                                    <SVG_Pin
+                                        fill={style.colors.red}
+                                        style={styles.marker}
+                                    />
+                                </Marker>
                             </MapView>
                         </View>
 
@@ -687,7 +700,7 @@ export default function Event({ navigation, route }) {
                                 scrollEnabled
                                 selectTextOnFocus
                                 placeholder="Zapodaj twój komentar"
-                                placeholderTextColor={style.colors.sec}
+                                placeholderTextColor={style.colors.blue}
                                 textAlign="left"
                                 caretHidden
                                 value={currentCommentInput}
@@ -903,5 +916,10 @@ const styles = StyleSheet.create({
         width: "100%",
         maxHeight: 58,
         alignItems: "center",
+    },
+
+    marker: {
+        width: 32,
+        height: 32,
     },
 });

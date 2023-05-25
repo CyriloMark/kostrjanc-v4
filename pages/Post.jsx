@@ -348,7 +348,7 @@ export default function Post({ navigation, route }) {
                             {/* Input */}
                             <TextInput
                                 ref={commentInputRef}
-                                hitSlop={10}
+                                hitSlop={25}
                                 inputAccessoryViewID={"23488388256395198"}
                                 allowFontScaling
                                 autoCapitalize="none"
@@ -365,7 +365,7 @@ export default function Post({ navigation, route }) {
                                         setCommentVisible(false);
                                 }}
                                 selectTextOnFocus
-                                placeholderTextColor={style.colors.sec}
+                                placeholderTextColor={style.colors.blue}
                                 textAlign="left"
                                 textAlignVertical="center"
                                 value={currentCommentInput}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { Pressable, View, StyleSheet, Text, Image } from "react-native";
 
@@ -8,16 +8,22 @@ import * as style from "../../styles";
 
 import { Event_Placeholder } from "../../constants/content/PlaceholderData";
 
-import MapView, { Marker } from "../beta/MapView";
+import MapView, {
+    Marker,
+    PROVIDER_DEFAULT,
+    PROVIDER_GOOGLE,
+} from "react-native-maps";
 
 import SVG_Live from "../../assets/svg/Live";
+import SVG_Pin from "../../assets/svg/Pin3.0";
 
-import { checkIfLive } from "../../constants/event";
+import { checkIfLive, mapStylesDefault } from "../../constants/event";
 import { convertTimestampToString } from "../../constants/time";
 import { getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 
 export default function Event(props) {
+    const mapRef = useRef();
     const [event, setEvent] = useState(Event_Placeholder);
     const [isLive, setIsLive] = useState(false);
     const [imgUris, setImgUris] = useState([]);
@@ -41,6 +47,8 @@ export default function Event(props) {
                         return;
                     }
                 }
+
+                mapRef.current.animateToRegion(eventData["geoCords"], 1000);
 
                 setEvent({
                     ...eventData,
@@ -106,8 +114,9 @@ export default function Event(props) {
         loadData();
     }, []);
 
+    if (event.isBanned) return null;
     return (
-        <View style={props.style}>
+        <View style={[props.style, { marginVertical: style.defaultMmd }]}>
             <Pressable style={styles.container} onPress={props.onPress}>
                 {/* Header */}
                 <View style={[styles.headerContainer]}>
@@ -145,17 +154,26 @@ export default function Event(props) {
                         style.oHidden,
                     ]}>
                     <MapView
+                        ref={mapRef}
                         style={style.allMax}
                         accessible={false}
                         focusable={false}
                         rotateEnabled={false}
+                        provider={PROVIDER_DEFAULT}
+                        customMapStyle={mapStylesDefault}
                         zoomEnabled={false}
                         pitchEnabled={false}
-                        initialRegion={event.geoCords}
                         scrollEnabled={false}
+                        initialRegion={event.geoCords}
                         onPress={props.onPress}>
-                        <Marker coordinate={event.geoCords} />
+                        {/* <Marker
+                            coordinate={event.geoCords}
+                            draggable={false}
+                            tappable={false}>
+                            
+                        </Marker> */}
                     </MapView>
+                    <SVG_Pin fill={style.colors.red} style={styles.marker} />
                 </View>
 
                 {/* Checks PBs */}
@@ -177,7 +195,6 @@ export default function Event(props) {
                                 style={[
                                     styles.checksImg,
                                     style.allMax,
-                                    style.boxShadow,
                                     key === 0
                                         ? null
                                         : {
@@ -246,5 +263,18 @@ const styles = StyleSheet.create({
         maxHeight: 32,
         maxWidth: 32,
         borderRadius: 100,
+    },
+
+    marker: {
+        position: "absolute",
+        zIndex: 99,
+        height: 32,
+        width: 32,
+        transform: [
+            {
+                translateY: -12,
+            },
+        ],
+        ...style.boxShadow,
     },
 });

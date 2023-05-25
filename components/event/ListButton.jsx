@@ -23,9 +23,9 @@ export default function ListButton({ style, onPress, title }) {
 
 const styles = StyleSheet.create({
     container: {
-        maxWidth: 58,
+        minWidth: 32,
+        minHeight: 32,
         maxHeight: 58,
-        aspectRatio: 1,
         borderRadius: 25,
     },
 });

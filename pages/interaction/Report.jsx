@@ -49,12 +49,41 @@ export default function Report({ navigation, route }) {
 
     let checkButton = () => {
         let inputValid = false;
-        if (reportData.description.length !== 0 && item && reportData.type > -1)
+        if (
+            reportData.description.length !== 0 &&
+            item &&
+            reportData.type !== -1
+        )
             inputValid = true;
         setButtonChecked(inputValid);
     };
 
+    const setUnfullfilledAlert = () => {
+        let missing = "";
+        if (reportData.type === -1) missing += `\n${getLangs("missing_type")}`;
+        if (
+            !(
+                reportData.description.length > 0 &&
+                reportData.description.length <= 512
+            )
+        )
+            missing += `\n${getLangs("missing_description")}`;
+
+        Alert.alert(
+            getLangs("missing_alert_title"),
+            `${getLangs("missing_alert_sub")}${missing}`,
+            [
+                {
+                    text: "Ok",
+                    style: "cancel",
+                    isPreferred: true,
+                },
+            ]
+        );
+    };
+
     useEffect(() => {
+        reporting = false;
         checkButton();
     }, [reportData]);
 
@@ -193,7 +222,13 @@ export default function Report({ navigation, route }) {
                     </View>
 
                     <View style={[style.allCenter, styles.button]}>
-                        <EnterButton onPress={report} checked={buttonChecked} />
+                        <EnterButton
+                            onPress={() => {
+                                if (buttonChecked) report();
+                                else setUnfullfilledAlert();
+                            }}
+                            checked={buttonChecked}
+                        />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

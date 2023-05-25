@@ -53,6 +53,8 @@ export default function Landing({ navigation }) {
         const id = getAuth().currentUser.uid;
         storeData("userId", id);
 
+        showingContent = [];
+
         const db = getDatabase();
         get(child(ref(db), "users/" + id))
             .then(userSnap => {
@@ -505,7 +507,7 @@ export default function Landing({ navigation }) {
                 automaticallyAdjustContentInsets
                 snapToAlignment="center"
                 snapToEnd
-                scrollEventThrottle={200}
+                scrollEventThrottle={16}
                 refreshControl={
                     Platform.OS === "ios" ? (
                         <Refresh
@@ -533,7 +535,6 @@ export default function Landing({ navigation }) {
                     item.type === 0 ? (
                         <Post
                             key={key}
-                            style={{ marginVertical: style.defaultMmd }}
                             id={item.id}
                             onPress={() =>
                                 navigation.navigate("postView", {
@@ -544,7 +545,6 @@ export default function Landing({ navigation }) {
                     ) : (
                         <Event
                             key={key}
-                            style={{ marginVertical: style.defaultMmd }}
                             id={item.id}
                             onPress={() =>
                                 navigation.navigate("eventView", {
@@ -569,7 +569,7 @@ export default function Landing({ navigation }) {
 }
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-    const paddingToBottom = 500;
+    const paddingToBottom = 1000;
     return (
         layoutMeasurement.height + contentOffset.y >=
         contentSize.height - paddingToBottom

@@ -65,5 +65,6 @@ const styles = StyleSheet.create({
     },
     input: {
         width: "100%",
+        flex: 1,
     },
 });
