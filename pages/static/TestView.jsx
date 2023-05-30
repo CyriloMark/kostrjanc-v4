@@ -11,7 +11,6 @@ import AppHeader from "../../components/auth/AppHeader";
 import EnterButton from "../../components/auth/EnterButton";
 
 const newFktHSB = [
-    "Nětko so testuje, hač je funkcija kartow zaso móžna. Dla toho smědźa so ewenty zaso wozjewić.",
     "Wužiwarjo daja so sobu zapřijeć, to pak tučasnje jenož na priwatne naprašowanje. Potom wjedźe link dale k wužiwarjej.",
     "Wobrazy daja so nětko na kóždym Android modelu wuzwolić. Hdyž to tak njeje prosymy wo spěšny feedback.",
     "Komentary bychu dyrbjeli so nětko prawje wozjewić. Jeničce profilne wobrazy po wozjewjenju su hišće problematika.",
@@ -19,7 +18,6 @@ const newFktHSB = [
     "Posty a ewenty daja so nětko wot wužiwarja wotstronić.",
 ];
 const newFktDE = [
-    "Jetzt wird getestet, ob die Funktion der Karten wieder möglich ist. Deswegen dürfen Events wieder veröffentlicht werden.",
     "Nutzer lassen sich verlinken, das aber derzeit nur auf Privatanfrage. Dann führt der Link weiter zum Nutzer.",
     "Die Bilder können jetzt auf jedem Android Modell hochgeladen werden. Wenn das nicht so ist bitten wir um schnelles Feedback.",
     "Kommentare müssten nun richtig veröffentlicht werden. Lediglich die Profilbilder nach der Veröffentlichung sind noch eine Problematik.",

@@ -54,6 +54,7 @@ export default function Landing({ navigation }) {
         storeData("userId", id);
 
         showingContent = [];
+        AMTs = [0, 0, 0, false];
 
         const db = getDatabase();
         get(child(ref(db), "users/" + id))

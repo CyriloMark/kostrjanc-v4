@@ -331,7 +331,8 @@ export default function Post({ navigation, route }) {
                         </View>
 
                         {/* New comment */}
-                        <View
+                        <Pressable
+                            onPress={() => commentInputRef.current.focus()}
                             style={{
                                 marginTop: commentVisible
                                     ? style.defaultMlg
@@ -359,7 +360,9 @@ export default function Post({ navigation, route }) {
                                 keyboardAppearance="dark"
                                 keyboardType="default"
                                 scrollEnabled
-                                placeholder="Zapodaj twój komentar"
+                                placeholder={`→ ${getLangs(
+                                    "input_placeholder_entercomment"
+                                )}`}
                                 onBlur={() => {
                                     if (currentCommentInput.length === 0)
                                         setCommentVisible(false);
@@ -392,7 +395,7 @@ export default function Post({ navigation, route }) {
                                     />
                                 </View>
                             ) : null}
-                        </View>
+                        </Pressable>
 
                         {/* Comments List */}
                         <View

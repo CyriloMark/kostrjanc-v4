@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         aspectRatio: 1,
-        height: "40%",
+        height: "33%",
         marginRight: "5%",
     },
 });

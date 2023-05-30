@@ -3,7 +3,7 @@
     "name": "kostrjanc",
     "slug": "kostrjanc",
     "owner": "lauske",
-    "version": "0.9.5b",
+    "version": "0.9.5c",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
     "splash": {
@@ -39,7 +39,7 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "versionCode": 4,
+      "versionCode": 5,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBQq8qlKB9h7qjOgL47a1FX6gOKgRRYNdI"

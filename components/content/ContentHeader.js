@@ -41,7 +41,7 @@ export default function ContentHeader(props) {
                         style.boxShadow,
                     ]}>
                     <Text style={[style.TsmRg, style.tWhite, styles.shText]}>
-                        studio
+                        studijo
                     </Text>
                 </View>
             </View>

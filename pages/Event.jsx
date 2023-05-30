@@ -671,7 +671,8 @@ export default function Event({ navigation, route }) {
                         </View>
 
                         {/* New comment */}
-                        <View
+                        <Pressable
+                            onPress={() => commentInputRef.current.focus()}
                             style={{
                                 marginTop: commentVisible
                                     ? style.defaultMlg
@@ -699,7 +700,9 @@ export default function Event({ navigation, route }) {
                                 keyboardType="default"
                                 scrollEnabled
                                 selectTextOnFocus
-                                placeholder="Zapodaj twój komentar"
+                                placeholder={`→ ${getLangs(
+                                    "input_placeholder_entercomment"
+                                )}`}
                                 placeholderTextColor={style.colors.blue}
                                 textAlign="left"
                                 caretHidden
@@ -727,7 +730,7 @@ export default function Event({ navigation, route }) {
                                     />
                                 </View>
                             ) : null}
-                        </View>
+                        </Pressable>
 
                         {/* Comments List */}
                         <View

@@ -203,7 +203,7 @@ export default function App() {
 
     if (!loggedIn) {
         return (
-            <NavigationContainer>
+            <NavigationContainer fallback={<Loading />}>
                 <StatusBar
                     animated
                     networkActivityIndicatorVisible
@@ -226,7 +226,7 @@ export default function App() {
     if (banned) return <Ban />;
 
     return (
-        <NavigationContainer>
+        <NavigationContainer fallback={<Loading />}>
             <StatusBar
                 animated
                 networkActivityIndicatorVisible

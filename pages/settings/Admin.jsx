@@ -12,6 +12,8 @@ import { getLangs } from "../../constants/langs";
 import BackHeader from "../../components/BackHeader";
 import DangerButton from "../../components/settings/DangerButton";
 
+const LOGS_ENABLED = false;
+
 export default function Admin({ navigation }) {
     const [logs, setLogs] = useState([]);
 
@@ -98,55 +100,64 @@ export default function Admin({ navigation }) {
                 </View>
 
                 {/* Logs */}
-                <View style={styles.sectionContainer}>
-                    <Text style={[style.TlgBd, style.tWhite]}>Logs:</Text>
+                {LOGS_ENABLED ? (
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.TlgBd, style.tWhite]}>Logs:</Text>
 
-                    <View style={{ marginTop: style.defaultMmd }}>
-                        {logs.map((log, key) => (
-                            <View
-                                style={[
-                                    styles.logElementContainer,
-                                    key != logs.length - 1
-                                        ? { marginBottom: style.defaultMmd }
-                                        : null,
-                                ]}
-                                key={key}>
-                                <Text style={[style.tWhite, style.TsmLt]}>
-                                    Aktion: {log.action}
-                                    {"\n"}
-                                    Moderator: {log.mod}
-                                    {"\n"}
-                                    Target:
-                                    {"\n"}
-                                    {log.action !== "user_banned" ? (
-                                        <Text
-                                            style={[style.TsmLt, style.tWhite]}>
-                                            {log.target}
-                                        </Text>
-                                    ) : (
-                                        <View
-                                            style={{ flexDirection: "column" }}>
-                                            {log.target.map((t, k) => (
-                                                <Text
-                                                    style={[
-                                                        style.TsmLt,
-                                                        style.tWhite,
-                                                    ]}
-                                                    key={k}>
-                                                    {t}
-                                                </Text>
-                                            ))}
-                                        </View>
-                                    )}
-                                    {"\n"}
-                                    Timestamp:{" "}
-                                    {convertTimestampToString(log.timestamp)}
-                                    {"\n"}
-                                </Text>
-                            </View>
-                        ))}
+                        <View style={{ marginTop: style.defaultMmd }}>
+                            {logs.map((log, key) => (
+                                <View
+                                    style={[
+                                        styles.logElementContainer,
+                                        key != logs.length - 1
+                                            ? { marginBottom: style.defaultMmd }
+                                            : null,
+                                    ]}
+                                    key={key}>
+                                    <Text style={[style.tWhite, style.TsmLt]}>
+                                        Aktion: {log.action}
+                                        {"\n"}
+                                        Moderator: {log.mod}
+                                        {"\n"}
+                                        Target:
+                                        {"\n"}
+                                        {log.action !== "user_banned" ? (
+                                            <Text
+                                                style={[
+                                                    style.TsmLt,
+                                                    style.tWhite,
+                                                ]}>
+                                                {log.target}
+                                            </Text>
+                                        ) : (
+                                            <View
+                                                style={{
+                                                    flexDirection: "column",
+                                                }}>
+                                                {log.target.map((t, k) => (
+                                                    <Text
+                                                        style={[
+                                                            style.TsmLt,
+                                                            style.tWhite,
+                                                        ]}
+                                                        key={k}>
+                                                        {t}
+                                                    </Text>
+                                                ))}
+                                            </View>
+                                        )}
+                                        {"\n"}
+                                        Timestamp:{" "}
+                                        {convertTimestampToString(
+                                            log.timestamp
+                                        )}
+                                        {"\n"}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
                     </View>
-                </View>
+                ) : null}
 
                 <View style={styles.sectionContainer} />
             </ScrollView>
