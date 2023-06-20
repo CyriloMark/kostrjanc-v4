@@ -37,6 +37,7 @@ export default function Comment({
     style,
     commentData,
     onRemove,
+    onPress,
     onCommentUserPress,
 }) {
     const [user, setUser] = useState(User_Placeholder);
@@ -135,7 +136,9 @@ export default function Comment({
                 style={[{ width: "100%", position: "relative" }, panStyle]}>
                 <Pressable onLongPress={onRem}>
                     {/* Header */}
-                    <View style={[styles.userContainer]}>
+                    <Pressable
+                        style={[styles.userContainer]}
+                        onPress={() => onPress(commentData.creator)}>
                         {/* Profile pic */}
                         <View style={styles.userPbContainer}>
                             <Image
@@ -167,7 +170,7 @@ export default function Comment({
                             ]}>
                             {convertTimestampToString(commentData.created)}
                         </Text>
-                    </View>
+                    </Pressable>
 
                     <View style={styles.textContainer}>
                         <Text style={[s.tWhite, s.Tmd]}>

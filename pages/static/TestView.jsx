@@ -12,30 +12,26 @@ import EnterButton from "../../components/auth/EnterButton";
 
 const newFktHSB = [
     "Wužiwarjo daja so sobu zapřijeć, to pak tučasnje jenož na priwatne naprašowanje. Potom wjedźe link dale k wužiwarjej.",
-    "Wobrazy daja so nětko na kóždym Android modelu wuzwolić. Hdyž to tak njeje prosymy wo spěšny feedback.",
     "Komentary bychu dyrbjeli so nětko prawje wozjewić. Jeničce profilne wobrazy po wozjewjenju su hišće problematika.",
     "Moderatory a adminy móža komentary wotstronić, hdyž dołho na tutón tłóča.",
-    "Posty a ewenty daja so nětko wot wužiwarja wotstronić.",
+    "Tutorial funkcije - informaciske wokna",
 ];
 const newFktDE = [
     "Nutzer lassen sich verlinken, das aber derzeit nur auf Privatanfrage. Dann führt der Link weiter zum Nutzer.",
-    "Die Bilder können jetzt auf jedem Android Modell hochgeladen werden. Wenn das nicht so ist bitten wir um schnelles Feedback.",
     "Kommentare müssten nun richtig veröffentlicht werden. Lediglich die Profilbilder nach der Veröffentlichung sind noch eine Problematik.",
     "Moderatoren und Admins können Kommentare entfernen, wenn sie lange auf diese drücken.",
-    "Posts und Events lassen sich jetzt vom Nutzer löschen.",
+    "Tutorial Funktion - Informationsfenster",
 ];
 
 const missingFktHSB = [
     "Algorytmus hłowneje strony njeje dospowny.",
     "Powěsćowe zastajenja",
     "Rěč: delnoserbšćina",
-    "Tutorial funkcije - informaciske wokna",
 ];
 const missingFktDE = [
     "Algorythmus der Hauptseite ist nicht final.",
     "Einstellungen von Benachrichtigungen",
     "Sprache: Niedersorbisch",
-    "Tutorial Funktion - Informationsfenster",
 ];
 
 export default function TestView(props) {

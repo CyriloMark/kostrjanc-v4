@@ -21,6 +21,7 @@ import { wait } from "../../constants/wait";
 import { arraySplitter, sortArrayByDate } from "../../constants";
 import { storeData, getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
+import { checkIfTutorialNeeded } from "../../constants/tutorial";
 
 import BackHeader from "../../components/BackHeader";
 import PostPreview from "../../components/profile/PostPreview";
@@ -31,7 +32,7 @@ import Refresh from "../../components/RefreshControl";
 import SVG_Admin from "../../assets/svg/Admin";
 import SVG_Verify from "../../assets/svg/Moderator";
 
-export default function UserProfile({ navigation }) {
+export default function UserProfile({ navigation, onTut }) {
     const scrollRef = useRef();
 
     const [refreshing, setRefreshing] = useState(false);
@@ -147,7 +148,13 @@ export default function UserProfile({ navigation }) {
             if (userData) setUserData(userData);
             else loadUser();
         });
+        checkForTutorial();
     }, []);
+
+    const checkForTutorial = async () => {
+        const needTutorial = await checkIfTutorialNeeded(2);
+        if (needTutorial) onTut(2);
+    };
 
     const alertForRoles = () => {
         Alert.alert(

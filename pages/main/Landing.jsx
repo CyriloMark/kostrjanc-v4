@@ -15,6 +15,7 @@ import { getData, storeData } from "../../constants/storage";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { lerp, sortArrayByDateFromUnderorderedKey } from "../../constants";
 import { getLangs } from "../../constants/langs";
+import { checkIfTutorialNeeded } from "../../constants/tutorial";
 
 import { getAuth } from "firebase/auth";
 import { get, ref, getDatabase, child } from "firebase/database";
@@ -32,7 +33,7 @@ let showingContent = [];
 
 let LOADING = false;
 
-export default function Landing({ navigation }) {
+export default function Landing({ navigation, onTut }) {
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -80,7 +81,13 @@ export default function Landing({ navigation }) {
     useEffect(() => {
         setLoading(true);
         loadUser();
+        checkForTutorial();
     }, []);
+
+    const checkForTutorial = async () => {
+        const needTutorial = await checkIfTutorialNeeded(0);
+        if (needTutorial) onTut(0);
+    };
 
     async function ULTIMATIVE_ALGORITHM(_id, user, updateBanners) {
         if (LOADING) return;

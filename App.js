@@ -60,7 +60,16 @@ import ServerStatus from "./pages/static/ServerStatus";
 import Ban from "./pages/static/Ban";
 import LanguageSelect from "./pages/static/LanguageSelect";
 import TestView from "./pages/static/TestView";
+
+import TutorialView from "./components/tutorial/TutorialView";
+import {
+    TUTORIAL_DATA,
+    setTutorialAsSeen,
+    resetTutorials,
+} from "./constants/tutorial";
 //#endregion
+
+const RESET_TUTORIALS_ENABELD = false;
 
 export default function App() {
     const [fontsLoaded, fontsError] = useFonts({
@@ -81,7 +90,22 @@ export default function App() {
 
     const [expoPushToken, setExpoPushToken] = useState("");
 
+    const [tutorial, setTutorial] = useState({
+        visible: false,
+        id: 0,
+    });
+
+    function showTutorial(id) {
+        setTutorial({
+            visible: true,
+            id: id,
+        });
+    }
+
     useEffect(() => {
+        // RESET TUTORIALS
+        if (RESET_TUTORIALS_ENABELD) resetTutorials();
+
         const db = getDatabase();
         //onAuthChange
         onAuthStateChanged(
@@ -240,7 +264,20 @@ export default function App() {
                     width: "100%",
                     ...style.bgBlack,
                 }}>
-                <ViewportManager />
+                <ViewportManager onTut={showTutorial} />
+                <TutorialView
+                    visible={tutorial.visible}
+                    data={TUTORIAL_DATA[tutorial.id]}
+                    onClose={() => {
+                        setTutorial(prev => {
+                            return {
+                                ...prev,
+                                visible: false,
+                            };
+                        });
+                        setTutorialAsSeen(tutorial.id);
+                    }}
+                />
             </SafeAreaProvider>
         </NavigationContainer>
     );

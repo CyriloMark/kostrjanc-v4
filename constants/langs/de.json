@@ -108,7 +108,6 @@
         "comment_sub_0": "Kommentar von",
         "comment_sub_1": "wirklich entfernen?",
 
-
         "checkbtn_check": "Ich bin dabei!",
         "checkbtn_uncheck": "Ich bin nicht dabei.",
 
@@ -432,6 +431,12 @@
         "testview_sub_1": " schickst . Bei einer Nachricht gib bitte die aktuelle Version mit an.",
         "testview_new_title": "Was hat sich geändert:",
         "testview_missing_title": "Funktionen, welche noch fehlen:",
-        "testview_thx": "Danke für deine Hilfe!"
+        "testview_thx": "Danke für deine Hilfe!",
+
+        "tutorial_mainnav": "Hauptnavigation durch kostrjanc.",
+        "tutorial_contentpage": "Was ist kostrjanc STUDIJO? Selbst aktiv werden.",
+        "tutorial_profile": "Das bin ich. Profile auf kostrjanc.",
+        "tutorial_post": "Was sind Posts?",
+        "tutorial_event": "Was sind Events?"
     }
 }

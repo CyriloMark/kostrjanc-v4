@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import {
     Keyboard,
     Pressable,
@@ -26,6 +26,7 @@ import { wait } from "../../constants/wait";
 import { lerp } from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { splitterForContent } from "../../constants";
+import { checkIfTutorialNeeded } from "../../constants/tutorial";
 
 import * as style from "../../styles";
 
@@ -34,7 +35,7 @@ import SVG_Search from "../../assets/svg/Search";
 const RANDOM_CONTENT_ENABLED = false;
 
 let UsersData = null;
-export default function Content({ navigation }) {
+export default function Content({ navigation, onTut }) {
     const contentScrollRef = useRef();
 
     const [refreshing, setRefreshing] = useState(false);
@@ -136,6 +137,14 @@ export default function Content({ navigation }) {
                     error.code
                 )
             );
+    };
+
+    useEffect(() => {
+        checkForTutorial();
+    }, []);
+    const checkForTutorial = async () => {
+        const needTutorial = await checkIfTutorialNeeded(1);
+        if (needTutorial) onTut(1);
     };
 
     return (

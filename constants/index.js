@@ -12,7 +12,8 @@ export function openLink(link) {
             text: getLangs("yes"),
             style: "default",
             onPress: () => {
-                openURL(link);
+                if (link.includes("https://")) openURL(link);
+                else openURL(`https://${link}`);
             },
         },
     ]);

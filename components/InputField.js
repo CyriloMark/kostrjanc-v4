@@ -18,6 +18,7 @@ export default function InputField(props) {
                 ]}>
                 <View style={[styles.icon, s.allCenter]}>{props.icon}</View>
                 <TextInput
+                    ref={props.optRef ? props.optRef : null}
                     allowFontScaling
                     autoCorrect
                     cursorColor={s.colors.blue}

@@ -431,7 +431,13 @@
         "testview_sub_1": ". Při powěsći přidaj prošu wersiju, z kotrejž dźěłaš.",
         "testview_new_title": "Što je so změniło:",
         "testview_missing_title": "Funkcije, kiž faluja:",
-        "testview_thx": "Dźakuju za twoju prócu!"
+        "testview_thx": "Dźakuju za twoju prócu!",
+
+        "tutorial_mainnav": "Hłowna nawigacija přez kostrjanc.",
+        "tutorial_contentpage": "Što je kostrjanc STUDIJO? Sam aktiwny na kostrjanc być.",
+        "tutorial_profile": "To sym ja. Profily na kostrjanc.",
+        "tutorial_post": "Što su posty?",
+        "tutorial_event": "Što su ewenty?"
 
     }
 }

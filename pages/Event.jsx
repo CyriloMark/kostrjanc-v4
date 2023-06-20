@@ -32,6 +32,8 @@ import SendButton from "../components/comments/SendButton";
 import DeleteButton from "../components/comments/DeleteButton";
 import ListButton from "../components/event/ListButton";
 import Refresh from "../components/RefreshControl";
+import TextField from "../components/TextField";
+import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 
 import SVG_Live from "../assets/svg/Live";
 import SVG_Pin from "../assets/svg/Pin3.0";
@@ -50,6 +52,7 @@ import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
+import { checkIfTutorialNeeded } from "../constants/tutorial";
 
 import MapView, {
     Marker,
@@ -57,7 +60,9 @@ import MapView, {
     PROVIDER_GOOGLE,
 } from "react-native-maps";
 
-export default function Event({ navigation, route }) {
+const KEYBOARDBUTTON_ENABLED = false;
+
+export default function Event({ navigation, route, onTut }) {
     const mapRef = useRef();
     const commentInputRef = useRef();
 
@@ -235,7 +240,13 @@ export default function Event({ navigation, route }) {
     useEffect(() => {
         loadData();
         getIfAdmin();
+        checkForTutorial();
     }, []);
+
+    const checkForTutorial = async () => {
+        const needTutorial = await checkIfTutorialNeeded(4);
+        if (needTutorial) onTut(4);
+    };
 
     const [clientIsAdmin, setClintIsAdmin] = useState(false);
     const getIfAdmin = async () => {
@@ -687,7 +698,7 @@ export default function Event({ navigation, route }) {
                                 </Text>
                             ) : null}
                             {/* Input */}
-                            <TextInput
+                            {/* <TextInput
                                 ref={commentInputRef}
                                 inputAccessoryViewID={"4127435841768339"}
                                 allowFontScaling
@@ -715,9 +726,41 @@ export default function Event({ navigation, route }) {
                                     style.tWhite,
                                     !commentVisible ? { height: 0 } : null,
                                 ]}
+                            /> */}
+                            <TextField
+                                reference={commentInputRef}
+                                inputAccessoryViewID={"4127435841768339"}
+                                autoCapitalize="sentences"
+                                placeholder={getLangs(
+                                    "input_placeholder_entercomment"
+                                )}
+                                textBreakStrategy="simple"
+                                scrollEnabled
+                                selectTextOnFocus
+                                maxLength={128}
+                                value={currentCommentInput}
+                                onChangeText={t => setCurrentCommentInput(t)}
+                                style={[
+                                    { marginTop: style.defaultMmd },
+                                    style.tWhite,
+                                    !commentVisible
+                                        ? { height: 0, opacity: 0 }
+                                        : null,
+                                ]}
                             />
                             {commentVisible ? (
                                 <View style={styles.commentsButtonContainer}>
+                                    {Platform.OS === "android" &&
+                                    KEYBOARDBUTTON_ENABLED ? (
+                                        <OpenKeyboardButton
+                                            onPress={() =>
+                                                commentInputRef.current.focus()
+                                            }
+                                            style={{
+                                                marginRight: style.defaultMsm,
+                                            }}
+                                        />
+                                    ) : null}
                                     <DeleteButton
                                         onPress={() => {
                                             setCurrentCommentInput("");
@@ -751,6 +794,11 @@ export default function Event({ navigation, route }) {
                                     }
                                     commentData={comment}
                                     onRemove={() => removeComment(comment)}
+                                    onPress={id =>
+                                        navigation.navigate("profileView", {
+                                            id: id,
+                                        })
+                                    }
                                     onCommentUserPress={id =>
                                         navigation.navigate("profileView", {
                                             id: id,

@@ -25,6 +25,7 @@ import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
+import { checkIfTutorialNeeded } from "../constants/tutorial";
 
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
@@ -34,8 +35,12 @@ import AccessoryView from "../components/AccessoryView";
 import SendButton from "../components/comments/SendButton";
 import DeleteButton from "../components/comments/DeleteButton";
 import Refresh from "../components/RefreshControl";
+import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
+import TextField from "../components/TextField";
 
-export default function Post({ navigation, route }) {
+const KEYBOARDBUTTON_ENABLED = false;
+
+export default function Post({ navigation, route, onTut }) {
     const scrollRef = useRef();
     const commentInputRef = useRef();
 
@@ -166,7 +171,13 @@ export default function Post({ navigation, route }) {
     useEffect(() => {
         loadData();
         getIfAdmin();
+        checkForTutorial();
     }, []);
+
+    const checkForTutorial = async () => {
+        const needTutorial = await checkIfTutorialNeeded(3);
+        if (needTutorial) onTut(3);
+    };
 
     const [clientIsAdmin, setClintIsAdmin] = useState(false);
     const getIfAdmin = async () => {
@@ -347,7 +358,7 @@ export default function Post({ navigation, route }) {
                                 </Text>
                             ) : null}
                             {/* Input */}
-                            <TextInput
+                            {/* <TextInput
                                 ref={commentInputRef}
                                 hitSlop={25}
                                 inputAccessoryViewID={"23488388256395198"}
@@ -379,10 +390,42 @@ export default function Post({ navigation, route }) {
                                     style.tWhite,
                                     !commentVisible ? { height: 0 } : null,
                                 ]}
+                            /> */}
+                            <TextField
+                                reference={commentInputRef}
+                                inputAccessoryViewID={"4127435841768339"}
+                                autoCapitalize="sentences"
+                                placeholder={getLangs(
+                                    "input_placeholder_entercomment"
+                                )}
+                                textBreakStrategy="simple"
+                                scrollEnabled
+                                selectTextOnFocus
+                                maxLength={128}
+                                value={currentCommentInput}
+                                onChangeText={t => setCurrentCommentInput(t)}
+                                style={[
+                                    { marginTop: style.defaultMmd },
+                                    style.tWhite,
+                                    !commentVisible
+                                        ? { height: 0, opacity: 0 }
+                                        : null,
+                                ]}
                             />
 
                             {commentVisible ? (
                                 <View style={styles.commentsButtonContainer}>
+                                    {Platform.OS === "android" &&
+                                    KEYBOARDBUTTON_ENABLED ? (
+                                        <OpenKeyboardButton
+                                            onPress={() =>
+                                                commentInputRef.current.focus()
+                                            }
+                                            style={{
+                                                marginRight: style.defaultMsm,
+                                            }}
+                                        />
+                                    ) : null}
                                     <DeleteButton
                                         onPress={() => {
                                             setCurrentCommentInput("");
@@ -416,6 +459,11 @@ export default function Post({ navigation, route }) {
                                     }
                                     commentData={comment}
                                     onRemove={() => removeComment(comment)}
+                                    onPress={id =>
+                                        navigation.navigate("profileView", {
+                                            id: id,
+                                        })
+                                    }
                                     onCommentUserPress={id =>
                                         navigation.navigate("profileView", {
                                             id: id,

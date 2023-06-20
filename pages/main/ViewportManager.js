@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Platform } from "react-native";
 import {
@@ -48,7 +48,7 @@ import Delete from "../interaction/Delete";
 
 const MainNavStack = createStackNavigator();
 
-export default function ViewportManager() {
+export default function ViewportManager({ onTut }) {
     const insets = useSafeAreaInsets();
 
     return (
@@ -67,20 +67,25 @@ export default function ViewportManager() {
                 initialRouteName="landing">
                 <MainNavStack.Screen
                     name="content"
-                    component={Content}
                     options={{
                         gestureDirection: "horizontal-inverted",
-                    }}
-                />
-                <MainNavStack.Screen name="landing" component={Landing} />
+                    }}>
+                    {props => <Content {...props} onTut={onTut} />}
+                </MainNavStack.Screen>
+                <MainNavStack.Screen name="landing">
+                    {props => <Landing {...props} onTut={onTut} />}
+                </MainNavStack.Screen>
 
-                <MainNavStack.Screen
-                    name="userProfile"
-                    component={UserProfile}
-                />
+                <MainNavStack.Screen name="userProfile">
+                    {props => <UserProfile {...props} onTut={onTut} />}
+                </MainNavStack.Screen>
 
-                <MainNavStack.Screen name="postView" component={Post} />
-                <MainNavStack.Screen name="eventView" component={Event} />
+                <MainNavStack.Screen name="postView">
+                    {props => <Post {...props} onTut={onTut} />}
+                </MainNavStack.Screen>
+                <MainNavStack.Screen name="eventView">
+                    {props => <Event {...props} onTut={onTut} />}
+                </MainNavStack.Screen>
                 <MainNavStack.Screen name="profileView" component={Profile} />
 
                 <MainNavStack.Screen name="settings" component={Settings} />

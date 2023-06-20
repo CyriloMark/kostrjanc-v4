@@ -21,6 +21,7 @@ export default function TextField(props) {
                     props.bg ? { backgroundColor: props.bg } : null,
                 ]}>
                 <TextInput
+                    ref={props.reference ? props.reference : null}
                     {...props}
                     allowFontScaling
                     autoCapitalize="sentences"
