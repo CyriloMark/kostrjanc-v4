@@ -11,13 +11,13 @@ import AppHeader from "../../components/auth/AppHeader";
 import EnterButton from "../../components/auth/EnterButton";
 
 const newFktHSB = [
-    "Wužiwarjo daja so sobu zapřijeć, to pak tučasnje jenož na priwatne naprašowanje. Potom wjedźe link dale k wužiwarjej.",
+    "Wužiwarjo daja so nětko wot wšitkich sobu zapřijeć!",
     "Komentary bychu dyrbjeli so nětko prawje wozjewić. Jeničce profilne wobrazy po wozjewjenju su hišće problematika.",
     "Moderatory a adminy móža komentary wotstronić, hdyž dołho na tutón tłóča.",
     "Tutorial funkcije - informaciske wokna",
 ];
 const newFktDE = [
-    "Nutzer lassen sich verlinken, das aber derzeit nur auf Privatanfrage. Dann führt der Link weiter zum Nutzer.",
+    "Nutzer lassen sich nun von jedem verlinken!",
     "Kommentare müssten nun richtig veröffentlicht werden. Lediglich die Profilbilder nach der Veröffentlichung sind noch eine Problematik.",
     "Moderatoren und Admins können Kommentare entfernen, wenn sie lange auf diese drücken.",
     "Tutorial Funktion - Informationsfenster",
