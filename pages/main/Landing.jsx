@@ -547,6 +547,8 @@ export default function Landing({ navigation, onTut }) {
                             onPress={() =>
                                 navigation.navigate("postView", {
                                     id: item.id,
+                                    // fromLinking: false,
+                                    // linkingData: null,
                                 })
                             }
                         />

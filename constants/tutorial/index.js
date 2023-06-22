@@ -2,7 +2,7 @@ export const TUTORIAL_DATA = [
     {
         id: 0,
         title_id: "tutorial_mainnav",
-        uri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/tutorial_vids%2Fkostrjanc%20Tutorial%2001%20-%20H%C5%82owna%20nawigacija%20a%20startowa%20strona.mp4?alt=media&token=7de213d7-9803-4581-a5a9-72db3050fdf9",
+        uri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/tutorial_vids%2Fkostrjanc%20Tutorial%2001%20-%20H%C5%82owna%20nawigacija%20a%20startowa%20strona.mp4?alt=media&token=081d732c-9f0d-4e03-b756-630affc27264",
     },
     {
         id: 1,
@@ -22,7 +22,7 @@ export const TUTORIAL_DATA = [
     {
         id: 4,
         title_id: "tutorial_event",
-        uri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/tutorial_vids%2Fkostrjanc%20Tutorial%2005%20-%20%C5%A0to%20su%20Ewenty.mp4?alt=media&token=945c6d53-bb67-4b70-aef9-bb9986201ecb",
+        uri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/tutorial_vids%2Fkostrjanc%20Tutorial%2005%20-%20%C5%A0to%20su%20Ewenty.mp4?alt=media&token=e884d691-0dcf-4652-aade-b59635fb8ba7",
     },
 ];
 

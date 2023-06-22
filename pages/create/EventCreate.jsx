@@ -34,6 +34,10 @@ import {
     mapStylesDefault,
 } from "../../constants/event";
 import { getLangs } from "../../constants/langs";
+import {
+    checkForLinkings,
+    LINKING_TYPES,
+} from "../../constants/content/linking";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -77,7 +81,7 @@ const userUploadMetadata = {
 
 const tagLineAmt = 5;
 
-export default function EventCreate({ navigation }) {
+export default function EventCreate({ navigation, route }) {
     let btnPressed = false;
 
     const mapRef = useRef();
@@ -92,6 +96,9 @@ export default function EventCreate({ navigation }) {
         adBanner: false,
         tags: false,
     });
+
+    // From linking → when comes back fromLinking = true || = false
+    const { fromLinking, linkingData } = route.params;
 
     const [buttonChecked, setButtonChecked] = useState(false);
 
@@ -173,6 +180,11 @@ export default function EventCreate({ navigation }) {
     };
 
     useEffect(() => {
+        if (fromLinking) {
+            setButtonChecked(true);
+            setEvent(linkingData);
+            publishEvent();
+        }
         checkButton();
     }, [event]);
 
@@ -206,6 +218,21 @@ export default function EventCreate({ navigation }) {
         }
         if (btnPressed) return;
         btnPressed = true;
+
+        if (
+            !fromLinking &&
+            !(
+                !checkForLinkings(event.title) &&
+                !checkForLinkings(event.description)
+            )
+        ) {
+            navigation.navigate("linkingScreen", {
+                content: event,
+                type: LINKING_TYPES.Event,
+                origin: "eventCreate",
+            });
+            return;
+        }
 
         const uid = await getData("userId").catch(() => {
             return getAuth().currentUser.uid;

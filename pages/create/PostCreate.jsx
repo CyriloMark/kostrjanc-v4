@@ -9,7 +9,6 @@ import {
     KeyboardAvoidingView,
     Platform,
     Alert,
-    ActivityIndicator,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -21,10 +20,13 @@ import * as Storage from "firebase/storage";
 import { Post_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData, storeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
+import {
+    checkForLinkings,
+    LINKING_TYPES,
+} from "../../constants/content/linking";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
-import SVG_Add from "../../assets/svg/Add";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -32,8 +34,6 @@ import {
     requestMediaLibraryPermissionsAsync,
     MediaTypeOptions,
 } from "expo-image-picker";
-
-import { LinearGradient } from "expo-linear-gradient";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -45,23 +45,17 @@ const userUploadMetadata = {
     contentType: "image/jpeg",
 };
 
-let UsersData = null;
+let LINKING_ENABLED = true;
 
-let LINKING_ENABLED = false;
-
-export default function PostCreate({ navigation }) {
+export default function PostCreate({ navigation, route }) {
     let btnPressed = false;
 
     const [post, setPost] = useState(Post_Placeholder);
     const [imageUri, setImageUri] = useState(null);
     const [buttonChecked, setButtonChecked] = useState(false);
-    const [linkings, setLinkings] = useState([]);
-    const [userSelection, setUserSelection] = useState({
-        visible: false,
-        index: -1,
-    });
-    const [currentUsernameInput, setCurrentUsernameInput] = useState("");
-    const [currentUserSearchResult, setCurrentUserResult] = useState([]);
+
+    // From linking → when comes back fromLinking = true || = false
+    const { fromLinking, linkingData } = route.params;
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
@@ -147,36 +141,12 @@ export default function PostCreate({ navigation }) {
         );
     };
 
-    const onCheckLinkings = input => {
-        if (!input.includes("@")) return setLinkings([]);
-
-        const split = input.split("@");
-        const output = [];
-        let a = 1;
-
-        if (split.length === 1) a = 0;
-
-        for (let i = a; i < split.length; i++) {
-            const link = split[i].split(" ");
-
-            let start = 0;
-            for (let j = 0; j < i; j++) start += split[j].length;
-
-            // if (linkings.length !== 0) {
-            //     for ()
-            // }
-
-            output.push({
-                user: null,
-                text: `@${link[0]}`,
-                start: start,
-            });
-        }
-
-        setLinkings(output);
-    };
-
     useEffect(() => {
+        if (fromLinking) {
+            setButtonChecked(true);
+            setPost(linkingData);
+            publishPost();
+        }
         checkButton();
     }, [post]);
 
@@ -185,6 +155,22 @@ export default function PostCreate({ navigation }) {
             setUnfullfilledAlert();
             return;
         }
+
+        if (
+            !fromLinking &&
+            !(
+                !checkForLinkings(post.title) &&
+                !checkForLinkings(post.description)
+            )
+        ) {
+            navigation.navigate("linkingScreen", {
+                content: post,
+                type: LINKING_TYPES.Post,
+                origin: "postCreate",
+            });
+            return;
+        }
+
         if (btnPressed) return;
         btnPressed = true;
 
@@ -317,106 +303,10 @@ export default function PostCreate({ navigation }) {
             );
     };
 
-    //#region UserLinkSelect
-    const onChange = input => {
-        if (input.length === 0) {
-            setCurrentUserResult([]);
-            return;
-        }
-        fetchUsers(input);
-    };
-
-    let getSearchResult = text => {
-        let output = [];
-        let searchQuery = text.toLowerCase();
-        for (const key in UsersData) {
-            let user = UsersData[key].name.toLowerCase();
-            if (user.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
-                if (currentUsernameInput.length <= 5) {
-                    if (!UsersData[key].isBanned) {
-                        output.push(UsersData[key]);
-                    }
-                }
-            }
-        }
-        setCurrentUserResult(output);
-    };
-
-    const fetchUsers = text => {
-        if (text.length <= 0 || text.length > 64) {
-            setCurrentUserResult([]);
-            return;
-        }
-
-        if (!UsersData) {
-            const db = getDatabase();
-            getData("userData").then(data => {
-                if (data === null) return;
-                let users = [];
-                if (data.follower) users.push(...data.follower);
-                if (data.following) users.push(...data.following);
-
-                const usersFiltered = users.filter(function (item, pos) {
-                    return users.indexOf(item) == pos;
-                });
-
-                for (let i = 0; i < usersFiltered.length; i++) {
-                    get(child(ref(db), `users/${usersFiltered[i]}`))
-                        .then(userSnap => {
-                            if (userSnap.exists()) {
-                                const userData = userSnap.val();
-                                if (!userData.isBanned) {
-                                    if (UsersData === null)
-                                        UsersData = [
-                                            {
-                                                name: userData.name,
-                                                pbUri: userData.pbUri,
-                                                id: usersFiltered[i],
-                                            },
-                                        ];
-                                    else
-                                        UsersData.push({
-                                            name: userData.name,
-                                            pbUri: userData.pbUri,
-                                            id: usersFiltered[i],
-                                        });
-                                }
-                            }
-                        })
-                        .finally(() => {
-                            if (i === usersFiltered.length - 1)
-                                getSearchResult(text);
-                        })
-                        .catch(error =>
-                            console.log(
-                                "error pages/create/PostCreate.jsx",
-                                "fetchUsers get user",
-                                error.code
-                            )
-                        );
-                }
-            });
-        } else getSearchResult(text);
-    };
-
-    const overrideUserLink = user => {
-        setLinkings(prev => {
-            prev[userSelection.index].user = user;
-            return [...prev];
-        });
-        setCurrentUsernameInput("");
-        setCurrentUserResult([]);
-        setUserSelection({
-            visible: false,
-            index: -1,
-        });
-    };
-    //#endregion
-
     return (
         <View style={[style.container, style.bgBlack]}>
             <KeyboardAvoidingView
-                style={style.allMax}
+                style={[style.allMax, { opacity: fromLinking ? 0.5 : 1 }]}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
@@ -554,7 +444,6 @@ export default function PostCreate({ navigation }) {
                                     )}
                                     value={post.description}
                                     maxLength={512}
-                                    editable={!userSelection.visible}
                                     inputAccessoryViewID="post_description_InputAccessoryViewID"
                                     onChangeText={val => {
                                         setPost(prev => {
@@ -563,240 +452,11 @@ export default function PostCreate({ navigation }) {
                                                 description: val,
                                             };
                                         });
-                                        onCheckLinkings(val);
                                     }}
                                 />
-
-                                {linkings.length !== 0 && LINKING_ENABLED ? (
-                                    <View
-                                        style={[
-                                            // style.bgRed,
-                                            styles.linkingsContainer,
-                                        ]}>
-                                        <Text style={[style.Tmd, style.tWhite]}>
-                                            Wužiwarjow zapřijeć:
-                                        </Text>
-
-                                        {linkings.map((link, key) => (
-                                            <View
-                                                style={styles.linkingsElement}
-                                                key={key}>
-                                                <Text
-                                                    style={[
-                                                        style.Tmd,
-                                                        style.tWhite,
-                                                    ]}>
-                                                    {key + 1}.
-                                                </Text>
-                                                <Text
-                                                    style={[
-                                                        style.Tmd,
-                                                        style.tBlue,
-                                                        {
-                                                            marginLeft:
-                                                                style.defaultMsm,
-                                                        },
-                                                    ]}>
-                                                    {link.text}
-                                                </Text>
-                                                {link.user === null ? (
-                                                    <Pressable
-                                                        onPress={() => {
-                                                            setUserSelection({
-                                                                visible: true,
-                                                                index: key,
-                                                            });
-                                                        }}
-                                                        style={[
-                                                            styles.selectUserContainer,
-                                                            styles.userContainer,
-                                                            style.oHidden,
-                                                        ]}>
-                                                        <LinearGradient
-                                                            style={[
-                                                                style.Psm,
-                                                                style.allCenter,
-                                                                styles.selectUserInner,
-                                                            ]}
-                                                            colors={[
-                                                                style.colors
-                                                                    .blue,
-                                                                style.colors
-                                                                    .sec,
-                                                            ]}
-                                                            end={{
-                                                                x: -0.5,
-                                                                y: 0.5,
-                                                            }}
-                                                            locations={[
-                                                                0, 0.75,
-                                                            ]}>
-                                                            <View>
-                                                                <SVG_Add
-                                                                    style={[
-                                                                        style.boxShadow,
-                                                                        style.oVisible,
-                                                                        styles.selectUserIcon,
-                                                                    ]}
-                                                                    fill={
-                                                                        style
-                                                                            .colors
-                                                                            .white
-                                                                    }
-                                                                />
-                                                            </View>
-                                                            <Text
-                                                                style={[
-                                                                    style.tWhite,
-                                                                    style.TsmRg,
-                                                                    {
-                                                                        marginLeft:
-                                                                            style.defaultMmd,
-                                                                    },
-                                                                ]}>
-                                                                Wužiwarja
-                                                                wuwolić
-                                                            </Text>
-                                                        </LinearGradient>
-                                                    </Pressable>
-                                                ) : (
-                                                    <Pressable
-                                                        style={[
-                                                            styles.userContainer,
-                                                            styles.userInner,
-                                                            style.Psm,
-                                                        ]}>
-                                                        <View
-                                                            style={
-                                                                styles.userPbContainer
-                                                            }>
-                                                            <Image
-                                                                source={{
-                                                                    uri: link
-                                                                        .user
-                                                                        .pbUri,
-                                                                }}
-                                                                style={
-                                                                    styles.userPb
-                                                                }
-                                                                resizeMode="cover"
-                                                                resizeMethod="auto"
-                                                            />
-                                                        </View>
-                                                        <Text
-                                                            style={[
-                                                                style.Tmd,
-                                                                style.tWhite,
-                                                                {
-                                                                    marginLeft:
-                                                                        style.defaultMmd,
-                                                                },
-                                                            ]}>
-                                                            {link.user.name}
-                                                        </Text>
-                                                    </Pressable>
-                                                )}
-                                            </View>
-                                        ))}
-                                    </View>
-                                ) : null}
                             </View>
                         </View>
                     </View>
-
-                    {/* User Selection */}
-                    {userSelection.visible && LINKING_ENABLED ? (
-                        <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                Wuzwolenje Wužiwarja za{" "}
-                                <Text style={style.tBlue}>
-                                    {linkings[userSelection.index].text}
-                                </Text>
-                            </Text>
-
-                            {/* Mjeno */}
-                            <View style={{ marginTop: style.defaultMmd }}>
-                                <Text
-                                    style={[
-                                        style.Tmd,
-                                        style.tWhite,
-                                        { marginBottom: style.defaultMsm },
-                                    ]}>
-                                    Mjeno wužiwarja zapodać:
-                                </Text>
-                                <InputField
-                                    maxLength={32}
-                                    keyboardType="default"
-                                    textContentType="username"
-                                    placeholder={getLangs(
-                                        "input_placeholder_username"
-                                    )}
-                                    value={currentUsernameInput}
-                                    inputAccessoryViewID="user_name_InputAccessoryViewID"
-                                    icon={
-                                        <SVG_Pencil fill={style.colors.blue} />
-                                    }
-                                    onChangeText={val => {
-                                        setCurrentUsernameInput(val);
-                                        onChange(val);
-                                    }}
-                                />
-                            </View>
-
-                            <View style={{ marginTop: style.defaultMmd }}>
-                                {currentUserSearchResult.length !== 0 ? (
-                                    currentUserSearchResult.map((user, key) => (
-                                        <Pressable
-                                            onPress={() =>
-                                                overrideUserLink(user)
-                                            }
-                                            key={key}
-                                            style={[
-                                                {
-                                                    marginTop:
-                                                        key > 0
-                                                            ? style.defaultMsm
-                                                            : 0,
-                                                },
-                                                styles.userInner,
-                                                style.Psm,
-                                            ]}>
-                                            <View
-                                                style={styles.userPbContainer}>
-                                                <Image
-                                                    source={{
-                                                        uri: user.pbUri,
-                                                    }}
-                                                    style={styles.userPb}
-                                                    resizeMode="cover"
-                                                    resizeMethod="auto"
-                                                />
-                                            </View>
-                                            <Text
-                                                style={[
-                                                    style.Tmd,
-                                                    style.tWhite,
-                                                    {
-                                                        marginLeft:
-                                                            style.defaultMmd,
-                                                    },
-                                                ]}>
-                                                {user.name}
-                                            </Text>
-                                        </Pressable>
-                                    ))
-                                ) : (
-                                    <ActivityIndicator
-                                        style={{
-                                            marginTop: style.defaultMsm,
-                                        }}
-                                        color={style.colors.blue}
-                                        animating
-                                    />
-                                )}
-                            </View>
-                        </View>
-                    ) : null}
 
                     {/* Button */}
                     <View style={[style.allCenter, styles.button]}>
@@ -831,13 +491,6 @@ export default function PostCreate({ navigation }) {
                     });
                 }}
                 nativeID={"post_description_InputAccessoryViewID"}
-            />
-            {/* Usernmae */}
-            <AccessoryView
-                onElementPress={l => {
-                    setCurrentUsernameInput(currentUsernameInput + l);
-                }}
-                nativeID={"user_name_InputAccessoryViewID"}
             />
         </View>
     );

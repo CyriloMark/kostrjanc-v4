@@ -1,6 +1,12 @@
 export const LINK_SIGN = "µlink";
 export const LINK_SPLIT = "µ";
 
+export const LINKING_TYPES = {
+    Post: "post",
+    Event: "event",
+    Comment: "comment",
+};
+
 export function checkLinkedUser(input) {
     if (!input.includes(LINK_SIGN))
         return [
@@ -80,4 +86,43 @@ export function getCombinedLinkedText(text, linkings) {
 
     let outputTexts = [];
     for (let i = 0; i < linkings.length; i++) {}
+}
+
+/**
+ * @returns {bool} Returns true if text contains one or more @ signs
+ * @param {*} text Input for checking
+ */
+export function checkForLinkings(text) {
+    const split = text.split(" ");
+    for (let i = 0; i < split.length; i++)
+        if (split[i].startsWith("@") && split[i].length !== 1) return true;
+    return false;
+}
+
+/**
+ *
+ * @param {String} text
+ */
+export function getLinkingsFromPlainText(text, start) {
+    if (!text.includes("@")) return [];
+
+    const split = text.split("@");
+    const output = [start];
+    let a = 1;
+
+    if (split.length === 1) a = 0;
+
+    for (let i = a; i < split.length; i++) {
+        const link = split[i].split(" ");
+
+        let start = 0;
+        for (let j = 0; j < i; j++) start += split[j].length;
+
+        output.push({
+            user: null,
+            text: `@${link[0]}`,
+            start: start,
+        });
+    }
+    return output;
 }

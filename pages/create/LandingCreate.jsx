@@ -54,7 +54,11 @@ export default function LandingCreate({ navigation }) {
                     <Pressable
                         style={[styles.elementContainer, style.oHidden]}
                         onPress={() => {
-                            if (POST_ENABLED) navigation.navigate("postCreate");
+                            if (POST_ENABLED)
+                                navigation.navigate("postCreate", {
+                                    fromLinking: false,
+                                    linkingData: null,
+                                });
                             else setErrorAlert(0);
                         }}>
                         <LinearGradient
@@ -109,7 +113,10 @@ export default function LandingCreate({ navigation }) {
                         style={[styles.elementContainer, style.oHidden]}
                         onPress={() => {
                             if (EVENT_ENABLED)
-                                navigation.navigate("eventCreate");
+                                navigation.navigate("eventCreate", {
+                                    fromLinking: false,
+                                    linkingData: null,
+                                });
                             else setErrorAlert(1);
                         }}>
                         <LinearGradient

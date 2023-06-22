@@ -44,6 +44,8 @@ import UserList from "../UserList";
 import Report from "../interaction/Report";
 import Ban from "../interaction/Ban";
 import Delete from "../interaction/Delete";
+
+import LinkingPage from "../LinkingPage";
 //#endregion
 
 const MainNavStack = createStackNavigator();
@@ -139,6 +141,11 @@ export default function ViewportManager({ onTut }) {
                 <MainNavStack.Screen name="report" component={Report} />
                 <MainNavStack.Screen name="ban" component={Ban} />
                 <MainNavStack.Screen name="delete" component={Delete} />
+
+                <MainNavStack.Screen
+                    name="linkingScreen"
+                    component={LinkingPage}
+                />
             </MainNavStack.Navigator>
 
             <BottomTransitionBar style={{ bottom: insets.bottom }} />

@@ -24,7 +24,11 @@ import { wait } from "../constants/wait";
 import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
-import { checkLinkedUser } from "../constants/content/linking";
+import {
+    LINKING_TYPES,
+    checkForLinkings,
+    checkLinkedUser,
+} from "../constants/content/linking";
 import { checkIfTutorialNeeded } from "../constants/tutorial";
 
 import BackHeader from "../components/BackHeader";
@@ -54,6 +58,7 @@ export default function Post({ navigation, route, onTut }) {
     }, []);
 
     const { id } = route.params;
+    // fromLinking, linkingData
 
     const [user, setUser] = useState(User_Placeholder);
     const [post, setPost] = useState(Post_Placeholder);
@@ -120,6 +125,11 @@ export default function Post({ navigation, route, onTut }) {
         }
     };
 
+    // useEffect(() => {
+    //     setCurrentCommentInput(linkingData);
+    //     publishComment();
+    // }, [linkingData]);
+
     const publishComment = () => {
         if (post.isBanned) return;
         if (
@@ -129,6 +139,15 @@ export default function Post({ navigation, route, onTut }) {
             )
         )
             return;
+
+        // if (!fromLinking && checkForLinkings(currentCommentInput)) {
+        //     navigation.navigate("linkingScreen", {
+        //         content: currentCommentInput,
+        //         type: LINKING_TYPES.Comment,
+        //         origin: "postView",
+        //     });
+        //     return;
+        // }
 
         const input = currentCommentInput;
         setCurrentCommentInput("");
@@ -393,7 +412,7 @@ export default function Post({ navigation, route, onTut }) {
                             /> */}
                             <TextField
                                 reference={commentInputRef}
-                                inputAccessoryViewID={"4127435841768339"}
+                                inputAccessoryViewID={"23488388256395198"}
                                 autoCapitalize="sentences"
                                 placeholder={getLangs(
                                     "input_placeholder_entercomment"
