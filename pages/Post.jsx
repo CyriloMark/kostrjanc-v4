@@ -261,7 +261,22 @@ export default function Post({ navigation, route, onTut }) {
                     <View>
                         {/* Title */}
                         <Text style={[style.tWhite, style.Ttitle2]}>
-                            {post.title}
+                            {checkLinkedUser(post.title).map((el, key) =>
+                                !el.isLinked ? (
+                                    <Text key={key}>{el.text}</Text>
+                                ) : (
+                                    <Text
+                                        key={key}
+                                        style={style.tBlue}
+                                        onPress={() =>
+                                            navigation.push("profileView", {
+                                                id: el.id,
+                                            })
+                                        }>
+                                        {el.text}
+                                    </Text>
+                                )
+                            )}
                         </Text>
 
                         {/* Img */}
@@ -296,7 +311,7 @@ export default function Post({ navigation, route, onTut }) {
                                                 key={key}
                                                 style={style.tBlue}
                                                 onPress={() =>
-                                                    navigation.navigate(
+                                                    navigation.push(
                                                         "profileView",
                                                         {
                                                             id: el.id,

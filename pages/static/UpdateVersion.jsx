@@ -64,8 +64,8 @@ export default function UpdateVersion(props) {
                     <Text style={[style.tWhite, style.TsmLt, style.tCenter]}>
                         Version {props.versions.server}
                         {"\n"}
-                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 all
-                        rights reserved
+                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 All
+                        Rights Reserved
                     </Text>
                 </View>
             </View>

@@ -108,8 +108,8 @@ export default function ServerStatus(props) {
                     <Text style={[style.tWhite, style.TsmLt, style.tCenter]}>
                         Version {require("../../app.json").expo.version}
                         {"\n"}
-                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 all
-                        rights reserved
+                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 All
+                        Rights Reserved
                     </Text>
                 </View>
             </View>

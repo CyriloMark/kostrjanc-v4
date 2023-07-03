@@ -351,7 +351,22 @@ export default function Event({ navigation, route, onTut }) {
                     <View>
                         {/* Title */}
                         <Text style={[style.tWhite, style.Ttitle2]}>
-                            {event.title}
+                            {checkLinkedUser(event.title).map((el, key) =>
+                                !el.isLinked ? (
+                                    <Text key={key}>{el.text}</Text>
+                                ) : (
+                                    <Text
+                                        key={key}
+                                        style={style.tBlue}
+                                        onPress={() =>
+                                            navigation.push("profileView", {
+                                                id: el.id,
+                                            })
+                                        }>
+                                        {el.text}
+                                    </Text>
+                                )
+                            )}
                         </Text>
 
                         {/* Map */}
@@ -409,7 +424,7 @@ export default function Event({ navigation, route, onTut }) {
                                                 key={key}
                                                 style={style.tBlue}
                                                 onPress={() =>
-                                                    navigation.navigate(
+                                                    navigation.push(
                                                         "profileView",
                                                         {
                                                             id: el.id,
