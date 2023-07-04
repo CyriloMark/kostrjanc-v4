@@ -1,11 +1,3 @@
-export function toggleTheme() {}
-
-export const THEMES = {
-    0: "light",
-    1: "dark",
-};
-export const ACTIVE_THEME = THEMES[0];
-
 export const colors = {
     //old
     // blue: "#5884B0",

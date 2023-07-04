@@ -3,7 +3,7 @@
     "name": "kostrjanc",
     "slug": "kostrjanc",
     "owner": "lauske",
-    "version": "1.0.3a",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
     "splash": {
@@ -24,6 +24,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.zsl.kostrjanc",
+      "buildNumber": "1.0.4",
       "config": {
         "googleMapsApiKey": "AIzaSyC6FZglVrqjt6QivVkUwy95NFsd4w8TW1s"
       }
@@ -39,7 +40,7 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "versionCode": 7,
+      "versionCode": 8,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBQq8qlKB9h7qjOgL47a1FX6gOKgRRYNdI"
