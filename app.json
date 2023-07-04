@@ -16,7 +16,8 @@
       "color": "#060A0D"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/4ee68e59-b2ec-411a-ae50-8664781a1a67"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -24,10 +25,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.zsl.kostrjanc",
-      "buildNumber": "1.0.4",
-      "config": {
-        "googleMapsApiKey": "AIzaSyC6FZglVrqjt6QivVkUwy95NFsd4w8TW1s"
-      }
+      "buildNumber": "1.0.4"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -40,12 +38,7 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "versionCode": 8,
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyBQq8qlKB9h7qjOgL47a1FX6gOKgRRYNdI"
-        }
-      }
+      "versionCode": 8
     },
     "web": {
       "favicon": "./assets/icons/favicon.png"
@@ -71,6 +64,9 @@
       "eas": {
         "projectId": "4ee68e59-b2ec-411a-ae50-8664781a1a67"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
