@@ -7,6 +7,7 @@ import {
     Alert,
     ScrollView,
     Image,
+    Platform,
     KeyboardAvoidingView,
 } from "react-native";
 

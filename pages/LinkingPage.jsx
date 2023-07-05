@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView,
     Alert,
     ActivityIndicator,
+    Platform,
 } from "react-native";
 
 import * as style from "../styles";

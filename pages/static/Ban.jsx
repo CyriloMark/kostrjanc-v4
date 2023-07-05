@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, StyleSheet, Text, Platform } from "react-native";
+import { View, Image, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as style from "../../styles";

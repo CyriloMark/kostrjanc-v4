@@ -5,7 +5,6 @@ import {
     Pressable,
     ScrollView,
     StyleSheet,
-    Platform,
     Alert,
 } from "react-native";
 
