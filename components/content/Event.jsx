@@ -58,6 +58,7 @@ export default function Event({ id, onPress, style, asCard }) {
                         pitchEnabled={false}
                         initialRegion={event.geoCords}
                         scrollEnabled={false}
+                        userInterfaceStyle="dark"
                         onPress={onPress}>
                         <Marker coordinate={event.geoCords} />
                     </MapView>

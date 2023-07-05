@@ -157,6 +157,7 @@ export default function Event(props) {
                         ref={mapRef}
                         style={style.allMax}
                         accessible={false}
+                        userInterfaceStyle="dark"
                         focusable={false}
                         rotateEnabled={false}
                         provider={PROVIDER_DEFAULT}

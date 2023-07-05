@@ -29,6 +29,7 @@ export default function EventPreview({ style, onPress, data }) {
                     initialRegion={data.geoCords}
                     pitchEnabled={false}
                     onPress={onPress}
+                    userInterfaceStyle="dark"
                     scrollEnabled={false}></MapView>
                 <SVG_Pin fill={s.colors.red} style={styles.pin} />
             </Pressable>
