@@ -32,6 +32,8 @@ import Refresh from "../../components/RefreshControl";
 import SVG_Admin from "../../assets/svg/Admin";
 import SVG_Verify from "../../assets/svg/Moderator";
 
+import AnimatedPaidBatch from "../../components/content/AnimatedPaidBatch";
+
 export default function UserProfile({ navigation, onTut }) {
     const scrollRef = useRef();
 
@@ -250,6 +252,11 @@ export default function UserProfile({ navigation, onTut }) {
                                 />
                             </Pressable>
                         ) : null}
+                        {/* <Pressable
+                            style={{ marginRight: style.defaultMmd }}
+                            onPress={() => console.log("test")}>
+                            <AnimatedPaidBatch />
+                        </Pressable> */}
 
                         <Text style={[style.tWhite, style.Ttitle2]}>
                             {user.name}

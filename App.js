@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { StatusBar, View, Platform } from "react-native";
+import { View, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 //#region Notifications
 import * as Notifications from "expo-notifications";
@@ -233,7 +234,7 @@ export default function App() {
                     networkActivityIndicatorVisible
                     translucent
                     backgroundColor={style.colors.black}
-                    barStyle={"light-content"}
+                    style="light"
                 />
                 <SafeAreaProvider
                     style={{
@@ -256,7 +257,7 @@ export default function App() {
                 networkActivityIndicatorVisible
                 translucent
                 backgroundColor={style.colors.black}
-                barStyle={"light-content"}
+                style={"light"}
             />
             <SafeAreaProvider
                 style={{

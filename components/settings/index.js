@@ -35,7 +35,10 @@ export function logout() {
     );
 }
 
-export function deleteAccount(uid, userData) {
+/*
+    Obsolete
+*/
+export function deleteAccount_old(uid, userData) {
     Alert.alert(
         getLangs("auth_delete_0_title"),
         getLangs("auth_delete_0_sub"),
@@ -196,6 +199,221 @@ export function deleteAccount(uid, userData) {
                                         console.log(
                                             "error comps/settings/index.js",
                                             "deleteAccount delete User",
+                                            error.code
+                                        )
+                                    );
+                            },
+                        },
+                    ]);
+                },
+            },
+        ]
+    );
+}
+
+/*
+    Use this :)
+    old removes whole user
+    this fkt set user as isBanned and removes his entry in Auth
+*/
+export function deleteAccount(uid, userData) {
+    Alert.alert(
+        getLangs("auth_delete_0_title"),
+        getLangs("auth_delete_0_sub"),
+        [
+            {
+                text: getLangs("no"),
+                style: "destructive",
+            },
+            {
+                text: getLangs("yes"),
+                style: "default",
+                onPress: () => {
+                    Alert.alert(getLangs("auth_delete_1_title"), "", [
+                        {
+                            text: getLangs("no"),
+                            style: "destructive",
+                        },
+                        {
+                            text: getLangs("yes"),
+                            style: "default",
+                            onPress: () => {
+                                const db = getDatabase();
+
+                                //#region Remove Follower/-ing
+                                if (userData.follower)
+                                    userData.follower.forEach(user =>
+                                        get(
+                                            child(
+                                                ref(db),
+                                                `users/${user}/following`
+                                            )
+                                        )
+                                            .then(followingSnap => {
+                                                let newList =
+                                                    followingSnap.val();
+                                                newList.splice(
+                                                    newList.indexOf(uid),
+                                                    1
+                                                );
+                                                set(
+                                                    ref(
+                                                        db,
+                                                        `users/${user}/following`
+                                                    ),
+                                                    newList
+                                                ).catch(error =>
+                                                    console.log(
+                                                        "error comps/settings/index.js",
+                                                        "deleteAccount remove follower users",
+                                                        error.code
+                                                    )
+                                                );
+                                            })
+                                            .catch(error =>
+                                                console.log(
+                                                    "error comps/settings/index.js",
+                                                    "deleteAccount get follower users",
+                                                    error.code
+                                                )
+                                            )
+                                    );
+                                if (userData.following)
+                                    userData.following.forEach(user =>
+                                        get(
+                                            child(
+                                                ref(db),
+                                                `users/${user}/follower`
+                                            )
+                                        )
+                                            .then(followerSnap => {
+                                                let newList =
+                                                    followerSnap.val();
+                                                newList.splice(
+                                                    newList.indexOf(uid),
+                                                    1
+                                                );
+                                                set(
+                                                    ref(
+                                                        db,
+                                                        `users/${user}/follower`
+                                                    ),
+                                                    newList
+                                                ).catch(error =>
+                                                    console.log(
+                                                        "error comps/settings/index.js",
+                                                        "deleteAccount remove Following users",
+                                                        error.code
+                                                    )
+                                                );
+                                            })
+                                            .catch(error =>
+                                                console.log(
+                                                    "error comps/settings/index.js",
+                                                    "deleteAccount get following users",
+                                                    error.code
+                                                )
+                                            )
+                                    );
+                                //#endregion
+
+                                //#region Remove Posts & Events
+                                if (userData.posts) {
+                                    userData.posts.forEach(post =>
+                                        set(
+                                            ref(db, `posts/${post}/isBanned`),
+                                            true
+                                        ).catch(error =>
+                                            console.log(
+                                                "error comps/settings/index.js",
+                                                "deleteAccount delete Posts",
+                                                error.code
+                                            )
+                                        )
+                                    );
+                                }
+                                if (userData.events) {
+                                    userData.events.forEach(event =>
+                                        set(
+                                            ref(db, `events/${event}/isBanned`),
+                                            true
+                                        ).catch(error =>
+                                            console.log(
+                                                "error comps/settings/index.js",
+                                                "deleteAccount delete Events",
+                                                error.code
+                                            )
+                                        )
+                                    );
+                                }
+                                //#endregion
+
+                                set(ref(db, `users/${uid}/isDeleted`), true)
+                                    .then(() => {
+                                        // Add User to deleted Users
+                                        get(child(ref(db), `deleted_users`))
+                                            .then(deletedUsers => {
+                                                let list = [];
+                                                if (deletedUsers.exists())
+                                                    list = deletedUsers.val();
+                                                list.push({
+                                                    id: uid,
+                                                    email: getAuth().currentUser
+                                                        .email,
+                                                });
+                                                set(
+                                                    ref(db, `deleted_users`),
+                                                    list
+                                                )
+                                                    .finally(() => {
+                                                        // Remove Cached User Data
+                                                        removeData("userId");
+                                                        removeData("userData");
+                                                        // Delete User in Auth
+                                                        deleteUser(
+                                                            getAuth()
+                                                                .currentUser
+                                                        )
+                                                            .then(() =>
+                                                                Alert.alert(
+                                                                    "Konto je so wuspěšnje wotstronił.",
+                                                                    "",
+                                                                    [
+                                                                        {
+                                                                            style: "default",
+                                                                            text: "Ok",
+                                                                        },
+                                                                    ]
+                                                                )
+                                                            )
+                                                            .catch(error =>
+                                                                console.log(
+                                                                    "error comps/settings/index.js",
+                                                                    "deleteAccount delete User",
+                                                                    error.code
+                                                                )
+                                                            );
+                                                    })
+                                                    .catch(error =>
+                                                        console.log(
+                                                            "error comps/settings/index.js",
+                                                            "deleteAccount set User in deleted_users",
+                                                            error.code
+                                                        )
+                                                    );
+                                            })
+                                            .catch(error =>
+                                                console.log(
+                                                    "error comps/settings/index.js",
+                                                    "deleteAccount get deleted_users",
+                                                    error.code
+                                                )
+                                            );
+                                    })
+                                    .catch(error =>
+                                        console.log(
+                                            "error comps/settings/index.js",
+                                            "deleteAccount set isBanned User",
                                             error.code
                                         )
                                     );
