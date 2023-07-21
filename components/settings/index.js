@@ -360,6 +360,7 @@ export function deleteAccount(uid, userData) {
                                                     id: uid,
                                                     email: getAuth().currentUser
                                                         .email,
+                                                    deleted: Date.now(),
                                                 });
                                                 set(
                                                     ref(db, `deleted_users`),
