@@ -25,6 +25,8 @@ import EnterButton from "../../components/auth/EnterButton";
 import TextField from "../../components/TextField";
 import SelectableButton from "../../components/event/SelectableButton";
 import AccessoryView from "../../components/AccessoryView";
+import makeRequest from "../../constants/request";
+import { ActivityIndicator } from "react-native-paper";
 
 let reporting = false;
 
@@ -33,6 +35,8 @@ export default function Report({ navigation, route }) {
 
     const [reportData, setReportData] = useState(Report_Placeholder);
     const [buttonChecked, setButtonChecked] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const itemType = () => {
         switch (type) {
@@ -91,49 +95,78 @@ export default function Report({ navigation, route }) {
         if (reporting) return;
         reporting = true;
 
-        const db = getDatabase();
-        const id = Date.now();
-        const uid = await getData("userId").catch(() => {
-            return getAuth().currentUser.uid;
+        setLoading(true);
+
+        let response = await makeRequest("/mod/report", {
+            reason: `přičina: ${
+                reportData.description
+            } typ problema: ${getLangs(
+                `report_reporttypes_${reportData.type}`
+            )}`,
+            type: type == 0 ? "post" : "event",
+            id: item.id,
         });
-        set(ref(db, `reports/${id}`), {
-            ...reportData,
-            id: id,
-            creator: uid,
-            item: item,
-        })
-            .catch(error =>
-                console.log(
-                    "error pages/interaction/Report.jsx",
-                    "report set reports",
-                    error.code
-                )
-            )
-            .finally(() =>
-                Alert.alert(
-                    getLangs("report_successful_title"),
-                    `${item.title} (${itemType()}) ${getLangs(
-                        "report_successful_sub"
-                    )}`,
-                    [
-                        {
-                            text: "Ok",
-                            isPreferred: true,
-                            style: "cancel",
-                            onPress: () => {
-                                navigation.goBack();
-                            },
+
+        if (response == "content has already been reported!") {
+            Alert.alert(
+                getLangs("report_successful_title"),
+                `${item.title} (${itemType()}) ${getLangs(
+                    "report_successful_sub"
+                )}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            navigation.goBack();
                         },
-                    ]
-                )
+                    },
+                ]
             );
+        } else if (response == "reported succesfully") {
+            Alert.alert(
+                getLangs("report_successful_title"),
+                `${item.title} (${itemType()}) ${getLangs(
+                    "report_successful_sub"
+                )}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            navigation.goBack();
+                        },
+                    },
+                ]
+            );
+        } else {
+            Alert.alert(
+                getLangs("report_unsuccessful_title"),
+                getLangs("report_unsuccessful_sub"),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            navigation.goBack();
+                        },
+                    },
+                ]
+            );
+        }
+
+        setLoading(false);
     };
 
     return (
         <View style={[style.container, style.bgBlack]}>
             <KeyboardAvoidingView
                 style={style.allMax}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
@@ -158,7 +191,8 @@ export default function Report({ navigation, route }) {
                     automaticallyAdjustKeyboardInsets
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
-                    snapToEnd>
+                    snapToEnd
+                >
                     <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs("report_sub")} "
                         {type === 2 ? item.name : item.title}" ({itemType()})
@@ -179,7 +213,7 @@ export default function Report({ navigation, route }) {
                                         Report_Types.indexOf(item)
                                     }
                                     onPress={() =>
-                                        setReportData(prev => {
+                                        setReportData((prev) => {
                                             return {
                                                 ...prev,
                                                 type: Report_Types.indexOf(
@@ -200,7 +234,8 @@ export default function Report({ navigation, route }) {
                                 style.Tmd,
                                 style.tWhite,
                                 { marginBottom: style.defaultMsm },
-                            ]}>
+                            ]}
+                        >
                             {getLangs("report_additionalinfomation")}
                         </Text>
                         <TextField
@@ -212,7 +247,7 @@ export default function Report({ navigation, route }) {
                                 "report_Description_InputAccessoryViewID"
                             }
                             maxLength={512}
-                            onChangeText={val => {
+                            onChangeText={(val) => {
                                 setReportData({
                                     ...reportData,
                                     description: val,
@@ -222,20 +257,24 @@ export default function Report({ navigation, route }) {
                     </View>
 
                     <View style={[style.allCenter, styles.button]}>
-                        <EnterButton
-                            onPress={() => {
-                                if (buttonChecked) report();
-                                else setUnfullfilledAlert();
-                            }}
-                            checked={buttonChecked}
-                        />
+                        {loading ? (
+                            <ActivityIndicator color={style.colors.white} />
+                        ) : (
+                            <EnterButton
+                                onPress={() => {
+                                    if (buttonChecked) report();
+                                    else setUnfullfilledAlert();
+                                }}
+                                checked={buttonChecked}
+                            />
+                        )}
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
 
             <AccessoryView
-                onElementPress={l => {
-                    setReportData(prev => {
+                onElementPress={(l) => {
+                    setReportData((prev) => {
                         return {
                             ...prev,
                             description: prev.description + l,
