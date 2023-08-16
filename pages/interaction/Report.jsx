@@ -25,6 +25,8 @@ import EnterButton from "../../components/auth/EnterButton";
 import TextField from "../../components/TextField";
 import SelectableButton from "../../components/event/SelectableButton";
 import AccessoryView from "../../components/AccessoryView";
+import makeRequest from "../../constants/request";
+import { ActivityIndicator } from "react-native-paper";
 
 let reporting = false;
 
@@ -33,6 +35,8 @@ export default function Report({ navigation, route }) {
 
     const [reportData, setReportData] = useState(Report_Placeholder);
     const [buttonChecked, setButtonChecked] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const itemType = () => {
         switch (type) {
@@ -91,42 +95,70 @@ export default function Report({ navigation, route }) {
         if (reporting) return;
         reporting = true;
 
-        const db = getDatabase();
-        const id = Date.now();
-        const uid = await getData("userId").catch(() => {
-            return getAuth().currentUser.uid;
+        setLoading(true);
+
+        let response = await makeRequest("/mod/report", {
+            reason: `přičina: ${
+                reportData.description
+            } typ problema: ${getLangs(
+                `report_reporttypes_${reportData.type}`
+            )}`,
+            type: type == 0 ? "post" : "event",
+            id: item.id,
         });
-        set(ref(db, `reports/${id}`), {
-            ...reportData,
-            id: id,
-            creator: uid,
-            item: item,
-        })
-            .catch(error =>
-                console.log(
-                    "error pages/interaction/Report.jsx",
-                    "report set reports",
-                    error.code
-                )
-            )
-            .finally(() =>
-                Alert.alert(
-                    getLangs("report_successful_title"),
-                    `${item.title} (${itemType()}) ${getLangs(
-                        "report_successful_sub"
-                    )}`,
-                    [
-                        {
-                            text: "Ok",
-                            isPreferred: true,
-                            style: "cancel",
-                            onPress: () => {
-                                navigation.goBack();
-                            },
+
+        if (response == "content has already been reported!") {
+            Alert.alert(
+                getLangs("report_successful_title"),
+                `${item.title} (${itemType()}) ${getLangs(
+                    "report_successful_sub"
+                )}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            navigation.goBack();
                         },
-                    ]
-                )
+                    },
+                ]
             );
+        } else if (response == "reported succesfully") {
+            Alert.alert(
+                getLangs("report_successful_title"),
+                `${item.title} (${itemType()}) ${getLangs(
+                    "report_successful_sub"
+                )}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            navigation.goBack();
+                        },
+                    },
+                ]
+            );
+        } else {
+            Alert.alert(
+                getLangs("report_unsuccessful_title"),
+                getLangs("report_unsuccessful_sub"),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            navigation.goBack();
+                        },
+                    },
+                ]
+            );
+        }
+
+        setLoading(false);
     };
 
     return (
@@ -146,6 +178,7 @@ export default function Report({ navigation, route }) {
                 <ScrollView
                     style={[
                         style.container,
+                        style.pH,
                         style.oVisible,
                         { marginTop: style.defaultMsm },
                     ]}
@@ -158,13 +191,13 @@ export default function Report({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    <Text style={[style.Ttitle2, style.tWhite, style.pH]}>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs("report_sub")} "
                         {type === 2 ? item.name : item.title}" ({itemType()})
                     </Text>
                     {/* Type */}
                     <View style={styles.sectionContainer}>
-                        <Text style={[style.tWhite, style.TlgBd, style.pH]}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("report_typetitle")}
                         </Text>
 
@@ -221,13 +254,17 @@ export default function Report({ navigation, route }) {
                     </View>
 
                     <View style={[style.allCenter, styles.button]}>
-                        <EnterButton
-                            onPress={() => {
-                                if (buttonChecked) report();
-                                else setUnfullfilledAlert();
-                            }}
-                            checked={buttonChecked}
-                        />
+                        {loading ? (
+                            <ActivityIndicator color={style.colors.white} />
+                        ) : (
+                            <EnterButton
+                                onPress={() => {
+                                    if (buttonChecked) report();
+                                    else setUnfullfilledAlert();
+                                }}
+                                checked={buttonChecked}
+                            />
+                        )}
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
@@ -254,7 +291,8 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     typeItem: {
-        margin: style.defaultMsm,
+        marginVertical: style.defaultMsm,
+        flex: 1,
     },
 
     button: {

@@ -39,6 +39,7 @@ import AccessoryView from "../../components/AccessoryView";
 import makeRequest from "../../constants/request";
 
 import * as FileSystem from "expo-file-system";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function PostCreate({ navigation, route }) {
     let btnPressed = false;
