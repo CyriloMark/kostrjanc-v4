@@ -234,6 +234,7 @@
         "contentpage_contenthint": "Pohladaj raz pola:",
         "contentpage_searchresulttext": "Pytanski wuslědk:",
         "contentpage_randomresulttext": "Što my doporučimy:",
+        "contentpage_lastupdatetext": "Poslednja aktualizacija bě: ",
 
         "content_aboutcreator": "Přez awtora:",
         "content_comments_title": "Komentary:",
@@ -247,6 +248,11 @@
         "event_about_website": "Webstrona:",
         "event_checkstitle": "Štó je pódla:",
         "event_checkspagetitle": "Štó je pódla",
+
+        "event_contentcard_big_0": "Pódla su hišće ",
+        "event_contentcard_big_1": " druhzy. Budź tež pódla!",
+        "event_contentcard_medium_0": " druhzy.",
+        "event_contentcard_small_0": " su připrajili.",
 
         "landingcreate_title": "Nowe wozjewjenje:",
         "landingcreate_post_title": "Nowy post",

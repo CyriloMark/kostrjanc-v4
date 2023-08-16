@@ -23,6 +23,7 @@ import * as Storage from "firebase/storage";
 
 import { getAuthErrorMsg } from "../../constants/error/auth";
 import { getLangs } from "../../constants/langs";
+import { openLink } from "../../constants";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -37,10 +38,12 @@ import TextField from "../../components/TextField";
 import EnterButton from "../../components/auth/EnterButton";
 import Check from "../../components/Check";
 import AccessoryView from "../../components/AccessoryView";
+import OptionButton from "../../components/OptionButton";
 
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Email from "../../assets/svg/Email";
+import SVG_Web from "../../assets/svg/Web";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -613,70 +616,19 @@ export default function Register({ navigation }) {
                                     style.pH,
                                     { marginTop: style.defaultMmd },
                                 ]}>
-                                <Text
-                                    style={[
-                                        style.tWhite,
-                                        style.TsmRg,
-                                        { opacity: 0.5 },
-                                    ]}>
-                                    Eiusmod labore laborum fugiat esse proident
-                                    eu aute anim eiusmod anim minim nulla.
-                                    Reprehenderit reprehenderit sint veniam
-                                    irure ea culpa minim mollit reprehenderit
-                                    aute. Pariatur non eiusmod exercitation
-                                    dolore anim proident nostrud aliqua. Laboris
-                                    nisi voluptate id labore anim exercitation
-                                    laboris laboris nulla. Labore velit magna
-                                    voluptate do ut cillum consequat consectetur
-                                    duis. Eiusmod labore laborum fugiat esse
-                                    proident eu aute anim eiusmod anim minim
-                                    nulla. Reprehenderit reprehenderit sint
-                                    veniam irure ea culpa minim mollit
-                                    reprehenderit aute. Pariatur non eiusmod
-                                    exercitation dolore anim proident nostrud
-                                    aliqua. Laboris nisi voluptate id labore
-                                    anim exercitation laboris laboris nulla.
-                                    Labore velit magna voluptate do ut cillum
-                                    consequat consectetur duis. Eiusmod labore
-                                    laborum fugiat esse proident eu aute anim
-                                    eiusmod anim minim nulla. Reprehenderit
-                                    reprehenderit sint veniam irure ea culpa
-                                    minim mollit reprehenderit aute. Pariatur
-                                    non eiusmod exercitation dolore anim
-                                    proident nostrud aliqua. Laboris nisi
-                                    voluptate id labore anim exercitation
-                                    laboris laboris nulla. Labore velit magna
-                                    voluptate do ut cillum consequat consectetur
-                                    duis. Eiusmod labore laborum fugiat esse
-                                    proident eu aute anim eiusmod anim minim
-                                    nulla. Reprehenderit reprehenderit sint
-                                    veniam irure ea culpa minim mollit
-                                    reprehenderit aute. Pariatur non eiusmod
-                                    exercitation dolore anim proident nostrud
-                                    aliqua. Laboris nisi voluptate id labore
-                                    anim exercitation laboris laboris nulla.
-                                    Labore velit magna voluptate do ut cillum
-                                    consequat consectetur duis. Eiusmod labore
-                                    laborum fugiat esse proident eu aute anim
-                                    eiusmod anim minim nulla. Reprehenderit
-                                    reprehenderit sint veniam irure ea culpa
-                                    minim mollit reprehenderit aute. Pariatur
-                                    non eiusmod exercitation dolore anim
-                                    proident nostrud aliqua. Laboris nisi
-                                    voluptate id labore anim exercitation
-                                    laboris laboris nulla. Labore velit magna
-                                    voluptate do ut cillum consequat consectetur
-                                    duis. Eiusmod labore laborum fugiat esse
-                                    proident eu aute anim eiusmod anim minim
-                                    nulla. Reprehenderit reprehenderit sint
-                                    veniam irure ea culpa minim mollit
-                                    reprehenderit aute. Pariatur non eiusmod
-                                    exercitation dolore anim proident nostrud
-                                    aliqua. Laboris nisi voluptate id labore
-                                    anim exercitation laboris laboris nulla.
-                                    Labore velit magna voluptate do ut cillum
-                                    consequat consectetur duis.
-                                </Text>
+                                <OptionButton
+                                    icon={<SVG_Web fill={style.colors.red} />}
+                                    red
+                                    style={{ marginVertical: style.defaultMlg }}
+                                    title={
+                                        "Naše powšitkowne wobchodne wuměnjenja"
+                                    }
+                                    onPress={() =>
+                                        openLink(
+                                            "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/Pow%C5%A1itkowne%20Wobchodne%20Wum%C4%9Bnjenja%20kostrjanc.pdf?alt=media&token=da26f289-a03b-4c02-a2bb-e03184932b75"
+                                        )
+                                    }
+                                />
                                 <View style={styles.checkContainer}>
                                     <Check
                                         color={1}

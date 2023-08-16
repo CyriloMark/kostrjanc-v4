@@ -87,9 +87,9 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                     <View style={[styles_big.checkContainer]}>
                         <View style={styles_big.checksContainer}>
                             <Text style={[s.tWhite, s.Tmd]}>
-                                Pódla su hišće{" "}
-                                <Text style={s.TlgBd}>{data.checks}</Text>{" "}
-                                druhzy. Budź tež pódla!
+                                {getLangs("event_contentcard_big_0")}
+                                <Text style={s.TlgBd}>{data.checks}</Text>
+                                {getLangs("event_contentcard_big_1")}
                             </Text>
                         </View>
                         <View
@@ -199,9 +199,9 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                     <View style={[styles_medium.checkContainer]}>
                         <View style={styles_medium.checksContainer}>
                             <Text style={[s.tWhite, s.Tmd]}>
-                                Pódla su hišće{" "}
-                                <Text style={s.TlgBd}>{data.checks}</Text>{" "}
-                                druhzy.
+                                {getLangs("event_contentcard_big_0")}
+                                <Text style={s.TlgBd}>{data.checks}</Text>
+                                {getLangs("event_contentcard_medium_0")}
                             </Text>
                         </View>
                         {/* Check Button */}
@@ -300,8 +300,8 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                 s.pH,
                                 { marginTop: s.defaultMsm },
                             ]}>
-                            <Text style={[s.TlgBd]}>{data.checks}</Text> su
-                            připrajili.
+                            <Text style={[s.TlgBd]}>{data.checks}</Text>
+                            {getLangs("event_contentcard_small_0")}
                         </Text>
                     </View>
                     {/* Map Area */}

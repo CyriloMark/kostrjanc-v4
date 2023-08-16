@@ -41,6 +41,7 @@ import * as style from "../../styles";
 import SVG_Search from "../../assets/svg/Search";
 
 import { LinearGradient } from "expo-linear-gradient";
+import { convertTimestampToString } from "../../constants/time";
 
 const RANDOM_CONTENT_ENABLED = false;
 //#region Event Recommendation
@@ -473,6 +474,21 @@ export default function Content({ navigation, onTut }) {
                                     />
                                 ))}
                             </View>
+
+                            <Text
+                                style={[
+                                    style.TsmRg,
+                                    style.tWhite,
+                                    {
+                                        marginTop: style.defaultMlg,
+                                        textAlign: "center",
+                                    },
+                                ]}>
+                                {getLangs("contentpage_lastupdatetext")}
+                                {convertTimestampToString(
+                                    eventRanking.lastUpdated
+                                )}
+                            </Text>
                         </View>
                     ) : null}
                 </Pressable>
