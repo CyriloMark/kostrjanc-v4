@@ -175,9 +175,11 @@ export default function App() {
     useEffect(() => {
         if (loggedIn) {
             const db = getDatabase();
+
             registerForPushNotifications().then(token =>
                 setExpoPushToken(token)
             );
+
             // Ban Check
             onValue(
                 ref(db, `users/${getAuth().currentUser.uid}/isBanned`),
@@ -299,7 +301,11 @@ async function registerForPushNotifications() {
             console.log("Failed to get push token for push notification");
             return;
         }
-        token = (await Notifications.getExpoPushTokenAsync()).data;
+        token = (
+            await Notifications.getExpoPushTokenAsync({
+                projectId: require("./app.json").expo.extra.eas.projectId,
+            })
+        ).data;
 
         const expoPushToken = (
             await get(

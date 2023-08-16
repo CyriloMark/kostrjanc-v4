@@ -160,12 +160,10 @@ export default function LinkingPage({ navigation, route }) {
     }, [usersList]);
 
     let removeUnnötigEmpties = input => {
-        console.log("input", `[${input}]`);
         let output = input
             .split(" ")
             .filter(el => el.length !== 0)
             .join(" ");
-        console.log("output", `[${output}]`);
         return output;
     };
 
@@ -273,12 +271,10 @@ export default function LinkingPage({ navigation, route }) {
                                 )
                             );
 
-                    console.log(finalTextParts);
                     const reducedTextParts = finalTextParts.filter(
                         el => el[0] != [""][0].length
                     );
                     const finalText = reducedTextParts.join(" ");
-                    console.log(finalText);
                     updatedContent.description = finalText;
                 }
                 break;

@@ -146,7 +146,6 @@ export default function Report({ navigation, route }) {
                 <ScrollView
                     style={[
                         style.container,
-                        style.pH,
                         style.oVisible,
                         { marginTop: style.defaultMsm },
                     ]}
@@ -159,13 +158,13 @@ export default function Report({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    <Text style={[style.Ttitle2, style.tWhite]}>
+                    <Text style={[style.Ttitle2, style.tWhite, style.pH]}>
                         {getLangs("report_sub")} "
                         {type === 2 ? item.name : item.title}" ({itemType()})
                     </Text>
                     {/* Type */}
                     <View style={styles.sectionContainer}>
-                        <Text style={[style.tWhite, style.TlgBd]}>
+                        <Text style={[style.tWhite, style.TlgBd, style.pH]}>
                             {getLangs("report_typetitle")}
                         </Text>
 
@@ -255,8 +254,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     typeItem: {
-        marginVertical: style.defaultMsm,
-        flex: 1,
+        margin: style.defaultMsm,
     },
 
     button: {

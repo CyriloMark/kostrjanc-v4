@@ -7,13 +7,19 @@ import * as style from "../../styles";
 import SVG_Settings from "../../assets/svg/Settings";
 import SVG_Return from "../../assets/svg/Return";
 
-import { LinearGradient } from "expo-linear-gradient";
-
 export default function ContentHeader(props) {
     return (
-        <LinearGradient
-            colors={[style.colors.black, "transparent"]}
+        // <LinearGradient
+        //     colors={[style.colors.black, "transparent"]}
+        //     style={[
+        //         styles.container,
+        //         style.Pmd,
+        //         style.allCenter,
+        //         { zIndex: 10 },
+        //     ]}>
+        <View
             style={[
+                style.bgBlack,
                 styles.container,
                 style.Pmd,
                 style.allCenter,
@@ -55,7 +61,7 @@ export default function ContentHeader(props) {
                     rotation={0}
                 />
             </Pressable>
-        </LinearGradient>
+        </View>
     );
 }
 

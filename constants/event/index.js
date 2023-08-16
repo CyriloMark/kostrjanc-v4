@@ -1,5 +1,11 @@
 export const mapTypes = ["standard", "hybrid"];
 
+/**
+ *
+ * @param {*} st Starting Time of Event in UTC+0
+ * @param {*} end Ending Time of Event in UTC+0
+ * @returns true if Date.now is between Starting and Ending Time of Event
+ */
 export function checkIfLive(st, end) {
     const date = Date.now();
     if (date >= st && date <= end) return true;

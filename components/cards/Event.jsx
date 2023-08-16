@@ -142,7 +142,9 @@ export default function Event(props) {
                                 style.tWhite,
                                 { marginTop: style.defaultMsm },
                             ]}>
-                            {convertTimestampToString(event.starting)}
+                            {convertTimestampToString(event.starting) +
+                                " - " +
+                                convertTimestampToString(event.ending)}
                         </Text>
                     </View>
                 </View>

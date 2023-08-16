@@ -160,3 +160,12 @@ export function checkNumberInRanges(number, array) {
 
     return isInRange;
 }
+
+/**
+ * Function that sorts an Object Array by a Paramter
+ * @param {object[]} array Array to Sort by Parameter
+ * @param {string} parameter as a String of the Object
+ */
+export function sortByParameter(array, parameter) {
+    array.sort((a, b) => b[parameter] - a[parameter]);
+}

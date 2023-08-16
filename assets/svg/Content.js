@@ -23,6 +23,7 @@ export default function Content(props) {
                     rotation={45}
                     stroke={colors.blue}
                     strokeWidth={100}
+                    fill={"transparent"}
                 />
             </G>
 
@@ -34,6 +35,7 @@ export default function Content(props) {
                     y={550 / 2.25}
                     stroke={colors.white}
                     strokeWidth={100}
+                    fill={"transparent"}
                 />
                 <Line
                     x1={50}
@@ -43,11 +45,12 @@ export default function Content(props) {
                     stroke={colors.white}
                     strokeWidth={100}
                     strokeLinecap={"round"}
+                    fill={"transparent"}
                 />
             </G>
 
             {/* Add */}
-            <G y={650}>
+            <G y={650} fill={"transparent"}>
                 <Line
                     x1={50}
                     y1={550 / 2}
@@ -77,6 +80,7 @@ export default function Content(props) {
                     points={`${550 / 2} ${125} ${450} ${475} ${100} ${475} ${
                         550 / 2
                     } ${125}`}
+                    fill={"transparent"}
                 />
             </G>
         </Svg>

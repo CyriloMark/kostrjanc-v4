@@ -12,7 +12,6 @@ import * as style from "../../styles";
 
 import * as Account from "../../components/settings";
 
-import { openLink } from "../../constants";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
 import { getCurrentLanguage, getLangs } from "../../constants/langs";
@@ -22,6 +21,7 @@ import { child, get, getDatabase, ref } from "firebase/database";
 import BackHeader from "../../components/BackHeader";
 import WarnButton from "../../components/settings/WarnButton";
 import OptionButton from "../../components/OptionButton";
+import BuyMeACoffeeButton from "../../components/settings/BuyMeACoffeeButton";
 
 import SVG_Recent from "../../assets/svg/Recent";
 import SVG_Help from "../../assets/svg/Help";
@@ -92,12 +92,10 @@ export default function Landing({ navigation }) {
                 automaticallyAdjustContentInsets
                 snapToAlignment="center"
                 snapToEnd>
-                <WarnButton
+                <BuyMeACoffeeButton
                     text={getLangs("settings_landing_bugbutton_title")}
                     sub={getLangs("settings_landing_bugbutton_sub")}
-                    onPress={() =>
-                        openLink("https://kostrjanc.de/pomoc/formular#bugs")
-                    }
+                    onPress={() => navigation.navigate("settings-buymeacoffee")}
                 />
 
                 {/* Client */}

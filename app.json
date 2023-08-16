@@ -61,7 +61,19 @@
           "icon": "./assets/icons/icon.png",
           "color": "#5884B0"
         }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.de.kostrjanc.kostrjanc",
+          "enableGooglePay": true
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4ee68e59-b2ec-411a-ae50-8664781a1a67"
+      }
+    }
   }
 }
