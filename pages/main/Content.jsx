@@ -26,11 +26,11 @@ import { getDatabase, get, ref, child } from "firebase/database";
 
 // import Constants
 import { wait } from "../../constants/wait";
-import { lerp, sortByParameter } from "../../constants";
+import { lerp, sortByParameter, splitterForContent } from "../../constants";
 import { getLangs } from "../../constants/langs";
-import { splitterForContent } from "../../constants";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
-import { getData, hasData } from "../../constants/storage";
+import { getData, hasData, storeData } from "../../constants/storage";
+import { convertTimestampToString } from "../../constants/time";
 
 // import Meilisearch / User Search
 import { HOST_URL } from "@env";
@@ -41,7 +41,6 @@ import * as style from "../../styles";
 import SVG_Search from "../../assets/svg/Search";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { convertTimestampToString } from "../../constants/time";
 
 const RANDOM_CONTENT_ENABLED = false;
 //#region Event Recommendation
@@ -181,22 +180,23 @@ export default function Content({ navigation, onTut }) {
         }
     };
 
+    //#region Tutorials
     useEffect(() => {
         checkForTutorial();
-        checkForTopEvents();
     }, []);
     const checkForTutorial = async () => {
         const needTutorial = await checkIfTutorialNeeded(1);
         if (needTutorial) onTut(1);
     };
+    //#endregion
+
+    useEffect(() => {
+        checkForTopEvents();
+    }, []);
 
     const checkForTopEvents = async () => {
-        if (await hasData("topEvents")) {
-            const data = await getData("topEvents");
-            console.log("data", data);
-            setEventRanking(data);
-        } else {
-            get(child(ref(getDatabase()), "top_events")).then(topEventsSnap => {
+        get(child(ref(getDatabase()), "top_events"))
+            .then(topEventsSnap => {
                 if (!topEventsSnap.exists()) {
                     setEventRanking({
                         lastUpdated: 0,
@@ -206,12 +206,18 @@ export default function Content({ navigation, onTut }) {
                 }
                 const topEvents = topEventsSnap.val();
                 getClientTopEvents(topEvents);
-            });
-        }
+            })
+            .catch(error =>
+                console.log(
+                    "error pages/main/Content.jsx",
+                    "checkForTopEvents get top_events",
+                    error.code
+                )
+            );
     };
 
     const getClientTopEvents = topEvents => {
-        const lastUpdated = topEvents["last_updated"];
+        const lastUpdated = topEvents["upated"];
         const top10events = topEvents["events"];
 
         getData("userData").then(userData => {
@@ -221,7 +227,7 @@ export default function Content({ navigation, onTut }) {
 
             const newTop10events = [];
             top10events.forEach(e => {
-                if (followingList.includes(e.creator.id))
+                if (followingList.includes(e.creator))
                     newTop10events.push({
                         ...e,
                         value: e.value * EVENT_FOLLOWING_FACTOR,
@@ -229,7 +235,7 @@ export default function Content({ navigation, onTut }) {
                 else newTop10events.push(e);
             });
 
-            sortByParameter(newTop10events, "value");
+            sortByParameter(newTop10events, "score");
 
             let clientEvents = newTop10events.slice(
                 0,

@@ -456,27 +456,34 @@ export default function Profile({ navigation, route }) {
                             key={listKey}
                             style={styles.contentItemListContainer}>
                             {list.map((item, itemKey) =>
-                                item.type === 0 ? (
-                                    <PostPreview
-                                        key={itemKey}
-                                        data={item}
-                                        style={styles.contentItem}
-                                        onPress={() =>
-                                            navigation.push("postView", {
-                                                id: item.id,
-                                            })
-                                        }
-                                    />
+                                item !== null ? (
+                                    item.type === 0 ? (
+                                        <PostPreview
+                                            key={itemKey}
+                                            data={item}
+                                            style={styles.contentItem}
+                                            onPress={() =>
+                                                navigation.push("postView", {
+                                                    id: item.id,
+                                                })
+                                            }
+                                        />
+                                    ) : (
+                                        <EventPreview
+                                            key={itemKey}
+                                            data={item}
+                                            style={styles.contentItem}
+                                            onPress={() =>
+                                                navigation.push("eventView", {
+                                                    id: item.id,
+                                                })
+                                            }
+                                        />
+                                    )
                                 ) : (
-                                    <EventPreview
+                                    <View
                                         key={itemKey}
-                                        data={item}
                                         style={styles.contentItem}
-                                        onPress={() =>
-                                            navigation.push("eventView", {
-                                                id: item.id,
-                                            })
-                                        }
                                     />
                                 )
                             )}

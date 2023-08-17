@@ -48,7 +48,7 @@ export default function Event(props) {
                     }
                 }
 
-                mapRef.current.animateToRegion(eventData["geoCords"], 1000);
+                mapRef.current.animateToRegion(eventData["geoCords"], 0);
 
                 setEvent({
                     ...eventData,

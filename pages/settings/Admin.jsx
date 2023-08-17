@@ -9,8 +9,13 @@ import { getDatabase, ref, child, get } from "firebase/database";
 import { convertTimestampToString } from "../../constants/time";
 import { getLangs } from "../../constants/langs";
 
+// import Components
 import BackHeader from "../../components/BackHeader";
 import DangerButton from "../../components/settings/DangerButton";
+import OptionButton from "../../components/OptionButton";
+
+// import SVGs
+import SVG_Warn from "../../assets/svg/Warn";
 
 const LOGS_ENABLED = false;
 
@@ -57,6 +62,33 @@ export default function Admin({ navigation }) {
                     <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs("settings_admin_h2")}
                     </Text>
+                </View>
+
+                {/* Ranking Update */}
+                <View style={styles.sectionContainer}>
+                    <Text style={[style.TlgBd, style.tWhite]}>
+                        Ranking ewentow aktualisować
+                    </Text>
+                    <Text
+                        style={[
+                            style.Tmd,
+                            style.tWhite,
+                            { marginTop: style.defaultMmd },
+                        ]}>
+                        Ranking ewentow na kostrjanc Studijo stronje ma so
+                        (hišće) přeco manuelnje aktualisować. Přez tutón wobłuk
+                        so hač do 100 najnowšich ewentow rankuja. Wotwisnje wot
+                        wužiwarja so tute hišće filtruja, tak zo maja wužiwarjo
+                        wosobiske doporučenja. Ranking je tohorunja městno,
+                        hdźež pokazaja so najwoblubowaniše ewenty.
+                    </Text>
+                    <OptionButton
+                        red
+                        icon={<SVG_Warn fill={style.colors.red} />}
+                        title={"Ranking ewentow aktualisować"}
+                        style={{ marginTop: style.defaultMmd }}
+                        onPress={() => Account.refreshEventRanking()}
+                    />
                 </View>
 
                 {/* Server Offline */}

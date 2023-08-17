@@ -4,6 +4,8 @@ import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 
 import * as style from "../../styles";
 
+import { LinearGradient } from "expo-linear-gradient";
+
 import SVG_Settings from "../../assets/svg/Settings";
 import SVG_Return from "../../assets/svg/Return";
 
@@ -38,18 +40,20 @@ export default function ContentHeader(props) {
                 <Text style={[style.TlgBd, style.tWhite, style.boxShadow]}>
                     kostrjanc
                 </Text>
-                <View
+                <LinearGradient
                     style={[
                         style.allCenter,
                         styles.shBox,
-                        style.bgBlue,
+                        // style.bgBlue,
                         style.Psm,
-                        style.boxShadow,
-                    ]}>
+                    ]}
+                    colors={[style.colors.blue, style.colors.sec]}
+                    end={{ x: -0.5, y: 0.5 }}
+                    locations={[0, 0.75]}>
                     <Text style={[style.TsmRg, style.tWhite, styles.shText]}>
                         studijo
                     </Text>
-                </View>
+                </LinearGradient>
             </View>
 
             <Pressable

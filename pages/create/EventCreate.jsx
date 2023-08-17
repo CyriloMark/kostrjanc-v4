@@ -368,6 +368,19 @@ export default function EventCreate({ navigation, route }) {
         }
     };
 
+    const addToLocalStorage = id => {
+        getData("userData").then(userData => {
+            const events = [];
+            if (userData["events"]) posts = userData["events"];
+            posts.push(id);
+
+            storeData("userData", {
+                ...userData,
+                events: events,
+            }).finally(() => console.log("complete"));
+        });
+    };
+
     return (
         <View style={[style.container, style.bgBlack]}>
             <KeyboardAvoidingView
@@ -1269,39 +1282,52 @@ export default function EventCreate({ navigation, route }) {
                                             style={
                                                 styles.typeItemListContainer
                                             }>
-                                            {list.map((type, key) => (
-                                                <SelectableButton
-                                                    key={key}
-                                                    title={getLangs(type)}
-                                                    checked={
-                                                        event.eventOptions
-                                                            .type !== undefined
-                                                            ? event.eventOptions
-                                                                  .type ===
-                                                              Event_Types.indexOf(
-                                                                  type
-                                                              )
-                                                            : false
-                                                    }
-                                                    style={[
-                                                        styles.typeItem,
-                                                        { flex: 1 },
-                                                    ]}
-                                                    onPress={() => {
-                                                        setEvent(prev => {
-                                                            return {
-                                                                ...prev,
-                                                                eventOptions: {
-                                                                    ...prev.eventOptions,
-                                                                    type: Event_Types.indexOf(
-                                                                        type
-                                                                    ),
-                                                                },
-                                                            };
-                                                        });
-                                                    }}
-                                                />
-                                            ))}
+                                            {list.map((type, key) =>
+                                                type !== null ? (
+                                                    <SelectableButton
+                                                        key={key}
+                                                        title={getLangs(type)}
+                                                        checked={
+                                                            event.eventOptions
+                                                                .type !==
+                                                            undefined
+                                                                ? event
+                                                                      .eventOptions
+                                                                      .type ===
+                                                                  Event_Types.indexOf(
+                                                                      type
+                                                                  )
+                                                                : false
+                                                        }
+                                                        style={[
+                                                            styles.typeItem,
+                                                            { flex: 1 },
+                                                        ]}
+                                                        onPress={() => {
+                                                            setEvent(prev => {
+                                                                return {
+                                                                    ...prev,
+                                                                    eventOptions:
+                                                                        {
+                                                                            ...prev.eventOptions,
+                                                                            type: Event_Types.indexOf(
+                                                                                type
+                                                                            ),
+                                                                        },
+                                                                };
+                                                            });
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <View
+                                                        key={key}
+                                                        style={[
+                                                            styles.typeItem,
+                                                            { flex: 1 },
+                                                        ]}
+                                                    />
+                                                )
+                                            )}
                                         </View>
                                     )
                                 )}

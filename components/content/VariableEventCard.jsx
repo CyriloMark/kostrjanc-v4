@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Pressable, View, StyleSheet, Text, Image } from "react-native";
 
@@ -20,10 +20,69 @@ import {
 import { getLangs } from "../../constants/langs";
 
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
-
 import { LinearGradient } from "expo-linear-gradient";
 
+import { get, child, ref, getDatabase } from "firebase/database";
+
 export default function VariableEventCard({ style, size, data, onPress }) {
+    const mapRef = useRef();
+
+    const [event, setEvent] = useState({
+        ...Event_Placeholder,
+        creator: {
+            id: "",
+            pbUri: "https://www.colorhexa.com/587db0.png",
+            name: "",
+        },
+    });
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    const loadData = () => {
+        const db = getDatabase();
+        get(child(ref(db), `events/${data.id}`))
+            .then(eventSnap => {
+                if (!eventSnap.exists()) return;
+                const eventData = eventSnap.val();
+
+                get(child(ref(db), `users/${data.creator}`))
+                    .then(userSnap => {
+                        if (!userSnap.exists()) return;
+                        const userData = userSnap.val();
+
+                        setEvent({
+                            ...eventData,
+                            creator: {
+                                id: data.creator,
+                                name: userData.name,
+                                pbUri: userData.pbUri,
+                            },
+                        });
+
+                        mapRef.current.animateToRegion(
+                            eventData["geoCords"],
+                            0
+                        );
+                    })
+                    .catch(error =>
+                        console.log(
+                            "components/content/VariableEventCard.jsx",
+                            "get user Data",
+                            error.code
+                        )
+                    );
+            })
+            .catch(error =>
+                console.log(
+                    "components/content/VariableEventCard.jsx",
+                    "get events Data",
+                    error.code
+                )
+            );
+    };
+
     //#region Size === 0 / Big Card
     if (size === 0)
         return (
@@ -31,23 +90,53 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                 <Pressable style={s.container} onPress={onPress}>
                     {/* Header */}
                     <View style={[styles_big.headerContainer, s.allCenter]}>
-                        <Text style={[s.TlgBd, s.tWhite]}>{data.title}</Text>
-                        <View style={styles_big.timeContainer}>
-                            <Text style={[s.TlgRg, s.tWhite]}>
-                                {convertTimestampToDate(data.starting)}
+                        {/* Title */}
+                        <Text style={[s.TlgBd, s.tWhite]}>{event.title}</Text>
+                        {/* Creator Container */}
+                        <View
+                            style={[
+                                styles_big.userContainer,
+                                s.Psm,
+                                s.allCenter,
+                            ]}>
+                            <View style={styles.userPbContainer}>
+                                <Image
+                                    source={{
+                                        uri: event.creator.pbUri,
+                                    }}
+                                    style={styles.userPb}
+                                    resizeMode="cover"
+                                    resizeMethod="auto"
+                                />
+                            </View>
+                            <Text
+                                style={[
+                                    s.Tmd,
+                                    s.tWhite,
+                                    {
+                                        marginLeft: s.defaultMmd,
+                                    },
+                                ]}>
+                                {event.creator.name}
+                            </Text>
+                        </View>
+                        {/* Time Container */}
+                        <View style={[styles_big.timeContainer, s.allCenter]}>
+                            <Text style={[s.Tmd, s.tWhite]}>
+                                {convertTimestampToString(event.starting)}
                             </Text>
                             <View style={s.pH}>
-                                {checkIfLive(data.starting, data.ending) ? (
+                                {checkIfLive(event.starting, event.ending) ? (
                                     <SVG_Live
                                         fill={s.colors.red}
                                         style={styles.liveIcon}
                                     />
                                 ) : (
-                                    <Text style={[s.TlgBd, s.tWhite]}>-</Text>
+                                    <Text style={[s.Tmd, s.tWhite]}>-</Text>
                                 )}
                             </View>
-                            <Text style={[s.TlgRg, s.tWhite]}>
-                                {convertTimestampToDate(data.ending)}
+                            <Text style={[s.Tmd, s.tWhite]}>
+                                {convertTimestampToString(event.ending)}
                             </Text>
                         </View>
                     </View>
@@ -59,6 +148,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             s.oHidden,
                         ]}>
                         <MapView
+                            ref={mapRef}
                             style={s.allMax}
                             accessible
                             userInterfaceStyle="dark"
@@ -69,13 +159,13 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             zoomEnabled
                             pitchEnabled
                             scrollEnabled
-                            initialRegion={data.geoCords}
+                            initialRegion={event.geoCords}
                             onPress={onPress}>
                             <Marker
                                 focusable
                                 draggable={false}
-                                title={data.title}
-                                coordinate={data.geoCords}>
+                                title={event.title}
+                                coordinate={event.geoCords}>
                                 <SVG_Pin
                                     fill={s.colors.red}
                                     style={styles.marker}
@@ -88,7 +178,9 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                         <View style={styles_big.checksContainer}>
                             <Text style={[s.tWhite, s.Tmd]}>
                                 {getLangs("event_contentcard_big_0")}
-                                <Text style={s.TlgBd}>{data.checks}</Text>
+                                <Text style={s.TlgBd}>
+                                    {event.checks ? event.checks.length : 0}
+                                </Text>
                                 {getLangs("event_contentcard_big_1")}
                             </Text>
                         </View>
@@ -137,7 +229,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                     {/* Header */}
                     <View style={[styles_medium.headerContainer]}>
                         {/* Live */}
-                        {checkIfLive(data.starting, data.ending) ? (
+                        {checkIfLive(event.starting, event.ending) ? (
                             <View style={styles_medium.headerLiveContainer}>
                                 <SVG_Live
                                     style={styles_medium.headerLive}
@@ -149,18 +241,42 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             <Text
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
-                                style={[s.TlgRg, s.tWhite]}>
-                                {data.title}
+                                style={[s.TlgBd, s.tWhite]}>
+                                {event.title}
                             </Text>
+
+                            <View style={[styles.userContainer, s.Psm]}>
+                                <View style={styles.userPbContainer}>
+                                    <Image
+                                        source={{
+                                            uri: event.creator.pbUri,
+                                        }}
+                                        style={styles.userPb}
+                                        resizeMode="cover"
+                                        resizeMethod="auto"
+                                    />
+                                </View>
+                                <Text
+                                    style={[
+                                        s.Tmd,
+                                        s.tWhite,
+                                        {
+                                            marginLeft: s.defaultMmd,
+                                        },
+                                    ]}>
+                                    {event.creator.name}
+                                </Text>
+                            </View>
+
                             <Text
                                 style={[
                                     s.TsmLt,
                                     s.tWhite,
                                     { marginTop: s.defaultMsm },
                                 ]}>
-                                {convertTimestampToString(data.starting) +
+                                {convertTimestampToString(event.starting) +
                                     " - " +
-                                    convertTimestampToString(data.ending)}
+                                    convertTimestampToString(event.ending)}
                             </Text>
                         </View>
                     </View>
@@ -173,6 +289,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             s.oHidden,
                         ]}>
                         <MapView
+                            ref={mapRef}
                             style={s.allMax}
                             accessible={false}
                             userInterfaceStyle="dark"
@@ -183,7 +300,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             zoomEnabled={false}
                             pitchEnabled={false}
                             scrollEnabled={false}
-                            initialRegion={data.geoCords}
+                            initialRegion={event.geoCords}
                             onPress={onPress}>
                             {/* <Marker
                             coordinate={event.geoCords}
@@ -200,7 +317,9 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                         <View style={styles_medium.checksContainer}>
                             <Text style={[s.tWhite, s.Tmd]}>
                                 {getLangs("event_contentcard_big_0")}
-                                <Text style={s.TlgBd}>{data.checks}</Text>
+                                <Text style={s.TlgBd}>
+                                    {event.checks ? event.checks.length : 0}
+                                </Text>
                                 {getLangs("event_contentcard_medium_0")}
                             </Text>
                         </View>
@@ -243,12 +362,12 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                     {/* Text Area */}
                     <View style={[styles_small.infoContainer]}>
                         {/* Title */}
-                        <Text style={[s.tWhite, s.TlgBd]}>{data.title}</Text>
+                        <Text style={[s.tWhite, s.TlgBd]}>{event.title}</Text>
                         <View style={[styles.userContainer, s.Psm]}>
                             <View style={styles.userPbContainer}>
                                 <Image
                                     source={{
-                                        uri: data.creator.pbUri,
+                                        uri: event.creator.pbUri,
                                     }}
                                     style={styles.userPb}
                                     resizeMode="cover"
@@ -263,7 +382,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                         marginLeft: s.defaultMmd,
                                     },
                                 ]}>
-                                {data.creator.name}
+                                {event.creator.name}
                             </Text>
                         </View>
                         <View style={[styles_small.timeContainer]}>
@@ -273,8 +392,8 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                     styles.liveIcon,
                                     {
                                         opacity: checkIfLive(
-                                            data.starting,
-                                            data.ending
+                                            event.starting,
+                                            event.ending
                                         )
                                             ? 1
                                             : 0.25,
@@ -287,9 +406,9 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                     s.tWhite,
                                     { marginLeft: s.defaultMmd },
                                 ]}>
-                                {convertTimestampToString(data.starting)}
+                                {convertTimestampToString(event.starting)}
                                 {"\n"}
-                                {convertTimestampToString(data.ending)}
+                                {convertTimestampToString(event.ending)}
                             </Text>
                         </View>
 
@@ -300,7 +419,9 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                 s.pH,
                                 { marginTop: s.defaultMsm },
                             ]}>
-                            <Text style={[s.TlgBd]}>{data.checks}</Text>
+                            <Text style={[s.TlgBd]}>
+                                {event.checks ? event.checks.length : 0}
+                            </Text>
                             {getLangs("event_contentcard_small_0")}
                         </Text>
                     </View>
@@ -312,6 +433,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             s.allCenter,
                         ]}>
                         <MapView
+                            ref={mapRef}
                             style={s.allMax}
                             accessible={false}
                             userInterfaceStyle="dark"
@@ -322,7 +444,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             zoomEnabled={false}
                             pitchEnabled={false}
                             scrollEnabled={false}
-                            initialRegion={data.geoCords}
+                            initialRegion={event.geoCords}
                             onPress={onPress}>
                             {/* <Marker
                             coordinate={event.geoCords}
@@ -359,10 +481,6 @@ const styles = StyleSheet.create({
     },
 
     userContainer: {
-        flexDirection: "row",
-        marginTop: s.defaultMsm,
-    },
-    userContainer: {
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
@@ -389,14 +507,20 @@ const styles_big = StyleSheet.create({
         width: "100%",
         flexDirection: "column",
     },
+    userContainer: {
+        width: "100%",
+        flexDirection: "row",
+        marginTop: s.defaultMmd,
+    },
     timeContainer: {
         flexDirection: "row",
-        marginVertical: s.defaultMmd,
+        marginTop: s.defaultMsm,
     },
     mapContainer: {
         width: "100%",
         aspectRatio: 4 / 3,
         borderRadius: 10,
+        marginTop: s.defaultMmd,
     },
 
     checkContainer: {
@@ -457,11 +581,11 @@ const styles_medium = StyleSheet.create({
         width: "100%",
         aspectRatio: 2,
         borderRadius: 10,
-        marginTop: s.defaultMsm,
+        marginTop: s.defaultMmd,
     },
 
     checkContainer: {
-        marginTop: s.defaultMsm,
+        marginTop: s.defaultMmd,
         width: "100%",
         flexDirection: "row",
         justifyContent: "center",
@@ -474,7 +598,7 @@ const styles_medium = StyleSheet.create({
         paddingRight: s.Pmd.paddingHorizontal,
     },
     checkButton: {
-        height: 58,
+        minHeight: 32,
         maxWidth: 58,
         aspectRatio: 1,
         borderRadius: 100,

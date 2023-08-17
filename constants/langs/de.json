@@ -158,6 +158,10 @@
 
         "auth_copyid_successful": "Deine Id wurde kopiert!",
 
+        "auth_eventranking_title": "Willst du wirklich das Eventranking aktualisieren?",
+        "auth_eventranking_success": "Das Eventranking wurde aktualisiert.",
+        "auth_eventranking_error": "Fehler beim Aktualisieren.",
+
         "auth_landing_welcome_title": "Willkommen bei",
         "auth_landing_sub_0": "Egal, wie lange du nicht mehr da warst,",
         "auth_landing_sub_1": "oder ob das sogar erstmals da ist.",
@@ -355,6 +359,9 @@
 
         "settings_admin_title": "Admin und Moderator",
         "settings_admin_h2": "Bereich für Admins und Moderatoren:",
+        "settings_admin_eventranking_title": "Ranking der Events aktualisieren",
+        "settings_admin_eventranking_sub": "Das Ranking der Events auf der kostrjanc Studio Seite muss (noch) immer manuell aktualisiert werden. Durch diesen Bereich werden bis zu 100 der neuesten Events gerankt. Je nach Nutzer werden diese noch gefiltert, sodass Nutzer ihre persönliche Empfehlungen haben. Das Ranking ist ebenfalls der Ort, wo sich die beliebtesten Events zeigen.",
+        "settings_admin_eventranking_button": "Ranking aktualisieren",
         "settings_admin_offline_title": "Server - Offline:",
         "settings_admin_offline_sub": "Dieser Bereich schaltet den Server auf unbekannte Zeit aus. Nutzer können derzeit nicht auf kostrjanc zugreifen. Server muss manuell auf online gesetzen werden.",
         "settings_admin_offline_button": "Server auf offline setzen",

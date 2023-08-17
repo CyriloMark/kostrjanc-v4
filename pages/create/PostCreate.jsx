@@ -17,6 +17,7 @@ import { getAuth } from "firebase/auth";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 import * as Storage from "firebase/storage";
 
+// import Constants
 import { Post_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData, storeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
@@ -25,21 +26,21 @@ import {
     LINKING_TYPES,
 } from "../../constants/content/linking";
 
+// import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
+// import Components
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
 import makeRequest from "../../constants/request";
-
-import * as FileSystem from "expo-file-system";
-import { ActivityIndicator } from "react-native-paper";
 
 export default function PostCreate({ navigation, route }) {
     let btnPressed = false;
@@ -192,9 +193,7 @@ export default function PostCreate({ navigation, route }) {
                         text: "Ok",
                         isPreferred: true,
                         style: "cancel",
-                        onPress: () => {
-                            navigation.goBack();
-                        },
+                        onPress: () => navigation.goBack(),
                     },
                 ]
             );
@@ -238,6 +237,19 @@ export default function PostCreate({ navigation, route }) {
                 );
             }
         }
+    };
+
+    const addToLocalStorage = id => {
+        getData("userData").then(userData => {
+            const posts = [];
+            if (userData["posts"]) posts = userData["posts"];
+            posts.push(id);
+
+            storeData("userData", {
+                ...userData,
+                posts: posts,
+            }).finally(() => console.log("complete"));
+        });
     };
 
     return (

@@ -158,6 +158,10 @@
 
         "auth_copyid_successful": "Twoja id je so kopěrowała!",
 
+        "auth_eventranking_title": "Chceš woprawdźe ranking ewentow aktualisować?",
+        "auth_eventranking_success": "Ranking ewentow je so aktualisował.",
+        "auth_eventranking_error": "Zmylk při aktualisowanju.",
+
         "auth_landing_welcome_title": "Witaj pola",
         "auth_landing_sub_0": "Wšojedne, kak dołho hižo njejsy tu był,",
         "auth_landing_sub_1": "abo hač je to samo prěni raz tu.",
@@ -355,6 +359,9 @@
 
         "settings_admin_title": "Admin a moderator",
         "settings_admin_h2": "Wobłuk za adminy a moderatory:",
+        "settings_admin_eventranking_title": "Ranking ewentow aktualisować",
+        "settings_admin_eventranking_sub": "Ranking ewentow na kostrjanc Studijo stronje ma so (hišće) přeco manuelnje aktualisować. Přez tutón wobłuk so hač do 100 najnowšich ewentow rankuja. Wotwisnje wot wužiwarja so tute hišće filtruja, tak zo maja wužiwarjo wosobiske doporučenja. Ranking je tohorunja městno, hdźež pokazaja so najwoblubowaniše ewenty.",
+        "settings_admin_eventranking_button": "Ranking aktualisować",
         "settings_admin_offline_title": "Serwer - Offline:",
         "settings_admin_offline_sub": "Tutón wobłuk hasnje serwer na njeznaty čas. Wužiwarjo njemóža na kostrjanc přistupić. Serwer ma so manuelnje na online sadźić.",
         "settings_admin_offline_button": "Serwer na offline sadźić",

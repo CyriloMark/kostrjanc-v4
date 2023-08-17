@@ -4,9 +4,11 @@ import { getAuth, signOut, deleteUser } from "firebase/auth";
 import { getDatabase, set, ref, child, get } from "firebase/database";
 import * as Storage from "firebase/storage";
 
+// import Constants
 import { getAuthErrorMsg } from "../../constants/error/auth";
 import { removeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
+import { makeRequest } from "../../constants/request";
 
 import { setStringAsync } from "expo-clipboard";
 
@@ -597,6 +599,41 @@ export async function copyUIDToClipboard(uid) {
         {
             text: "Ok",
             style: "cancel",
+        },
+    ]);
+}
+
+export async function refreshEventRanking() {
+    Alert.alert(getLangs("auth_eventranking_title"), "", [
+        {
+            style: "destructive",
+            text: getLangs("no"),
+            isPreferred: true,
+        },
+        {
+            style: "default",
+            text: getLangs("yes"),
+            onPress: async () => {
+                console.log("refreshEventRanking");
+                return;
+                const response = await makeRequest("", null);
+                if (response.status == "accepted")
+                    Alert.alert(getLangs("auth_eventranking_success"), "", [
+                        {
+                            text: "Ok",
+                            style: "default",
+                            isPreferred: true,
+                        },
+                    ]);
+                else
+                    Alert.alert(getLangs("auth_eventranking_error"), "", [
+                        {
+                            text: "Ok",
+                            style: "default",
+                            isPreferred: true,
+                        },
+                    ]);
+            },
         },
     ]);
 }

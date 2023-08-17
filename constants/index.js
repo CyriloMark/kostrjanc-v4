@@ -29,6 +29,7 @@ export function arraySplitter(data, coloums) {
         let currentObject = [];
         for (let j = i * coloums; j < coloums + i * coloums; j++) {
             if (j < data.length) currentObject.push(data[j]);
+            else currentObject.push(null);
         }
         newData.push(currentObject);
     }

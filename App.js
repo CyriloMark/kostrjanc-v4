@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { View, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";

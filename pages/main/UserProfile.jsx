@@ -12,7 +12,7 @@ import {
 
 import * as style from "../../styles";
 
-import { getDatabase, ref, get, child } from "firebase/database";
+import { getDatabase, ref, get, child, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
@@ -33,6 +33,8 @@ import SVG_Admin from "../../assets/svg/Admin";
 import SVG_Verify from "../../assets/svg/Moderator";
 
 import AnimatedPaidBatch from "../../components/content/AnimatedPaidBatch";
+
+const DAYS_TO_DELETE_EVENTS = 7;
 
 export default function UserProfile({ navigation, onTut }) {
     const scrollRef = useRef();
@@ -107,7 +109,21 @@ export default function UserProfile({ navigation, onTut }) {
                     .then(eventSnap => {
                         if (eventSnap.exists()) {
                             const eventData = eventSnap.val();
-                            if (!eventData.isBanned)
+
+                            const xDays =
+                                24 * 1000 * 60 * 60 * DAYS_TO_DELETE_EVENTS;
+                            if (Date.now() - eventData.ending >= xDays) {
+                                set(
+                                    ref(db, `events/${e[i]}/isBanned`),
+                                    true
+                                ).catch(error =>
+                                    console.log(
+                                        "error pages/main/UserProfile.jsx",
+                                        "set Event isBanned when to long ago",
+                                        error.code
+                                    )
+                                );
+                            } else if (!eventData.isBanned)
                                 postEventDatas.push(eventData);
                             if (i === e.length - 1)
                                 setPostEventList(
@@ -354,27 +370,34 @@ export default function UserProfile({ navigation, onTut }) {
                             key={listKey}
                             style={styles.contentItemListContainer}>
                             {list.map((item, itemKey) =>
-                                item.type === 0 ? (
-                                    <PostPreview
-                                        key={itemKey}
-                                        data={item}
-                                        style={styles.contentItem}
-                                        onPress={() =>
-                                            navigation.push("postView", {
-                                                id: item.id,
-                                            })
-                                        }
-                                    />
+                                item !== null ? (
+                                    item.type === 0 ? (
+                                        <PostPreview
+                                            key={itemKey}
+                                            data={item}
+                                            style={styles.contentItem}
+                                            onPress={() =>
+                                                navigation.push("postView", {
+                                                    id: item.id,
+                                                })
+                                            }
+                                        />
+                                    ) : (
+                                        <EventPreview
+                                            key={itemKey}
+                                            data={item}
+                                            style={styles.contentItem}
+                                            onPress={() =>
+                                                navigation.push("eventView", {
+                                                    id: item.id,
+                                                })
+                                            }
+                                        />
+                                    )
                                 ) : (
-                                    <EventPreview
+                                    <View
                                         key={itemKey}
-                                        data={item}
                                         style={styles.contentItem}
-                                        onPress={() =>
-                                            navigation.push("eventView", {
-                                                id: item.id,
-                                            })
-                                        }
                                     />
                                 )
                             )}
