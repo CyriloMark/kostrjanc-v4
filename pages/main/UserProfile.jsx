@@ -34,7 +34,7 @@ import SVG_Verify from "../../assets/svg/Moderator";
 
 import AnimatedPaidBatch from "../../components/content/AnimatedPaidBatch";
 
-const DAYS_TO_DELETE_EVENTS = 7;
+const DAYS_TO_DELETE_EVENTS = 31;
 
 export default function UserProfile({ navigation, onTut }) {
     const scrollRef = useRef();

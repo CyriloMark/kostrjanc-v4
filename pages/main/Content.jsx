@@ -46,7 +46,7 @@ const RANDOM_CONTENT_ENABLED = false;
 //#region Event Recommendation
 const EVENT_RECOMMENDATION_ENABLED = true;
 const EVENT_FOLLOWING_FACTOR = 2;
-const EVENT_AMOUNT_OF_RECOMMENDATION = 3;
+const EVENT_AMOUNT_OF_RECOMMENDATION = 5;
 //#endregion
 
 let UsersData = null;
@@ -217,7 +217,7 @@ export default function Content({ navigation, onTut }) {
     };
 
     const getClientTopEvents = topEvents => {
-        const lastUpdated = topEvents["upated"];
+        const lastUpdated = topEvents["updated"];
         const top10events = topEvents["events"];
 
         getData("userData").then(userData => {
@@ -230,7 +230,7 @@ export default function Content({ navigation, onTut }) {
                 if (followingList.includes(e.creator))
                     newTop10events.push({
                         ...e,
-                        value: e.value * EVENT_FOLLOWING_FACTOR,
+                        score: e.score * EVENT_FOLLOWING_FACTOR,
                     });
                 else newTop10events.push(e);
             });
@@ -239,7 +239,7 @@ export default function Content({ navigation, onTut }) {
 
             let clientEvents = newTop10events.slice(
                 0,
-                EVENT_AMOUNT_OF_RECOMMENDATION - 1
+                EVENT_AMOUNT_OF_RECOMMENDATION
             );
 
             setEventRanking({

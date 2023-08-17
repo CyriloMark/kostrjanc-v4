@@ -92,14 +92,18 @@ export default function Landing({ navigation }) {
                 automaticallyAdjustContentInsets
                 snapToAlignment="center"
                 snapToEnd>
-                <BuyMeACoffeeButton
-                    text={getLangs("settings_landing_bugbutton_title")}
-                    sub={getLangs("settings_landing_bugbutton_sub")}
-                    onPress={() => navigation.navigate("settings-buymeacoffee")}
-                />
+                {false ? (
+                    <BuyMeACoffeeButton
+                        text={getLangs("settings_landing_bugbutton_title")}
+                        sub={getLangs("settings_landing_bugbutton_sub")}
+                        onPress={() =>
+                            navigation.navigate("settings-buymeacoffee")
+                        }
+                    />
+                ) : null}
 
                 {/* Client */}
-                <View style={styles.sectionContainer}>
+                <View style={{ width: "100%", flexDirection: "column" }}>
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("settings_landing_aplication_title")}
                     </Text>
@@ -114,7 +118,7 @@ export default function Landing({ navigation }) {
                         }
                     />
                     <OptionButton
-                        style={styles.optionButton}
+                        style={[styles.optionButton, { opacity: 0.25 }]}
                         icon={<SVG_Recent fill={style.colors.white} />}
                         title={getLangs(
                             "settings_landing_aplication_notifications"

@@ -8,7 +8,7 @@ import * as Storage from "firebase/storage";
 import { getAuthErrorMsg } from "../../constants/error/auth";
 import { removeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
-import { makeRequest } from "../../constants/request";
+import makeRequest from "../../constants/request";
 
 import { setStringAsync } from "expo-clipboard";
 
@@ -614,9 +614,7 @@ export async function refreshEventRanking() {
             style: "default",
             text: getLangs("yes"),
             onPress: async () => {
-                console.log("refreshEventRanking");
-                return;
-                const response = await makeRequest("", null);
+                const response = await makeRequest("/algo/top_events", {});
                 if (response.status == "accepted")
                     Alert.alert(getLangs("auth_eventranking_success"), "", [
                         {

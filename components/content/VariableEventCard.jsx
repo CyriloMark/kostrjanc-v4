@@ -122,7 +122,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                         </View>
                         {/* Time Container */}
                         <View style={[styles_big.timeContainer, s.allCenter]}>
-                            <Text style={[s.Tmd, s.tWhite]}>
+                            <Text style={[s.TsmLt, s.tWhite]}>
                                 {convertTimestampToString(event.starting)}
                             </Text>
                             <View style={s.pH}>
@@ -132,10 +132,10 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                         style={styles.liveIcon}
                                     />
                                 ) : (
-                                    <Text style={[s.Tmd, s.tWhite]}>-</Text>
+                                    <Text style={[s.TsmLt, s.tWhite]}>-</Text>
                                 )}
                             </View>
-                            <Text style={[s.Tmd, s.tWhite]}>
+                            <Text style={[s.TsmLt, s.tWhite]}>
                                 {convertTimestampToString(event.ending)}
                             </Text>
                         </View>

@@ -183,6 +183,7 @@ export default function PostCreate({ navigation, route }) {
         });
 
         if (response.status == "accepted") {
+            addToLocalStorage(response.id);
             Alert.alert(
                 getLangs("postcreate_publishsuccessful_title"),
                 `${getLangs("postcreate_publishsuccessful_sub_0")} ${

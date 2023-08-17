@@ -310,6 +310,7 @@ export default function EventCreate({ navigation, route }) {
         const response = await makeRequest("/post_event/publish", params);
 
         if (response.status == "accepted") {
+            addToLocalStorage(response.id);
             Alert.alert(
                 getLangs("eventcreate_publishsuccessful_title"),
                 `${getLangs("eventcreate_publishsuccessful_sub_0")} ${
