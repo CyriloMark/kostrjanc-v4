@@ -43,12 +43,17 @@ export default function LanguageSelect({ onLanguageChange }) {
                     {langs.map((lang, key) => (
                         <Pressable
                             key={key}
-                            onPress={() => setCurrentLanguage(lang.id)}
+                            onPress={() => {
+                                lang.id !== 1
+                                    ? setCurrentLanguage(lang.id)
+                                    : null;
+                            }}
                             style={[styles.langElementContainer]}>
                             <View
                                 style={[
                                     styles.langBorder,
                                     {
+                                        opacity: lang.id === 1 ? 0.5 : 1,
                                         borderColor:
                                             currentLanguage === lang.id
                                                 ? style.colors.red
