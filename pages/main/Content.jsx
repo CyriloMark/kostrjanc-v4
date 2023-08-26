@@ -33,7 +33,7 @@ import { getData, hasData, storeData } from "../../constants/storage";
 import { convertTimestampToString } from "../../constants/time";
 
 // import Meilisearch / User Search
-// import { HOST_URL } from "@env";
+import { HOST_URL } from "@env";
 // import { MeiliSearch } from "meilisearch";
 
 import * as style from "../../styles";
@@ -144,7 +144,7 @@ export default function Content({ navigation, onTut }) {
         if (!UsersData) {
             const db = getDatabase();
             get(child(ref(db), "users"))
-                .then(usersSnap => {
+                .then((usersSnap) => {
                     if (!usersSnap.exists()) return;
 
                     const usersData = usersSnap.val();
@@ -161,7 +161,7 @@ export default function Content({ navigation, onTut }) {
                     };
                     setRandomUser(randomUser);
                 })
-                .catch(error =>
+                .catch((error) =>
                     console.log(
                         "error main/Content.jsx",
                         "getRandomUser get users",
@@ -196,7 +196,7 @@ export default function Content({ navigation, onTut }) {
 
     const checkForTopEvents = async () => {
         get(child(ref(getDatabase()), "top_events"))
-            .then(topEventsSnap => {
+            .then((topEventsSnap) => {
                 if (!topEventsSnap.exists()) {
                     setEventRanking({
                         lastUpdated: 0,
@@ -207,7 +207,7 @@ export default function Content({ navigation, onTut }) {
                 const topEvents = topEventsSnap.val();
                 getClientTopEvents(topEvents);
             })
-            .catch(error =>
+            .catch((error) =>
                 console.log(
                     "error pages/main/Content.jsx",
                     "checkForTopEvents get top_events",
@@ -216,17 +216,17 @@ export default function Content({ navigation, onTut }) {
             );
     };
 
-    const getClientTopEvents = topEvents => {
+    const getClientTopEvents = (topEvents) => {
         const lastUpdated = topEvents["updated"];
         const top10events = topEvents["events"];
 
-        getData("userData").then(userData => {
+        getData("userData").then((userData) => {
             let followingList = [];
             if (userData["following"])
-                userData["following"].forEach(e => followingList.push(e));
+                userData["following"].forEach((e) => followingList.push(e));
 
             const newTop10events = [];
-            top10events.forEach(e => {
+            top10events.forEach((e) => {
                 if (followingList.includes(e.creator))
                     newTop10events.push({
                         ...e,
@@ -258,14 +258,44 @@ export default function Content({ navigation, onTut }) {
             {/* Search Input */}
             <LinearGradient
                 colors={[style.colors.black, "transparent"]}
-                style={[style.pH, styles.searchContainer]}>
+                style={[style.pH, styles.searchContainer]}
+            >
                 <InputField
                     placeholder={getLangs("input_placeholder_search")}
                     value={searchInput}
                     inputAccessoryViewID="content_search_InputAccessoryViewID"
                     icon={<SVG_Search fill={style.colors.blue} />}
-                    onChangeText={val => {
+                    onChangeText={(val) => {
                         setSearchInput(val);
+                        if (val != "") {
+                            fetch(`${HOST_URL}/indexes/kostrjanc/search`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ q: val }),
+                            })
+                                .then((rsp) => {
+                                    rsp.json()
+                                        .then((data) => {
+                                            let results = [];
+                                            data.hits.map((hit) => {
+                                                results.push({
+                                                    name: hit.primary,
+                                                    pbUri: hit.img,
+                                                    id: hit.id.substring(2),
+                                                });
+                                            });
+                                            setSearchResult(results);
+                                        })
+                                        .catch((e) => {
+                                            console.log(e);
+                                        });
+                                })
+                                .catch((e) => {
+                                    console.log(e);
+                                });
+                        }
                         // client
                         //     .index("kostrjanc")
                         //     .search(val)
@@ -309,17 +339,20 @@ export default function Content({ navigation, onTut }) {
                             onRefresh={onRefresh}
                         />
                     ) : null
-                }>
+                }
+            >
                 <Pressable
                     onPress={Keyboard.dismiss}
-                    style={{ alignItems: "center" }}>
+                    style={{ alignItems: "center" }}
+                >
                     {randomUser ? (
                         <View
                             style={{
                                 marginTop: style.defaultMmd,
                                 width: "100%",
                                 alignItems: "center",
-                            }}>
+                            }}
+                        >
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("contentpage_contenthint")}
                             </Text>
@@ -341,7 +374,8 @@ export default function Content({ navigation, onTut }) {
                                 style.tWhite,
                                 style.TlgBd,
                                 { marginTop: style.defaultMmd },
-                            ]}>
+                            ]}
+                        >
                             {getRandomUser()}
                             {getLangs("contentpage_search")}
                         </Text>
@@ -352,7 +386,7 @@ export default function Content({ navigation, onTut }) {
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("contentpage_searchresulttext")}
                             </Text>
-                            {searchResult.map(user => (
+                            {searchResult.map((user) => (
                                 <Pressable
                                     key={user.id}
                                     style={[styles.userContainer, style.Psm]}
@@ -360,7 +394,8 @@ export default function Content({ navigation, onTut }) {
                                         navigation.navigate("profileView", {
                                             id: user.id,
                                         })
-                                    }>
+                                    }
+                                >
                                     <View style={styles.userPbContainer}>
                                         <Image
                                             source={{
@@ -378,7 +413,8 @@ export default function Content({ navigation, onTut }) {
                                             {
                                                 marginLeft: style.defaultMmd,
                                             },
-                                        ]}>
+                                        ]}
+                                    >
                                         {user.name}
                                     </Text>
                                 </Pressable>
@@ -399,7 +435,8 @@ export default function Content({ navigation, onTut }) {
                                             key={lineKey}
                                             style={
                                                 styles.randomContentLineContainer
-                                            }>
+                                            }
+                                        >
                                             {line.map((item, key) =>
                                                 item.type === 0 ? (
                                                     <Post
@@ -465,7 +502,8 @@ export default function Content({ navigation, onTut }) {
                                     style.tWhite,
                                     style.Tmd,
                                     { textAlign: "center" },
-                                ]}>
+                                ]}
+                            >
                                 {getLangs("contentpage_eventlisttitle")}
                             </Text>
 
@@ -493,7 +531,8 @@ export default function Content({ navigation, onTut }) {
                                         marginTop: style.defaultMlg,
                                         textAlign: "center",
                                     },
-                                ]}>
+                                ]}
+                            >
                                 {getLangs("contentpage_lastupdatetext")}
                                 {convertTimestampToString(
                                     eventRanking.lastUpdated
@@ -566,8 +605,8 @@ export default function Content({ navigation, onTut }) {
 
             {/* Search Input */}
             <AccessoryView
-                onElementPress={l => {
-                    setSearchInput(prev => {
+                onElementPress={(l) => {
+                    setSearchInput((prev) => {
                         return prev + l;
                     });
                 }}
