@@ -62,6 +62,7 @@ export default function TestView(props) {
                         { marginTop: style.defaultMsm },
                     ]}>
                     {getLangs("testview_title")}
+                    <Text style={style.tBlue}>kostrjanc</Text>.
                 </Text>
                 <Text
                     style={[

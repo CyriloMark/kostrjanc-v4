@@ -1,79 +1,79 @@
 {
-  "expo": {
-    "name": "kostrjanc",
-    "slug": "kostrjanc",
-    "owner": "lauske",
-    "version": "1.0.4",
-    "orientation": "portrait",
-    "icon": "./assets/icons/icon.png",
-    "splash": {
-      "image": "./assets/icons/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#060A0D"
-    },
-    "notification": {
-      "icon": "./assets/icons/icon.png",
-      "color": "#060A0D"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "de.zsl.kostrjanc",
-      "buildNumber": "1.0.4",
-      "config": {
-        "googleMapsApiKey": "AIzaSyC6FZglVrqjt6QivVkUwy95NFsd4w8TW1s"
-      }
-    },
-    "android": {
-      "googleServicesFile": "./google-services.json",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/adaptive-icon.png",
-        "backgroundColor": "#060A0D"
-      },
-      "softwareKeyboardLayoutMode": "pan",
-      "package": "de.zsl.kostrjanc",
-      "permissions": ["android.permission.RECORD_AUDIO"],
-      "versionCode": 8,
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyBQq8qlKB9h7qjOgL47a1FX6gOKgRRYNdI"
+    "expo": {
+        "name": "kostrjanc",
+        "slug": "kostrjanc",
+        "owner": "lauske",
+        "version": "1.0.91",
+        "orientation": "portrait",
+        "icon": "./assets/icons/icon.png",
+        "splash": {
+            "image": "./assets/icons/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#060A0D"
+        },
+        "notification": {
+            "icon": "./assets/icons/icon.png",
+            "color": "#060A0D"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "de.kostrjanc.kostrjanc",
+            "buildNumber": "1.0.91",
+            "config": {
+                "googleMapsApiKey": "AIzaSyC6FZglVrqjt6QivVkUwy95NFsd4w8TW1s"
+            }
+        },
+        "android": {
+            "googleServicesFile": "./google-services.json",
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/icons/adaptive-icon.png",
+                "backgroundColor": "#060A0D"
+            },
+            "softwareKeyboardLayoutMode": "pan",
+            "package": "de.kostrjanc.kostrjanc",
+            "permissions": ["android.permission.RECORD_AUDIO"],
+            "versionCode": 2,
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyCIoPcZR2nHZ2qsNb5b-n1JvFCeZGPOb5k"
+                }
+            }
+        },
+        "web": {
+            "favicon": "./assets/icons/favicon.png"
+        },
+        "description": "",
+        "githubUrl": "https://github.com/CyriloMark/kostrjanc",
+        "plugins": [
+            [
+                "expo-image-picker",
+                {
+                    "photosPermission": "Berechtigung, damit Fotos hochgeladen und geteilt werden dürfen."
+                }
+            ],
+            [
+                "expo-notifications",
+                {
+                    "icon": "./assets/icons/icon.png",
+                    "color": "#5884B0"
+                }
+            ],
+            [
+                "@stripe/stripe-react-native",
+                {
+                    "merchantIdentifier": "merchant.de.kostrjanc.kostrjanc",
+                    "enableGooglePay": true
+                }
+            ]
+        ],
+        "extra": {
+            "eas": {
+                "projectId": "4ee68e59-b2ec-411a-ae50-8664781a1a67"
+            }
         }
-      }
-    },
-    "web": {
-      "favicon": "./assets/icons/favicon.png"
-    },
-    "description": "",
-    "githubUrl": "https://github.com/CyriloMark/kostrjanc",
-    "plugins": [
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Berechtigung, damit Fotos hochgeladen und geteilt werden dürfen."
-        }
-      ],
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/icons/icon.png",
-          "color": "#5884B0"
-        }
-      ],
-      [
-        "@stripe/stripe-react-native",
-        {
-          "merchantIdentifier": "merchant.de.kostrjanc.kostrjanc",
-          "enableGooglePay": true
-        }
-      ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "4ee68e59-b2ec-411a-ae50-8664781a1a67"
-      }
     }
-  }
 }

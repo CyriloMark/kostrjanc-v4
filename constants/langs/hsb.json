@@ -238,6 +238,7 @@
         "contentpage_contenthint": "Pohladaj raz pola:",
         "contentpage_searchresulttext": "Pytanski wuslědk:",
         "contentpage_randomresulttext": "Što my doporučimy:",
+        "contentpage_eventlisttitle": "Naše doporučenja za tebje:",
         "contentpage_lastupdatetext": "Poslednja aktualizacija bě: ",
 
         "content_aboutcreator": "Přez awtora:",
@@ -449,7 +450,7 @@
 
         "no_map": "Žana karta wužijomna.",
 
-        "testview_title": "Witaj při zawrjenym beta-tesće.",
+        "testview_title": "Witaj při zawrjenym beta-tesće wot ",
         "testview_sub_0": "Sy wuzwoleny za testowanje kostrjanc. My prosymy wo diskretny test a konstruktiwnu kritiku. Při prašenjach abo namjetach prosymy wo powěsć na ",
         "testview_sub_1": ". Při powěsći přidaj prošu wersiju, z kotrejž dźěłaš.",
         "testview_new_title": "Što je so změniło:",

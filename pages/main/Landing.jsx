@@ -110,7 +110,7 @@ export default function Landing({ navigation, onTut }) {
      * @param {boolean} updateBanners true when Banners need to get updated
      * @returns
      */
-    async function ULTIMATIVE_ALGORITHM_old(_id, user, updateBanners) {
+    async function ULTIMATIVE_ALGORITHM(_id, user, updateBanners) {
         if (LOADING) return;
         LOADING = true;
 
@@ -784,7 +784,7 @@ export default function Landing({ navigation, onTut }) {
         //#endregion
     }
 
-    async function ULTIMATIVE_ALGORITHM(_id, user, updateBanners) {
+    async function ULTIMATIVE_ALGORITHM_new(_id, user, updateBanners) {
         //#region Loading Screen and avoid multiple calls
         if (LOADING) return;
         LOADING = true;

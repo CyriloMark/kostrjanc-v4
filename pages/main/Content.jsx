@@ -33,8 +33,8 @@ import { getData, hasData, storeData } from "../../constants/storage";
 import { convertTimestampToString } from "../../constants/time";
 
 // import Meilisearch / User Search
-import { HOST_URL } from "@env";
-import { MeiliSearch } from "meilisearch";
+// import { HOST_URL } from "@env";
+// import { MeiliSearch } from "meilisearch";
 
 import * as style from "../../styles";
 
@@ -51,9 +51,9 @@ const EVENT_AMOUNT_OF_RECOMMENDATION = 5;
 
 let UsersData = null;
 
-const client = new MeiliSearch({
-    host: HOST_URL,
-});
+// const client = new MeiliSearch({
+//     host: HOST_URL,
+// });
 
 export default function Content({ navigation, onTut }) {
     const contentScrollRef = useRef();
@@ -266,20 +266,20 @@ export default function Content({ navigation, onTut }) {
                     icon={<SVG_Search fill={style.colors.blue} />}
                     onChangeText={val => {
                         setSearchInput(val);
-                        client
-                            .index("kostrjanc")
-                            .search(val)
-                            .then(res => {
-                                let results = [];
-                                res.hits.map(hit => {
-                                    results.push({
-                                        name: hit.primary,
-                                        pbUri: hit.img,
-                                        id: hit.id.substring(2),
-                                    });
-                                });
-                                setSearchResult(results);
-                            });
+                        // client
+                        //     .index("kostrjanc")
+                        //     .search(val)
+                        //     .then(res => {
+                        //         let results = [];
+                        //         res.hits.map(hit => {
+                        //             results.push({
+                        //                 name: hit.primary,
+                        //                 pbUri: hit.img,
+                        //                 id: hit.id.substring(2),
+                        //             });
+                        //         });
+                        //         setSearchResult(results);
+                        //     });
                     }}
                     maxLength={32}
                     bg={`rgba(${style.colorsRGB.black},.25)`}
@@ -460,9 +460,13 @@ export default function Content({ navigation, onTut }) {
 
                     {EVENT_RECOMMENDATION_ENABLED ? (
                         <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                {/* {getLangs("contentpage_randomresulttext")} */}
-                                Naše doporučenje na tebje:
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    { textAlign: "center" },
+                                ]}>
+                                {getLangs("contentpage_eventlisttitle")}
                             </Text>
 
                             <View>

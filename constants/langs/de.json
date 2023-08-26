@@ -238,6 +238,7 @@
         "contentpage_contenthint": "Schau mal bei:",
         "contentpage_searchresulttext": "Suchergebnis:",
         "contentpage_randomresulttext": "Was wir empfehlen:",
+        "contentpage_eventlisttitle": "Unsere Empfehlungen an dich:",
         "contentpage_lastupdatetext": "Letzte Aktualisierung war: ",
 
         "content_aboutcreator": "Über den Ersteller:",
@@ -449,7 +450,7 @@
 
         "no_map": "Keine Karte verfügbar.",
 
-        "testview_title": "Willkommen im geschlossenen Beta-Test.",
+        "testview_title": "Willkommen im geschlossenen Beta-Test von ",
         "testview_sub_0": "Du bist bestimmt zum Testen von kostrjanc. Wir bitten um einen diskreten Test und konstruktive Krittik. Bei Fragen oder Bemerkungen bitten wir dich, dass du uns eine Email an ",
         "testview_sub_1": " schickst . Bei einer Nachricht gib bitte die aktuelle Version mit an.",
         "testview_new_title": "Was hat sich geändert:",
