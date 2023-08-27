@@ -1,5 +1,6 @@
 import { getAuth } from "firebase/auth";
 import { SERVER_URL } from "@env";
+import { Alert } from "react-native";
 
 const makeRequest = (url, body) => {
     return new Promise((resolve, reject) => {
@@ -14,6 +15,9 @@ const makeRequest = (url, body) => {
                     body: JSON.stringify({ ...body, token: token }),
                 })
                     .then(rsp => {
+                        Alert.alert(`rsp.ok: ${rsp.ok}`, "Ok", [
+                            { isPreferred: true, text: "Ok", style: "default" },
+                        ]);
                         rsp.json()
                             .then(data => {
                                 resolve(data);
@@ -23,6 +27,9 @@ const makeRequest = (url, body) => {
                             });
                     })
                     .catch(e => {
+                        Alert.alert(`e: ${e}`, "Error", [
+                            { isPreferred: true, text: "Ok", style: "default" },
+                        ]);
                         reject(e);
                     });
             });
