@@ -24,7 +24,7 @@
             "bundleIdentifier": "de.kostrjanc.kostrjanc",
             "buildNumber": "1.1.4",
             "config": {
-                "googleMapsApiKey": "AIzaSyC6FZglVrqjt6QivVkUwy95NFsd4w8TW1s"
+                "googleMapsApiKey": "AIzaSyCMn8UNxdrveua2TUaPczfuXo0qpB28u6s"
             }
         },
         "android": {
@@ -35,7 +35,6 @@
             },
             "softwareKeyboardLayoutMode": "pan",
             "package": "de.kostrjanc.kostrjanc",
-            "permissions": ["android.permission.RECORD_AUDIO"],
             "versionCode": 4,
             "config": {
                 "googleMaps": {
