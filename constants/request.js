@@ -7,7 +7,7 @@ const makeRequest = (url, body) => {
         getAuth()
             .currentUser.getIdToken()
             .then(token => {
-                fetch(`${SERVER_URL}${url}`, {
+                fetch(`https://kostrjanc.ew.r.appspot.com${url}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

@@ -1,14 +1,24 @@
 import React from "react";
-import { View, Image, StyleSheet, Text, ScrollView } from "react-native";
+import {
+    View,
+    Image,
+    StyleSheet,
+    Text,
+    ScrollView,
+    Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as style from "../../styles";
 
+// import Constants
 import { getLangs, getCurrentLanguage } from "../../constants/langs";
 import { openLink } from "../../constants";
 
+// import Components
 import AppHeader from "../../components/auth/AppHeader";
 import EnterButton from "../../components/auth/EnterButton";
+import WarnButton from "../../components/settings/WarnButton";
 
 const newFktHSB = [
     "Wužiwarjo daja so nětko wot wšitkich sobu zapřijeć!",
@@ -55,6 +65,21 @@ export default function TestView(props) {
                 automaticallyAdjustKeyboardInsets
                 automaticallyAdjustContentInsets
                 style={[style.container, style.pH, style.oVisible]}>
+                {require("../../app.json").expo.android.package !==
+                    "de.kostrjanc.kostrjanc" && Platform.OS === "android" ? (
+                    <WarnButton
+                        text={"Nowa kostrjanc App"}
+                        sub={
+                            "Nowe wersije wot kostrjanc namakaš wot něk pod linkom."
+                        }
+                        onPress={() =>
+                            openLink(
+                                "https://play.google.com/store/apps/details?id=de.kostrjanc.kostrjanc"
+                            )
+                        }
+                    />
+                ) : null}
+
                 <Text
                     style={[
                         style.Ttitle2,

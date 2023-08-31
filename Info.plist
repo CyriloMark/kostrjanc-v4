@@ -38,5 +38,14 @@ com.googleusercontent.apps.919686819174-d3lrmbnang1oqqh3t52k78i1770bqm5m
 <string>
 https://kostrjanc-default-rtdb.europe-west1.firebasedatabase.app
 </string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Berechtigung, dass dein Standort auf der Karte von Events nur für dich angezeigt wird. Dein Standort wird nicht geteilt.</string>
+<key>ITSAppUsesNonExemptEncryption</key>
+<false />
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+</dict>
 </dict>
 </plist>

@@ -14,18 +14,24 @@ import * as style from "../../styles";
 import { wait } from "../../constants/wait";
 import { getData, storeData } from "../../constants/storage";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
-import { lerp, sortArrayByDateFromUnderorderedKey } from "../../constants";
+import {
+    lerp,
+    openLink,
+    sortArrayByDateFromUnderorderedKey,
+} from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
 
 import { getAuth } from "firebase/auth";
 import { get, ref, getDatabase, child } from "firebase/database";
 
+// import Components
 import AppHeader from "../../components/landing/AppHeader";
 import Post from "../../components/cards/Post";
 import Event from "../../components/cards/Event";
 import Banner from "../../components/cards/Banner";
 import Refresh from "../../components/RefreshControl";
+import WarnButton from "../../components/settings/WarnButton";
 
 import Loading from "../static/Loading";
 
@@ -1147,6 +1153,22 @@ export default function Landing({ navigation, onTut }) {
                         if (!refreshing)
                             ULTIMATIVE_ALGORITHM(null, null, false);
                 }}>
+                {Platform.OS === "android" &&
+                require("../../app.json").expo.android.package !==
+                    "de.kostrjanc.kostrjanc" ? (
+                    <WarnButton
+                        text={"Nowa kostrjanc App"}
+                        sub={
+                            "Nowe wersije wot kostrjanc namakaš wot něk pod linkom."
+                        }
+                        onPress={() =>
+                            openLink(
+                                "https://play.google.com/store/apps/details?id=de.kostrjanc.kostrjanc"
+                            )
+                        }
+                    />
+                ) : null}
+
                 {contentData.banners.map((banner, key) => (
                     <Banner
                         key={key}

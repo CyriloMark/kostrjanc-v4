@@ -36,10 +36,6 @@ export default function VariableEventCard({ style, size, data, onPress }) {
         },
     });
 
-    useEffect(() => {
-        loadData();
-    }, []);
-
     const loadData = () => {
         const db = getDatabase();
         get(child(ref(db), `events/${data.id}`))
@@ -61,14 +57,14 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             },
                         });
 
-                        mapRef.current.animateToRegion(
-                            eventData["geoCords"],
-                            0
-                        );
+                        // mapRef.current.animateToRegion(
+                        //     eventData["geoCords"],
+                        //     0
+                        // );
                     })
                     .catch(error =>
                         console.log(
-                            "components/content/VariableEventCard.jsx",
+                            "error components/content/VariableEventCard.jsx",
                             "get user Data",
                             error.code
                         )
@@ -76,18 +72,22 @@ export default function VariableEventCard({ style, size, data, onPress }) {
             })
             .catch(error =>
                 console.log(
-                    "components/content/VariableEventCard.jsx",
+                    "error components/content/VariableEventCard.jsx",
                     "get events Data",
                     error.code
                 )
             );
     };
 
+    useEffect(() => {
+        loadData();
+    }, []);
+
     //#region Size === 0 / Big Card
     if (size === 0)
         return (
             <View style={style}>
-                <Pressable style={s.container} onPress={onPress}>
+                <Pressable onPress={onPress}>
                     {/* Header */}
                     <View style={[styles_big.headerContainer, s.allCenter]}>
                         {/* Title */}
@@ -225,7 +225,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
     else if (size === 1)
         return (
             <View style={style}>
-                <Pressable style={s.container} onPress={onPress}>
+                <Pressable onPress={onPress}>
                     {/* Header */}
                     <View style={[styles_medium.headerContainer]}>
                         {/* Live */}
@@ -357,7 +357,13 @@ export default function VariableEventCard({ style, size, data, onPress }) {
         return (
             <View style={style}>
                 <Pressable
-                    style={[s.container, s.allCenter, { flexDirection: "row" }]}
+                    style={[
+                        s.container,
+                        s.allCenter,
+                        {
+                            flexDirection: "row",
+                        },
+                    ]}
                     onPress={onPress}>
                     {/* Text Area */}
                     <View style={[styles_small.infoContainer]}>

@@ -24,6 +24,7 @@ import * as Storage from "firebase/storage";
 import { getAuthErrorMsg } from "../../constants/error/auth";
 import { getLangs } from "../../constants/langs";
 import { openLink } from "../../constants";
+import makeRequest from "../../constants/request";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {

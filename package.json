@@ -1,6 +1,6 @@
 {
     "name": "kostrjanc",
-    "version": "1.1.4",
+    "version": "1.1.7",
     "scripts": {
         "start": "expo start",
         "devstart": "expo start --dev-client",
@@ -14,6 +14,7 @@
         "@react-navigation/native": "^6.1.6",
         "@react-navigation/stack": "^6.3.16",
         "@stripe/stripe-react-native": "0.28.0",
+        "axios": "^1.5.0",
         "expo": "^49.0.8",
         "expo-av": "~13.4.1",
         "expo-clipboard": "~4.3.1",
