@@ -32,10 +32,6 @@ import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import { getData, hasData, storeData } from "../../constants/storage";
 import { convertTimestampToString } from "../../constants/time";
 
-// import Meilisearch / User Search
-import { HOST_URL } from "@env";
-// import { MeiliSearch } from "meilisearch";
-
 import * as style from "../../styles";
 
 import SVG_Search from "../../assets/svg/Search";
@@ -271,7 +267,7 @@ export default function Content({ navigation, onTut }) {
                         if (val !== "") {
                             axios
                                 .post(
-                                    `http://35.228.17.35:7700/indexes/kostrjanc/search`,
+                                    `${process.env.EXPO_PUBLIC_HOST_URL}/indexes/kostrjanc/search`,
                                     {
                                         q: val,
                                     },
@@ -534,10 +530,12 @@ export default function Content({ navigation, onTut }) {
                                         textAlign: "center",
                                     },
                                 ]}>
-                                {getLangs("contentpage_lastupdatetext")}
-                                {convertTimestampToString(
-                                    eventRanking.lastUpdated
-                                )}
+                                {eventRanking.events.length !== 0
+                                    ? `${getLangs("contentpage_lastupdatetext")}
+                                    ${convertTimestampToString(
+                                        eventRanking.lastUpdated
+                                    )}`
+                                    : getLangs("contentpage_noevents")}
                             </Text>
                         </View>
                     ) : null}

@@ -1,5 +1,4 @@
 import { getAuth } from "firebase/auth";
-import { SERVER_URL } from "@env";
 import { Alert } from "react-native";
 
 const makeRequest = (url, body) => {
@@ -7,7 +6,7 @@ const makeRequest = (url, body) => {
         getAuth()
             .currentUser.getIdToken()
             .then(token => {
-                fetch(`https://kostrjanc.ew.r.appspot.com${url}`, {
+                fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}${url}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
