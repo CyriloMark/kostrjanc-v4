@@ -1,6 +1,12 @@
 import { getAuth } from "firebase/auth";
 import { Alert } from "react-native";
 
+/**
+ *
+ * @param {string} url API URL
+ * @param {object} body Body of "POST" API Request
+ * @returns
+ */
 const makeRequest = (url, body) => {
     return new Promise((resolve, reject) => {
         getAuth()
@@ -13,22 +19,18 @@ const makeRequest = (url, body) => {
                     },
                     body: JSON.stringify({ ...body, token: token }),
                 })
-                    .then(rsp => {
-                        Alert.alert(`rsp.ok: ${rsp.ok}`, "Ok", [
-                            { isPreferred: true, text: "Ok", style: "default" },
-                        ]);
-                        rsp.json()
+                    .then(rsp =>
+                        rsp
+                            .json()
                             .then(data => {
                                 resolve(data);
+                                // console.log(data);
                             })
                             .catch(e => {
                                 reject(e);
-                            });
-                    })
+                            })
+                    )
                     .catch(e => {
-                        Alert.alert(`e: ${e}`, "Error", [
-                            { isPreferred: true, text: "Ok", style: "default" },
-                        ]);
                         reject(e);
                     });
             });

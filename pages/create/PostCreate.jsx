@@ -182,10 +182,6 @@ export default function PostCreate({ navigation, route }) {
             description: post.description,
         });
 
-        Alert.alert(response.status, response.reason, [
-            { isPreferred: true, text: "Ok", style: "default" },
-        ]);
-
         if (response.status == "accepted") {
             addToLocalStorage(response.id);
             Alert.alert(

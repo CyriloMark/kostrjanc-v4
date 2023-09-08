@@ -224,14 +224,15 @@ export default function Content({ navigation, onTut }) {
                 userData["following"].forEach(e => followingList.push(e));
 
             const newTop10events = [];
-            top10events.forEach(e => {
-                if (followingList.includes(e.creator))
-                    newTop10events.push({
-                        ...e,
-                        score: e.score * EVENT_FOLLOWING_FACTOR,
-                    });
-                else newTop10events.push(e);
-            });
+            if (top10events !== undefined)
+                top10events.forEach(e => {
+                    if (followingList.includes(e.creator))
+                        newTop10events.push({
+                            ...e,
+                            score: e.score * EVENT_FOLLOWING_FACTOR,
+                        });
+                    else newTop10events.push(e);
+                });
 
             sortByParameter(newTop10events, "score");
 
