@@ -462,6 +462,10 @@
         "tutorial_contentpage": "Što je kostrjanc STUDIJO? Sam aktiwny na kostrjanc być.",
         "tutorial_profile": "To sym ja. Profily na kostrjanc.",
         "tutorial_post": "Što su posty?",
-        "tutorial_event": "Što su ewenty?"
+        "tutorial_event": "Što su ewenty?",
+
+        "spellcheck_title": "Awtomatiska korektura:",
+        "spellcheck_100": "Zapodaj wjac pismikow za awtomatisku kontrolu słowa.",
+        "spellcheck_200": "Słowo je prawje pisane."
     }
 }

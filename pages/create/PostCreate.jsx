@@ -41,6 +41,7 @@ import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
 import makeRequest from "../../constants/request";
+import checkForAutoCorrect from "../../constants/content/autoCorrect";
 
 export default function PostCreate({ navigation, route }) {
     let btnPressed = false;
@@ -49,6 +50,11 @@ export default function PostCreate({ navigation, route }) {
     const [post, setPost] = useState(Post_Placeholder);
     const [imageUri, setImageUri] = useState(null);
     const [buttonChecked, setButtonChecked] = useState(false);
+
+    const [autoCorrect, setAutoCorrect] = useState({
+        status: 100,
+        content: [],
+    });
 
     // From linking → when comes back fromLinking = true || = false
     const { fromLinking, linkingData } = route.params;
@@ -275,6 +281,7 @@ export default function PostCreate({ navigation, route }) {
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
+                    keyboardShouldPersistTaps="handled"
                     automaticallyAdjustKeyboardInsets
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
@@ -371,10 +378,36 @@ export default function PostCreate({ navigation, route }) {
                                     icon={
                                         <SVG_Pencil fill={style.colors.blue} />
                                     }
-                                    onChangeText={val => {
+                                    supportsAutoCorrect
+                                    onChangeText={async val => {
                                         setPost({
                                             ...post,
                                             title: val,
+                                        });
+                                        const autoC = await checkForAutoCorrect(
+                                            val
+                                        );
+                                        setAutoCorrect(autoC);
+                                    }}
+                                    autoCorrection={autoCorrect}
+                                    applyAutoCorrection={word => {
+                                        setPost(prev => {
+                                            let title = prev.title.split(" ");
+                                            title.pop();
+                                            title.push(word);
+                                            let newTitle = "";
+                                            title.forEach(
+                                                el => (newTitle += `${el} `)
+                                            );
+
+                                            setAutoCorrect({
+                                                status: 100,
+                                                content: [],
+                                            });
+                                            return {
+                                                ...prev,
+                                                title: newTitle,
+                                            };
                                         });
                                     }}
                                 />
@@ -396,11 +429,38 @@ export default function PostCreate({ navigation, route }) {
                                     value={post.description}
                                     maxLength={512}
                                     inputAccessoryViewID="post_description_InputAccessoryViewID"
-                                    onChangeText={val => {
+                                    supportsAutoCorrect
+                                    onChangeText={async val => {
                                         setPost(prev => {
                                             return {
                                                 ...prev,
                                                 description: val,
+                                            };
+                                        });
+                                        const autoC = await checkForAutoCorrect(
+                                            val
+                                        );
+                                        setAutoCorrect(autoC);
+                                    }}
+                                    autoCorrection={autoCorrect}
+                                    applyAutoCorrection={word => {
+                                        setPost(prev => {
+                                            let desc =
+                                                prev.description.split(" ");
+                                            desc.pop();
+                                            desc.push(word);
+                                            let newDesc = "";
+                                            desc.forEach(
+                                                el => (newDesc += `${el} `)
+                                            );
+
+                                            setAutoCorrect({
+                                                status: 100,
+                                                content: [],
+                                            });
+                                            return {
+                                                ...prev,
+                                                description: newDesc,
                                             };
                                         });
                                     }}

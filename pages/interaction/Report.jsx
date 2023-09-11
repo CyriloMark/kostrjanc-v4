@@ -27,6 +27,7 @@ import SelectableButton from "../../components/event/SelectableButton";
 import AccessoryView from "../../components/AccessoryView";
 import makeRequest from "../../constants/request";
 import { ActivityIndicator } from "react-native-paper";
+import checkForAutoCorrect from "../../constants/content/autoCorrect";
 
 let reporting = false;
 
@@ -37,6 +38,11 @@ export default function Report({ navigation, route }) {
     const [buttonChecked, setButtonChecked] = useState(false);
 
     const [loading, setLoading] = useState(false);
+
+    const [autoCorrect, setAutoCorrect] = useState({
+        status: 100,
+        content: [],
+    });
 
     const itemType = () => {
         switch (type) {
@@ -187,6 +193,7 @@ export default function Report({ navigation, route }) {
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
+                    keyboardShouldPersistTaps="handled"
                     automaticallyAdjustKeyboardInsets
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
@@ -244,10 +251,33 @@ export default function Report({ navigation, route }) {
                                 "report_Description_InputAccessoryViewID"
                             }
                             maxLength={512}
-                            onChangeText={val => {
+                            supportsAutoCorrect
+                            onChangeText={async val => {
                                 setReportData({
                                     ...reportData,
                                     description: val,
+                                });
+
+                                const autoC = await checkForAutoCorrect(val);
+                                setAutoCorrect(autoC);
+                            }}
+                            autoCorrection={autoCorrect}
+                            applyAutoCorrection={word => {
+                                setReportData(prev => {
+                                    let desc = prev.description.split(" ");
+                                    desc.pop();
+                                    desc.push(word);
+                                    let newDesc = "";
+                                    desc.forEach(el => (newDesc += `${el} `));
+
+                                    setAutoCorrect({
+                                        status: 100,
+                                        content: [],
+                                    });
+                                    return {
+                                        ...prev,
+                                        description: newDesc,
+                                    };
                                 });
                             }}
                         />

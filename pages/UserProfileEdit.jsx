@@ -34,6 +34,7 @@ import { getLangs } from "../constants/langs";
 
 import SVG_Post from "../assets/svg/Post";
 import makeRequest from "../constants/request";
+import checkForAutoCorrect from "../constants/content/autoCorrect";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -47,6 +48,11 @@ export default function UserProfileEdit({ navigation, route }) {
     const [updatedUserData, setUpdatedUserData] = useState(userData);
     const [buttonChecked, setButtonChecked] = useState(false);
     const [pbImageUri, setPbImageUri] = useState(userData.pbUri);
+
+    const [autoCorrect, setAutoCorrect] = useState({
+        status: 100,
+        content: [],
+    });
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
@@ -263,6 +269,7 @@ export default function UserProfileEdit({ navigation, route }) {
                     keyboardDismissMode="interactive"
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
+                    keyboardShouldPersistTaps="handled"
                     snapToEnd
                     style={[style.container, style.pH, style.oVisible]}>
                     {/* Name */}
@@ -346,10 +353,37 @@ export default function UserProfileEdit({ navigation, route }) {
                                 defaultValue={userData.description}
                                 value={updatedUserData.description}
                                 inputAccessoryViewID="userprofileedit_Description_InputAccessoryViewID"
-                                onChangeText={val => {
+                                supportsAutoCorrect
+                                onChangeText={async val => {
                                     setUpdatedUserData({
                                         ...updatedUserData,
                                         description: val,
+                                    });
+
+                                    const autoC = await checkForAutoCorrect(
+                                        val
+                                    );
+                                    setAutoCorrect(autoC);
+                                }}
+                                autoCorrection={autoCorrect}
+                                applyAutoCorrection={word => {
+                                    setUpdatedUserData(prev => {
+                                        let desc = prev.description.split(" ");
+                                        desc.pop();
+                                        desc.push(word);
+                                        let newDesc = "";
+                                        desc.forEach(
+                                            el => (newDesc += `${el} `)
+                                        );
+
+                                        setAutoCorrect({
+                                            status: 100,
+                                            content: [],
+                                        });
+                                        return {
+                                            ...prev,
+                                            description: newDesc,
+                                        };
                                     });
                                 }}
                             />

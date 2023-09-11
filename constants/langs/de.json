@@ -462,6 +462,10 @@
         "tutorial_contentpage": "Was ist kostrjanc STUDIJO? Selbst aktiv werden.",
         "tutorial_profile": "Das bin ich. Profile auf kostrjanc.",
         "tutorial_post": "Was sind Posts?",
-        "tutorial_event": "Was sind Events?"
+        "tutorial_event": "Was sind Events?",
+
+        "spellcheck_title": "Automatische Kontrolle:",
+        "spellcheck_100": "Gib mehr Buchstaben ein, um das Wort auf automatische Rechtschreibung zu kontrollieren.",
+        "spellcheck_200": "Das Wort ist richtig geschrieben."
     }
 }

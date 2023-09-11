@@ -45,6 +45,7 @@ import SVG_Post from "../../assets/svg/Post";
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Email from "../../assets/svg/Email";
 import SVG_Web from "../../assets/svg/Web";
+import checkForAutoCorrect from "../../constants/content/autoCorrect";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -69,6 +70,11 @@ export default function Register({ navigation }) {
     const [pbImageUri, setPbImageUri] = useState(null);
 
     const [registering, setRegistering] = useState(false);
+
+    const [autoCorrect, setAutoCorrect] = useState({
+        status: 100,
+        content: [],
+    });
 
     const setAlert = error => {
         Alert.alert(
@@ -328,6 +334,7 @@ export default function Register({ navigation }) {
                     keyboardDismissMode="interactive"
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
+                    keyboardShouldPersistTaps="handled"
                     snapToEnd
                     style={[style.container, style.pH, style.oVisible]}>
                     <View style={styles.titleContainer}>
@@ -476,10 +483,38 @@ export default function Register({ navigation }) {
                                     maxLength={512}
                                     value={registerData.description}
                                     inputAccessoryViewID="register_description_InputAccessoryViewID"
-                                    onChangeText={val => {
+                                    supportsAutoCorrect
+                                    onChangeText={async val => {
                                         setRegisterData({
                                             ...registerData,
                                             description: val,
+                                        });
+
+                                        const autoC = await checkForAutoCorrect(
+                                            val
+                                        );
+                                        setAutoCorrect(autoC);
+                                    }}
+                                    autoCorrection={autoCorrect}
+                                    applyAutoCorrection={word => {
+                                        setRegisterData(prev => {
+                                            let desc =
+                                                prev.description.split(" ");
+                                            desc.pop();
+                                            desc.push(word);
+                                            let newDesc = "";
+                                            desc.forEach(
+                                                el => (newDesc += `${el} `)
+                                            );
+
+                                            setAutoCorrect({
+                                                status: 100,
+                                                content: [],
+                                            });
+                                            return {
+                                                ...prev,
+                                                description: newDesc,
+                                            };
                                         });
                                     }}
                                 />

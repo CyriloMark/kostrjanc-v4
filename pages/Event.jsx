@@ -53,6 +53,7 @@ import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
 import { checkIfTutorialNeeded } from "../constants/tutorial";
+import checkForAutoCorrect from "../constants/content/autoCorrect";
 
 import MapView, {
     Marker,
@@ -79,6 +80,11 @@ export default function Event({ navigation, route, onTut }) {
 
     const [user, setUser] = useState(User_Placeholder);
     const [event, setEvent] = useState(Event_Placeholder);
+
+    const [autoCorrect, setAutoCorrect] = useState({
+        status: 100,
+        content: [],
+    });
 
     const [isLive, setIsLive] = useState(false);
     const [currentMapType, setCurrentMapType] = useState(0);
@@ -334,6 +340,7 @@ export default function Event({ navigation, route, onTut }) {
                     automaticallyAdjustContentInsets
                     keyboardDismissMode="interactive"
                     snapToAlignment="center"
+                    keyboardShouldPersistTaps="handled"
                     snapToEnd
                     style={[style.container, style.pH, style.oVisible]}
                     showsHorizontalScrollIndicator={false}
@@ -754,7 +761,31 @@ export default function Event({ navigation, route, onTut }) {
                                 selectTextOnFocus
                                 maxLength={128}
                                 value={currentCommentInput}
-                                onChangeText={t => setCurrentCommentInput(t)}
+                                supportsAutoCorrect
+                                onChangeText={async t => {
+                                    setCurrentCommentInput(t);
+
+                                    const autoC = await checkForAutoCorrect(t);
+                                    setAutoCorrect(autoC);
+                                }}
+                                autoCorrection={autoCorrect}
+                                applyAutoCorrection={word => {
+                                    setCurrentCommentInput(prev => {
+                                        let text = prev.split(" ");
+                                        text.pop();
+                                        text.push(word);
+                                        let newText = "";
+                                        text.forEach(
+                                            el => (newText += `${el} `)
+                                        );
+
+                                        setAutoCorrect({
+                                            status: 100,
+                                            content: [],
+                                        });
+                                        return newText;
+                                    });
+                                }}
                                 style={[
                                     { marginTop: style.defaultMmd },
                                     style.tWhite,

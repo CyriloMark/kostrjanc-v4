@@ -7,7 +7,8 @@
             "env": {
                 "EXPO_PUBLIC_ENVIROMENT": "DEVELOPMENT",
                 "EXPO_PUBLIC_SERVER_URL": "https://kostrjanc.ew.r.appspot.com",
-                "EXPO_PUBLIC_HOST_URL": "http://35.228.17.35:7700/"
+                "EXPO_PUBLIC_HOST_URL": "http://34.79.49.61:7700/",
+                "EXPO_PUBLIC_SPELL_CHECK_URL": "http://34.79.49.61:8999/check"
             },
             "developmentClient": true,
             "distribution": "internal",
@@ -19,7 +20,8 @@
             "env": {
                 "EXPO_PUBLIC_ENVIROMENT": "DEVELOPMENT",
                 "EXPO_PUBLIC_SERVER_URL": "https://kostrjanc.ew.r.appspot.com",
-                "EXPO_PUBLIC_HOST_URL": "http://35.228.17.35:7700/"
+                "EXPO_PUBLIC_HOST_URL": "http://34.79.49.61:7700/",
+                "EXPO_PUBLIC_SPELL_CHECK_URL": "http://34.79.49.61:8999/check"
             },
             "distribution": "internal",
             "ios": {
@@ -30,7 +32,8 @@
             "env": {
                 "EXPO_PUBLIC_ENVIROMENT": "DEVELOPMENT",
                 "EXPO_PUBLIC_SERVER_URL": "https://kostrjanc.ew.r.appspot.com",
-                "EXPO_PUBLIC_HOST_URL": "http://35.228.17.35:7700/"
+                "EXPO_PUBLIC_HOST_URL": "http://34.79.49.61:7700/",
+                "EXPO_PUBLIC_SPELL_CHECK_URL": "http://34.79.49.61:8999/check"
             },
             "ios": {
                 "resourceClass": "m-medium"

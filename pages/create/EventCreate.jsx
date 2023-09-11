@@ -38,6 +38,8 @@ import {
     checkForLinkings,
     LINKING_TYPES,
 } from "../../constants/content/linking";
+import makeRequest from "../../constants/request";
+import checkForAutoCorrect from "../../constants/content/autoCorrect";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -76,7 +78,6 @@ import * as FileSystem from "expo-file-system";
 import DateTimePicker, {
     DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
-import makeRequest from "../../constants/request";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
@@ -99,6 +100,11 @@ export default function EventCreate({ navigation, route }) {
         website: false,
         adBanner: false,
         tags: false,
+    });
+
+    const [autoCorrect, setAutoCorrect] = useState({
+        status: 100,
+        content: [],
     });
 
     // From linking → when comes back fromLinking = true || = false
@@ -402,6 +408,7 @@ export default function EventCreate({ navigation, route }) {
                     style={[style.container, style.pH, style.oVisible]}
                     keyboardDismissMode="interactive"
                     scrollEnabled
+                    keyboardShouldPersistTaps="handled"
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
@@ -633,10 +640,37 @@ export default function EventCreate({ navigation, route }) {
                                     icon={
                                         <SVG_Pencil fill={style.colors.blue} />
                                     }
-                                    onChangeText={val => {
+                                    supportsAutoCorrect
+                                    onChangeText={async val => {
                                         setEvent({
                                             ...event,
                                             title: val,
+                                        });
+
+                                        const autoC = await checkForAutoCorrect(
+                                            val
+                                        );
+                                        setAutoCorrect(autoC);
+                                    }}
+                                    autoCorrection={autoCorrect}
+                                    applyAutoCorrection={word => {
+                                        setEvent(prev => {
+                                            let title = prev.title.split(" ");
+                                            title.pop();
+                                            title.push(word);
+                                            let newTitle = "";
+                                            title.forEach(
+                                                el => (newTitle += `${el} `)
+                                            );
+
+                                            setAutoCorrect({
+                                                status: 100,
+                                                content: [],
+                                            });
+                                            return {
+                                                ...prev,
+                                                title: newTitle,
+                                            };
                                         });
                                     }}
                                 />
@@ -659,10 +693,38 @@ export default function EventCreate({ navigation, route }) {
                                     value={event.description}
                                     maxLength={512}
                                     inputAccessoryViewID="event_description_InputAccessoryViewID"
-                                    onChangeText={val => {
+                                    supportsAutoCorrect
+                                    onChangeText={async val => {
                                         setEvent({
                                             ...event,
                                             description: val,
+                                        });
+
+                                        const autoC = await checkForAutoCorrect(
+                                            val
+                                        );
+                                        setAutoCorrect(autoC);
+                                    }}
+                                    autoCorrection={autoCorrect}
+                                    applyAutoCorrection={word => {
+                                        setEvent(prev => {
+                                            let desc =
+                                                prev.description.split(" ");
+                                            desc.pop();
+                                            desc.push(word);
+                                            let newDesc = "";
+                                            desc.forEach(
+                                                el => (newDesc += `${el} `)
+                                            );
+
+                                            setAutoCorrect({
+                                                status: 100,
+                                                content: [],
+                                            });
+                                            return {
+                                                ...prev,
+                                                description: newDesc,
+                                            };
                                         });
                                     }}
                                 />
