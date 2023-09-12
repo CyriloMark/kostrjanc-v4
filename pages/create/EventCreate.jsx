@@ -315,69 +315,43 @@ export default function EventCreate({ navigation, route }) {
 
         const response = await makeRequest("/post_event/publish", params);
 
-        if (response.status == "accepted") {
+        if (response.code < 400) {
             addToLocalStorage(response.id);
             Alert.alert(
                 getLangs("eventcreate_publishsuccessful_title"),
-                `${getLangs("eventcreate_publishsuccessful_sub_0")} ${
-                    event.title
-                } ${getLangs("eventcreate_publishsuccessful_sub_1")}`,
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => navigation.goBack(),
+                    },
+                ]
+            );
+        } else {
+            Alert.alert(
+                getLangs("eventcreate_publishrejected_title"),
+                getLangs(getStatusCodeText(response.code)),
                 [
                     {
                         text: "Ok",
                         isPreferred: true,
                         style: "cancel",
                         onPress: () => {
-                            navigation.goBack();
+                            btnPressed = false;
+                            setUploading(false);
+                            checkButton();
                         },
                     },
                 ]
             );
-        } else if (response.status == "rejected") {
-            if (
-                response.reason ==
-                "title or description includes/include bad words!"
-            ) {
-                Alert.alert(
-                    getLangs("eventcreate_publishrejected_badwords_title"),
-                    getLangs("eventcreate_publishrejected_badwords_sub"),
-                    [
-                        {
-                            text: "Ok",
-                            isPreferred: true,
-                            style: "cancel",
-                            onPress: () => {
-                                btnPressed = false;
-                                setUploading(false);
-                                checkButton();
-                            },
-                        },
-                    ]
-                );
-            } else {
-                Alert.alert(
-                    getLangs("eventcreate_publishrejected_title"),
-                    getLangs("eventcreate_publishrejected_sub"),
-                    [
-                        {
-                            text: "Ok",
-                            isPreferred: true,
-                            style: "cancel",
-                            onPress: () => {
-                                btnPressed = false;
-                                setUploading(false);
-                                checkButton();
-                            },
-                        },
-                    ]
-                );
-            }
         }
     };
 
     const addToLocalStorage = id => {
         getData("userData").then(userData => {
-            const events = [];
+            let events = [];
             if (userData["events"]) posts = userData["events"];
             posts.push(id);
 

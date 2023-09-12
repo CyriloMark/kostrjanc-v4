@@ -25,6 +25,7 @@ import {
     checkForLinkings,
     LINKING_TYPES,
 } from "../../constants/content/linking";
+import getStatusCodeText from "../../components/content/status";
 
 // import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
@@ -188,13 +189,11 @@ export default function PostCreate({ navigation, route }) {
             description: post.description,
         });
 
-        if (response.status == "accepted") {
+        if (response.code < 400) {
             addToLocalStorage(response.id);
             Alert.alert(
                 getLangs("postcreate_publishsuccessful_title"),
-                `${getLangs("postcreate_publishsuccessful_sub_0")} ${
-                    post.title
-                } ${getLangs("postcreate_publishsuccessful_sub_1")}`,
+                getLangs(getStatusCodeText(response.code)),
                 [
                     {
                         text: "Ok",
@@ -204,50 +203,27 @@ export default function PostCreate({ navigation, route }) {
                     },
                 ]
             );
-        } else if (response.status == "rejected") {
-            if (
-                response.reason ==
-                "title or description includes/include bad words!"
-            ) {
-                Alert.alert(
-                    getLangs("postcreate_publishrejected_badwords_title"),
-                    getLangs("postcreate_publishrejected_badwords_sub"),
-                    [
-                        {
-                            text: "Ok",
-                            isPreferred: true,
-                            style: "cancel",
-                            onPress: () => {
-                                btnPressed = false;
-                                setUploading(false);
-                                checkButton();
-                            },
+        } else {
+            Alert.alert(
+                getLangs("postcreate_publishrejected_title"),
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            btnPressed = false;
+                            setUploading(false);
+                            checkButton();
                         },
-                    ]
-                );
-            } else {
-                Alert.alert(
-                    getLangs("postcreate_publishrejected_title"),
-                    getLangs("postcreate_publishrejected_sub"),
-                    [
-                        {
-                            text: "Ok",
-                            isPreferred: true,
-                            style: "cancel",
-                            onPress: () => {
-                                btnPressed = false;
-                                setUploading(false);
-                                checkButton();
-                            },
-                        },
-                    ]
-                );
-            }
+                    },
+                ]
+            );
         }
     };
 
     const addToLocalStorage = id => {
-        return;
         getData("userData").then(userData => {
             const posts = [];
             if (userData["posts"]) posts = userData["posts"];
