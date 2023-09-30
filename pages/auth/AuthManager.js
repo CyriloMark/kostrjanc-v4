@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
     SafeAreaView,
@@ -6,6 +6,8 @@ import {
 } from "react-native-safe-area-context";
 
 import * as style from "../../styles";
+
+import { changeLanguage, getCurrentLanguage } from "../../constants/langs";
 
 import {
     CardStyleInterpolators,
@@ -26,6 +28,11 @@ const AuthNavStack = createStackNavigator();
 
 export default function AuthManager() {
     const insets = useSafeAreaInsets();
+
+    useEffect(() => {
+        const lang = getCurrentLanguage();
+        if (lang === -1 || lang === 1) changeLanguage(2);
+    }, []);
 
     return (
         <SafeAreaView style={[style.container]}>

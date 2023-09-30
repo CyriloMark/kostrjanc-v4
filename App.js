@@ -212,13 +212,13 @@ export default function App() {
             </SafeAreaProvider>
         );
 
-    if (!testIsChecked) {
-        return (
-            <SafeAreaProvider style={[style.container, style.bgBlack]}>
-                <TestView onCheck={() => setTestIsChecked(true)} />
-            </SafeAreaProvider>
-        );
-    }
+    // if (!testIsChecked) {
+    //     return (
+    //         <SafeAreaProvider style={[style.container, style.bgBlack]}>
+    //             <TestView onCheck={() => setTestIsChecked(true)} />
+    //         </SafeAreaProvider>
+    //     );
+    // }
 
     // Server Status
     if (serverStatus !== "online")

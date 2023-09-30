@@ -26,8 +26,11 @@ export function getLangs(key) {
             break;
 
         default:
-            return false;
+            output = "";
+            break;
     }
+
+    if (output.length === 0) output = de.app[key];
     return output;
 }
 
