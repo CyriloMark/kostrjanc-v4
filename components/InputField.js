@@ -107,7 +107,7 @@ export default function InputField(props) {
                 <TextInput
                     ref={props.optRef ? props.optRef : null}
                     allowFontScaling
-                    autoCorrect
+                    autoCorrect={false}
                     cursorColor={s.colors.blue}
                     multiline={false}
                     numberOfLines={1}

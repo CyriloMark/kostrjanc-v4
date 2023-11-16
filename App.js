@@ -203,7 +203,11 @@ export default function App() {
             langIsSet !== null
         )
     )
-        return <Loading />;
+        return (
+            <SafeAreaProvider style={[style.container, style.bgBlack]}>
+                <Loading />
+            </SafeAreaProvider>
+        );
 
     if (langIsSet === false)
         return (
@@ -222,11 +226,19 @@ export default function App() {
 
     // Server Status
     if (serverStatus !== "online")
-        return <ServerStatus status={serverStatus} />;
+        return (
+            <SafeAreaProvider style={[style.container, style.bgBlack]}>
+                <ServerStatus status={serverStatus} />
+            </SafeAreaProvider>
+        );
 
     // not recent version
     if (isRecentVersion.equal === false)
-        return <UpdateVersion versions={isRecentVersion} />;
+        return (
+            <SafeAreaProvider style={[style.container, style.bgBlack]}>
+                <UpdateVersion versions={isRecentVersion} />
+            </SafeAreaProvider>
+        );
 
     if (!loggedIn) {
         return (
