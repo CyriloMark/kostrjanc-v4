@@ -17,6 +17,7 @@ import { ref, set, getDatabase } from "firebase/database";
 import { Ban_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
+import { getUnsignedTranslationText } from "../../constants/content/translation";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -203,8 +204,11 @@ export default function Ban({ navigation, route }) {
                     snapToAlignment="center"
                     snapToEnd>
                     <Text style={[style.Ttitle2, style.tWhite]}>
-                        "{type === 2 ? item.name : item.title}" ({itemType()}){" "}
-                        {getLangs("banelement_sub_1")}
+                        "
+                        {type === 2
+                            ? item.name
+                            : getUnsignedTranslationText(item.title)}
+                        " ({itemType()}) {getLangs("banelement_sub_1")}
                     </Text>
 
                     {/* Description */}

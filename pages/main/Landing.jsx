@@ -1126,6 +1126,18 @@ export default function Landing({ navigation, onTut }) {
                         id={banner}
                         style={{
                             marginTop: style.defaultMmd,
+                            marginHorizontal: style.defaultMmd * 2,
+
+                            // Shadow
+                            shadowColor: style.colors.red,
+                            shadowRadius: 15,
+                            shadowOpacity: 0.5,
+                            shadowOffset: {
+                                width: 0,
+                                height: 0,
+                            },
+                            backgroundColor: style.colors.black,
+                            borderRadius: 10,
                         }}
                     />
                 ))}

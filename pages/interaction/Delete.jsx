@@ -12,7 +12,6 @@ import * as style from "../../styles";
 
 import { ref, set, getDatabase } from "firebase/database";
 
-import { getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 
 import BackHeader from "../../components/BackHeader";

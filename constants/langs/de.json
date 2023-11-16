@@ -230,6 +230,9 @@
         "profile_role_admin": "Admin",
         "profile_role_mod": "Moderator",
 
+        "conent_translation_title": "Inhalt übersetzt",
+        "conent_translation_sub": "Dieser Inhalt wurde mit sotra.app übersetzt.",
+
         "interactionbar_title": "Funktionen für Nutzer:",
 
         "landing_nocontenttext": "Mehr Inhalte gibt es nicht auf kostrjanc.",
@@ -354,6 +357,17 @@
         "settings_lang_changelang_sub": "Aktuelle Sprache: Deutsch",
         "settings_lang_changelang_alert_title": "Sprache ändern?",
         "settings_lang_changelang_alert_sub": "Bist du dir sicher, dass du die Sprache wechseln möchtest? Nach der Änderung muss die Appation neu gestartet werden.",
+
+        "settings_notifications_title": "Nachrichten",
+        "settings_notifications_h2": "Einstellungen für Nachrichten:",
+        "settings_notifications_follower_title": "Neue Follower:",
+        "settings_notifications_follower_sub": "Du bekommst eine Nachricht, sobald dir ein neuer Benutzer folgt. In dieser erfährst du sofort, wie diese Person heißt.",
+        "settings_notifications_contents_title": "Neue Inhalte:",
+        "settings_notifications_contents_sub": "Du bekommst eine Nachricht, sobald ein Benutzer, den du folgst, ein Post oder ein Event veröffentlicht.",
+        "settings_notifications_comments_title": "Kommentare:",
+        "settings_notifications_comments_sub": "Du bekommst eine Nachricht, sobald ein Benutzer einen Kommentar unter einem deiner Posts oder Events veröffentlicht.",
+        "settings_notifications_eventstart_title": "Event-Start:",
+        "settings_notifications_eventstart_sub": "Sollte ein Event zum Zeitpunkt des Starts heranrücken, bekommst du eine Erinnerung in Form einer Nachricht.",
 
         "settings_admin_title": "Admin und Moderator",
         "settings_admin_h2": "Bereich für Admins und Moderatoren:",
@@ -494,6 +508,9 @@
         "490_report_rejected": "Der Meldevorgang war nicht erfolgreich.",
         "491_report_already_reported": "Es wurde bereits dieser Inhalt gemeldet.",
         "500_internal_server_error": "Internal Server Error",
-        "502_bad_gateway": "Bad Gateway"
+        "502_bad_gateway": "Bad Gateway",
+
+        "translation_title": "Automatische Übersetzung",
+        "translation_sub": "Dieser Text war ursprünglich Deutsch und wurde mit sotra.app ins Sorbische übersetzt."
     }
 }

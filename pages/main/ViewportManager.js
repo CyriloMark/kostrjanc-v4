@@ -27,6 +27,7 @@ import Profile from "../Profile";
 
 import Settings from "../settings/Landing";
 import Settings_Language from "../settings/Language";
+import Settings_Notifications from "../settings/Notifications";
 import Settings_Help from "../settings/Help";
 import Settings_Verify from "../settings/Verify";
 import Settings_DataSecurityImpresum from "../settings/DataSecurityImpresum";
@@ -96,6 +97,10 @@ export default function ViewportManager({ onTut }) {
                 <MainNavStack.Screen
                     name="settings-language"
                     component={Settings_Language}
+                />
+                <MainNavStack.Screen
+                    name="settings-notifications"
+                    component={Settings_Notifications}
                 />
                 <MainNavStack.Screen
                     name="settings-help"

@@ -17,6 +17,7 @@ export default function DangerButton({ style, title, onPress }) {
                     end={{ x: 0.5, y: 2.5 }}
                     locations={[0, 0.75]}>
                     <SVG_Warn
+                        old
                         style={[s.boxShadow, s.oVisible, styles.icon]}
                         fill={s.colors.white}
                     />
@@ -29,6 +30,7 @@ export default function DangerButton({ style, title, onPress }) {
                         {title}
                     </Text>
                     <SVG_Warn
+                        old
                         style={[s.boxShadow, s.oVisible, styles.icon]}
                         fill={s.colors.white}
                     />

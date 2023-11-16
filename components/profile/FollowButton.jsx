@@ -14,7 +14,7 @@ export default function FollowButton({ style, onPress, checked }) {
     // checked
     if (checked) {
         return (
-            <View style={style}>
+            <View style={[style, styles.shadowRed, s.bgBlack]}>
                 <Pressable
                     style={[styles.container, s.oHidden]}
                     onPress={onPress}>
@@ -46,7 +46,7 @@ export default function FollowButton({ style, onPress, checked }) {
     } else {
         //Not checked
         return (
-            <View style={style}>
+            <View style={[style, styles.shadowBlue, s.bgBlack]}>
                 <Pressable
                     style={[styles.container, s.oHidden]}
                     onPress={onPress}>
@@ -90,5 +90,24 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         maxWidth: 12,
         maxHeight: 12,
+    },
+    shadowRed: {
+        shadowColor: s.colors.red,
+        overflow: "visible",
+        shadowOpacity: 0.33,
+        shadowRadius: 25,
+        shadowOffset: { height: 0, width: 0 },
+        elevation: 5,
+
+        borderRadius: 25,
+    },
+    shadowBlue: {
+        shadowColor: s.colors.blue,
+        overflow: "visible",
+        shadowOpacity: 0.33,
+        shadowRadius: 25,
+        shadowOffset: { height: 0, width: 0 },
+        elevation: 5,
+        borderRadius: 25,
     },
 });

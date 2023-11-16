@@ -31,7 +31,7 @@ export default function EditProfileButton({ checked, title, style, onPress }) {
     }, [checked]);
 
     return (
-        <View style={style}>
+        <View style={[style, s.shadowSec, { borderRadius: 25 }]}>
             <Animated.View
                 style={[styles.container, s.oHidden, bgAnimationStyles]}>
                 <Pressable onPress={onPress}>

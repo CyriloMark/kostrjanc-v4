@@ -230,6 +230,9 @@
         "profile_role_admin": "admin",
         "profile_role_mod": "moderator",
 
+        "conent_translation_title": "Wobsah přełoženy",
+        "conent_translation_sub": "Tutón wobsah bu z sotra.app přełoženy.",
+
         "interactionbar_title": "Funkcije za wužiwarja:",
 
         "landing_nocontenttext": "Wjac wobsahow njedawaja na kostrjanc.",
@@ -354,6 +357,17 @@
         "settings_lang_changelang_sub": "Aktuelna rěč: Hornjoserbsce",
         "settings_lang_changelang_alert_title": "Rěč změnić?",
         "settings_lang_changelang_alert_sub": "Sy sej wěsty, zo chceš rěč změnić? Po změnje dyrbi so aplikacija znowa startować.",
+
+        "settings_notifications_title": "Powěsće",
+        "settings_notifications_h2": "Zastajenja za powěsće:",
+        "settings_notifications_follower_title": "Nowi sćěhowarjo:",
+        "settings_notifications_follower_sub": "Dóstanješ powěsć, hdyž ći nowy wužiwar sćěhuje. W tutej hnydom zhoniš, kak tuta wosoba rěka.",
+        "settings_notifications_contents_title": "Nowe wobsahi:",
+        "settings_notifications_contents_sub": "Dóstanješ powěsć, hdyž wužiwar, kotremuž sćěhuješ, post abo ewent wozjewi.",
+        "settings_notifications_comments_title": "Komentary:",
+        "settings_notifications_comments_sub": "Dóstanješ powěsć, hdyž wužiwar komentar pod jednym z twojich postow abo ewentow wozjewi.",
+        "settings_notifications_eventstart_title": "Start ewenta:",
+        "settings_notifications_eventstart_sub": "Dyrbjał-li so ewent za čas starta přibližić, dóstanješ dopomnjenku w formje powěsće.",
 
         "settings_admin_title": "Admin a moderator",
         "settings_admin_h2": "Wobłuk za adminy a moderatory:",
@@ -494,6 +508,9 @@
         "490_report_rejected": "Wotběh přizjewjenja njebě wuspěšny.",
         "491_report_already_reported": "Es wurde bereits dieser Inhalt gemeldet.",
         "500_internal_server_error": "Internal Server Error",
-        "502_bad_gateway": "Bad Gateway"
+        "502_bad_gateway": "Bad Gateway",
+
+        "translation_title": "Awtomatiski přełožk",
+        "translation_sub": "Tutón tekst bě prěnjotnje němski a bu z sotra.app zeserbšćeny."
     }
 }

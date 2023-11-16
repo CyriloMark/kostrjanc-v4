@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     Alert,
+    ActivityIndicator,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -364,6 +365,19 @@ export default function EventCreate({ navigation, route }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
+            {uploading ? (
+                <View
+                    style={[
+                        { position: "absolute" },
+                        style.allCenter,
+                        style.allMax,
+                    ]}>
+                    <ActivityIndicator
+                        size={"large"}
+                        color={style.colors.blue}
+                    />
+                </View>
+            ) : null}
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>

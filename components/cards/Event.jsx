@@ -21,6 +21,8 @@ import { checkIfLive, mapStylesDefault } from "../../constants/event";
 import { convertTimestampToString } from "../../constants/time";
 import { getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
+import { getUnsignedTranslationText } from "../../constants/content/translation";
+import { checkForUnnecessaryNewLine } from "../../constants/content";
 
 export default function Event(props) {
     const mapRef = useRef();
@@ -71,11 +73,9 @@ export default function Event(props) {
 
     let getChecksUris = async d => {
         if (d.length === 0) return;
-        const IMG_Amt = 3;
+        const IMG_Amt = 5;
 
         let uriList = [];
-
-        // const db = getDatabase();
 
         const userData = await getData("userData");
         const followeringList = [
@@ -134,7 +134,9 @@ export default function Event(props) {
                             numberOfLines={1}
                             ellipsizeMode="tail"
                             style={[style.TlgRg, style.tWhite]}>
-                            {event.title}
+                            {getUnsignedTranslationText(
+                                checkForUnnecessaryNewLine(event.title)
+                            )}
                         </Text>
                         <Text
                             style={[
@@ -182,34 +184,32 @@ export default function Event(props) {
                 {/* Checks PBs */}
                 {imgUris.length > 0 ? (
                     <View style={[styles.checksContainer]}>
-                        <Text
-                            style={[
-                                style.TsmRg,
-                                style.tWhite,
-                                { marginRight: style.defaultMmd },
-                            ]}>
+                        <Text style={[style.TsmRg, style.tWhite]}>
                             {getLangs("event_checkshint")}
                         </Text>
-                        {imgUris.map((el, key) => (
-                            <Image
-                                key={key}
-                                resizeMode="cover"
-                                source={{ uri: el }}
-                                style={[
-                                    styles.checksImg,
-                                    style.allMax,
-                                    key === 0
-                                        ? null
-                                        : {
-                                              marginLeft: -style.defaultMmd * 2,
-                                          },
-                                    {
-                                        zIndex: 10 - key,
-                                        opacity: 1 - parseFloat(`.${key}`),
-                                    },
-                                ]}
-                            />
-                        ))}
+                        <View style={[styles.checksImgContainer]}>
+                            {imgUris.map((el, key) => (
+                                <Image
+                                    key={key}
+                                    resizeMode="cover"
+                                    source={{ uri: el }}
+                                    style={[
+                                        styles.checksImg,
+                                        style.allMax,
+                                        key === 0
+                                            ? null
+                                            : {
+                                                  marginLeft:
+                                                      -style.defaultMmd * 2,
+                                              },
+                                        {
+                                            zIndex: 10 - key,
+                                            opacity: 1 - parseFloat(`.${key}`),
+                                        },
+                                    ]}
+                                />
+                            ))}
+                        </View>
                     </View>
                 ) : null}
             </Pressable>
@@ -257,9 +257,13 @@ const styles = StyleSheet.create({
 
     checksContainer: {
         width: "100%",
-        flexDirection: "row",
+        flexDirection: "column",
         marginTop: style.defaultMsm,
-        alignItems: "center",
+        // justifyContent: "center",
+    },
+    checksImgContainer: {
+        marginTop: style.defaultMsm,
+        flexDirection: "row",
     },
     checksImg: {
         aspectRatio: 1,

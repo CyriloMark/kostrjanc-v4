@@ -161,3 +161,40 @@ export const blurBox = {
     zIndex: 5,
     ...allMax,
 };
+
+export const shadowSec = {
+    // Shadow
+    shadowColor: colors.sec,
+    shadowRadius: 15,
+    shadowOpacity: 0.5,
+    // shadowOpacity: 1,
+    shadowOffset: {
+        width: 0,
+        height: 0,
+    },
+    backgroundColor: colors.black,
+};
+export const shadowSecSmall = {
+    // Shadow
+    shadowColor: colors.sec,
+    shadowRadius: 10,
+    shadowOpacity: 0.33,
+    // shadowOpacity: 1,
+    shadowOffset: {
+        width: 0,
+        height: 0,
+    },
+    backgroundColor: colors.black,
+};
+export const shadowRed = {
+    // Shadow
+    shadowColor: colors.red,
+    shadowRadius: 15,
+    shadowOpacity: 0.33,
+    // shadowOpacity: 1,
+    shadowOffset: {
+        width: 0,
+        height: 0,
+    },
+    backgroundColor: colors.black,
+};

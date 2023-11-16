@@ -84,7 +84,7 @@ export default function Admin({ navigation }) {
                     </Text>
                     <OptionButton
                         red
-                        icon={<SVG_Warn fill={style.colors.red} />}
+                        icon={<SVG_Warn fill={style.colors.red} old />}
                         title={"Ranking ewentow aktualisować"}
                         style={{ marginTop: style.defaultMmd }}
                         onPress={() => Account.refreshEventRanking()}

@@ -5,7 +5,6 @@ import {
     ScrollView,
     Pressable,
     Text,
-    TextInput,
     Image,
     Platform,
     KeyboardAvoidingView,
@@ -31,6 +30,12 @@ import {
 } from "../constants/content/linking";
 import { checkIfTutorialNeeded } from "../constants/tutorial";
 import checkForAutoCorrect from "../constants/content/autoCorrect";
+import {
+    alertForTranslation,
+    checkIsTranslated,
+    getUnsignedTranslationText,
+} from "../constants/content/translation";
+import { checkForUnnecessaryNewLine } from "../constants/content";
 
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
@@ -42,6 +47,8 @@ import DeleteButton from "../components/comments/DeleteButton";
 import Refresh from "../components/RefreshControl";
 import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 import TextField from "../components/TextField";
+
+import SVG_Translate from "../assets/svg/Translate";
 
 const KEYBOARDBUTTON_ENABLED = false;
 
@@ -266,68 +273,129 @@ export default function Post({ navigation, route, onTut }) {
                     }>
                     {/* Image Container */}
                     <View>
-                        {/* Title */}
-                        <Text style={[style.tWhite, style.Ttitle2]}>
-                            {checkLinkedUser(post.title).map((el, key) =>
-                                !el.isLinked ? (
-                                    <Text key={key}>{el.text}</Text>
-                                ) : (
-                                    <Text
-                                        key={key}
-                                        style={style.tBlue}
-                                        onPress={() =>
-                                            navigation.push("profileView", {
-                                                id: el.id,
-                                            })
-                                        }>
-                                        {el.text}
-                                    </Text>
-                                )
-                            )}
-                        </Text>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}>
+                            {/* Title */}
+                            <Text style={[style.tWhite, style.Ttitle2]}>
+                                {checkIsTranslated(post.title) ? (
+                                    <Pressable
+                                        onPress={alertForTranslation}
+                                        style={[
+                                            {
+                                                width: 28,
+                                                height: 34,
+                                                marginHorizontal:
+                                                    style.defaultMmd,
+                                            },
+                                            style.allCenter,
+                                        ]}>
+                                        <SVG_Translate
+                                            style={{
+                                                width: 28,
+                                                aspectRatio: 1,
+                                            }}
+                                        />
+                                    </Pressable>
+                                ) : null}
+                                {checkLinkedUser(
+                                    getUnsignedTranslationText(
+                                        checkForUnnecessaryNewLine(post.title)
+                                    )
+                                ).map((el, key) =>
+                                    !el.isLinked ? (
+                                        <Text key={key}>{el.text}</Text>
+                                    ) : (
+                                        <Text
+                                            key={key}
+                                            style={style.tBlue}
+                                            onPress={() =>
+                                                navigation.push("profileView", {
+                                                    id: el.id,
+                                                })
+                                            }>
+                                            {el.text}
+                                        </Text>
+                                    )
+                                )}
+                            </Text>
+                        </View>
 
                         {/* Img */}
-                        <Pressable
-                            onPress={() =>
-                                navigation.navigate("imgFull", {
-                                    uri: post.imgUri,
-                                })
-                            }
+                        <View
                             style={[
-                                style.allCenter,
-                                styles.imgContainer,
-                                style.oHidden,
+                                style.shadowSecSmall,
+                                {
+                                    marginTop: style.defaultMmd,
+                                    borderRadius: 10,
+                                },
                             ]}>
-                            <Image
-                                source={{
-                                    uri: post.imgUri,
-                                }}
-                                style={{ width: "100%", aspectRatio: 1 }}
-                                resizeMode="cover"
-                            />
-                        </Pressable>
+                            <Pressable
+                                onPress={() =>
+                                    navigation.navigate("imgFull", {
+                                        uri: post.imgUri,
+                                    })
+                                }
+                                style={[
+                                    style.allCenter,
+                                    styles.imgContainer,
+                                    style.oHidden,
+                                ]}>
+                                <Image
+                                    source={{
+                                        uri: post.imgUri,
+                                    }}
+                                    style={{ width: "100%", aspectRatio: 1 }}
+                                    resizeMode="cover"
+                                />
+                            </Pressable>
+                        </View>
 
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                {checkLinkedUser(post.description).map(
-                                    (el, key) =>
-                                        !el.isLinked ? (
-                                            <Text key={key}>{el.text}</Text>
-                                        ) : (
-                                            <Text
-                                                key={key}
-                                                style={style.tBlue}
-                                                onPress={() =>
-                                                    navigation.push(
-                                                        "profileView",
-                                                        {
-                                                            id: el.id,
-                                                        }
-                                                    )
-                                                }>
-                                                {el.text}
-                                            </Text>
+                                {checkIsTranslated(post.description) ? (
+                                    <Pressable
+                                        onPress={alertForTranslation}
+                                        style={[
+                                            {
+                                                width: 18,
+                                                height: 18,
+                                                marginHorizontal:
+                                                    style.defaultMmd,
+                                            },
+                                            style.allCenter,
+                                        ]}>
+                                        <SVG_Translate
+                                            style={{
+                                                width: 18,
+                                                aspectRatio: 1,
+                                            }}
+                                        />
+                                    </Pressable>
+                                ) : null}
+                                {checkLinkedUser(
+                                    getUnsignedTranslationText(
+                                        checkForUnnecessaryNewLine(
+                                            post.description
                                         )
+                                    )
+                                ).map((el, key) =>
+                                    !el.isLinked ? (
+                                        <Text key={key}>{el.text}</Text>
+                                    ) : (
+                                        <Text
+                                            key={key}
+                                            style={style.tBlue}
+                                            onPress={() =>
+                                                navigation.push("profileView", {
+                                                    id: el.id,
+                                                })
+                                            }>
+                                            {el.text}
+                                        </Text>
+                                    )
                                 )}
                             </Text>
                         </View>
@@ -594,7 +662,6 @@ const styles = StyleSheet.create({
     },
 
     imgContainer: {
-        marginTop: style.defaultMmd,
         width: "100%",
         borderRadius: 10,
     },

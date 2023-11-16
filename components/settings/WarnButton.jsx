@@ -12,7 +12,7 @@ export default function WarnButton({ style, text, sub, onPress }) {
                 style={[s.border, s.Pmd, s.allCenter, styles.container]}
                 onPress={onPress}>
                 <View style={styles.signContainer}>
-                    <SVG_Warn style={[styles.pin]} fill={s.colors.red} />
+                    <SVG_Warn old style={[styles.pin]} fill={s.colors.red} />
                 </View>
                 {/* Txt Container */}
                 <View style={styles.textContainer}>

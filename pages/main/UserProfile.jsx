@@ -229,23 +229,35 @@ export default function UserProfile({ navigation, onTut }) {
                 {/* Header Container */}
                 <View style={{ alignItems: "center" }}>
                     {/* Pb */}
-                    <Pressable
-                        onPress={() =>
-                            navigation.navigate("imgFull", { uri: user.pbUri })
-                        }
+                    <View
                         style={[
-                            style.allCenter,
-                            styles.imgContainer,
-                            style.oHidden,
+                            style.shadowSec,
+                            {
+                                borderRadius: 100,
+                                shadowOpacity: 0.75,
+                                shadowRadius: 15,
+                            },
                         ]}>
-                        <Image
-                            source={{
-                                uri: user.pbUri,
-                            }}
-                            style={[style.container, style.allMax]}
-                            resizeMode="cover"
-                        />
-                    </Pressable>
+                        <Pressable
+                            onPress={() =>
+                                navigation.navigate("imgFull", {
+                                    uri: user.pbUri,
+                                })
+                            }
+                            style={[
+                                style.allCenter,
+                                styles.imgContainer,
+                                style.oHidden,
+                            ]}>
+                            <Image
+                                source={{
+                                    uri: user.pbUri,
+                                }}
+                                style={[style.container, style.allMax]}
+                                resizeMode="cover"
+                            />
+                        </Pressable>
+                    </View>
 
                     {/* Name */}
                     <View style={styles.nameContainer}>
@@ -470,5 +482,7 @@ const styles = StyleSheet.create({
     contentItem: {
         margin: style.defaultMsm,
         flex: 1,
+        borderRadius: 10,
+        ...style.shadowSecSmall,
     },
 });

@@ -109,7 +109,26 @@ export default function Landing({ navigation }) {
                     </Text>
                     <OptionButton
                         style={styles.optionButton}
-                        icon={flags.langs[getCurrentLanguage()].flag}
+                        icon={
+                            <View
+                                style={{
+                                    aspectRatio: 1,
+                                    height: "100%",
+                                    borderRadius: 100,
+                                    overflow: "hidden",
+                                }}>
+                                <View
+                                    style={{
+                                        transform: [
+                                            {
+                                                scale: 2,
+                                            },
+                                        ],
+                                    }}>
+                                    {flags.langs[getCurrentLanguage()].flag}
+                                </View>
+                            </View>
+                        }
                         title={getLangs("settings_landing_aplication_lang")}
                         onPress={() =>
                             navigation.navigate("settings-language", {
@@ -118,11 +137,14 @@ export default function Landing({ navigation }) {
                         }
                     />
                     <OptionButton
-                        style={[styles.optionButton, { opacity: 0.25 }]}
+                        style={styles.optionButton}
                         icon={<SVG_Recent fill={style.colors.white} />}
                         title={getLangs(
                             "settings_landing_aplication_notifications"
                         )}
+                        onPress={() =>
+                            navigation.navigate("settings-notifications")
+                        }
                     />
                 </View>
 

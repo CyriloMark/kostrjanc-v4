@@ -12,13 +12,10 @@ import {
 
 import * as style from "../../styles";
 
-import { getAuth } from "firebase/auth";
-import { ref, set, getDatabase } from "firebase/database";
-
 import { Report_Placeholder } from "../../constants/content/PlaceholderData";
 import { Report_Types } from "../../constants/content/report";
-import { getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
+import { getUnsignedTranslationText } from "../../constants/content/translation";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -200,7 +197,10 @@ export default function Report({ navigation, route }) {
                     snapToEnd>
                     <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs("report_sub")} "
-                        {type === 2 ? item.name : item.title}" ({itemType()})
+                        {type === 2
+                            ? item.name
+                            : getUnsignedTranslationText(item.title)}
+                        " ({itemType()})
                     </Text>
                     {/* Type */}
                     <View style={styles.sectionContainer}>

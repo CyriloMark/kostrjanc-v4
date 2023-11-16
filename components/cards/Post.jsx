@@ -10,6 +10,8 @@ import {
     User_Placeholder,
     Post_Placeholder,
 } from "../../constants/content/PlaceholderData";
+import { getUnsignedTranslationText } from "../../constants/content/translation";
+import { checkForUnnecessaryNewLine } from "../../constants/content";
 
 export default function Post(props) {
     const [user, setUser] = useState(User_Placeholder);
@@ -65,7 +67,13 @@ export default function Post(props) {
 
     if (post.isBanned) return null;
     return (
-        <View style={[props.style, { marginVertical: style.defaultMmd }]}>
+        <View
+            style={[
+                props.style,
+                {
+                    marginVertical: style.defaultMmd,
+                },
+            ]}>
             <Pressable style={styles.container} onPress={props.onPress}>
                 {/* Header */}
                 <View style={[styles.headerContainer, style.Psm]}>
@@ -91,21 +99,32 @@ export default function Post(props) {
 
                 {/* Img */}
                 <View
-                    style={[
-                        style.allCenter,
-                        styles.imgContainer,
-                        style.oHidden,
-                    ]}>
-                    <Image
-                        source={{ uri: post.imgUri }}
-                        style={[styles.img]}
-                        resizeMode="cover"
-                    />
+                    style={{
+                        marginTop: style.defaultMsm,
+                        ...style.shadowSecSmall,
+                        borderRadius: 10,
+                    }}>
+                    <View
+                        style={[
+                            style.allCenter,
+                            styles.imgContainer,
+                            style.oHidden,
+                        ]}>
+                        <Image
+                            source={{ uri: post.imgUri }}
+                            style={[styles.img]}
+                            resizeMode="cover"
+                        />
+                    </View>
                 </View>
 
                 {/* Text */}
                 <View style={[styles.textContainer]}>
-                    <Text style={[style.Tmd, style.tWhite]}>{post.title}</Text>
+                    <Text style={[style.Tmd, style.tWhite]}>
+                        {getUnsignedTranslationText(
+                            checkForUnnecessaryNewLine(post.title)
+                        )}
+                    </Text>
                 </View>
             </Pressable>
         </View>
@@ -140,7 +159,7 @@ const styles = StyleSheet.create({
     },
 
     imgContainer: {
-        marginTop: style.defaultMsm,
+        // marginTop: style.defaultMsm,
         width: "100%",
         borderRadius: 10,
     },

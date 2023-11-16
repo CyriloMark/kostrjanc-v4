@@ -37,6 +37,7 @@ import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 
 import SVG_Live from "../assets/svg/Live";
 import SVG_Pin from "../assets/svg/Pin3.0";
+import SVG_Translate from "../assets/svg/Translate";
 
 import { convertTimestampToString } from "../constants/time";
 import { wait } from "../constants/wait";
@@ -54,6 +55,12 @@ import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
 import { checkIfTutorialNeeded } from "../constants/tutorial";
 import checkForAutoCorrect from "../constants/content/autoCorrect";
+import {
+    alertForTranslation,
+    checkIsTranslated,
+    getUnsignedTranslationText,
+} from "../constants/content/translation";
+import { checkForUnnecessaryNewLine } from "../constants/content";
 
 import MapView, {
     Marker,
@@ -358,7 +365,30 @@ export default function Event({ navigation, route, onTut }) {
                     <View>
                         {/* Title */}
                         <Text style={[style.tWhite, style.Ttitle2]}>
-                            {checkLinkedUser(event.title).map((el, key) =>
+                            {checkIsTranslated(event.title) ? (
+                                <Pressable
+                                    onPress={alertForTranslation}
+                                    style={[
+                                        {
+                                            width: 28,
+                                            height: 34,
+                                            marginHorizontal: style.defaultMmd,
+                                        },
+                                        style.allCenter,
+                                    ]}>
+                                    <SVG_Translate
+                                        style={{
+                                            width: 28,
+                                            aspectRatio: 1,
+                                        }}
+                                    />
+                                </Pressable>
+                            ) : null}
+                            {checkLinkedUser(
+                                getUnsignedTranslationText(
+                                    checkForUnnecessaryNewLine(event.title)
+                                )
+                            ).map((el, key) =>
                                 !el.isLinked ? (
                                     <Text key={key}>{el.text}</Text>
                                 ) : (
@@ -422,25 +452,47 @@ export default function Event({ navigation, route, onTut }) {
 
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
-                                {checkLinkedUser(event.description).map(
-                                    (el, key) =>
-                                        !el.isLinked ? (
-                                            <Text key={key}>{el.text}</Text>
-                                        ) : (
-                                            <Text
-                                                key={key}
-                                                style={style.tBlue}
-                                                onPress={() =>
-                                                    navigation.push(
-                                                        "profileView",
-                                                        {
-                                                            id: el.id,
-                                                        }
-                                                    )
-                                                }>
-                                                {el.text}
-                                            </Text>
+                                {checkIsTranslated(event.description) ? (
+                                    <Pressable
+                                        onPress={alertForTranslation}
+                                        style={[
+                                            {
+                                                width: 18,
+                                                height: 18,
+                                                marginHorizontal:
+                                                    style.defaultMmd,
+                                            },
+                                            style.allCenter,
+                                        ]}>
+                                        <SVG_Translate
+                                            style={{
+                                                width: 18,
+                                                aspectRatio: 1,
+                                            }}
+                                        />
+                                    </Pressable>
+                                ) : null}
+                                {checkLinkedUser(
+                                    getUnsignedTranslationText(
+                                        checkForUnnecessaryNewLine(
+                                            event.description
                                         )
+                                    )
+                                ).map((el, key) =>
+                                    !el.isLinked ? (
+                                        <Text key={key}>{el.text}</Text>
+                                    ) : (
+                                        <Text
+                                            key={key}
+                                            style={style.tBlue}
+                                            onPress={() =>
+                                                navigation.push("profileView", {
+                                                    id: el.id,
+                                                })
+                                            }>
+                                            {el.text}
+                                        </Text>
+                                    )
                                 )}
                             </Text>
                         </View>
@@ -575,33 +627,41 @@ export default function Event({ navigation, route, onTut }) {
 
                                 {/* Ad Banner */}
                                 {event.eventOptions.adBanner ? (
-                                    <Pressable
-                                        onPress={() =>
-                                            navigation.navigate("imgFull", {
-                                                uri: event.eventOptions.adBanner
-                                                    .uri,
-                                            })
-                                        }
+                                    <View
                                         style={[
                                             styles.underSectionContainer,
-                                            styles.rowContainer,
+                                            style.shadowSecSmall,
+                                            {
+                                                marginTop: style.defaultMmd,
+                                                borderRadius: 10,
+                                            },
                                         ]}>
-                                        <Image
-                                            style={[
-                                                styles.adBanner,
-                                                {
-                                                    aspectRatio:
-                                                        event.eventOptions
-                                                            .adBanner.aspect,
-                                                },
-                                            ]}
-                                            source={{
-                                                uri: event.eventOptions.adBanner
-                                                    .uri,
-                                            }}
-                                            resizeMode="cover"
-                                        />
-                                    </Pressable>
+                                        <Pressable
+                                            onPress={() =>
+                                                navigation.navigate("imgFull", {
+                                                    uri: event.eventOptions
+                                                        .adBanner.uri,
+                                                })
+                                            }
+                                            style={[styles.rowContainer]}>
+                                            <Image
+                                                style={[
+                                                    styles.adBanner,
+                                                    {
+                                                        aspectRatio:
+                                                            event.eventOptions
+                                                                .adBanner
+                                                                .aspect,
+                                                    },
+                                                ]}
+                                                source={{
+                                                    uri: event.eventOptions
+                                                        .adBanner.uri,
+                                                }}
+                                                resizeMode="cover"
+                                            />
+                                        </Pressable>
+                                    </View>
                                 ) : null}
 
                                 {/* Tags */}

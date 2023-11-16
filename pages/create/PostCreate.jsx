@@ -9,6 +9,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     Alert,
+    ActivityIndicator,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -225,7 +226,7 @@ export default function PostCreate({ navigation, route }) {
 
     const addToLocalStorage = id => {
         getData("userData").then(userData => {
-            const posts = [];
+            let posts = [];
             if (userData["posts"]) posts = userData["posts"];
             posts.push(id);
 
@@ -238,6 +239,19 @@ export default function PostCreate({ navigation, route }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
+            {uploading ? (
+                <View
+                    style={[
+                        styles.loadingContainer,
+                        style.allCenter,
+                        style.allMax,
+                    ]}>
+                    <ActivityIndicator
+                        size={"large"}
+                        color={style.colors.blue}
+                    />
+                </View>
+            ) : null}
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -584,5 +598,9 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         maxWidth: 12,
         maxHeight: 12,
+    },
+
+    loadingContainer: {
+        position: "absolute",
     },
 });

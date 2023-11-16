@@ -11,7 +11,7 @@ import SVG_Add from "../../assets/svg/Add";
 
 export default function NewCommentButton({ style, onPress }) {
     return (
-        <View style={style}>
+        <View style={[style, s.shadowSec, { borderRadius: 25 }]}>
             <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
                 <LinearGradient
                     style={[s.Pmd, s.allCenter, styles.inner]}

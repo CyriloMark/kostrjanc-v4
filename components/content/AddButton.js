@@ -11,11 +11,15 @@ import Animated, {
     withTiming,
     withSpring,
     Easing,
+    withRepeat,
+    withDelay,
+    withSequence,
 } from "react-native-reanimated";
 
 import SVG_Add from "../../assets/svg/Add";
 
 export default function AddButton({ checked, style, onPress }) {
+    //#region Add Button Animation of old way
     const startBoxWidth = useSharedValue(72);
     const startIconRotation = useSharedValue(0);
     const bgOpacity = useSharedValue(0);
@@ -56,11 +60,51 @@ export default function AddButton({ checked, style, onPress }) {
         });
         bgOpacity.value = checked ? 1 : 0;
     }, [checked]);
+    //#endregion
+
+    //#region Pulse Animation
+    const maxScale = 1.05;
+    const minScale = 1.0;
+    const pulseStyles = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    scale: withRepeat(
+                        withSequence(
+                            withTiming(minScale, {
+                                duration: 10,
+                                easing: Easing.ease,
+                            }),
+                            withDelay(
+                                5000,
+                                withSpring(maxScale, {
+                                    damping: 90,
+                                    stiffness: 50,
+                                })
+                            ),
+                            withSpring(minScale, {
+                                damping: 90,
+                                stiffness: 50,
+                            })
+                        ),
+                        0,
+                        true
+                    ),
+                },
+            ],
+        };
+    });
+    //#endregion
 
     return (
-        <View style={style}>
+        <View style={[style, styles.shadow, s.bgBlack]}>
             <Animated.View
-                style={[styles.container, s.oHidden, startBoxStyles]}>
+                style={[
+                    styles.container,
+                    s.oHidden,
+                    startBoxStyles,
+                    pulseStyles,
+                ]}>
                 <Pressable onPress={onPress}>
                     <LinearGradient
                         style={s.allMax}
@@ -109,5 +153,15 @@ const styles = StyleSheet.create({
     },
     bg: {
         position: "absolute",
+    },
+    shadow: {
+        shadowColor: s.colors.blue,
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0.33,
+        shadowRadius: 25,
+        borderRadius: 25,
     },
 });

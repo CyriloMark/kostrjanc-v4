@@ -14,7 +14,7 @@ export default function CheckButton({ style, onPress, checked }) {
     if (checked) {
         //Checked
         return (
-            <View style={style}>
+            <View style={[style, s.shadowRed, { borderRadius: 25 }]}>
                 <Pressable
                     style={[styles.container, s.oHidden]}
                     onPress={onPress}>
@@ -44,7 +44,7 @@ export default function CheckButton({ style, onPress, checked }) {
     } else {
         //Not checked
         return (
-            <View style={style}>
+            <View style={[style, s.shadowSec, { borderRadius: 25 }]}>
                 <Pressable
                     style={[styles.container, s.oHidden]}
                     onPress={onPress}>

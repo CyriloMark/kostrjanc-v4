@@ -39,6 +39,7 @@ import SVG_Search from "../../assets/svg/Search";
 import { LinearGradient } from "expo-linear-gradient";
 
 import axios from "axios";
+import makeRequest from "../../constants/request";
 
 const RANDOM_CONTENT_ENABLED = false;
 //#region Event Recommendation
@@ -81,6 +82,9 @@ export default function Content({ navigation, onTut }) {
         lastUpdated: 0,
         events: [],
     });
+
+    let shownRandomUsersList = [];
+    let currentRandomUsersList = [];
 
     /* #region Old Search Engine
     let getSearchResult = text => {
@@ -138,45 +142,98 @@ export default function Content({ navigation, onTut }) {
     };
     // #endregion */
 
+    //#region Get Random User
+    let loadingUsers = false;
     const getRandomUser = () => {
-        if (!UsersData) {
-            const db = getDatabase();
-            get(child(ref(db), "users"))
-                .then(usersSnap => {
-                    if (!usersSnap.exists()) return;
+        if (loadingUsers) return;
+        loadingUsers = true;
 
-                    const usersData = usersSnap.val();
-                    UsersData = usersData;
+        if (currentRandomUsersList.length === 0) {
+            makeRequest("/algo/follower", {
+                max_followers: 5,
+                max_out: 5,
+                previous_followers: shownRandomUsersList,
+            }).then(user => {
+                loadingUsers = false;
+                currentRandomUsersList = user["followers"];
+                loadRandomUser();
+            });
+        } else loadRandomUser();
 
-                    const data = Object.entries(UsersData);
-                    const random = Math.round(
-                        lerp(0, data.length, Math.random())
-                    );
-                    const randomUser = {
-                        id: data[random][0],
-                        name: data[random][1]["name"],
-                        pbUri: data[random][1]["pbUri"],
-                    };
-                    setRandomUser(randomUser);
-                })
-                .catch(error =>
-                    console.log(
-                        "error main/Content.jsx",
-                        "getRandomUser get users",
-                        error.code
-                    )
-                );
-        } else {
-            const data = Object.entries(UsersData);
-            const random = Math.round(lerp(0, data.length, Math.random()));
-            const randomUser = {
-                id: data[random][0],
-                name: data[random][1]["name"],
-                pbUri: data[random][1]["pbUri"],
-            };
-            setRandomUser(randomUser);
-        }
+        // if (!UsersData) {
+        //     const db = getDatabase();
+        //     get(child(ref(db), "users"))
+        //         .then(usersSnap => {
+        //             if (!usersSnap.exists()) return;
+
+        //             const usersData = usersSnap.val();
+        //             UsersData = usersData;
+
+        //             const data = Object.entries(UsersData);
+        //             const random = Math.round(
+        //                 lerp(0, data.length, Math.random())
+        //             );
+        //             const randomUser = {
+        //                 id: data[random][0],
+        //                 name: data[random][1]["name"],
+        //                 pbUri: data[random][1]["pbUri"],
+        //             };
+        //             setRandomUser(randomUser);
+        //         })
+        //         .catch(error =>
+        //             console.log(
+        //                 "error main/Content.jsx",
+        //                 "getRandomUser get users",
+        //                 error.code
+        //             )
+        //         );
+        // } else {
+        //     const data = Object.entries(UsersData);
+        //     const random = Math.round(lerp(0, data.length, Math.random()));
+        //     const randomUser = {
+        //         id: data[random][0],
+        //         name: data[random][1]["name"],
+        //         pbUri: data[random][1]["pbUri"],
+        //     };
+        //     setRandomUser(randomUser);
+        // }
     };
+    const loadRandomUser = () => {
+        const currentUserId =
+            currentRandomUsersList[currentRandomUsersList.length - 1];
+        shownRandomUsersList.push(currentUserId);
+        currentRandomUsersList.pop();
+
+        const db = getDatabase();
+        get(child(ref(db), `users/${currentUserId}`))
+            .then(userSnap => {
+                if (!userSnap.exists()) return;
+                const userData = userSnap.val();
+
+                const user = {
+                    id: currentUserId,
+                    name: userData["name"],
+                    pbUri: userData["pbUri"],
+                    isBanned: userData["isBanned"],
+                };
+                if (user.isBanned)
+                    if (currentRandomUsersList.length === 0)
+                        setRandomUser(null);
+                    else getUser();
+                else {
+                    setRandomUser(user);
+                    loadingUsers = false;
+                }
+            })
+            .catch(error =>
+                console.log(
+                    "error main/Content.jsx",
+                    "getRandomUser get user",
+                    error.code
+                )
+            );
+    };
+    //#endregion
 
     //#region Tutorials
     useEffect(() => {
