@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Pressable,
     Image,
+    Dimensions,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -265,7 +266,38 @@ export default function Landing({ navigation }) {
 
                 {/* Footer */}
                 <View style={[styles.sectionContainer, style.allCenter]}>
-                    <Text style={[style.TsmLt, style.tWhite, style.tCenter]}>
+                    {/* Zalozba za serbski Lud */}
+                    <View style={[styles.stiftungContainer, style.allCenter]}>
+                        <View style={[{ flex: 0.2 }, style.allCenter]}>
+                            <Image
+                                resizeMode="cover"
+                                style={styles.stiftungImage}
+                                source={require("../../assets/img/Stiftung-Logo-Small.png")}
+                            />
+                        </View>
+                        <Text
+                            style={[
+                                style.TsmRg,
+                                style.tWhite,
+                                styles.stiftungText,
+                            ]}>
+                            Projekt spěchuje so wot{" "}
+                            <Text style={{ fontFamily: "Barlow_Bold" }}>
+                                Załožby za serbski lud
+                            </Text>
+                            , kotraž dóstawa lětnje přiražki z dawkowych srědkow
+                            na zakładźe hospodarskich planow, wobzamknjenych wot
+                            Zwjazkoweho sejma, Krajneho sejma Braniborskeje a
+                            Sakskeho krajneho sejma.
+                        </Text>
+                    </View>
+                    <Text
+                        style={[
+                            style.TsmLt,
+                            style.tWhite,
+                            style.tCenter,
+                            { marginTop: style.defaultMlg },
+                        ]}>
                         Version {require("../../app.json").expo.version}
                         {"\n"}
                         Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 All
@@ -308,5 +340,19 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         marginLeft: style.defaultMmd,
         flex: 1,
+    },
+
+    stiftungContainer: {
+        width: "100%",
+        flexDirection: "row",
+    },
+    stiftungImage: {
+        width: Dimensions.get("screen").width * 0.125,
+        height: (Dimensions.get("screen").width * 0.125 * 7) / 4,
+        borderRadius: 10,
+    },
+    stiftungText: {
+        flex: 0.8,
+        paddingLeft: style.defaultMsm,
     },
 });

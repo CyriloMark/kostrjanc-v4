@@ -1753,7 +1753,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         transform: [
             {
-                translateY: -12,
+                translateY: -16,
             },
         ],
         ...style.boxShadow,

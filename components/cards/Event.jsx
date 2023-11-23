@@ -171,14 +171,16 @@ export default function Event(props) {
                         scrollEnabled={false}
                         initialRegion={event.geoCords}
                         onPress={props.onPress}>
-                        {/* <Marker
+                        <Marker
                             coordinate={event.geoCords}
                             draggable={false}
                             tappable={false}>
-                            
-                        </Marker> */}
+                            <SVG_Pin
+                                fill={style.colors.red}
+                                style={styles.marker}
+                            />
+                        </Marker>
                     </MapView>
-                    <SVG_Pin fill={style.colors.red} style={styles.marker} />
                 </View>
 
                 {/* Checks PBs */}
@@ -273,13 +275,12 @@ const styles = StyleSheet.create({
     },
 
     marker: {
-        position: "absolute",
         zIndex: 99,
         height: 32,
         width: 32,
         transform: [
             {
-                translateY: -12,
+                translateY: -16,
             },
         ],
         ...style.boxShadow,

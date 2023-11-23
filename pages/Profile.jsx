@@ -473,7 +473,10 @@ export default function Profile({ navigation, route }) {
                                         <PostPreview
                                             key={itemKey}
                                             data={item}
-                                            style={styles.contentItem}
+                                            style={[
+                                                styles.contentItem,
+                                                style.shadowSecSmall,
+                                            ]}
                                             onPress={() =>
                                                 navigation.push("postView", {
                                                     id: item.id,
@@ -484,7 +487,10 @@ export default function Profile({ navigation, route }) {
                                         <EventPreview
                                             key={itemKey}
                                             data={item}
-                                            style={styles.contentItem}
+                                            style={[
+                                                styles.contentItem,
+                                                style.shadowSecSmall,
+                                            ]}
                                             onPress={() =>
                                                 navigation.push("eventView", {
                                                     id: item.id,
@@ -591,6 +597,5 @@ const styles = StyleSheet.create({
         margin: style.defaultMsm,
         flex: 1,
         borderRadius: 10,
-        ...style.shadowSecSmall,
     },
 });

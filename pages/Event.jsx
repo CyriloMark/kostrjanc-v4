@@ -442,10 +442,12 @@ export default function Event({ navigation, route, onTut }) {
                                     draggable={false}
                                     title={event.title}
                                     coordinate={event.geoCords}>
-                                    <SVG_Pin
-                                        fill={style.colors.red}
-                                        style={styles.marker}
-                                    />
+                                    <View>
+                                        <SVG_Pin
+                                            fill={style.colors.red}
+                                            style={styles.marker}
+                                        />
+                                    </View>
                                 </Marker>
                             </MapView>
                         </View>
@@ -1078,5 +1080,10 @@ const styles = StyleSheet.create({
     marker: {
         width: 32,
         height: 32,
+        transform: [
+            {
+                translateY: -16,
+            },
+        ],
     },
 });

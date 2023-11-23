@@ -589,10 +589,11 @@ export default function Content({ navigation, onTut }) {
                                     },
                                 ]}>
                                 {eventRanking.events.length !== 0
-                                    ? `${getLangs("contentpage_lastupdatetext")}
-                                    ${convertTimestampToString(
-                                        eventRanking.lastUpdated
-                                    )}`
+                                    ? `${getLangs(
+                                          "contentpage_lastupdatetext"
+                                      )} ${convertTimestampToString(
+                                          eventRanking.lastUpdated
+                                      )}`
                                     : getLangs("contentpage_noevents")}
                             </Text>
                         </View>

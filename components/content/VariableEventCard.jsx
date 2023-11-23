@@ -57,10 +57,10 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             },
                         });
 
-                        // mapRef.current.animateToRegion(
-                        //     eventData["geoCords"],
-                        //     0
-                        // );
+                        mapRef.current.animateToRegion(
+                            eventData["geoCords"],
+                            0
+                        );
                     })
                     .catch(error =>
                         console.log(
@@ -302,14 +302,16 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             scrollEnabled={false}
                             initialRegion={event.geoCords}
                             onPress={onPress}>
-                            {/* <Marker
-                            coordinate={event.geoCords}
-                            draggable={false}
-                            tappable={false}>
-                            
-                        </Marker> */}
+                            <Marker
+                                coordinate={event.geoCords}
+                                draggable={false}
+                                tappable={false}>
+                                <SVG_Pin
+                                    fill={s.colors.red}
+                                    style={styles.marker}
+                                />
+                            </Marker>
                         </MapView>
-                        <SVG_Pin fill={s.colors.red} style={styles.marker} />
                     </View>
 
                     {/* Checks */}
@@ -452,14 +454,16 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             scrollEnabled={false}
                             initialRegion={event.geoCords}
                             onPress={onPress}>
-                            {/* <Marker
-                            coordinate={event.geoCords}
-                            draggable={false}
-                            tappable={false}>
-                            
-                        </Marker> */}
+                            <Marker
+                                coordinate={event.geoCords}
+                                draggable={false}
+                                tappable={false}>
+                                <SVG_Pin
+                                    fill={s.colors.red}
+                                    style={styles.marker}
+                                />
+                            </Marker>
                         </MapView>
-                        <SVG_Pin fill={s.colors.red} style={styles.marker} />
                     </View>
                 </Pressable>
             </View>
@@ -470,13 +474,12 @@ export default function VariableEventCard({ style, size, data, onPress }) {
 
 const styles = StyleSheet.create({
     marker: {
-        position: "absolute",
         zIndex: 99,
         height: 32,
         width: 32,
         transform: [
             {
-                translateY: -12,
+                translateY: -16,
             },
         ],
         ...s.boxShadow,

@@ -30,8 +30,14 @@ export default function EventPreview({ style, onPress, data }) {
                     pitchEnabled={false}
                     onPress={onPress}
                     userInterfaceStyle="dark"
-                    scrollEnabled={false}></MapView>
-                <SVG_Pin fill={s.colors.red} style={styles.pin} />
+                    scrollEnabled={false}>
+                    <Marker
+                        coordinate={data.geoCords}
+                        focusable={false}
+                        draggable={false}>
+                        <SVG_Pin fill={s.colors.red} style={styles.pin} />
+                    </Marker>
+                </MapView>
             </Pressable>
         </View>
     );
@@ -50,7 +56,6 @@ const styles = StyleSheet.create({
         right: s.defaultMsm,
     },
     pin: {
-        position: "absolute",
         zIndex: 99,
         height: 32,
         width: 32,
