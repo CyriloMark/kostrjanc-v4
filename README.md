@@ -30,20 +30,23 @@ GPL-3.0 LICENCE
 
 ### Technologies
 
--- nodejs
--- react / react-native
--- JavaScript / Typescript
--- firebase
+$ -- nodejs
+$ -- react / react-native
+$ -- JavaScript / Typescript
+$ -- firebase
 
 ### Installation
 
 INIT: ./src/app.jsx
+
+```bash
 $ git clone https://github.com/CyriloMark/kostrjanc
 $ cd ../kostrjanc/
 $ npm install
 $ npm start
+```
 
 ### Collaboration
 
--- Mark, Cyril
--- Baier, Korla
+$ -- Mark, Cyrill
+$ -- Baier, Korla
