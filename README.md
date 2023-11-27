@@ -1,13 +1,22 @@
 # kostrjanc
+
 kostrjanc - 1. Serbski Social Media
 
+## Licence
+
+&copy; 2022-2023 Cyrill Mark, Korla Baier
+All Rights Reserved
+GPL-3.0 LICENCE
+
 ## Content
+
 1. [General] #general
 2. [Technologies] #technologies
 3. [Installation] #installation
 4. [Collaboration] #collaboration
 
 ### General
+
 "kostrjanc" je prěni serbski socialny medium, kotryž so jako aplikacija poskići.
 "kostrjanc" zmóžni jednore zwjazanje Serbow přez internet.
 
@@ -18,12 +27,14 @@ kostrjanc - 1. Serbski Social Media
 "kostrjanc" enables Sorbians to communicate easily through the internet.
 
 ### Technologies
+
 -- nodejs
 -- react / react-native
 -- JavaScript / Typescript
 -- firebase
 
 ### Installation
+
 INIT: ./src/app.jsx
 $ git clone https://github.com/CyriloMark/kostrjanc
 $ cd ../kostrjanc/
@@ -31,5 +42,6 @@ $ npm install
 $ npm start
 
 ### Collaboration
+
 -- Mark, Cyril
 -- Baier, Korla
