@@ -5,7 +5,9 @@ kostrjanc - 1. Serbski Social Media
 ## Licence
 
 &copy; 2022-2023 Cyrill Mark, Korla Baier
+
 All Rights Reserved
+
 GPL-3.0 LICENCE
 
 ## Content
