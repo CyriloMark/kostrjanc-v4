@@ -199,6 +199,10 @@ export default function Content({ navigation, onTut }) {
         // }
     };
     const loadRandomUser = () => {
+        if (currentRandomUsersList.length === 0) {
+            setRandomUser(null);
+            return;
+        }
         const currentUserId =
             currentRandomUsersList[currentRandomUsersList.length - 1];
         shownRandomUsersList.push(currentUserId);

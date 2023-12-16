@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Pressable, StyleSheet, ScrollView, Text } from "react-native";
 
 import * as style from "../../styles";
 
 import { getLangs } from "../../constants/langs";
-
-import { getAuth, updateProfile } from "firebase/auth";
+import * as notifications from "../../constants/settings/notifications";
 
 import BackHeader from "../../components/BackHeader";
 import Switch from "../../components/settings/Switch";
@@ -13,17 +12,22 @@ import EditProfileButton from "../../components/profile/EditProfileButton";
 
 export default function Notifications({ navigation }) {
     const [actives, setActives] = useState({
-        follower: true,
+        follower: false,
         contents: false,
         comments: false,
-        eventStart: true,
+        eventStart: false,
     });
 
-    const overrideNotificationSettings = () => {
-        console.log("save notification settings");
-
-        // navigation.goBack();
+    const overrideNotificationSettings = async () => {
+        notifications.setNotificationSettings(actives).then(res => {
+            // Alert
+            navigation.goBack();
+        });
     };
+
+    useEffect(() => {
+        setActives(notifications.getNotificationSettings());
+    }, []);
 
     return (
         <View style={[style.container, style.bgBlack]}>

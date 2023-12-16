@@ -30,10 +30,10 @@ GPL-3.0 LICENCE
 
 ### Technologies
 
-$ -- nodejs
-$ -- react / react-native
-$ -- JavaScript / Typescript
-$ -- firebase
+-- nodejs
+-- react / react-native
+-- JavaScript / Typescript
+-- firebase
 
 ### Installation
 
@@ -48,5 +48,5 @@ $ npm start
 
 ### Collaboration
 
-$ -- Mark, Cyrill
-$ -- Baier, Korla
+-- Mark, Cyrill
+-- Baier, Korla

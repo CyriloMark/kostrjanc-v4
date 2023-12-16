@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { View, Platform } from "react-native";
+import { View, Platform, Appearance } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
@@ -72,6 +72,7 @@ import {
 
 const RESET_TUTORIALS_ENABELD = false;
 
+Appearance.setColorScheme("dark");
 export default function App() {
     const [fontsLoaded, fontsError] = useFonts({
         RobotoMono_Thin: require("./assets/fonts/RobotoMono-Thin.ttf"),

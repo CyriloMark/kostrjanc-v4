@@ -105,8 +105,8 @@ export default function TestView(props) {
                                 textDecorationColor: style.colors.blue,
                             },
                         ]}
-                        onPress={() => openLink("mailto:info@kostrjanc.de")}>
-                        info@kostrjanc.de
+                        onPress={() => openLink("mailto:kostrjanc@gmail.com")}>
+                        kostrjanc@gmail.com
                     </Text>
                     {getLangs("testview_sub_1")}
                 </Text>

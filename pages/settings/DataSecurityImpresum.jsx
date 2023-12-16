@@ -54,8 +54,8 @@ export default function DataSecurityImpresum({ navigation }) {
                     <View style={style.pH}>
                         <Text style={textStyles}>
                             Cyril Mark {"\n"}
-                            Łusč 1e {"\n"}
-                            02699 Bóšicy
+                            Hermann-Liebmann-Straße 31{"\n"}
+                            04315 Lipsk
                         </Text>
                         <Text style={textStyles}>
                             Korla Baier {"\n"}
@@ -85,7 +85,7 @@ export default function DataSecurityImpresum({ navigation }) {
                         <View style={style.pH}>
                             <Text style={[textStyles]}>
                                 Telefon: +49 179 4361854 {"\n"}
-                                Email: info@kostrjanc.de {"\n"}
+                                Email: kostrjanc@gmail.com {"\n"}
                                 Internet: kostrjanc.de
                             </Text>
                         </View>
@@ -399,14 +399,6 @@ export default function DataSecurityImpresum({ navigation }) {
                                 <Text
                                     style={style.tBlue}
                                     onPress={() =>
-                                        openLink("mailto:info@kostrjanc.de")
-                                    }>
-                                    info@kostrjanc.de
-                                </Text>{" "}
-                                abo přez{" "}
-                                <Text
-                                    style={style.tBlue}
-                                    onPress={() =>
                                         openLink("mailto:kostrjanc@gmail.com")
                                     }>
                                     kostrjanc@gmail.com
@@ -432,14 +424,6 @@ export default function DataSecurityImpresum({ navigation }) {
                                 Jeli chce wužiwar wědźeć, kotry daty kostrjanc
                                 wo wužiwarju ma, ma wobhospodarjow aplikacije
                                 pod{" "}
-                                <Text
-                                    style={style.tBlue}
-                                    onPress={() =>
-                                        openLink("mailto:info@kostrjanc.de")
-                                    }>
-                                    info@kostrjanc.de
-                                </Text>{" "}
-                                abo přez{" "}
                                 <Text
                                     style={style.tBlue}
                                     onPress={() =>
