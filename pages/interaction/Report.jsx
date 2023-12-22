@@ -8,6 +8,7 @@ import {
     StyleSheet,
     Platform,
     Alert,
+    ActivityIndicator,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -16,17 +17,19 @@ import { Report_Placeholder } from "../../constants/content/PlaceholderData";
 import { Report_Types } from "../../constants/content/report";
 import { getLangs } from "../../constants/langs";
 import { getUnsignedTranslationText } from "../../constants/content/translation";
+import makeRequest from "../../constants/request";
+import checkForAutoCorrectInside, {
+    getCursorPosition,
+} from "../../constants/content/autoCorrect";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import TextField from "../../components/TextField";
 import SelectableButton from "../../components/event/SelectableButton";
 import AccessoryView from "../../components/AccessoryView";
-import makeRequest from "../../constants/request";
-import { ActivityIndicator } from "react-native-paper";
-import checkForAutoCorrect from "../../constants/content/autoCorrect";
 
 let reporting = false;
+let cursorPos = -1;
 
 export default function Report({ navigation, route }) {
     const { item, type } = route.params;
@@ -40,6 +43,10 @@ export default function Report({ navigation, route }) {
         status: 100,
         content: [],
     });
+
+    useEffect(() => {
+        cursorPos = -1;
+    }, []);
 
     const itemType = () => {
         switch (type) {
@@ -252,23 +259,58 @@ export default function Report({ navigation, route }) {
                             }
                             maxLength={512}
                             supportsAutoCorrect
+                            onSelectionChange={async e => {
+                                cursorPos = e.nativeEvent.selection.start;
+
+                                const autoC = await checkForAutoCorrectInside(
+                                    reportData.description,
+                                    cursorPos
+                                );
+                                setAutoCorrect(autoC);
+                            }}
                             onChangeText={async val => {
+                                // Check Selection
+                                cursorPos = getCursorPosition(
+                                    reportData.description,
+                                    val
+                                );
+
+                                // Add Input to Post Data -> Changes Desc
                                 setReportData({
                                     ...reportData,
                                     description: val,
                                 });
 
-                                const autoC = await checkForAutoCorrect(val);
+                                // Auto Correct
+                                const autoC = await checkForAutoCorrectInside(
+                                    val,
+                                    cursorPos
+                                );
                                 setAutoCorrect(autoC);
                             }}
                             autoCorrection={autoCorrect}
                             applyAutoCorrection={word => {
                                 setReportData(prev => {
                                     let desc = prev.description.split(" ");
-                                    desc.pop();
-                                    desc.push(word);
+                                    let descPartSplit = prev.description
+                                        .substring(0, cursorPos)
+                                        .split(" ");
+
+                                    descPartSplit.pop();
+                                    descPartSplit.push(word);
+
                                     let newDesc = "";
-                                    desc.forEach(el => (newDesc += `${el} `));
+                                    descPartSplit.forEach(
+                                        el => (newDesc += `${el} `)
+                                    );
+                                    for (
+                                        let i = descPartSplit.length;
+                                        i < desc.length;
+                                        i++
+                                    )
+                                        newDesc += `${desc[i]}${
+                                            i == desc.length - 1 ? "" : " "
+                                        }`;
 
                                     setAutoCorrect({
                                         status: 100,

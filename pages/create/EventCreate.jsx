@@ -40,7 +40,9 @@ import {
     LINKING_TYPES,
 } from "../../constants/content/linking";
 import makeRequest from "../../constants/request";
-import checkForAutoCorrect from "../../constants/content/autoCorrect";
+import checkForAutoCorrectInside, {
+    getCursorPosition,
+} from "../../constants/content/autoCorrect";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -86,6 +88,7 @@ const userUploadMetadata = {
 
 const tagLineAmt = 5;
 
+let cursorPos = -1;
 export default function EventCreate({ navigation, route }) {
     let btnPressed = false;
     const [uploading, setUploading] = useState(btnPressed);
@@ -107,6 +110,10 @@ export default function EventCreate({ navigation, route }) {
         status: 100,
         content: [],
     });
+
+    useEffect(() => {
+        cursorPos = -1;
+    }, []);
 
     // From linking → when comes back fromLinking = true || = false
     const { fromLinking, linkingData } = route.params;
@@ -629,27 +636,63 @@ export default function EventCreate({ navigation, route }) {
                                         <SVG_Pencil fill={style.colors.blue} />
                                     }
                                     supportsAutoCorrect
+                                    onSelectionChange={async e => {
+                                        cursorPos =
+                                            e.nativeEvent.selection.start;
+
+                                        const autoC =
+                                            await checkForAutoCorrectInside(
+                                                event.title,
+                                                cursorPos
+                                            );
+                                        setAutoCorrect(autoC);
+                                    }}
                                     onChangeText={async val => {
+                                        // Check Selection
+                                        cursorPos = getCursorPosition(
+                                            event.title,
+                                            val
+                                        );
+
+                                        // Add Input to Post Data -> Changes Title
                                         setEvent({
                                             ...event,
                                             title: val,
                                         });
 
-                                        const autoC = await checkForAutoCorrect(
-                                            val
-                                        );
+                                        // Auto Correct
+                                        const autoC =
+                                            await checkForAutoCorrectInside(
+                                                val,
+                                                cursorPos
+                                            );
                                         setAutoCorrect(autoC);
                                     }}
                                     autoCorrection={autoCorrect}
                                     applyAutoCorrection={word => {
                                         setEvent(prev => {
                                             let title = prev.title.split(" ");
-                                            title.pop();
-                                            title.push(word);
+                                            let titlePartSplit = prev.title
+                                                .substring(0, cursorPos)
+                                                .split(" ");
+
+                                            titlePartSplit.pop();
+                                            titlePartSplit.push(word);
+
                                             let newTitle = "";
-                                            title.forEach(
+                                            titlePartSplit.forEach(
                                                 el => (newTitle += `${el} `)
                                             );
+                                            for (
+                                                let i = titlePartSplit.length;
+                                                i < title.length;
+                                                i++
+                                            )
+                                                newTitle += `${title[i]}${
+                                                    i == title.length - 1
+                                                        ? ""
+                                                        : " "
+                                                }`;
 
                                             setAutoCorrect({
                                                 status: 100,
@@ -682,15 +725,36 @@ export default function EventCreate({ navigation, route }) {
                                     maxLength={512}
                                     inputAccessoryViewID="event_description_InputAccessoryViewID"
                                     supportsAutoCorrect
+                                    onSelectionChange={async e => {
+                                        cursorPos =
+                                            e.nativeEvent.selection.start;
+
+                                        const autoC =
+                                            await checkForAutoCorrectInside(
+                                                event.description,
+                                                cursorPos
+                                            );
+                                        setAutoCorrect(autoC);
+                                    }}
                                     onChangeText={async val => {
+                                        // Check Selection
+                                        cursorPos = getCursorPosition(
+                                            event.description,
+                                            val
+                                        );
+
+                                        // Add Input to Post Data -> Changes Desc
                                         setEvent({
                                             ...event,
                                             description: val,
                                         });
 
-                                        const autoC = await checkForAutoCorrect(
-                                            val
-                                        );
+                                        // Auto Correct
+                                        const autoC =
+                                            await checkForAutoCorrectInside(
+                                                val,
+                                                cursorPos
+                                            );
                                         setAutoCorrect(autoC);
                                     }}
                                     autoCorrection={autoCorrect}
@@ -698,12 +762,27 @@ export default function EventCreate({ navigation, route }) {
                                         setEvent(prev => {
                                             let desc =
                                                 prev.description.split(" ");
-                                            desc.pop();
-                                            desc.push(word);
+                                            let descPartSplit = prev.description
+                                                .substring(0, cursorPos)
+                                                .split(" ");
+
+                                            descPartSplit.pop();
+                                            descPartSplit.push(word);
+
                                             let newDesc = "";
-                                            desc.forEach(
+                                            descPartSplit.forEach(
                                                 el => (newDesc += `${el} `)
                                             );
+                                            for (
+                                                let i = descPartSplit.length;
+                                                i < desc.length;
+                                                i++
+                                            )
+                                                newDesc += `${desc[i]}${
+                                                    i == desc.length - 1
+                                                        ? ""
+                                                        : " "
+                                                }`;
 
                                             setAutoCorrect({
                                                 status: 100,

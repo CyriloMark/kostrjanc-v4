@@ -25,6 +25,9 @@ import { getAuthErrorMsg } from "../../constants/error/auth";
 import { getLangs } from "../../constants/langs";
 import { openLink } from "../../constants";
 import makeRequest from "../../constants/request";
+import checkForAutoCorrectInside, {
+    getCursorPosition,
+} from "../../constants/content/autoCorrect";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -45,11 +48,11 @@ import SVG_Post from "../../assets/svg/Post";
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Email from "../../assets/svg/Email";
 import SVG_Web from "../../assets/svg/Web";
-import checkForAutoCorrect from "../../constants/content/autoCorrect";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
 };
+let cursorPos = -1;
 
 export default function Register({ navigation }) {
     const savePasswordRegex =
@@ -75,6 +78,10 @@ export default function Register({ navigation }) {
         status: 100,
         content: [],
     });
+
+    useEffect(() => {
+        cursorPos = -1;
+    }, []);
 
     const setAlert = error => {
         Alert.alert(
@@ -484,15 +491,36 @@ export default function Register({ navigation }) {
                                     value={registerData.description}
                                     inputAccessoryViewID="register_description_InputAccessoryViewID"
                                     supportsAutoCorrect
+                                    onSelectionChange={async e => {
+                                        cursorPos =
+                                            e.nativeEvent.selection.start;
+
+                                        const autoC =
+                                            await checkForAutoCorrectInside(
+                                                registerData.description,
+                                                cursorPos
+                                            );
+                                        setAutoCorrect(autoC);
+                                    }}
                                     onChangeText={async val => {
+                                        // Check Selection
+                                        cursorPos = getCursorPosition(
+                                            registerData.description,
+                                            val
+                                        );
+
+                                        // Add Input to Post Data -> Changes Desc
                                         setRegisterData({
                                             ...registerData,
                                             description: val,
                                         });
 
-                                        const autoC = await checkForAutoCorrect(
-                                            val
-                                        );
+                                        // Auto Correct
+                                        const autoC =
+                                            await checkForAutoCorrectInside(
+                                                val,
+                                                cursorPos
+                                            );
                                         setAutoCorrect(autoC);
                                     }}
                                     autoCorrection={autoCorrect}
@@ -500,12 +528,27 @@ export default function Register({ navigation }) {
                                         setRegisterData(prev => {
                                             let desc =
                                                 prev.description.split(" ");
-                                            desc.pop();
-                                            desc.push(word);
+                                            let descPartSplit = prev.description
+                                                .substring(0, cursorPos)
+                                                .split(" ");
+
+                                            descPartSplit.pop();
+                                            descPartSplit.push(word);
+
                                             let newDesc = "";
-                                            desc.forEach(
+                                            descPartSplit.forEach(
                                                 el => (newDesc += `${el} `)
                                             );
+                                            for (
+                                                let i = descPartSplit.length;
+                                                i < desc.length;
+                                                i++
+                                            )
+                                                newDesc += `${desc[i]}${
+                                                    i == desc.length - 1
+                                                        ? ""
+                                                        : " "
+                                                }`;
 
                                             setAutoCorrect({
                                                 status: 100,

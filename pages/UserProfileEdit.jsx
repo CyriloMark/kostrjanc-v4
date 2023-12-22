@@ -31,17 +31,19 @@ import AccessoryView from "../components/AccessoryView";
 
 import { storeData } from "../constants/storage";
 import { getLangs } from "../constants/langs";
+import makeRequest from "../constants/request";
+import checkForAutoCorrectInside, {
+    getCursorPosition,
+} from "../constants/content/autoCorrect";
 
 import SVG_Post from "../assets/svg/Post";
-import makeRequest from "../constants/request";
-import checkForAutoCorrect from "../constants/content/autoCorrect";
 
 const userUploadMetadata = {
     contentType: "image/jpeg",
 };
 
 let pbChanged = false;
-
+let cursorPos = -1;
 export default function UserProfileEdit({ navigation, route }) {
     const { userData } = route.params;
 
@@ -53,6 +55,10 @@ export default function UserProfileEdit({ navigation, route }) {
         status: 100,
         content: [],
     });
+
+    useEffect(() => {
+        cursorPos = -1;
+    }, []);
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
@@ -273,7 +279,12 @@ export default function UserProfileEdit({ navigation, route }) {
                     snapToEnd
                     style={[style.container, style.pH, style.oVisible]}>
                     {/* Name */}
-                    <View style={styles.sectionContainer}>
+                    <View
+                        style={{
+                            width: "100%",
+                            flex: 1,
+                            flexDirection: "column",
+                        }}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("editprofile_myname")}
                         </Text>
@@ -354,27 +365,60 @@ export default function UserProfileEdit({ navigation, route }) {
                                 value={updatedUserData.description}
                                 inputAccessoryViewID="userprofileedit_Description_InputAccessoryViewID"
                                 supportsAutoCorrect
+                                onSelectionChange={async e => {
+                                    cursorPos = e.nativeEvent.selection.start;
+
+                                    const autoC =
+                                        await checkForAutoCorrectInside(
+                                            updatedUserData.description,
+                                            cursorPos
+                                        );
+                                    setAutoCorrect(autoC);
+                                }}
                                 onChangeText={async val => {
+                                    // Check Selection
+                                    cursorPos = getCursorPosition(
+                                        updatedUserData.description,
+                                        val
+                                    );
+
+                                    // Add Input to Post Data -> Changes Desc
                                     setUpdatedUserData({
                                         ...updatedUserData,
                                         description: val,
                                     });
 
-                                    const autoC = await checkForAutoCorrect(
-                                        val
-                                    );
+                                    // Auto Correct
+                                    const autoC =
+                                        await checkForAutoCorrectInside(
+                                            val,
+                                            cursorPos
+                                        );
                                     setAutoCorrect(autoC);
                                 }}
                                 autoCorrection={autoCorrect}
                                 applyAutoCorrection={word => {
                                     setUpdatedUserData(prev => {
                                         let desc = prev.description.split(" ");
-                                        desc.pop();
-                                        desc.push(word);
+                                        let descPartSplit = prev.description
+                                            .substring(0, cursorPos)
+                                            .split(" ");
+
+                                        descPartSplit.pop();
+                                        descPartSplit.push(word);
+
                                         let newDesc = "";
-                                        desc.forEach(
+                                        descPartSplit.forEach(
                                             el => (newDesc += `${el} `)
                                         );
+                                        for (
+                                            let i = descPartSplit.length;
+                                            i < desc.length;
+                                            i++
+                                        )
+                                            newDesc += `${desc[i]}${
+                                                i == desc.length - 1 ? "" : " "
+                                            }`;
 
                                         setAutoCorrect({
                                             status: 100,

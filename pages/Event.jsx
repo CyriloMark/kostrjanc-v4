@@ -54,7 +54,9 @@ import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
 import { checkIfTutorialNeeded } from "../constants/tutorial";
-import checkForAutoCorrect from "../constants/content/autoCorrect";
+import checkForAutoCorrectInside, {
+    getCursorPosition,
+} from "../constants/content/autoCorrect";
 import {
     alertForTranslation,
     checkIsTranslated,
@@ -70,6 +72,7 @@ import MapView, {
 
 const KEYBOARDBUTTON_ENABLED = false;
 
+let cursorPos = -1;
 export default function Event({ navigation, route, onTut }) {
     const mapRef = useRef();
     const commentInputRef = useRef();
@@ -99,6 +102,10 @@ export default function Event({ navigation, route, onTut }) {
 
     const [commentVisible, setCommentVisible] = useState(false);
     const [currentCommentInput, setCurrentCommentInput] = useState("");
+
+    useEffect(() => {
+        cursorPos = -1;
+    }, []);
 
     const loadData = () => {
         const db = getDatabase();
@@ -824,22 +831,57 @@ export default function Event({ navigation, route, onTut }) {
                                 maxLength={128}
                                 value={currentCommentInput}
                                 supportsAutoCorrect
+                                onSelectionChange={async e => {
+                                    cursorPos = e.nativeEvent.selection.start;
+
+                                    const autoC =
+                                        await checkForAutoCorrectInside(
+                                            currentCommentInput,
+                                            cursorPos
+                                        );
+                                    setAutoCorrect(autoC);
+                                }}
                                 onChangeText={async t => {
+                                    // Get Current Cursor Position
+                                    cursorPos = getCursorPosition(
+                                        currentCommentInput,
+                                        t
+                                    );
+
+                                    // Set new Input
                                     setCurrentCommentInput(t);
 
-                                    const autoC = await checkForAutoCorrect(t);
+                                    // Get Auto Correction
+                                    const autoC =
+                                        await checkForAutoCorrectInside(
+                                            t,
+                                            cursorPos
+                                        );
                                     setAutoCorrect(autoC);
                                 }}
                                 autoCorrection={autoCorrect}
                                 applyAutoCorrection={word => {
                                     setCurrentCommentInput(prev => {
                                         let text = prev.split(" ");
-                                        text.pop();
-                                        text.push(word);
+                                        let textSubSplit = prev
+                                            .substring(0, cursorPos)
+                                            .split(" ");
+
+                                        textSubSplit.pop();
+                                        textSubSplit.push(word);
+
                                         let newText = "";
-                                        text.forEach(
+                                        textSubSplit.forEach(
                                             el => (newText += `${el} `)
                                         );
+                                        for (
+                                            let i = textSubSplit.length;
+                                            i < text.length;
+                                            i++
+                                        )
+                                            newText += `${text[i]}${
+                                                i == text.length - 1 ? "" : " "
+                                            }`;
 
                                         setAutoCorrect({
                                             status: 100,

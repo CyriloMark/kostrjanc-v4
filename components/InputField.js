@@ -73,6 +73,7 @@ export default function InputField(props) {
 export default function InputField(props) {
     const [isFocused, setIsFocused] = useState(false);
 
+    //#region AutoCorrect Animation
     const autoCorrectContainerHeight = useSharedValue(0);
     const autoCorrectContainerHeightStyle = useAnimatedStyle(() => {
         return {
@@ -92,6 +93,7 @@ export default function InputField(props) {
         setIsFocused(false);
         autoCorrectContainerHeight.value = 0;
     };
+    //#endregion
 
     return (
         <View style={[props.style]}>

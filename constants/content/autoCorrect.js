@@ -9,10 +9,43 @@ function getCurrentWord(input) {
 
 /**
  *
+ * @param {string} word1 First Word to check; the older version
+ * @param {string} word2 Second Word to check; the newer one.
+ * @returns {number}
+ */
+export function getCursorPosition(word1, word2) {
+    if (word1 == word2) return word1.length;
+
+    if (word2 > word1) {
+        let i = 0;
+        while (i < word2.length) {
+            /*console.log("w1:", word1[i], "w2:", word2[i]);
+            if (word1[i] === undefined) i++;
+            else*/ if (word1[i] != word2[i]) break;
+            else i++;
+        }
+        return i + 1;
+    } else {
+        let i = 0;
+        while (i < word1.length) {
+            if (word1[i] != word2[i]) break;
+            else i++;
+        }
+        return i;
+    }
+
+    //  Hallo i bin der Tom        Hallo ic bin der Tom
+
+    // Hallo i| bin der Tom     7
+    // Hallo ic| bin der Tom    8
+}
+
+/**
+ *
  * @param {string} input Current Input to find correct Alternatives
  * @returns {object} Object with Status Code and String Array of correct Alternatives
  */
-export default async function checkForAutoCorrect(input) {
+export async function checkForAutoCorrect(input) {
     let output = {
         status: 0,
         content: [],
@@ -59,4 +92,15 @@ export default async function checkForAutoCorrect(input) {
 
         return output;
     }
+}
+
+/**
+ * Different to function above: Difference whether cursor is in middle of input
+ * @param {string} input Current Input to find correct Alternatives
+ * @param {number} selection
+ * @returns {object} Object with Status Code and String Array of correct Alternatives
+ */
+export default async function checkForAutoCorrectInside(input, selection) {
+    const subFromStart = input.substring(0, selection);
+    return checkForAutoCorrect(subFromStart);
 }
