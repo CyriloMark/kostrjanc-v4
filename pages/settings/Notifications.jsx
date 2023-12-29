@@ -97,7 +97,7 @@ export default function Notifications({ navigation }) {
                             {getLangs("settings_notifications_follower_sub")}
                         </Text>
                     </View>
-                    <Text
+                    {/* <Text
                         style={[
                             style.pH,
                             style.TsmRg,
@@ -105,7 +105,7 @@ export default function Notifications({ navigation }) {
                             { marginTop: style.defaultMmd },
                         ]}>
                         Adipisicing ut laborum est elit ut aliquip mollit.
-                    </Text>
+                    </Text> */}
                 </View>
 
                 {/* New Content */}
@@ -143,7 +143,7 @@ export default function Notifications({ navigation }) {
                             {getLangs("settings_notifications_contents_sub")}
                         </Text>
                     </View>
-                    <Text
+                    {/* <Text
                         style={[
                             style.pH,
                             style.TsmRg,
@@ -151,7 +151,7 @@ export default function Notifications({ navigation }) {
                             { marginTop: style.defaultMmd },
                         ]}>
                         Adipisicing ut laborum est elit ut aliquip mollit.
-                    </Text>
+                    </Text> */}
                 </View>
 
                 {/* Comment on Content */}
@@ -189,7 +189,7 @@ export default function Notifications({ navigation }) {
                             {getLangs("settings_notifications_comments_sub")}
                         </Text>
                     </View>
-                    <Text
+                    {/* <Text
                         style={[
                             style.pH,
                             style.TsmRg,
@@ -197,7 +197,7 @@ export default function Notifications({ navigation }) {
                             { marginTop: style.defaultMmd },
                         ]}>
                         Adipisicing ut laborum est elit ut aliquip mollit.
-                    </Text>
+                    </Text> */}
                 </View>
 
                 {/* Event Start */}
@@ -235,7 +235,7 @@ export default function Notifications({ navigation }) {
                             {getLangs("settings_notifications_eventstart_sub")}
                         </Text>
                     </View>
-                    <Text
+                    {/* <Text
                         style={[
                             style.pH,
                             style.TsmRg,
@@ -243,7 +243,7 @@ export default function Notifications({ navigation }) {
                             { marginTop: style.defaultMmd },
                         ]}>
                         Adipisicing ut laborum est elit ut aliquip mollit.
-                    </Text>
+                    </Text> */}
                 </View>
 
                 <View style={styles.editButton}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Platform } from "react-native";
 import {
@@ -50,9 +50,12 @@ import Delete from "../interaction/Delete";
 import LinkingPage from "../LinkingPage";
 //#endregion
 
+// Version Alert
+import UpdateVersion from "../static/UpdateVersion";
+
 const MainNavStack = createStackNavigator();
 
-export default function ViewportManager({ onTut }) {
+export default function ViewportManager({ onTut, hasRecentVersion }) {
     const insets = useSafeAreaInsets();
 
     return (
@@ -157,8 +160,10 @@ export default function ViewportManager({ onTut }) {
                     component={LinkingPage}
                 />
             </MainNavStack.Navigator>
-
             <BottomTransitionBar style={{ bottom: insets.bottom }} />
+            {!hasRecentVersion ? (
+                <UpdateVersion bottom={insets.bottom} />
+            ) : null}
         </SafeAreaView>
     );
 }

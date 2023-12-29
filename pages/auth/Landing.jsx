@@ -97,8 +97,8 @@ export default function Landing({ navigation }) {
                 <Text style={[style.TsmLt, style.tWhite, style.tCenter]}>
                     Version {require("../../app.json").expo.version}
                     {"\n"}
-                    Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 All Rights
-                    Reserved
+                    Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2024 All
+                    Rights Reserved
                 </Text>
             </View>
         </View>

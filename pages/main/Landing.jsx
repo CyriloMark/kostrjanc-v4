@@ -1127,6 +1127,7 @@ export default function Landing({ navigation, onTut }) {
                         style={{
                             marginTop: style.defaultMmd,
                             marginHorizontal: style.defaultMmd * 2,
+                            marginBottom: style.defaultMsm,
 
                             // Shadow
                             shadowColor: style.colors.red,

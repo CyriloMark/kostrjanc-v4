@@ -30,6 +30,7 @@ import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
+import { insertCharacterOnCursor } from "../../constants/content";
 import getStatusCodeText from "../../components/content/status";
 
 // import SVGs
@@ -554,7 +555,11 @@ export default function PostCreate({ navigation, route }) {
                     setPost(prev => {
                         return {
                             ...prev,
-                            title: prev.title + l,
+                            title: insertCharacterOnCursor(
+                                post.title,
+                                cursorPos,
+                                l
+                            ),
                         };
                     });
                 }}
@@ -566,7 +571,11 @@ export default function PostCreate({ navigation, route }) {
                     setPost(prev => {
                         return {
                             ...prev,
-                            description: prev.description + l,
+                            description: insertCharacterOnCursor(
+                                post.description,
+                                cursorPos,
+                                l
+                            ),
                         };
                     });
                 }}

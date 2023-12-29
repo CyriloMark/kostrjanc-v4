@@ -62,7 +62,11 @@ import {
     checkIsTranslated,
     getUnsignedTranslationText,
 } from "../constants/content/translation";
-import { checkForUnnecessaryNewLine } from "../constants/content";
+import {
+    checkForUnnecessaryNewLine,
+    getTimePassed,
+    insertCharacterOnCursor,
+} from "../constants/content";
 
 import MapView, {
     Marker,
@@ -503,6 +507,14 @@ export default function Event({ navigation, route, onTut }) {
                                         </Text>
                                     )
                                 )}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.tBlue,
+                                    style.TsmLt,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                {getTimePassed(event.created)}
                             </Text>
                         </View>
                     </View>
@@ -999,7 +1011,11 @@ export default function Event({ navigation, route, onTut }) {
 
             <AccessoryView
                 text={currentCommentInput}
-                onElementPress={l => setCurrentCommentInput(prev => prev + l)}
+                onElementPress={l =>
+                    setCurrentCommentInput(prev =>
+                        insertCharacterOnCursor(prev, cursorPos, l)
+                    )
+                }
                 nativeID={"4127435841768339"}
             />
         </View>

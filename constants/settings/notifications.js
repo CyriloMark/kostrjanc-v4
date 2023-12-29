@@ -1,7 +1,15 @@
 import { getAuth, updateProfile } from "firebase/auth";
 
 export function getNotificationSettings() {
-    return JSON.parse(getAuth().currentUser.displayName);
+    const data = JSON.parse(getAuth().currentUser.displayName);
+    if (data === null)
+        return {
+            follower: false,
+            contents: false,
+            comments: false,
+            eventStart: false,
+        };
+    return data;
 }
 
 /**

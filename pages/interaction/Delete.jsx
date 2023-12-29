@@ -22,6 +22,10 @@ let deleting = false;
 export default function Delete({ navigation, route }) {
     const { type, id } = route.params;
 
+    useEffect(() => {
+        deleting = false;
+    }, []);
+
     const onDelete = () => {
         if (deleting) {
             console.log("already deleting");

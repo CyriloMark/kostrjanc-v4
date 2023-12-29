@@ -95,7 +95,9 @@ export default function Language({ navigation }) {
                         {langs.map((lang, key) => (
                             <Pressable
                                 key={key}
-                                onPress={() => onLanguageChange(lang.id)}
+                                onPress={() => {
+                                    if (lang.enabled) onLanguageChange(lang.id);
+                                }}
                                 style={[styles.langElementContainer]}>
                                 <View
                                     style={[
@@ -105,6 +107,7 @@ export default function Language({ navigation }) {
                                                 currentLanguage === lang.id
                                                     ? style.colors.red
                                                     : style.colors.blue,
+                                            opacity: lang.enabled ? 1 : 0.5,
                                         },
                                     ]}>
                                     <View style={styles.langFlag}>

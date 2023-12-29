@@ -44,6 +44,10 @@ export default function Ban({ navigation, route }) {
         }
     };
 
+    useEffect(() => {
+        banning = false;
+    }, []);
+
     const ban = () => {
         if (banning) return;
 

@@ -325,8 +325,8 @@
         "eventcreate_time": "Zeit",
 
         "settings_landing_title": "Einstellungen",
-        "settings_landing_bugbutton_title": "Hast du den Fehler gefunden?",
-        "settings_landing_bugbutton_sub": "Melde diesen uns bitte!",
+        "settings_landing_bugbutton_title": "Teile uns dein Feedback!",
+        "settings_landing_bugbutton_sub": "Ob Wünsche, Probleme oder App Abstütze,\nWir sind Dankbar über alle Mitteilungen.",
         "settings_landing_aplication_title": "Applikation:",
         "settings_landing_aplication_lang": "Sprache ändern",
         "settings_landing_aplication_notifications": "Nachrichten von kostrjanc",

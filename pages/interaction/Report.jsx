@@ -21,6 +21,7 @@ import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
+import { insertCharacterOnCursor } from "../../constants/content";
 
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
@@ -346,7 +347,11 @@ export default function Report({ navigation, route }) {
                     setReportData(prev => {
                         return {
                             ...prev,
-                            description: prev.description + l,
+                            description: insertCharacterOnCursor(
+                                prev.description,
+                                cursorPos,
+                                l
+                            ),
                         };
                     });
                 }}

@@ -30,7 +30,7 @@ export function getLangs(key) {
             break;
     }
 
-    if (output.length === 0) output = de.app[key];
+    // if (output.length === 0) output = de.app[key];
     return output;
 }
 

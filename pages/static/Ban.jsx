@@ -81,8 +81,8 @@ export default function Ban() {
                     <Text style={[style.tWhite, style.TsmLt, style.tCenter]}>
                         Version {require("../../app.json").expo.version}
                         {"\n"}
-                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 All
-                        Rights Reserved
+                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2024
+                        All Rights Reserved
                     </Text>
                 </View>
             </View>

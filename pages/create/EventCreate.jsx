@@ -43,6 +43,8 @@ import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
+import getStatusCodeText from "../../components/content/status";
+import { insertCharacterOnCursor } from "../../constants/content";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -273,7 +275,7 @@ export default function EventCreate({ navigation, route }) {
             if (event.eventOptions.website && checkedCategories.website)
                 eventOptions = {
                     ...eventOptions,
-                    website: event.eventOptions.adBanner,
+                    website: event.eventOptions.website,
                 };
             if (event.eventOptions.tags && checkedCategories.tags)
                 eventOptions = {
@@ -544,14 +546,21 @@ export default function EventCreate({ navigation, route }) {
                         {/* Website */}
                         {event.eventOptions.website &&
                         checkedCategories.website ? (
-                            <Pressable
-                                style={styles.underSectionContainer}
-                                onPress={() =>
-                                    openLink(event.eventOptions.website)
-                                }>
+                            <Pressable style={styles.underSectionContainer}>
                                 <Text style={[style.Tmd, style.tWhite]}>
                                     {getLangs("event_about_website")}{" "}
-                                    {event.eventOptions.website}
+                                    <Text
+                                        style={[
+                                            style.tBlue,
+                                            {
+                                                textDecorationStyle: "solid",
+                                                textDecorationLine: "underline",
+                                                textDecorationColor:
+                                                    style.colors.blue,
+                                            },
+                                        ]}>
+                                        {event.eventOptions.website}
+                                    </Text>
                                 </Text>
                             </Pressable>
                         ) : null}
@@ -1793,7 +1802,11 @@ export default function EventCreate({ navigation, route }) {
                     setEvent(prev => {
                         return {
                             ...prev,
-                            title: prev.title + l,
+                            title: insertCharacterOnCursor(
+                                event.title,
+                                cursorPos,
+                                l
+                            ),
                         };
                     });
                 }}
@@ -1805,7 +1818,11 @@ export default function EventCreate({ navigation, route }) {
                     setEvent(prev => {
                         return {
                             ...prev,
-                            description: prev.description + l,
+                            description: insertCharacterOnCursor(
+                                event.description,
+                                cursorPos,
+                                l
+                            ),
                         };
                     });
                 }}

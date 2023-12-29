@@ -32,12 +32,17 @@ import { checkIfTutorialNeeded } from "../constants/tutorial";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../constants/content/autoCorrect";
+import { convertTimestampToString } from "../constants/time";
 import {
     alertForTranslation,
     checkIsTranslated,
     getUnsignedTranslationText,
 } from "../constants/content/translation";
-import { checkForUnnecessaryNewLine } from "../constants/content";
+import {
+    checkForUnnecessaryNewLine,
+    getTimePassed,
+    insertCharacterOnCursor,
+} from "../constants/content";
 
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
@@ -405,6 +410,14 @@ export default function Post({ navigation, route, onTut }) {
                                     )
                                 )}
                             </Text>
+                            <Text
+                                style={[
+                                    style.tBlue,
+                                    style.TsmLt,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                {getTimePassed(post.created)}
+                            </Text>
                         </View>
                     </View>
 
@@ -689,7 +702,11 @@ export default function Post({ navigation, route, onTut }) {
 
             <AccessoryView
                 text={currentCommentInput}
-                onElementPress={l => setCurrentCommentInput(prev => prev + l)}
+                onElementPress={l =>
+                    setCurrentCommentInput(prev =>
+                        insertCharacterOnCursor(prev, cursorPos, l)
+                    )
+                }
                 nativeID={"23488388256395198"}
             />
         </View>

@@ -35,6 +35,7 @@ import makeRequest from "../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../constants/content/autoCorrect";
+import { insertCharacterOnCursor } from "../constants/content";
 
 import SVG_Post from "../assets/svg/Post";
 
@@ -453,7 +454,11 @@ export default function UserProfileEdit({ navigation, route }) {
                     setUpdatedUserData(prev => {
                         return {
                             ...prev,
-                            description: prev.description + l,
+                            description: insertCharacterOnCursor(
+                                prev.description,
+                                cursorPos,
+                                l
+                            ),
                         };
                     });
                 }}

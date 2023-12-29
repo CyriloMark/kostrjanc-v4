@@ -28,6 +28,7 @@ import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
+import { insertCharacterOnCursor } from "../../constants/content";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -793,7 +794,11 @@ export default function Register({ navigation }) {
                     setRegisterData(prev => {
                         return {
                             ...prev,
-                            description: prev.description + l,
+                            description: insertCharacterOnCursor(
+                                prev.description,
+                                cursorPos,
+                                l
+                            ),
                         };
                     })
                 }

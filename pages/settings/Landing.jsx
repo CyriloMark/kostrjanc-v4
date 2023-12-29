@@ -16,6 +16,7 @@ import * as Account from "../../components/settings";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
 import { getCurrentLanguage, getLangs } from "../../constants/langs";
+import { openLink } from "../../constants";
 
 import { child, get, getDatabase, ref } from "firebase/database";
 
@@ -103,8 +104,35 @@ export default function Landing({ navigation }) {
                     />
                 ) : null}
 
+                <WarnButton
+                    text={getLangs("settings_landing_bugbutton_title")}
+                    sub={getLangs("settings_landing_bugbutton_sub")}
+                    onPress={() =>
+                        openLink("https://kostrjanc.de/pomoc/formular#bugs")
+                    }
+                    style={{
+                        marginHorizontal: style.defaultMmd * 2,
+
+                        // Shadow
+                        shadowColor: style.colors.red,
+                        shadowRadius: 15,
+                        shadowOpacity: 0.5,
+                        shadowOffset: {
+                            width: 0,
+                            height: 0,
+                        },
+                        backgroundColor: style.colors.black,
+                        borderRadius: 10,
+                    }}
+                />
+
                 {/* Client */}
-                <View style={{ width: "100%", flexDirection: "column" }}>
+                <View
+                    style={{
+                        width: "100%",
+                        flexDirection: "column",
+                        marginTop: style.defaultMmd,
+                    }}>
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("settings_landing_aplication_title")}
                     </Text>
@@ -300,8 +328,8 @@ export default function Landing({ navigation }) {
                         ]}>
                         Version {require("../../app.json").expo.version}
                         {"\n"}
-                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2023 All
-                        Rights Reserved
+                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2024
+                        All Rights Reserved
                     </Text>
                 </View>
 

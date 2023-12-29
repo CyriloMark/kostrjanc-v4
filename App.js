@@ -210,12 +210,12 @@ export default function App() {
             </SafeAreaProvider>
         );
 
-    if (langIsSet === false)
-        return (
-            <SafeAreaProvider style={[style.container, style.bgBlack]}>
-                <LanguageSelect onLanguageChange={() => setLangIsSet(true)} />
-            </SafeAreaProvider>
-        );
+    // if (langIsSet === false)
+    //     return (
+    //         <SafeAreaProvider style={[style.container, style.bgBlack]}>
+    //             <LanguageSelect onLanguageChange={() => setLangIsSet(true)} />
+    //         </SafeAreaProvider>
+    //     );
 
     // if (!testIsChecked) {
     //     return (
@@ -234,12 +234,12 @@ export default function App() {
         );
 
     // not recent version
-    if (isRecentVersion.equal === false)
-        return (
-            <SafeAreaProvider style={[style.container, style.bgBlack]}>
-                <UpdateVersion versions={isRecentVersion} />
-            </SafeAreaProvider>
-        );
+    // if (isRecentVersion.equal === false)
+    //     return (
+    //         <SafeAreaProvider style={[style.container, style.bgBlack]}>
+    //             <UpdateVersion versions={isRecentVersion} />
+    //         </SafeAreaProvider>
+    //     );
 
     if (!loggedIn) {
         return (
@@ -258,6 +258,7 @@ export default function App() {
                         ...style.bgBlack,
                     }}>
                     <AuthManager />
+                    {/* {isRecentVersion ? <UpdateVersion /> : null} */}
                 </SafeAreaProvider>
             </NavigationContainer>
         );
@@ -280,7 +281,10 @@ export default function App() {
                     width: "100%",
                     ...style.bgBlack,
                 }}>
-                <ViewportManager onTut={showTutorial} />
+                <ViewportManager
+                    onTut={showTutorial}
+                    hasRecentVersion={isRecentVersion}
+                />
                 <TutorialView
                     visible={tutorial.visible}
                     data={TUTORIAL_DATA[tutorial.id]}
