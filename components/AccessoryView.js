@@ -52,75 +52,95 @@ export default function AccessoryView({ nativeID, onElementPress }) {
     if (Platform.OS !== "ios") return null;
 
     return (
-        <InputAccessoryView nativeID={nativeID} backgroundColor={"white"}>
-            <View style={[style.bgBlack, style.Psm, styles.container]}>
-                <Pressable
-                    style={[style.allCenter, styles.capsButtonContainer]}
-                    onPress={() =>
-                        setCaps(prev => {
-                            return !prev;
-                        })
-                    }>
-                    <Animated.View style={capsButtonStyles}>
-                        <SVG_Return
-                            rotation={270}
-                            style={styles.capsButton}
-                            fill={style.colors.blue}
-                        />
-                    </Animated.View>
-                </Pressable>
-                <View style={[{ flex: 0.9 }, style.oHidden]}>
-                    <ScrollView
-                        style={[styles.layer]}
-                        contentContainerStyle={[styles.layerInner, style.pH]}
-                        keyboardShouldPersistTaps="handled"
-                        keyboardDismissMode="none"
-                        showsVerticalScrollIndicator={false}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}>
-                        {caps
-                            ? letters_caps.map((letter, key) => (
-                                  <Pressable
-                                      key={key}
-                                      style={[
-                                          style.pH,
-                                          style.allCenter,
-                                          key !== 0
-                                              ? {
-                                                    marginLeft:
-                                                        style.defaultMmd,
-                                                }
-                                              : null,
-                                      ]}
-                                      onPress={() => {
-                                          setCaps(false);
-                                          onElementPress(letter);
-                                      }}>
-                                      <Text style={[style.TlgBd, style.tWhite]}>
-                                          {letter}
-                                      </Text>
-                                  </Pressable>
-                              ))
-                            : letters.map((letter, key) => (
-                                  <Pressable
-                                      key={key}
-                                      style={[
-                                          style.pH,
-                                          style.allCenter,
-                                          key !== 0
-                                              ? {
-                                                    marginLeft:
-                                                        style.defaultMmd,
-                                                }
-                                              : null,
-                                      ]}
-                                      onPress={() => onElementPress(letter)}>
-                                      <Text style={[style.TlgBd, style.tWhite]}>
-                                          {letter}
-                                      </Text>
-                                  </Pressable>
-                              ))}
-                    </ScrollView>
+        <InputAccessoryView
+            nativeID={nativeID}
+            backgroundColor={"transparent"}
+            style={{
+                width: "100%",
+            }}>
+            <View style={[styles.outerContainer, style.oHidden]}>
+                <View style={[style.bgBlack, styles.container, style.oHidden]}>
+                    <Pressable
+                        style={[style.allCenter, styles.capsButtonContainer]}
+                        onPress={() =>
+                            setCaps(prev => {
+                                return !prev;
+                            })
+                        }>
+                        <Animated.View style={capsButtonStyles}>
+                            <SVG_Return
+                                rotation={270}
+                                style={styles.capsButton}
+                                fill={style.colors.blue}
+                            />
+                        </Animated.View>
+                    </Pressable>
+                    <View style={[{ flex: 0.9 }, style.oHidden]}>
+                        <ScrollView
+                            style={[styles.layer]}
+                            contentContainerStyle={[
+                                styles.layerInner,
+                                style.pH,
+                            ]}
+                            keyboardShouldPersistTaps="handled"
+                            keyboardDismissMode="none"
+                            showsVerticalScrollIndicator={false}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}>
+                            {caps
+                                ? letters_caps.map((letter, key) => (
+                                      <Pressable
+                                          key={key}
+                                          style={[
+                                              style.pH,
+                                              style.allCenter,
+                                              key !== 0
+                                                  ? {
+                                                        marginLeft:
+                                                            style.defaultMmd,
+                                                    }
+                                                  : null,
+                                          ]}
+                                          onPress={() => {
+                                              setCaps(false);
+                                              onElementPress(letter);
+                                          }}>
+                                          <Text
+                                              style={[
+                                                  style.TlgBd,
+                                                  style.tWhite,
+                                              ]}>
+                                              {letter}
+                                          </Text>
+                                      </Pressable>
+                                  ))
+                                : letters.map((letter, key) => (
+                                      <Pressable
+                                          key={key}
+                                          style={[
+                                              style.pH,
+                                              style.allCenter,
+                                              key !== 0
+                                                  ? {
+                                                        marginLeft:
+                                                            style.defaultMmd,
+                                                    }
+                                                  : null,
+                                          ]}
+                                          onPress={() =>
+                                              onElementPress(letter)
+                                          }>
+                                          <Text
+                                              style={[
+                                                  style.TlgBd,
+                                                  style.tWhite,
+                                              ]}>
+                                              {letter}
+                                          </Text>
+                                      </Pressable>
+                                  ))}
+                        </ScrollView>
+                    </View>
                 </View>
             </View>
         </InputAccessoryView>
@@ -218,9 +238,18 @@ export function AccessoryView2({ nativeID, onElementPress }) {
 }
 
 const styles = StyleSheet.create({
+    outerContainer: {
+        flex: 1,
+        width: "100%",
+        paddingHorizontal: style.Pmd.paddingHorizontal,
+        ...style.pV,
+    },
     container: {
+        flex: 1,
         width: "100%",
         flexDirection: "row",
+        padding: style.Psm.paddingVertical,
+        borderRadius: 25,
     },
     layer: {
         maxHeight: 32,
