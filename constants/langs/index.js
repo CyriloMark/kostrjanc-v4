@@ -26,11 +26,9 @@ export function getLangs(key) {
             break;
 
         default:
-            output = "";
+            output = hsb.app[key];
             break;
     }
-
-    // if (output.length === 0) output = de.app[key];
     return output;
 }
 
@@ -49,6 +47,7 @@ export function getLangsSpecific(key, lang) {
 
         default:
             return false;
+            break;
     }
     return output;
 }

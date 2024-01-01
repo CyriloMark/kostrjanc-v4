@@ -87,7 +87,9 @@ export default function App() {
     const [testIsChecked, setTestIsChecked] = useState(false);
 
     const [banned, setBanned] = useState(false);
-    const [isRecentVersion, setIsRecentVersion] = useState(null);
+    const [isRecentVersion, setIsRecentVersion] = useState({
+        equal: false,
+    });
     const [serverStatus, setServerStatus] = useState(null);
 
     const [expoPushToken, setExpoPushToken] = useState("");
@@ -154,23 +156,33 @@ export default function App() {
         });
 
         // Version Check - Firebase
-        onValue(ref(db, "version"), snapshot => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                if (data === require("./app.json").expo.version)
-                    setIsRecentVersion({
-                        equal: true,
-                        client: data,
-                        server: data,
-                    });
-                else
-                    setIsRecentVersion({
-                        equal: false,
-                        client: require("./app.json").expo.version,
-                        server: data,
-                    });
+        onValue(
+            ref(
+                db,
+                Platform.OS === "android"
+                    ? "android_version"
+                    : Platform.OS === "ios"
+                    ? "ios_version"
+                    : "version"
+            ),
+            snapshot => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if (data === require("./app.json").expo.version)
+                        setIsRecentVersion({
+                            equal: true,
+                            client: data,
+                            server: data,
+                        });
+                    else
+                        setIsRecentVersion({
+                            equal: false,
+                            client: require("./app.json").expo.version,
+                            server: data,
+                        });
+                }
             }
-        });
+        );
     }, []);
 
     useEffect(() => {
@@ -283,7 +295,7 @@ export default function App() {
                 }}>
                 <ViewportManager
                     onTut={showTutorial}
-                    hasRecentVersion={isRecentVersion}
+                    hasRecentVersion={isRecentVersion.equal}
                 />
                 <TutorialView
                     visible={tutorial.visible}

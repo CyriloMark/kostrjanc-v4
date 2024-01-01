@@ -615,7 +615,7 @@ export async function refreshEventRanking() {
             text: getLangs("yes"),
             onPress: async () => {
                 const response = await makeRequest("/algo/top_events", {});
-                if (response.status == "accepted")
+                if (response.code == 280)
                     Alert.alert(getLangs("auth_eventranking_success"), "", [
                         {
                             text: "Ok",

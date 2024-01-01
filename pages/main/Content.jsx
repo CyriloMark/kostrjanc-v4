@@ -220,10 +220,11 @@ export default function Content({ navigation, onTut }) {
                     pbUri: userData["pbUri"],
                     isBanned: userData["isBanned"],
                 };
+
                 if (user.isBanned)
                     if (currentRandomUsersList.length === 0)
                         setRandomUser(null);
-                    else getUser();
+                    else loadRandomUser();
                 else {
                     setRandomUser(user);
                     loadingUsers = false;

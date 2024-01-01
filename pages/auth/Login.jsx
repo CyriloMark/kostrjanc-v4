@@ -167,19 +167,35 @@ export default function Login({ navigation }) {
                             </View>
 
                             {/* Reset PW */}
-                            <Pressable
-                                style={{ marginTop: style.defaultMlg }}
-                                hitSlop={40}
-                                onPress={() => navigation.navigate("reset")}>
-                                <Text
+                            <View
+                                style={[
+                                    styles.sideBox,
+                                    style.allCenter,
+                                    { marginTop: style.defaultMlg },
+                                ]}>
+                                <Pressable
                                     style={[
-                                        style.tWhite,
-                                        style.Tmd,
-                                        style.tCenter,
-                                    ]}>
-                                    {getLangs("auth_login_forgetpassword")}
-                                </Text>
-                            </Pressable>
+                                        styles.sideBoxInner,
+                                        style.Pmd,
+                                        style.border,
+                                        {
+                                            borderColor: style.colors.white,
+                                        },
+                                    ]}
+                                    hitSlop={40}
+                                    onPress={() =>
+                                        navigation.navigate("reset")
+                                    }>
+                                    <Text
+                                        style={[
+                                            style.tWhite,
+                                            style.Tmd,
+                                            style.tCenter,
+                                        ]}>
+                                        {getLangs("auth_login_forgetpassword")}
+                                    </Text>
+                                </Pressable>
+                            </View>
                         </View>
 
                         <View style={[style.allCenter, styles.button]}>
@@ -211,5 +227,18 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: style.defaultMlg,
+    },
+
+    sideBox: {
+        height: 72,
+        zIndex: 5,
+        ...style.oHidden,
+    },
+    sideBoxInner: {
+        borderRadius: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        position: "relative",
+        zIndex: 5,
     },
 });

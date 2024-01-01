@@ -67,6 +67,9 @@ export default function Landing({ navigation }) {
                                 styles.sideBoxInner,
                                 style.Plg,
                                 style.border,
+                                {
+                                    borderColor: style.colors.red,
+                                },
                             ]}>
                             <View style={styles.sideBoxIconContainer}>
                                 <SVG_Login
@@ -81,14 +84,33 @@ export default function Landing({ navigation }) {
                     </View>
 
                     {/* Register */}
-                    <Pressable
-                        style={{ marginTop: style.defaultMlg }}
-                        hitSlop={40}
-                        onPress={() => navigation.navigate("register")}>
-                        <Text style={[style.tWhite, style.Tmd, style.tCenter]}>
-                            {getLangs("auth_landing_register")}
-                        </Text>
-                    </Pressable>
+                    <View
+                        style={[
+                            styles.sideBox,
+                            style.allCenter,
+                            { marginTop: style.defaultMmd },
+                        ]}>
+                        <Pressable
+                            style={[
+                                styles.sideBoxInner,
+                                style.Pmd,
+                                style.border,
+                                {
+                                    borderColor: style.colors.white,
+                                },
+                            ]}
+                            hitSlop={40}
+                            onPress={() => navigation.navigate("register")}>
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    style.tCenter,
+                                ]}>
+                                {getLangs("auth_landing_register")}
+                            </Text>
+                        </Pressable>
+                    </View>
                 </View>
             </View>
 
@@ -136,7 +158,6 @@ const styles = StyleSheet.create({
         ...style.oHidden,
     },
     sideBoxInner: {
-        borderColor: style.colors.red,
         borderRadius: 10,
         flexDirection: "row",
         alignItems: "center",
