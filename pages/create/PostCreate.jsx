@@ -36,9 +36,18 @@ import getStatusCodeText from "../../components/content/status";
 // import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
+import SVG_Kamera from "../../assets/svg/Kamera";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
+import {
+    launchImageLibraryAsync,
+    MediaTypeOptions,
+    launchCameraAsync,
+    CameraType,
+    UIImagePickerPresentationStyle,
+    requestCameraPermissionsAsync,
+    requestMediaLibraryPermissionsAsync,
+} from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 
 // import Components
@@ -71,21 +80,21 @@ export default function PostCreate({ navigation, route }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        // let permissionResult = await requestMediaLibraryPermissionsAsync(true);
-        // if (!permissionResult.granted) {
-        //     Alert.alert(
-        //         "kostrjanc njesmě na galeriju přistupić.",
-        //         `Status: ${permissionResult.status}`,
-        //         [
-        //             {
-        //                 text: "Ok",
-        //                 isPreferred: true,
-        //                 style: "cancel",
-        //             },
-        //         ]
-        //     );
-        //     return;
-        // }
+        let permissionResult = await requestMediaLibraryPermissionsAsync(true);
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na galeriju přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -112,6 +121,56 @@ export default function PostCreate({ navigation, route }) {
             }
         );
         setImageUri(pickerResult.assets[0].uri);
+        setPost(prev => {
+            return {
+                ...prev,
+                imgUri: croppedPicker.uri,
+            };
+        });
+    };
+
+    const openCamera = async () => {
+        let permissionResult = await requestCameraPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na kameru přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
+        let camResult = await launchCameraAsync({
+            mediaTypes: MediaTypeOptions.Images,
+            allowsMultipleSelection: false,
+            allowsEditing: true,
+            quality: 0.5,
+            aspect: [1, 1],
+        });
+
+        if (camResult.canceled) return;
+
+        const croppedPicker = await manipulateAsync(
+            camResult.assets[0].uri,
+            [
+                {
+                    resize: {
+                        width: 1024,
+                        height: 1024,
+                    },
+                },
+            ],
+            {
+                compress: 0.5,
+                format: SaveFormat.JPEG,
+            }
+        );
+        setImageUri(camResult.assets[0].uri);
         setPost(prev => {
             return {
                 ...prev,
@@ -321,10 +380,10 @@ export default function PostCreate({ navigation, route }) {
                                             style.allCenter,
                                             styles.imageBorder,
                                         ]}>
-                                        <SVG_Post
+                                        {/* <SVG_Post
                                             style={styles.hintIcon}
                                             fill={style.colors.blue}
-                                        />
+                                        /> */}
                                         <Text
                                             style={[
                                                 style.Tmd,
@@ -333,6 +392,63 @@ export default function PostCreate({ navigation, route }) {
                                             ]}>
                                             {getLangs("postcreate_imghint")}
                                         </Text>
+                                        <View
+                                            style={
+                                                styles.imageHintOptSelectionContainer
+                                            }>
+                                            <Pressable
+                                                onPress={openImagePickerAsync}
+                                                style={[
+                                                    styles.imageHintOptItem,
+                                                    style.Pmd,
+                                                    style.border,
+                                                    style.allCenter,
+                                                ]}>
+                                                <SVG_Post
+                                                    style={
+                                                        styles.imageHintOptSelectionImg
+                                                    }
+                                                    fill={style.colors.blue}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.TsmRg,
+                                                        style.tBlue,
+                                                        {
+                                                            marginTop:
+                                                                style.defaultMsm,
+                                                        },
+                                                    ]}>
+                                                    Galerija
+                                                </Text>
+                                            </Pressable>
+                                            <Pressable
+                                                onPress={openCamera}
+                                                style={[
+                                                    styles.imageHintOptItem,
+                                                    style.Pmd,
+                                                    style.border,
+                                                    style.allCenter,
+                                                ]}>
+                                                <SVG_Kamera
+                                                    style={
+                                                        styles.imageHintOptSelectionImg
+                                                    }
+                                                    fill={style.colors.blue}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.TsmRg,
+                                                        style.tBlue,
+                                                        {
+                                                            marginTop:
+                                                                style.defaultMsm,
+                                                        },
+                                                    ]}>
+                                                    Kamera
+                                                </Text>
+                                            </Pressable>
+                                        </View>
                                     </View>
                                 )}
                             </View>
@@ -617,7 +733,7 @@ const styles = StyleSheet.create({
     },
     hintText: {
         marginTop: style.defaultMmd,
-        width: "60%",
+        width: "100%",
         textAlign: "center",
     },
     textContainer: {
@@ -625,6 +741,22 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         marginTop: style.defaultMmd,
+    },
+    imageHintOptSelectionContainer: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: style.defaultMlg,
+    },
+    imageHintOptItem: {
+        borderColor: style.colors.blue,
+        borderRadius: 10,
+        marginHorizontal: style.defaultMsm,
+    },
+    imageHintOptSelectionImg: {
+        width: 48,
+        height: 48,
     },
 
     linkingsContainer: {

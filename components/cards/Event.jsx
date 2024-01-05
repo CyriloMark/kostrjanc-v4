@@ -174,6 +174,7 @@ export default function Event(props) {
                         <Marker
                             coordinate={event.geoCords}
                             draggable={false}
+                            style={{ transform: [{ translateY: -16 }] }}
                             tappable={false}>
                             <SVG_Pin
                                 fill={style.colors.red}
@@ -278,11 +279,6 @@ const styles = StyleSheet.create({
         zIndex: 99,
         height: 32,
         width: 32,
-        transform: [
-            {
-                translateY: -16,
-            },
-        ],
         ...style.boxShadow,
     },
 });

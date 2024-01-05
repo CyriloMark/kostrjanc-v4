@@ -31,7 +31,7 @@ export default function AuthManager() {
 
     useEffect(() => {
         const lang = getCurrentLanguage();
-        if (lang === -1 || lang === 1) changeLanguage(2);
+        if (lang === -1 || lang === 1) changeLanguage(0);
     }, []);
 
     return (

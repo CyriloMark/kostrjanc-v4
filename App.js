@@ -49,7 +49,7 @@ import {
 import * as style from "./styles";
 
 import { storeData, removeData, hasData } from "./constants/storage";
-import { checkIfLangIsSet } from "./constants/storage/language";
+import { checkIfLangIsSet, save } from "./constants/storage/language";
 
 //#region Pages
 import ViewportManager from "./pages/main/ViewportManager";
@@ -68,6 +68,7 @@ import {
     setTutorialAsSeen,
     resetTutorials,
 } from "./constants/tutorial";
+import { changeLanguage } from "./constants/langs";
 //#endregion
 
 const RESET_TUTORIALS_ENABELD = false;
@@ -145,7 +146,12 @@ export default function App() {
             setButtonStyleAsync("light");
         }
 
-        checkIfLangIsSet().then(state => setLangIsSet(state));
+        checkIfLangIsSet().then(state => {
+            if (!state) {
+                save("currentLanguage", 0);
+                changeLanguage(currentLanguage);
+            }
+        });
 
         // Server Status - Firebase
         onValue(ref(db, "status"), statusSnap => {
@@ -208,14 +214,7 @@ export default function App() {
 
     // return null;
     if (!fontsLoaded) return <View style={style.bgBlack} />;
-    if (
-        !(
-            loaded &&
-            isRecentVersion !== null &&
-            serverStatus !== null &&
-            langIsSet !== null
-        )
-    )
+    if (!(loaded && isRecentVersion !== null && serverStatus !== null))
         return (
             <SafeAreaProvider style={[style.container, style.bgBlack]}>
                 <Loading />
@@ -228,14 +227,6 @@ export default function App() {
     //             <LanguageSelect onLanguageChange={() => setLangIsSet(true)} />
     //         </SafeAreaProvider>
     //     );
-
-    // if (!testIsChecked) {
-    //     return (
-    //         <SafeAreaProvider style={[style.container, style.bgBlack]}>
-    //             <TestView onCheck={() => setTestIsChecked(true)} />
-    //         </SafeAreaProvider>
-    //     );
-    // }
 
     // Server Status
     if (serverStatus !== "online")
@@ -277,6 +268,14 @@ export default function App() {
     }
 
     if (banned) return <Ban />;
+
+    if (!testIsChecked) {
+        return (
+            <SafeAreaProvider style={[style.container, style.bgBlack]}>
+                <TestView onCheck={() => setTestIsChecked(true)} />
+            </SafeAreaProvider>
+        );
+    }
 
     return (
         <NavigationContainer fallback={<Loading />}>

@@ -18,6 +18,8 @@ import {
     launchImageLibraryAsync,
     requestMediaLibraryPermissionsAsync,
     MediaTypeOptions,
+    launchCameraAsync,
+    requestCameraPermissionsAsync,
 } from "expo-image-picker";
 
 import { getAuth } from "firebase/auth";
@@ -63,21 +65,21 @@ export default function UserProfileEdit({ navigation, route }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        // let permissionResult = await requestMediaLibraryPermissionsAsync();
-        // if (!permissionResult.granted) {
-        //     Alert.alert(
-        //         "kostrjanc njesmě na galeriju přistupić.",
-        //         `Status: ${permissionResult.status}`,
-        //         [
-        //             {
-        //                 text: "Ok",
-        //                 isPreferred: true,
-        //                 style: "cancel",
-        //             },
-        //         ]
-        //     );
-        //     return;
-        // }
+        let permissionResult = await requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na galeriju přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -93,8 +95,55 @@ export default function UserProfileEdit({ navigation, route }) {
             [
                 {
                     resize: {
-                        width: 256,
-                        height: 256,
+                        width: 512,
+                        height: 512,
+                    },
+                },
+            ],
+            {
+                compress: 0.5,
+                format: SaveFormat.JPEG,
+            }
+        );
+
+        pbChanged = true;
+        setButtonChecked(true);
+        setPbImageUri(croppedPicker.uri);
+    };
+
+    const openCamera = async () => {
+        let permissionResult = await requestCameraPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na kameru přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
+        let camResult = await launchCameraAsync({
+            mediaTypes: MediaTypeOptions.Images,
+            allowsMultipleSelection: false,
+            allowsEditing: true,
+            quality: 0.5,
+            aspect: [1, 1],
+        });
+
+        if (camResult.canceled) return;
+
+        const croppedPicker = await manipulateAsync(
+            camResult.assets[0].uri,
+            [
+                {
+                    resize: {
+                        width: 512,
+                        height: 512,
                     },
                 },
             ],
@@ -334,10 +383,10 @@ export default function UserProfileEdit({ navigation, route }) {
                                             style.allCenter,
                                             styles.imageBorder,
                                         ]}>
-                                        <SVG_Post
+                                        {/* <SVG_Post
                                             style={styles.hintIcon}
                                             fill={style.colors.blue}
-                                        />
+                                        /> */}
                                         <Text
                                             style={[
                                                 style.Tmd,
@@ -346,6 +395,64 @@ export default function UserProfileEdit({ navigation, route }) {
                                             ]}>
                                             {getLangs("editprofile_pbhint")}
                                         </Text>
+
+                                        <View
+                                            style={
+                                                styles.imageHintOptSelectionContainer
+                                            }>
+                                            <Pressable
+                                                onPress={openImagePickerAsync}
+                                                style={[
+                                                    styles.imageHintOptItem,
+                                                    style.Pmd,
+                                                    style.border,
+                                                    style.allCenter,
+                                                ]}>
+                                                <SVG_Post
+                                                    style={
+                                                        styles.imageHintOptSelectionImg
+                                                    }
+                                                    fill={style.colors.blue}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.TsmRg,
+                                                        style.tBlue,
+                                                        {
+                                                            marginTop:
+                                                                style.defaultMsm,
+                                                        },
+                                                    ]}>
+                                                    Galerija
+                                                </Text>
+                                            </Pressable>
+                                            <Pressable
+                                                onPress={openCamera}
+                                                style={[
+                                                    styles.imageHintOptItem,
+                                                    style.Pmd,
+                                                    style.border,
+                                                    style.allCenter,
+                                                ]}>
+                                                <SVG_Kamera
+                                                    style={
+                                                        styles.imageHintOptSelectionImg
+                                                    }
+                                                    fill={style.colors.blue}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.TsmRg,
+                                                        style.tBlue,
+                                                        {
+                                                            marginTop:
+                                                                style.defaultMsm,
+                                                        },
+                                                    ]}>
+                                                    Kamera
+                                                </Text>
+                                            </Pressable>
+                                        </View>
                                     </View>
                                 )}
                             </View>
@@ -511,5 +618,21 @@ const styles = StyleSheet.create({
         marginTop: style.defaultMmd,
         width: "60%",
         textAlign: "center",
+    },
+    imageHintOptSelectionContainer: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: style.defaultMlg,
+    },
+    imageHintOptItem: {
+        borderColor: style.colors.blue,
+        borderRadius: 10,
+        marginHorizontal: style.defaultMsm,
+    },
+    imageHintOptSelectionImg: {
+        width: 48,
+        height: 48,
     },
 });

@@ -160,7 +160,7 @@ export default function Post({ navigation, route, onTut }) {
         if (
             !(
                 currentCommentInput.length > 0 &&
-                currentCommentInput.length <= 64
+                currentCommentInput.length <= 256
             )
         )
             return;

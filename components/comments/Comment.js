@@ -28,6 +28,7 @@ import Animated, {
     Easing,
 } from "react-native-reanimated";
 import { checkLinkedUser } from "../../constants/content/linking";
+import { checkForUnnecessaryNewLine } from "../../constants/content";
 
 let VIBRATED = false;
 
@@ -175,20 +176,21 @@ export default function Comment({
                     <View style={styles.textContainer}>
                         <Text style={[s.tWhite, s.Tmd]}>
                             {/* {commentData.content} */}
-                            {checkLinkedUser(commentData.content).map(
-                                (el, key) =>
-                                    !el.isLinked ? (
-                                        <Text key={key}>{el.text}</Text>
-                                    ) : (
-                                        <Text
-                                            key={key}
-                                            style={s.tBlue}
-                                            onPress={() =>
-                                                onCommentUserPress(el.id)
-                                            }>
-                                            {el.text}
-                                        </Text>
-                                    )
+                            {checkLinkedUser(
+                                checkForUnnecessaryNewLine(commentData.content)
+                            ).map((el, key) =>
+                                !el.isLinked ? (
+                                    <Text key={key}>{el.text}</Text>
+                                ) : (
+                                    <Text
+                                        key={key}
+                                        style={s.tBlue}
+                                        onPress={() =>
+                                            onCommentUserPress(el.id)
+                                        }>
+                                        {el.text}
+                                    </Text>
+                                )
                             )}
                         </Text>
                     </View>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Image,
@@ -12,51 +12,47 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as style from "../../styles";
 
 // import Constants
-import { getLangs, getCurrentLanguage } from "../../constants/langs";
+import { getLangs } from "../../constants/langs";
 import { openLink } from "../../constants";
 
 // import Components
 import AppHeader from "../../components/auth/AppHeader";
 import EnterButton from "../../components/auth/EnterButton";
-import WarnButton from "../../components/settings/WarnButton";
 
-const newFktHSB = [
-    "Wužiwarjo daja so nětko wot wšitkich sobu zapřijeć!",
-    "Komentary bychu dyrbjeli so nětko prawje wozjewić. Jeničce profilne wobrazy po wozjewjenju su hišće problematika.",
-    "Moderatory a adminy móža komentary wotstronić, hdyž dołho na tutón tłóča.",
-    "Tutorial funkcije - informaciske wokna",
-];
-const newFktDE = [
-    "Nutzer lassen sich nun von jedem verlinken!",
-    "Kommentare müssten nun richtig veröffentlicht werden. Lediglich die Profilbilder nach der Veröffentlichung sind noch eine Problematik.",
-    "Moderatoren und Admins können Kommentare entfernen, wenn sie lange auf diese drücken.",
-    "Tutorial Funktion - Informationsfenster",
-];
-
-const missingFktHSB = [
-    "Algorytmus hłowneje strony njeje dospowny.",
-    "Powěsćowe zastajenja",
-    "Rěč: delnoserbšćina",
-];
-const missingFktDE = [
-    "Algorythmus der Hauptseite ist nicht final.",
-    "Einstellungen von Benachrichtigungen",
-    "Sprache: Niedersorbisch",
-];
+import { getAuth } from "firebase/auth";
+import { get, getDatabase, ref, child } from "firebase/database";
+import Loading from "./Loading";
 
 export default function TestView(props) {
-    const getLangCriterias = opt => {
-        switch (getCurrentLanguage()) {
-            case 0:
-                return opt === 0 ? newFktHSB : missingFktHSB;
-            case 1:
-                return [];
-            case 2:
-                return opt === 0 ? newFktDE : missingFktDE;
-            default:
-                break;
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (getAuth().currentUser.uid === "Co2jZnyLZaf04HihTPtrzDNzaBG2")
+            props.onCheck();
+        else {
+            const db = getDatabase();
+            get(child(ref(db), "beta"))
+                .then(betaSnap => {
+                    if (!betaSnap.exists) {
+                        props.onCheck();
+                        return;
+                    }
+                    const beta = betaSnap.val();
+                    setLangCriteriasWorking(beta.working);
+                    setLangCriteriasReported(beta.reported);
+                    setLoading(false);
+                })
+                .catch(error =>
+                    console.log("error in TestView", "getBetaData", error.code)
+                );
         }
-    };
+    }, []);
+
+    const [langCriteriasWorking, setLangCriteriasWorking] = useState([]);
+    const [langCriteriasReported, setLangCriteriasReported] = useState([]);
+
+    if (loading) return <Loading />;
+
     return (
         <SafeAreaView style={[style.container, style.bgBlack]}>
             <AppHeader />
@@ -65,21 +61,6 @@ export default function TestView(props) {
                 automaticallyAdjustKeyboardInsets
                 automaticallyAdjustContentInsets
                 style={[style.container, style.pH, style.oVisible]}>
-                {require("../../app.json").expo.android.package !==
-                    "de.kostrjanc.kostrjanc" && Platform.OS === "android" ? (
-                    <WarnButton
-                        text={"Nowa kostrjanc App"}
-                        sub={
-                            "Nowe wersije wot kostrjanc namakaš wot něk pod linkom."
-                        }
-                        onPress={() =>
-                            openLink(
-                                "https://play.google.com/store/apps/details?id=de.kostrjanc.kostrjanc"
-                            )
-                        }
-                    />
-                ) : null}
-
                 <Text
                     style={[
                         style.Ttitle2,
@@ -128,7 +109,7 @@ export default function TestView(props) {
                     <Text style={[style.TlgBd, style.tWhite]}>
                         {getLangs("testview_new_title")}
                     </Text>
-                    {getLangCriterias(0).map((fkt, key) => (
+                    {langCriteriasWorking.map((fkt, key) => (
                         <Text
                             key={key}
                             style={[
@@ -136,6 +117,7 @@ export default function TestView(props) {
                                 style.tWhite,
                                 { marginTop: style.defaultMsm },
                             ]}>
+                            {"- "}
                             {fkt}
                         </Text>
                     ))}
@@ -144,7 +126,7 @@ export default function TestView(props) {
                     <Text style={[style.TlgBd, style.tWhite]}>
                         {getLangs("testview_missing_title")}
                     </Text>
-                    {getLangCriterias(1).map((fkt, key) => (
+                    {langCriteriasReported.map((fkt, key) => (
                         <Text
                             key={key}
                             style={[
@@ -152,6 +134,7 @@ export default function TestView(props) {
                                 style.tWhite,
                                 { marginTop: style.defaultMsm },
                             ]}>
+                            {"- "}
                             {fkt}
                         </Text>
                     ))}

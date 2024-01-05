@@ -53,6 +53,7 @@ import SVG_Time from "../../assets/svg/Time";
 import SVG_Cash from "../../assets/svg/Cash";
 import SVG_Web from "../../assets/svg/Web";
 import SVG_Pin from "../../assets/svg/Pin3.0";
+import SVG_Kamera from "../../assets/svg/Kamera";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -60,6 +61,8 @@ import {
     requestMediaLibraryPermissionsAsync,
     MediaTypeOptions,
     UIImagePickerPresentationStyle,
+    launchCameraAsync,
+    requestCameraPermissionsAsync,
 } from "expo-image-picker";
 
 // import MapView from "../../components/beta/MapView";
@@ -129,21 +132,21 @@ export default function EventCreate({ navigation, route }) {
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
-        // let permissionResult = await requestMediaLibraryPermissionsAsync();
-        // if (!permissionResult.granted) {
-        //     Alert.alert(
-        //         "kostrjanc njesmě na galeriju přistupić.",
-        //         `Status: ${permissionResult.status}`,
-        //         [
-        //             {
-        //                 text: "Ok",
-        //                 isPreferred: true,
-        //                 style: "cancel",
-        //             },
-        //         ]
-        //     );
-        //     return;
-        // }
+        let permissionResult = await requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na galeriju přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
 
         let pickerResult = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
@@ -173,6 +176,62 @@ export default function EventCreate({ navigation, route }) {
             }
         );
 
+        setEvent(prev => {
+            return {
+                ...prev,
+                eventOptions: {
+                    ...prev.eventOptions,
+                    adBanner: {
+                        uri: croppedPicker.uri,
+                        aspect: aspect,
+                    },
+                },
+            };
+        });
+    };
+
+    const openCamera = async () => {
+        let permissionResult = await requestCameraPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert(
+                "kostrjanc njesmě na kameru přistupić.",
+                `Status: ${permissionResult.status}`,
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                    },
+                ]
+            );
+            return;
+        }
+        let camResult = await launchCameraAsync({
+            mediaTypes: MediaTypeOptions.Images,
+            allowsMultipleSelection: false,
+            allowsEditing: true,
+            quality: 0.5,
+        });
+
+        if (camResult.canceled) return;
+
+        let aspect = camResult.assets[0].width / camResult.assets[0].width;
+
+        const croppedPicker = await manipulateAsync(
+            camResult.assets[0].uri,
+            [
+                {
+                    resize: {
+                        width: 1024,
+                        height: 1024,
+                    },
+                },
+            ],
+            {
+                compress: 0.5,
+                format: SaveFormat.JPEG,
+            }
+        );
         setEvent(prev => {
             return {
                 ...prev,
@@ -272,7 +331,7 @@ export default function EventCreate({ navigation, route }) {
                     ...eventOptions,
                     entrance_fee: event.eventOptions.entrance_fee,
                 };
-            if (event.eventOptions.website && checkedCategories.website)
+            if (event.eventOptions.website !== undefined && checkedCategories.website)
                 eventOptions = {
                     ...eventOptions,
                     website: event.eventOptions.website,
@@ -1607,10 +1666,10 @@ export default function EventCreate({ navigation, route }) {
                                                 styles.imageBorder,
                                                 { aspectRatio: 1 },
                                             ]}>
-                                            <SVG_Post
+                                            {/* <SVG_Post
                                                 style={styles.hintIcon}
                                                 fill={style.colors.blue}
-                                            />
+                                            /> */}
                                             <Text
                                                 style={[
                                                     style.Tmd,
@@ -1621,6 +1680,65 @@ export default function EventCreate({ navigation, route }) {
                                                     "eventcreate_adbanner_imghint"
                                                 )}
                                             </Text>
+                                            <View
+                                                style={
+                                                    styles.imageHintOptSelectionContainer
+                                                }>
+                                                <Pressable
+                                                    onPress={
+                                                        openImagePickerAsync
+                                                    }
+                                                    style={[
+                                                        styles.imageHintOptItem,
+                                                        style.Pmd,
+                                                        style.border,
+                                                        style.allCenter,
+                                                    ]}>
+                                                    <SVG_Post
+                                                        style={
+                                                            styles.imageHintOptSelectionImg
+                                                        }
+                                                        fill={style.colors.blue}
+                                                    />
+                                                    <Text
+                                                        style={[
+                                                            style.TsmRg,
+                                                            style.tBlue,
+                                                            {
+                                                                marginTop:
+                                                                    style.defaultMsm,
+                                                            },
+                                                        ]}>
+                                                        Galerija
+                                                    </Text>
+                                                </Pressable>
+                                                <Pressable
+                                                    onPress={openCamera}
+                                                    style={[
+                                                        styles.imageHintOptItem,
+                                                        style.Pmd,
+                                                        style.border,
+                                                        style.allCenter,
+                                                    ]}>
+                                                    <SVG_Kamera
+                                                        style={
+                                                            styles.imageHintOptSelectionImg
+                                                        }
+                                                        fill={style.colors.blue}
+                                                    />
+                                                    <Text
+                                                        style={[
+                                                            style.TsmRg,
+                                                            style.tBlue,
+                                                            {
+                                                                marginTop:
+                                                                    style.defaultMsm,
+                                                            },
+                                                        ]}>
+                                                        Kamera
+                                                    </Text>
+                                                </Pressable>
+                                            </View>
                                         </View>
                                     )}
                                 </View>
@@ -1942,8 +2060,24 @@ const styles = StyleSheet.create({
     },
     hintText: {
         marginTop: style.defaultMmd,
-        width: "60%",
+        width: "100%",
         textAlign: "center",
+    },
+    imageHintOptSelectionContainer: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: style.defaultMlg,
+    },
+    imageHintOptItem: {
+        borderColor: style.colors.blue,
+        borderRadius: 10,
+        marginHorizontal: style.defaultMsm,
+    },
+    imageHintOptSelectionImg: {
+        width: 48,
+        height: 48,
     },
 
     tagLineContainer: {

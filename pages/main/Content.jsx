@@ -328,29 +328,64 @@ export default function Content({ navigation, onTut }) {
                     onChangeText={val => {
                         setSearchInput(val);
                         if (val !== "") {
-                            axios
-                                .post(
-                                    `${process.env.EXPO_PUBLIC_HOST_URL}/indexes/kostrjanc/search`,
-                                    {
-                                        q: val,
+                            fetch(
+                                `${process.env.EXPO_PUBLIC_HOST_URL}/indexes/kostrjanc/search`,
+                                {
+                                    method: "POST",
+                                    body: JSON.stringify({ q: val }),
+                                    headers: {
+                                        "Content-Type": "application/json",
                                     },
-                                    {
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                    }
+                                }
+                            )
+                                .then(rsp =>
+                                    rsp
+                                        .json()
+                                        .then(data => {
+                                            let results = [];
+                                            data.hits.map(hit => {
+                                                results.push({
+                                                    name: hit.primary,
+                                                    pbUri: hit.img,
+                                                    id: hit.id.substring(2),
+                                                });
+                                            });
+                                            setSearchResult(results);
+                                        })
+                                        .catch(e =>
+                                            console.log(
+                                                "error search in meili",
+                                                "pages/main/COntent.jsx",
+                                                e
+                                            )
+                                        )
                                 )
-                                .then(rsp => {
-                                    let results = [];
-                                    rsp.data.hits.map(hit => {
-                                        results.push({
-                                            name: hit.primary,
-                                            pbUri: hit.img,
-                                            id: hit.id.substring(2),
-                                        });
-                                    });
-                                    setSearchResult(results);
-                                })
+                                // .then(rsp => {
+                                //     console.log(rsp.ok);
+                                // })
+                                // axios
+                                //     .post(
+                                //         `${process.env.EXPO_PUBLIC_HOST_URL}/indexes/kostrjanc/search`,
+                                //         {
+                                //             q: val,
+                                //         },
+                                //         {
+                                //             headers: {
+                                //                 "Content-Type": "application/json",
+                                //             },
+                                //         }
+                                //     )
+                                // .then(rsp => {
+                                //     let results = [];
+                                //     rsp.data.hits.map(hit => {
+                                //         results.push({
+                                //             name: hit.primary,
+                                //             pbUri: hit.img,
+                                //             id: hit.id.substring(2),
+                                //         });
+                                //     });
+                                //     setSearchResult(results);
+                                // })
                                 .catch(e => {
                                     console.log(e);
                                 });

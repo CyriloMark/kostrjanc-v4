@@ -293,7 +293,7 @@ export default function Event({ navigation, route, onTut }) {
         if (
             !(
                 currentCommentInput.length > 0 &&
-                currentCommentInput.length <= 64
+                currentCommentInput.length <= 256
             )
         )
             return;
@@ -452,6 +452,7 @@ export default function Event({ navigation, route, onTut }) {
                                     focusable
                                     draggable={false}
                                     title={event.title}
+                                    style={{ transform: [{ translateY: -16 }] }}
                                     coordinate={event.geoCords}>
                                     <View>
                                         <SVG_Pin
@@ -1138,10 +1139,10 @@ const styles = StyleSheet.create({
     marker: {
         width: 32,
         height: 32,
-        transform: [
-            {
-                translateY: -16,
-            },
-        ],
+        // transform: [
+        //     {
+        //         translateY: -16,
+        //     },
+        // ],
     },
 });

@@ -33,6 +33,7 @@ export default function EventPreview({ style, onPress, data }) {
                     scrollEnabled={false}>
                     <Marker
                         coordinate={data.geoCords}
+                        style={{ transform: [{ translateY: -16 }] }}
                         focusable={false}
                         draggable={false}>
                         <SVG_Pin fill={s.colors.red} style={styles.pin} />
@@ -59,11 +60,6 @@ const styles = StyleSheet.create({
         zIndex: 99,
         height: 32,
         width: 32,
-        transform: [
-            {
-                translateY: -16,
-            },
-        ],
         ...s.boxShadow,
     },
 });

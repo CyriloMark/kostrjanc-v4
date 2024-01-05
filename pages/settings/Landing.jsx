@@ -67,6 +67,12 @@ export default function Landing({ navigation }) {
         });
     };
 
+    let getFlag = () => {
+        const curLang = getCurrentLanguage();
+        if (curLang < 0) return flags.langs[0].flag;
+        return flags.langs[curLang].flag;
+    };
+
     return (
         <View style={[style.container, style.bgBlack]}>
             {/* Header */}
@@ -154,7 +160,7 @@ export default function Landing({ navigation }) {
                                             },
                                         ],
                                     }}>
-                                    {flags.langs[getCurrentLanguage()].flag}
+                                    {getFlag()}
                                 </View>
                             </View>
                         }
@@ -188,12 +194,18 @@ export default function Landing({ navigation }) {
                         icon={<SVG_Help fill={style.colors.white} />}
                         onPress={() => navigation.navigate("settings-help")}
                     />
-                    <OptionButton
-                        style={styles.optionButton}
-                        icon={<SVG_Moderator fill={style.colors.white} />}
-                        title={getLangs("settings_landing_kostrjanc_verify")}
-                        onPress={() => navigation.navigate("settings-verify")}
-                    />
+                    {false ? (
+                        <OptionButton
+                            style={styles.optionButton}
+                            icon={<SVG_Moderator fill={style.colors.white} />}
+                            title={getLangs(
+                                "settings_landing_kostrjanc_verify"
+                            )}
+                            onPress={() =>
+                                navigation.navigate("settings-verify")
+                            }
+                        />
+                    ) : null}
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs(

@@ -150,20 +150,21 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                         <MapView
                             ref={mapRef}
                             style={s.allMax}
-                            accessible
+                            accessible={false}
                             userInterfaceStyle="dark"
                             focusable={false}
                             rotateEnabled={false}
                             provider={PROVIDER_DEFAULT}
                             customMapStyle={mapStylesDefault}
-                            zoomEnabled
-                            pitchEnabled
-                            scrollEnabled
+                            zoomEnabled={false}
+                            pitchEnabled={false}
+                            scrollEnabled={false}
                             initialRegion={event.geoCords}
                             onPress={onPress}>
                             <Marker
                                 focusable
                                 draggable={false}
+                                style={{ transform: [{ translateY: -16 }] }}
                                 title={event.title}
                                 coordinate={event.geoCords}>
                                 <SVG_Pin
@@ -305,6 +306,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             <Marker
                                 coordinate={event.geoCords}
                                 draggable={false}
+                                style={{ transform: [{ translateY: -16 }] }}
                                 tappable={false}>
                                 <SVG_Pin
                                     fill={s.colors.red}
@@ -457,6 +459,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             <Marker
                                 coordinate={event.geoCords}
                                 draggable={false}
+                                style={{ transform: [{ translateY: -16 }] }}
                                 tappable={false}>
                                 <SVG_Pin
                                     fill={s.colors.red}
@@ -477,11 +480,6 @@ const styles = StyleSheet.create({
         zIndex: 99,
         height: 32,
         width: 32,
-        transform: [
-            {
-                translateY: -16,
-            },
-        ],
         ...s.boxShadow,
     },
     liveIcon: {

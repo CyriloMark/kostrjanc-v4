@@ -46,7 +46,7 @@ export function getLangsSpecific(key, lang) {
             break;
 
         default:
-            return false;
+            output = hsb.app[key];
             break;
     }
     return output;
