@@ -52,6 +52,9 @@ let safedRandomPosts = [];
 let safedEvents = [];
 let safedRandomEvents = [];
 
+let showingPosts = [];
+let showingEvents = [];
+
 const UPDATE_COOLDOWN = 1000;
 
 export default function Landing({ navigation, onTut }) {
@@ -125,6 +128,7 @@ export default function Landing({ navigation, onTut }) {
         const needTutorial = await checkIfTutorialNeeded(0);
         if (needTutorial) onTut(0);
     };
+
     /**
      * OBSOLETE
      * @param {string} _id User Id |Can be delivered directly
@@ -132,7 +136,7 @@ export default function Landing({ navigation, onTut }) {
      * @param {boolean} updateBanners true when Banners need to get updated
      * @returns
      */
-    async function ULTIMATIVE_ALGORITHM(_id, user, updateBanners) {
+    async function ULTIMATIVE_ALGORITHM_old(_id, user, updateBanners) {
         if (LOADING) return;
         LOADING = true;
 
@@ -1085,7 +1089,7 @@ export default function Landing({ navigation, onTut }) {
         //#endregion
     }
 
-    async function ULTIMATIVE_ALGORITHM_current(_id, user, updateBanners) {
+    async function ULTIMATIVE_ALGORITHM_new2(_id, user, updateBanners) {
         //#region Loading Screen and avoid multiple calls
         if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
         if (LOADING) return;
@@ -1630,6 +1634,110 @@ export default function Landing({ navigation, onTut }) {
         //#endregion
     }
 
+    async function ULTIMATIVE_ALGORITHM(_id, user, updateBanners) {
+        //#region Loading Screen and avoid multiple calls
+        if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
+        if (LOADING) return;
+        LOADING = true;
+        //#endregion
+
+        console.log("ULTIMATIVE_ALGORITHM");
+
+        // Firebase Database Connection
+        const db = ref(getDatabase());
+
+        const currentDate = Date.now();
+        const uid = _id ? _id : await getData("userId");
+        const userData = user ? user : await getData("userData");
+
+        //#region get Amounts of Content 0: posts; 1: events; (2: ads);
+        if (!AMTs[4])
+            await get(child(db, `AMT_post-event-ad`))
+                .then(amtsSnap => {
+                    if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
+                    else return;
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "ultimate_algo get amts",
+                        error.code
+                    )
+                );
+        //#endregion
+
+        //#region load Banners when updateBanners == true
+        if (updateBanners) {
+            get(child(db, `banners`))
+                .then(bannersSnap => {
+                    if (bannersSnap.exists()) {
+                        let outputBanners = [];
+                        //#region Check if Banners are in Time
+                        bannersSnap.forEach(banner => {
+                            if (
+                                banner.val().ending > currentDate &&
+                                banner.val().starting < currentDate
+                            )
+                                outputBanners.push(banner.key);
+                        });
+                        //#endregion
+                        // Set Banners to Final Data
+                        setContentData(prev => {
+                            return {
+                                ...prev,
+                                banners: outputBanners,
+                            };
+                        });
+                        // setLoading(false);
+                        // LOADING = false;
+                    }
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "ultimate_algo get banners",
+                        error.code
+                    )
+                );
+        }
+        //#endregion
+
+        //#region load Following List
+        // Return nothing, when user does not have any Followings
+        if (!userData.following) {
+            console.log("no following");
+            setLoading(false);
+            LOADING = false;
+            return;
+        }
+
+        // Lists of Client Following
+        let clientFollowingList = userData.following;
+        //#endregion
+
+        const POST_AMT = AMTs[0] - AMTs[2];
+        const EVENT_AMT = AMTs[1] - AMTs[3];
+
+        let postsList = await getPosts(clientFollowingList, POST_AMT);
+        let eventsLists = await getEvents(clientFollowingList, EVENT_AMT);
+
+        showingPosts.push(...postsList);
+        showingEvents.push(...eventsLists);
+
+        combinePostsAndEvents(postsList, eventsLists);
+
+        setContentData(prev => {
+            return {
+                ...prev,
+                content: showingContent,
+            };
+        });
+
+        setLoading(false);
+        LOADING = false;
+        LAST_UPDATED = Date.now();
+    }
+
     if (loading) return <Loading />;
 
     return (
@@ -1783,9 +1891,432 @@ const isOnTop = ({ contentOffset }) => {
 };
 
 const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    // return false;
     const paddingToBottom = 500;
     return (
         layoutMeasurement.height + contentOffset.y >=
         contentSize.height - paddingToBottom
     );
 };
+
+//#region POSTs
+async function getPosts(userList, amt) {
+    let postsList = safedPosts;
+
+    // Get Users not used before
+    const clientFollowingListFiltered = filterUsedUsers(
+        userList,
+        checkedUsersListPosts
+    );
+
+    // Limited if Posts are safed OR there are no further Following Users to fetch
+    let limited = false;
+    if (postsList.length >= AMTs[0] - AMTs[2]) limited = true;
+    if (limited || clientFollowingListFiltered.length == 0) {
+        const postsSortedList = sortArrayByDateFromUnderorderedKey(
+            postsList,
+            "id"
+        );
+
+        const randomPosts = await getRandomPosts(AMTs[2]);
+        const clientPostsList = sortContentRandomly(
+            postsSortedList.slice(0, amt),
+            randomPosts
+        );
+        safedPosts = postsSortedList.slice(amt);
+
+        return clientPostsList;
+    } else {
+        const db = ref(getDatabase());
+
+        // Fetch new Posts by Following Users
+        for (let i = 0; i < clientFollowingListFiltered.length; i++) {
+            await get(
+                child(db, `users/${clientFollowingListFiltered[i]}/posts`)
+            )
+                .then(postsSnap => {
+                    if (postsSnap.exists())
+                        postsSnap.forEach(p => {
+                            if (
+                                !checkForDuplicates(
+                                    showingPosts.concat(postsList),
+                                    p.val()
+                                )
+                            ) {
+                                postsList.push({
+                                    id: p.val(),
+                                    type: 0,
+                                });
+                            }
+                        });
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "ULTIMATIVE_ALGORITHM getNewPosts",
+                        error.code
+                    )
+                );
+
+            if (i === clientFollowingListFiltered.length - 1) {
+                updateCheckedUsersListPosts(clientFollowingListFiltered);
+
+                const postsSortedList = sortArrayByDateFromUnderorderedKey(
+                    postsList,
+                    "id"
+                );
+                safedPosts = postsSortedList.slice(amt);
+
+                const randomPosts = await getRandomPosts(AMTs[2]);
+                console.log("randomPosts", randomPosts);
+
+                const clientPostsList = sortContentRandomly(
+                    postsSortedList.slice(0, amt),
+                    randomPosts
+                );
+                return clientPostsList;
+            }
+        }
+    }
+}
+
+async function getRandomPosts(amt) {
+    let postsList = safedRandomPosts;
+
+    if (postsList.length >= amt) {
+        const postsSortedList = sortArrayByDateFromUnderorderedKey(
+            postsList,
+            "id"
+        );
+
+        const outputPostsList = postsSortedList.slice(0, amt);
+        safedRandomPosts = postsSortedList.slice(amt);
+
+        return outputPostsList;
+    } else {
+        // Get New Posts Recursive
+
+        // Get new Random Users
+        let randomUsersList = await makeRequest("/algo/follower", {
+            max_followers: 5,
+            max_out: 5,
+            previous_followers: checkedUsersListPosts,
+        });
+        if (randomUsersList.followers.length === 0) {
+            console.log("return line 2003");
+            return postsList;
+        }
+
+        // ERROR CASE of getRandomUsers
+        if (!Array.isArray(randomUsersList.followers)) {
+            console.log("CATCH");
+            return postsList;
+        }
+
+        const db = ref(getDatabase());
+
+        for (let i = 0; i < randomUsersList.followers.length; i++) {
+            await get(child(db, `users/${randomUsersList.followers[i]}/posts`))
+                .then(postsSnap => {
+                    if (postsSnap.exists())
+                        postsSnap.forEach(p => {
+                            if (!checkForDuplicates(showingPosts, p.val())) {
+                                postsList.push({
+                                    id: p.val(),
+                                    type: 0,
+                                });
+                            }
+                        });
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "ULTIMATIVE_ALGORITHM getRandomPosts",
+                        error.code
+                    )
+                );
+
+            if (i === randomUsersList.followers.length - 1) {
+                updateCheckedUsersListPosts(randomUsersList.followers);
+
+                const postsSortedList = sortArrayByDateFromUnderorderedKey(
+                    postsList,
+                    "id"
+                );
+                const outputPostsList = postsSortedList.slice(0, amt);
+                safedRandomPosts = postsSortedList.slice(amt);
+
+                postsList = outputPostsList;
+                if (postsList.length < amt) getRandomPosts(amt);
+            }
+        }
+
+        return postsList;
+    }
+}
+//#endregion
+
+//#region EVENTs
+async function getEvents(userList, amt) {
+    let eventsList = safedEvents;
+
+    // Get Users not used before
+    const clientFollowingListFiltered = filterUsedUsers(
+        userList,
+        checkedUsersListEvents
+    );
+
+    // Limited if Posts are safed OR there are no further Following Users to fetch
+    let limited = false;
+    if (eventsList.length >= amt) limited = true;
+    if (limited || clientFollowingListFiltered.length == 0) {
+        const eventsSortedList = sortArrayByDateFromUnderorderedKey(
+            eventsList,
+            "starting"
+        );
+
+        const randomEvents = await getRandomEvents(AMTs[3]);
+        const clientEventsList = sortContentRandomly(
+            eventsSortedList.slice(0, amt),
+            randomEvents
+        );
+        safedEvents = eventsSortedList.slice(amt);
+
+        return clientEventsList;
+    } else {
+        const db = ref(getDatabase());
+
+        // Fetch new Posts by Following Users
+        for (let i = 0; i < clientFollowingListFiltered.length; i++) {
+            await get(
+                child(db, `users/${clientFollowingListFiltered[i]}/events`)
+            )
+                .then(async eventsSnap => {
+                    if (eventsSnap.exists())
+                        eventsSnap.forEach(async e => {
+                            if (!checkForDuplicates(eventsList, e.val()))
+                                await get(child(db, `events/${e.val()}`))
+                                    .then(dataSnap => {
+                                        if (dataSnap.exists) {
+                                            const data = dataSnap.val();
+                                            if (data["ending"] > Date.now())
+                                                eventsList.push({
+                                                    id: e.val(),
+                                                    type: 1,
+                                                    starting: data["starting"],
+                                                    ending: data["ending"],
+                                                });
+                                        }
+                                    })
+                                    .catch(error =>
+                                        console.log(
+                                            "error pages/main/Landing.jsx",
+                                            "ULTIMATIVE_ALGORITHM getClientEvents get Event Data",
+                                            error.code
+                                        )
+                                    );
+                        });
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "ULTIMATIVE_ALGORITHM getNewEvents",
+                        error.code
+                    )
+                );
+
+            if (i === clientFollowingListFiltered.length - 1) {
+                updateCheckedUsersListEvents(clientFollowingListFiltered);
+
+                console.log("eventsList", eventsList);
+
+                const eventsSortedList = sortArrayByDateFromUnderorderedKey(
+                    eventsList,
+                    "id"
+                );
+                safedEvents = eventsSortedList.slice(amt);
+
+                const randomEvents = await getRandomEvents(AMTs[3]);
+                const clientEventsList = sortContentRandomly(
+                    eventsSortedList.slice(0, amt),
+                    randomEvents
+                );
+                return clientEventsList;
+            }
+        }
+    }
+}
+
+async function getRandomEvents(amt) {
+    let eventsList = safedRandomEvents;
+
+    if (eventsList.length >= amt) {
+        const eventsSortedList = sortArrayByDateFromUnderorderedKey(
+            eventsList,
+            "starting"
+        );
+
+        const outputEventsList = eventsSortedList.slice(0, amt);
+        safedRandomEvents = eventsSortedList.slice(amt);
+
+        return outputEventsList;
+    } else {
+        // Get New Events Recursive
+
+        // Get new Random Users
+        let randomUsersList = await makeRequest("/algo/follower", {
+            max_followers: 5,
+            max_out: 5,
+            previous_followers: checkedUsersListEvents,
+        });
+        if (randomUsersList.followers.length === 0) {
+            console.log("return line 2181");
+            return eventsList;
+        }
+
+        // ERROR CASE of getRandomUsers
+        if (!Array.isArray(randomUsersList.followers)) {
+            console.log("CATCH");
+            return eventsList;
+        }
+
+        const db = ref(getDatabase());
+
+        for (let i = 0; i < randomUsersList.followers.length; i++) {
+            await get(child(db, `users/${randomUsersList.followers[i]}/events`))
+                .then(eventsSnap => {
+                    if (eventsSnap.exists())
+                        eventsSnap.forEach(async e => {
+                            if (!checkForDuplicates(eventsList, e.val()))
+                                await get(child(db, `events/${e.val()}`))
+                                    .then(dataSnap => {
+                                        if (dataSnap.exists) {
+                                            const data = dataSnap.val();
+                                            if (data["ending"] > Date.now())
+                                                eventsList.push({
+                                                    id: e.val(),
+                                                    type: 1,
+                                                    starting: data["starting"],
+                                                    ending: data["ending"],
+                                                });
+                                        }
+                                    })
+                                    .catch(error =>
+                                        console.log(
+                                            "error pages/main/Landing.jsx",
+                                            "ULTIMATIVE_ALGORITHM getRandomEvents get Event Data",
+                                            error.code
+                                        )
+                                    );
+                        });
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "ULTIMATIVE_ALGORITHM getRandomPosts",
+                        error.code
+                    )
+                );
+            if (i === randomUsersList.followers.length - 1) {
+                updateCheckedUsersListEvents(randomUsersList.followers);
+
+                const eventsSortedList = sortArrayByDateFromUnderorderedKey(
+                    eventsList,
+                    "starting"
+                );
+                const outputEventsList = eventsSortedList.slice(0, amt);
+                safedRandomEvents = eventsSortedList.slice(amt);
+
+                eventsList = outputEventsList;
+                if (eventsList.length < amt) getRandomEvents(amt);
+            }
+        }
+        return eventsList;
+    }
+}
+//#endregion
+
+//#region filterUsedUsers
+/**
+ *
+ * @param {*[]} toFilter
+ * @param {*[]} used
+ * @returns {*[]} List of Users don't used before
+ */
+function filterUsedUsers(toFilter, used) {
+    let output = [];
+    toFilter.forEach(l => {
+        if (!used.includes(l)) output.push(l);
+    });
+    return output;
+}
+//#endregion
+
+//#region checkForDuplicates
+/**
+ *
+ * @param {*[]} list List to check id
+ * @param {number} id id to find in list
+ * @returns {boolean} true if id is found in list
+ */
+function checkForDuplicates(list, id) {
+    list.forEach(l => {
+        if (l.id === id) return true;
+    });
+    return false;
+}
+//#endregion
+
+//#region updateCheckedUsersList
+function updateCheckedUsersListPosts(newContent) {
+    // console.log("newContent", newContent);
+    let newList = checkedUsersListPosts.concat(newContent);
+    checkedUsersListPosts = newList;
+}
+function updateCheckedUsersListEvents(newContent) {
+    // console.log("newContent", newContent);
+    let newList = checkedUsersListEvents.concat(newContent);
+    checkedUsersListEvents = newList;
+}
+//#endregion
+
+//#region getRandomUsers | Function to get a personalized User List Client is not Following
+async function getRandomUsers(maxAmt, usedList) {
+    return await makeRequest("/algo/follower", {
+        max_followers: maxAmt,
+        max_out: maxAmt,
+        previous_followers: usedList,
+    });
+}
+//#endregion
+
+//#region Combine Posts & Events
+function combinePostsAndEvents(posts, events) {
+    let newFinalContentList = posts;
+
+    events.forEach(e => {
+        const rand = Math.random();
+        const index = Math.round(lerp(0, newFinalContentList.length, rand));
+        newFinalContentList.splice(index, 0, e);
+    });
+
+    showingContent.push(...newFinalContentList);
+}
+//#endregion
+
+//#region sortContentRandomly
+/**
+ *
+ * @param {*[]} fixedList List with a fixed order
+ * @param {*[]} insertList A second list, which needs to get sorted Randomly into the fixedList
+ */
+function sortContentRandomly(fixedList, insertList) {
+    let newOutputList = fixedList;
+    insertList.forEach(e => {
+        const rand = Math.random();
+        const index = Math.round(lerp(0, newOutputList.length, rand));
+        newOutputList.splice(index, 0, e);
+    });
+    return newOutputList;
+}
+//#endregion

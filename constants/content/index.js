@@ -34,305 +34,16 @@ export function getTimePassed(time) {
     switch (getCurrentLanguage()) {
         // Lang == HSB
         case 0:
-            output += "Před ";
-
-            if (years > 0) {
-                // Years
-                // Years
-                switch (years) {
-                    case 1:
-                        output += "lětom";
-                        break;
-                    case 2:
-                        output += "lětomaj";
-                        break;
-                    default:
-                        output += `${getNumber(years)} lětami`;
-                        break;
-                }
-            } else if (month > 0) {
-                // Month (and Days)
-                // Month
-                switch (month) {
-                    case 1:
-                        output += "měsacom";
-                        break;
-                    case 2:
-                        output += "měsacomaj";
-                        break;
-                    default:
-                        output += `${getNumber(month)} měsacami`;
-                        break;
-                }
-
-                if (days > 0) {
-                    output += " a ";
-
-                    switch (days) {
-                        case 1:
-                            output += "dnjom";
-                            break;
-                        case 2:
-                            output += "dnjomaj";
-                            break;
-                        default:
-                            output += `${getNumber(days)} dnjemi`;
-                            break;
-                    }
-                }
-            } else if (days > 0) {
-                // Days
-
-                switch (days) {
-                    case 1:
-                        output += "dnjom";
-                        break;
-                    case 2:
-                        output += "dnjomaj";
-                        break;
-                    default:
-                        output += `${getNumber(days)} dnjemi`;
-                        break;
-                }
-
-                if (hours > 0) {
-                    output += " a ";
-
-                    switch (hours) {
-                        case 1:
-                            output += "hodźinu";
-                            break;
-                        case 2:
-                            output += "dwěmaj";
-                            break;
-                        default:
-                            output += `${getNumber(hours)} hodźinami`;
-                            break;
-                    }
-                }
-            } else if (hours > 0) {
-                switch (hours) {
-                    case 1:
-                        output += "hodźinu";
-                        break;
-                    case 2:
-                        output += "dwěmaj";
-                        break;
-                    default:
-                        output += `${getNumber(hours)} hodźinami`;
-                        break;
-                }
-
-                if (mins > 0) {
-                    output += sec > 0 ? ", " : " a ";
-
-                    switch (mins) {
-                        case 1:
-                            output += "mjeńšinu";
-                            break;
-                        case 2:
-                            output += "mjeńšinomaj";
-                            break;
-                        default:
-                            output += `${getNumber(mins)} mjeńšinami`;
-                            break;
-                    }
-                }
-
-                if (sec > 0) {
-                    output += " a ";
-
-                    switch (sec) {
-                        case 1:
-                            output += "sekundu";
-                            break;
-                        case 2:
-                            output += "sekundomaj";
-                            break;
-                        default:
-                            output += `${getNumber(sec)} sekundami`;
-                            break;
-                    }
-                }
-            } else if (mins > 0) {
-                switch (mins) {
-                    case 1:
-                        output += "mjeńšinu";
-                        break;
-                    case 2:
-                        output += "mjeńšinomaj";
-                        break;
-                    default:
-                        output += `${getNumber(mins)} mjeńšinami`;
-                        break;
-                }
-
-                if (sec > 0) {
-                    output += " a ";
-
-                    switch (sec) {
-                        case 1:
-                            output += "sekundu";
-                            break;
-                        case 2:
-                            output += "sekundomaj";
-                            break;
-                        default:
-                            output += `${getNumber(sec)} sekundami`;
-                            break;
-                    }
-                }
-            } else if (sec > 0) {
-                switch (sec) {
-                    case 1:
-                        output += "sekundu";
-                        break;
-                    case 2:
-                        output += "sekundomaj";
-                        break;
-                    default:
-                        output += `${getNumber(sec)} sekundami`;
-                        break;
-                }
-            } else output = convertTimestampToString(text);
-
-            output += " wozjewjene.";
+            output = handleHSB(years, month, days, hours, mins, sec);
             break;
 
         // Lang == DE
         case 2:
-            output += "Vor ";
-
-            if (years > 0) {
-                // Years
-                switch (years) {
-                    case 1:
-                        output += "einem Jahr";
-                        break;
-                    default:
-                        output += `${getNumberDE(years)} Jahren`;
-                        break;
-                }
-            } else if (month > 0) {
-                // Month (and Days)
-                // Month
-                switch (month) {
-                    case 1:
-                        output += "einem Monat";
-                        break;
-                    default:
-                        output += `${getNumberDE(month)} Monaten`;
-                        break;
-                }
-
-                if (days > 0) {
-                    output += " und ";
-
-                    switch (days) {
-                        case 1:
-                            output += "einem Tag";
-                            break;
-                        default:
-                            output += `${getNumberDE(days)} Tagen`;
-                            break;
-                    }
-                }
-            } else if (days > 0) {
-                // Days
-
-                switch (days) {
-                    case 1:
-                        output += "einem Tag";
-                        break;
-                    default:
-                        output += `${getNumberDE(days)} Tagen`;
-                        break;
-                }
-
-                if (hours > 0) {
-                    output += " und ";
-
-                    switch (hours) {
-                        case 1:
-                            output += "einer Stunde";
-                            break;
-                        default:
-                            output += `${getNumberDE(hours)} Stunden`;
-                            break;
-                    }
-                }
-            } else if (hours > 0) {
-                switch (hours) {
-                    case 1:
-                        output += "einer Stunde";
-                        break;
-                    default:
-                        output += `${getNumberDE(hours)} Stunden`;
-                        break;
-                }
-
-                if (mins > 0) {
-                    output += sec > 0 ? ", " : " und ";
-
-                    switch (mins) {
-                        case 1:
-                            output += "einer Minute";
-                            break;
-                        default:
-                            output += `${getNumberDE(mins)} Minuten`;
-                            break;
-                    }
-                }
-
-                if (sec > 0) {
-                    output += " und ";
-
-                    switch (sec) {
-                        case 1:
-                            output += "einer Sekunde";
-                            break;
-                        default:
-                            output += `${getNumberDE(sec)} Sekunden`;
-                            break;
-                    }
-                }
-            } else if (mins > 0) {
-                switch (mins) {
-                    case 1:
-                        output += "einer Minute";
-                        break;
-                    default:
-                        output += `${getNumberDE(mins)} Minuten`;
-                        break;
-                }
-
-                if (sec > 0) {
-                    output += " und ";
-
-                    switch (sec) {
-                        case 1:
-                            output += "einer Sekunde";
-                            break;
-                        default:
-                            output += `${getNumberDE(sec)} Sekunden`;
-                            break;
-                    }
-                }
-            } else if (sec > 0) {
-                switch (sec) {
-                    case 1:
-                        output += "einer Sekunde";
-                        break;
-                    default:
-                        output += `${getNumberDE(sec)} Sekunden`;
-                        break;
-                }
-            } else output = convertTimestampToString(text);
-
-            output += " veröffentlicht.";
+            output = handleDE(years, month, days, hours, mins, sec);
             break;
 
         default:
+            output = handleHSB(years, month, days, hours, mins, sec);
             break;
     }
 
@@ -431,4 +142,305 @@ export function insertCharacterOnCursor(text, selection, char) {
     let first = text.substring(0, selection);
     let second = text.slice(selection);
     return first + char + second;
+}
+
+function handleHSB(years, month, days, hours, mins, sec) {
+    let output = "";
+    output += "Před ";
+
+    if (years > 0) {
+        // Years
+        // Years
+        switch (years) {
+            case 1:
+                output += "lětom";
+                break;
+            case 2:
+                output += "lětomaj";
+                break;
+            default:
+                output += `${getNumber(years)} lětami`;
+                break;
+        }
+    } else if (month > 0) {
+        // Month (and Days)
+        // Month
+        switch (month) {
+            case 1:
+                output += "měsacom";
+                break;
+            case 2:
+                output += "měsacomaj";
+                break;
+            default:
+                output += `${getNumber(month)} měsacami`;
+                break;
+        }
+
+        if (days > 0) {
+            output += " a ";
+
+            switch (days) {
+                case 1:
+                    output += "dnjom";
+                    break;
+                case 2:
+                    output += "dnjomaj";
+                    break;
+                default:
+                    output += `${getNumber(days)} dnjemi`;
+                    break;
+            }
+        }
+    } else if (days > 0) {
+        // Days
+
+        switch (days) {
+            case 1:
+                output += "dnjom";
+                break;
+            case 2:
+                output += "dnjomaj";
+                break;
+            default:
+                output += `${getNumber(days)} dnjemi`;
+                break;
+        }
+
+        if (hours > 0) {
+            output += " a ";
+
+            switch (hours) {
+                case 1:
+                    output += "hodźinu";
+                    break;
+                case 2:
+                    output += "hodźinomaj";
+                    break;
+                default:
+                    output += `${getNumber(hours)} hodźinami`;
+                    break;
+            }
+        }
+    } else if (hours > 0) {
+        switch (hours) {
+            case 1:
+                output += "hodźinu";
+                break;
+            case 2:
+                output += "hodźinomaj";
+                break;
+            default:
+                output += `${getNumber(hours)} hodźinami`;
+                break;
+        }
+
+        if (mins > 0) {
+            output += sec > 0 ? ", " : " a ";
+
+            switch (mins) {
+                case 1:
+                    output += "mjeńšinu";
+                    break;
+                case 2:
+                    output += "mjeńšinomaj";
+                    break;
+                default:
+                    output += `${getNumber(mins)} mjeńšinami`;
+                    break;
+            }
+        }
+
+        if (sec > 0) {
+            output += " a ";
+
+            switch (sec) {
+                case 1:
+                    output += "sekundu";
+                    break;
+                case 2:
+                    output += "sekundomaj";
+                    break;
+                default:
+                    output += `${getNumber(sec)} sekundami`;
+                    break;
+            }
+        }
+    } else if (mins > 0) {
+        switch (mins) {
+            case 1:
+                output += "mjeńšinu";
+                break;
+            case 2:
+                output += "mjeńšinomaj";
+                break;
+            default:
+                output += `${getNumber(mins)} mjeńšinami`;
+                break;
+        }
+
+        if (sec > 0) {
+            output += " a ";
+
+            switch (sec) {
+                case 1:
+                    output += "sekundu";
+                    break;
+                case 2:
+                    output += "sekundomaj";
+                    break;
+                default:
+                    output += `${getNumber(sec)} sekundami`;
+                    break;
+            }
+        }
+    } else if (sec > 0) {
+        switch (sec) {
+            case 1:
+                output += "sekundu";
+                break;
+            case 2:
+                output += "sekundomaj";
+                break;
+            default:
+                output += `${getNumber(sec)} sekundami`;
+                break;
+        }
+    } else output = convertTimestampToString(text);
+
+    output += " wozjewjene.";
+    return output;
+}
+function handleDE() {
+    let output = "";
+    output += "Vor ";
+
+    if (years > 0) {
+        // Years
+        switch (years) {
+            case 1:
+                output += "einem Jahr";
+                break;
+            default:
+                output += `${getNumberDE(years)} Jahren`;
+                break;
+        }
+    } else if (month > 0) {
+        // Month (and Days)
+        // Month
+        switch (month) {
+            case 1:
+                output += "einem Monat";
+                break;
+            default:
+                output += `${getNumberDE(month)} Monaten`;
+                break;
+        }
+
+        if (days > 0) {
+            output += " und ";
+
+            switch (days) {
+                case 1:
+                    output += "einem Tag";
+                    break;
+                default:
+                    output += `${getNumberDE(days)} Tagen`;
+                    break;
+            }
+        }
+    } else if (days > 0) {
+        // Days
+
+        switch (days) {
+            case 1:
+                output += "einem Tag";
+                break;
+            default:
+                output += `${getNumberDE(days)} Tagen`;
+                break;
+        }
+
+        if (hours > 0) {
+            output += " und ";
+
+            switch (hours) {
+                case 1:
+                    output += "einer Stunde";
+                    break;
+                default:
+                    output += `${getNumberDE(hours)} Stunden`;
+                    break;
+            }
+        }
+    } else if (hours > 0) {
+        switch (hours) {
+            case 1:
+                output += "einer Stunde";
+                break;
+            default:
+                output += `${getNumberDE(hours)} Stunden`;
+                break;
+        }
+
+        if (mins > 0) {
+            output += sec > 0 ? ", " : " und ";
+
+            switch (mins) {
+                case 1:
+                    output += "einer Minute";
+                    break;
+                default:
+                    output += `${getNumberDE(mins)} Minuten`;
+                    break;
+            }
+        }
+
+        if (sec > 0) {
+            output += " und ";
+
+            switch (sec) {
+                case 1:
+                    output += "einer Sekunde";
+                    break;
+                default:
+                    output += `${getNumberDE(sec)} Sekunden`;
+                    break;
+            }
+        }
+    } else if (mins > 0) {
+        switch (mins) {
+            case 1:
+                output += "einer Minute";
+                break;
+            default:
+                output += `${getNumberDE(mins)} Minuten`;
+                break;
+        }
+
+        if (sec > 0) {
+            output += " und ";
+
+            switch (sec) {
+                case 1:
+                    output += "einer Sekunde";
+                    break;
+                default:
+                    output += `${getNumberDE(sec)} Sekunden`;
+                    break;
+            }
+        }
+    } else if (sec > 0) {
+        switch (sec) {
+            case 1:
+                output += "einer Sekunde";
+                break;
+            default:
+                output += `${getNumberDE(sec)} Sekunden`;
+                break;
+        }
+    } else output = convertTimestampToString(text);
+
+    output += " veröffentlicht.";
+    return output;
 }

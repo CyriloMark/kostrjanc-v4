@@ -149,7 +149,7 @@ export default function App() {
         checkIfLangIsSet().then(state => {
             if (!state) {
                 save("currentLanguage", 0);
-                changeLanguage(currentLanguage);
+                changeLanguage(0);
             }
         });
 

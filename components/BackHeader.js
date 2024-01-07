@@ -6,7 +6,7 @@ import * as style from "../styles";
 import { LinearGradient } from "expo-linear-gradient";
 
 import SVG_Return from "../assets/svg/Return";
-import SVG_Reload from "../assets/svg/Search";
+import SVG_Reload from "../assets/svg/Reload";
 
 export default function BackHeader(props) {
     return (

@@ -33,7 +33,7 @@ import {
     getLinkingsFromPlainText,
 } from "../constants/content/linking";
 import { getLangs } from "../constants/langs";
-import { getData } from "../constants/storage";
+import makeRequest from "../constants/request";
 
 import BackHeader from "../components/BackHeader";
 import EnterButton from "../components/auth/EnterButton";
@@ -159,7 +159,7 @@ export default function LinkingPage({ navigation, route }) {
         setButtonVisible(confirm);
     }, [usersList]);
 
-    let removeUnnötigEmpties = input => {
+    let removeUnnoetigEmpties = input => {
         let output = input
             .split(" ")
             .filter(el => el.length !== 0)
@@ -208,13 +208,13 @@ export default function LinkingPage({ navigation, route }) {
                                     finalTextParts.push(replacingElement);
                                 } else
                                     finalTextParts.push(
-                                        removeUnnötigEmpties(
+                                        removeUnnoetigEmpties(
                                             splittedElements[j]
                                         )
                                     );
                         } else
                             finalTextParts.push(
-                                removeUnnötigEmpties(
+                                removeUnnoetigEmpties(
                                     post_outputElementsTitle[i]
                                 )
                             );
@@ -260,13 +260,13 @@ export default function LinkingPage({ navigation, route }) {
                                     finalTextParts.push(replacingElement);
                                 } else
                                     finalTextParts.push(
-                                        removeUnnötigEmpties(
+                                        removeUnnoetigEmpties(
                                             splittedElements[j]
                                         )
                                     );
                         } else
                             finalTextParts.push(
-                                removeUnnötigEmpties(
+                                removeUnnoetigEmpties(
                                     post_outputElementsDescription[i]
                                 )
                             );
@@ -311,13 +311,13 @@ export default function LinkingPage({ navigation, route }) {
                                     finalTextParts.push(replacingElement);
                                 } else
                                     finalTextParts.push(
-                                        removeUnnötigEmpties(
+                                        removeUnnoetigEmpties(
                                             splittedElements[j]
                                         )
                                     );
                         } else
                             finalTextParts.push(
-                                removeUnnötigEmpties(
+                                removeUnnoetigEmpties(
                                     event_outputElementsTitle[i]
                                 )
                             );
@@ -363,13 +363,13 @@ export default function LinkingPage({ navigation, route }) {
                                     finalTextParts.push(replacingElement);
                                 } else
                                     finalTextParts.push(
-                                        removeUnnötigEmpties(
+                                        removeUnnoetigEmpties(
                                             splittedElements[j]
                                         )
                                     );
                         } else
                             finalTextParts.push(
-                                removeUnnötigEmpties(
+                                removeUnnoetigEmpties(
                                     event_outputElementsDescription[i]
                                 )
                             );
@@ -414,13 +414,13 @@ export default function LinkingPage({ navigation, route }) {
                                     finalTextParts.push(replacingElement);
                                 } else
                                     finalTextParts.push(
-                                        removeUnnötigEmpties(
+                                        removeUnnoetigEmpties(
                                             splittedElements[j]
                                         )
                                     );
                         } else
                             finalTextParts.push(
-                                removeUnnötigEmpties(
+                                removeUnnoetigEmpties(
                                     comment_outputElementsTitle[i]
                                 )
                             );
@@ -465,77 +465,33 @@ export default function LinkingPage({ navigation, route }) {
         fetchUsers(input);
     };
 
-    let getSearchResult = text => {
-        let output = [];
-        let searchQuery = text.toLowerCase();
-        for (const key in UsersData) {
-            let user = UsersData[key].name.toLowerCase();
-            if (user.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
-                if (currentUsernameInput.length <= 5) {
-                    if (!UsersData[key].isBanned) {
-                        output.push(UsersData[key]);
-                    }
-                }
-            }
-        }
-        setCurrentUserResult(output);
-    };
-
     const fetchUsers = text => {
         if (text.length <= 0 || text.length > 64) {
             setCurrentUserResult([]);
             return;
         }
 
-        if (!UsersData) {
-            const db = getDatabase();
-            getData("userData").then(data => {
-                if (data === null) return;
-                let users = [];
-                if (data.follower) users.push(...data.follower);
-                if (data.following) users.push(...data.following);
-
-                const usersFiltered = users.filter(function (item, pos) {
-                    return users.indexOf(item) == pos;
-                });
-
-                for (let i = 0; i < usersFiltered.length; i++) {
-                    get(child(ref(db), `users/${usersFiltered[i]}`))
-                        .then(userSnap => {
-                            if (userSnap.exists()) {
-                                const userData = userSnap.val();
-                                if (!userData.isBanned) {
-                                    if (UsersData === null)
-                                        UsersData = [
-                                            {
-                                                name: userData.name,
-                                                pbUri: userData.pbUri,
-                                                id: usersFiltered[i],
-                                            },
-                                        ];
-                                    else
-                                        UsersData.push({
-                                            name: userData.name,
-                                            pbUri: userData.pbUri,
-                                            id: usersFiltered[i],
-                                        });
-                                }
-                            }
-                        })
-                        .finally(() => {
-                            if (i === usersFiltered.length - 1)
-                                getSearchResult(text);
-                        })
-                        .catch(error =>
-                            console.log(
-                                "error pages/create/PostCreate.jsx",
-                                "fetchUsers get user",
-                                error.code
-                            )
-                        );
-                }
-            });
-        } else getSearchResult(text);
+        makeRequest("/user/search", {
+            query: text,
+        })
+            .then(rsp => {
+                let results = [];
+                rsp.hits.map(hit =>
+                    results.push({
+                        name: hit.primary,
+                        pbUri: hit.img,
+                        id: hit.id.substring(2),
+                    })
+                );
+                setCurrentUserResult(results);
+            })
+            .catch(error =>
+                console.log(
+                    "error getMeiliSearch request",
+                    "fetchUsers pages/Linkings.jsx",
+                    error
+                )
+            );
     };
 
     const cancelInput = () => {

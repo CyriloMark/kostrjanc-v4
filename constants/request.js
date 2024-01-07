@@ -17,7 +17,10 @@ const makeRequest = (url, body) => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ ...body, token: token }),
+                    body: JSON.stringify({
+                        ...body,
+                        token: url == "/post_event/check_words" ? null : token,
+                    }),
                 })
                     .then(rsp =>
                         rsp

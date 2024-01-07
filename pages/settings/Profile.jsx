@@ -123,16 +123,17 @@ export default function Profile({ navigation, route }) {
                 </Pressable>
 
                 {/* Edit */}
-                <EditProfileButton
-                    checked
-                    style={[styles.sectionContainer, style.allCenter]}
-                    title={getLangs("settings_profile_editbutton")}
-                    onPress={() =>
-                        navigation.navigate("editProfile", {
-                            userData: userData,
-                        })
-                    }
-                />
+                <View style={[styles.sectionContainer, style.allCenter]}>
+                    <EditProfileButton
+                        checked
+                        title={getLangs("settings_profile_editbutton")}
+                        onPress={() =>
+                            navigation.navigate("editProfile", {
+                                userData: userData,
+                            })
+                        }
+                    />
+                </View>
 
                 {/* Stats */}
                 <View style={styles.sectionContainer}>

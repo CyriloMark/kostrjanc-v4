@@ -331,7 +331,10 @@ export default function EventCreate({ navigation, route }) {
                     ...eventOptions,
                     entrance_fee: event.eventOptions.entrance_fee,
                 };
-            if (event.eventOptions.website !== undefined && checkedCategories.website)
+            if (
+                event.eventOptions.website !== undefined &&
+                checkedCategories.website
+            )
                 eventOptions = {
                     ...eventOptions,
                     website: event.eventOptions.website,
@@ -421,8 +424,8 @@ export default function EventCreate({ navigation, route }) {
     const addToLocalStorage = id => {
         getData("userData").then(userData => {
             let events = [];
-            if (userData["events"]) posts = userData["events"];
-            posts.push(id);
+            if (userData["events"]) events = userData["events"];
+            events.push(id);
 
             storeData("userData", {
                 ...userData,

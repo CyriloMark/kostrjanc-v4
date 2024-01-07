@@ -47,6 +47,7 @@ export default function Report({ navigation, route }) {
 
     useEffect(() => {
         cursorPos = -1;
+        reporting = false;
     }, []);
 
     const itemType = () => {
@@ -369,7 +370,6 @@ const styles = StyleSheet.create({
     },
     typeItem: {
         marginVertical: style.defaultMsm,
-        flex: 1,
     },
 
     button: {

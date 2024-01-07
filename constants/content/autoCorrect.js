@@ -1,3 +1,5 @@
+import makeRequest from "../request";
+
 /**
  *
  * @param {string} input Current Input to extract last word
@@ -56,32 +58,15 @@ export async function checkForAutoCorrect(input) {
         output.status = 200;
         return output;
     } else {
-        await fetch(process.env.EXPO_PUBLIC_SPELL_CHECK_URL, {
-            body: JSON.stringify({ word: word }),
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then(rsp =>
-                rsp
-                    .json()
-                    .then(words => {
-                        if (words.length === 0) output.status = 200;
-                        else
-                            output = {
-                                status: 300,
-                                content: words,
-                            };
-                    })
-                    .catch(error => {
-                        console.log(
-                            "error constants/content/autoCorrect.js",
-                            "error requestWords rsp.json()",
-                            error
-                        );
-                    })
-            )
+        await makeRequest("/post_event/check_words", { word: word })
+            .then(words => {
+                if (words.length === 0) output.status = 200;
+                else
+                    output = {
+                        status: 300,
+                        content: words,
+                    };
+            })
             .catch(error => {
                 console.log(
                     "error constants/content/autoCorrect.js",
@@ -89,7 +74,6 @@ export async function checkForAutoCorrect(input) {
                     error
                 );
             });
-
         return output;
     }
 }

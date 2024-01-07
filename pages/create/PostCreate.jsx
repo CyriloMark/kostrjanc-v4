@@ -487,7 +487,7 @@ export default function PostCreate({ navigation, route }) {
                                     autoCapitalize="sentences"
                                     keyboardType="default"
                                     value={post.title}
-                                    maxLength={32}
+                                    maxLength={128}
                                     inputAccessoryViewID="post_title_InputAccessoryViewID"
                                     icon={
                                         <SVG_Pencil fill={style.colors.blue} />

@@ -28,11 +28,9 @@ export default function SelectableButton({ checked, style, onPress, title }) {
         return (
             <View style={style}>
                 <Pressable
-                    style={[styles.container, s.oHidden, s.border]}
+                    style={[styles.container, s.border, s.Pmd, s.allCenter]}
                     onPress={onPress}>
-                    <View style={[s.Pmd, s.allCenter]}>
-                        <Text style={[s.tWhite, s.Tmd]}>{title}</Text>
-                    </View>
+                    <Text style={[s.tWhite, s.Tmd]}>{title}</Text>
                 </Pressable>
             </View>
         );

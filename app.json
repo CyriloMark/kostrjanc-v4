@@ -3,7 +3,7 @@
         "name": "kostrjanc",
         "slug": "kostrjanc",
         "owner": "lauske",
-        "version": "2.1.0",
+        "version": "2.2.0",
         "orientation": "portrait",
         "icon": "./assets/icons/icon.png",
         "splash": {
