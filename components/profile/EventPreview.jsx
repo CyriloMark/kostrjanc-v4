@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
         width: "100%",
         aspectRatio: 1,
         borderRadius: 10,
+        position: "relative",
     },
 
     pinContainer: {

@@ -23,6 +23,7 @@ import { getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 import { getUnsignedTranslationText } from "../../constants/content/translation";
 import { checkForUnnecessaryNewLine } from "../../constants/content";
+import { checkLinkedUser } from "../../constants/content/linking";
 
 export default function Event(props) {
     const mapRef = useRef();
@@ -130,14 +131,19 @@ export default function Event(props) {
                         </View>
                     ) : null}
                     <View style={styles.titleContainer}>
-                        <Text
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                            style={[style.TlgRg, style.tWhite]}>
-                            {getUnsignedTranslationText(
+                        {checkLinkedUser(
+                            getUnsignedTranslationText(
                                 checkForUnnecessaryNewLine(event.title)
-                            )}
-                        </Text>
+                            )
+                        ).map((el, key) => (
+                            <Text
+                                key={key}
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                style={[style.TlgRg, style.tWhite]}>
+                                {el.text}
+                            </Text>
+                        ))}
                         <Text
                             style={[
                                 style.TsmLt,

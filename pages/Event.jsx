@@ -64,6 +64,7 @@ import {
 } from "../constants/content/translation";
 import {
     checkForUnnecessaryNewLine,
+    checkForURLs,
     getTimePassed,
     insertCharacterOnCursor,
 } from "../constants/content";
@@ -401,7 +402,28 @@ export default function Event({ navigation, route, onTut }) {
                                 )
                             ).map((el, key) =>
                                 !el.isLinked ? (
-                                    <Text key={key}>{el.text}</Text>
+                                    checkForURLs(el.text).map((el2, key2) =>
+                                        !el2.hasUrl ? (
+                                            <Text key={key2}>{el2.text}</Text>
+                                        ) : (
+                                            <Text
+                                                key={key2}
+                                                style={[
+                                                    style.tBlue,
+                                                    {
+                                                        textDecorationLine:
+                                                            "underline",
+                                                        textDecorationColor:
+                                                            style.colors.blue,
+                                                    },
+                                                ]}
+                                                onPress={() =>
+                                                    openLink(el2.text)
+                                                }>
+                                                {el2.text}
+                                            </Text>
+                                        )
+                                    )
                                 ) : (
                                     <Text
                                         key={key}
@@ -494,7 +516,31 @@ export default function Event({ navigation, route, onTut }) {
                                     )
                                 ).map((el, key) =>
                                     !el.isLinked ? (
-                                        <Text key={key}>{el.text}</Text>
+                                        checkForURLs(el.text).map((el2, key2) =>
+                                            !el2.hasUrl ? (
+                                                <Text key={key2}>
+                                                    {el2.text}
+                                                </Text>
+                                            ) : (
+                                                <Text
+                                                    key={key2}
+                                                    style={[
+                                                        style.tBlue,
+                                                        {
+                                                            textDecorationLine:
+                                                                "underline",
+                                                            textDecorationColor:
+                                                                style.colors
+                                                                    .blue,
+                                                        },
+                                                    ]}
+                                                    onPress={() =>
+                                                        openLink(el2.text)
+                                                    }>
+                                                    {el2.text}
+                                                </Text>
+                                            )
+                                        )
                                     ) : (
                                         <Text
                                             key={key}

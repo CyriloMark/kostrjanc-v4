@@ -444,3 +444,49 @@ function handleDE() {
     output += " veröffentlicht.";
     return output;
 }
+
+export const URL_REGEX =
+    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+
+/**
+ *
+ * @param {String} text String to match for URL
+ */
+export function checkForURLs(text) {
+    const urls = text.match(URL_REGEX);
+
+    if (!urls)
+        return [
+            {
+                hasUrl: false,
+                text: text,
+            },
+        ];
+
+    let output = [];
+
+    let startIndex = 0;
+
+    for (let i = 0; i < urls.length; i++) {
+        const ind = text.indexOf(urls[i], startIndex);
+        output.push(
+            {
+                hasUrl: false,
+                text: text.substring(startIndex, ind),
+            },
+            {
+                hasUrl: true,
+                text: urls[i],
+            }
+        );
+        startIndex = ind + urls[i].length;
+    }
+
+    if (startIndex != text.length)
+        output.push({
+            hasUrl: false,
+            text: text.substring(startIndex),
+        });
+
+    return output;
+}

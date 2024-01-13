@@ -235,6 +235,7 @@
 
         "interactionbar_title": "Funktionen für Nutzer:",
 
+        "landing_group_selectgroup": "Gruppe wählen",
         "landing_nocontenttext": "Mehr Inhalte gibt es nicht auf kostrjanc.",
 
         "contentpage_search": "Suche nach etwas.",
@@ -246,6 +247,8 @@
         "contentpage_noevents": "Keine Events zum Ranking verfügbar.",
 
         "content_aboutcreator": "Über den Ersteller:",
+        "content_group_title": "Über die Gruppe:",
+        "content_group_sub": "Dieser Inhalt wurde in einer Gruppe veröffentlicht. Nur Mitglieder der Gruppe können diesen Inhalt sehen.",
         "content_comments_title": "Kommentare:",
         "content_comments_newcommenttitle": "Neuer Kommentar:",
 
@@ -268,6 +271,8 @@
         "landingcreate_post_sub": "Möchtes du ein Post veröffentlichen?\nDieser beinhaltet ein Bild mit einem Titel und zusätzlichem Text.",
         "landingcreate_event_title": "Neues Event",
         "landingcreate_event_sub": "Möchtes du ein Event veröffentlichen?\nDieser beinhaltet einen Standort mit einem Titel und zusätzlichen Informationen.",
+        "landingcreate_group_title": "Neue Gruppe",
+        "landingcreate_group_sub": "Möchtest du eine neue Gruppe eröffnen?\nZu einer Gruppe können beliebig Benutzer betreten und sehen, was in dieser Gruppe geteilt wurde.",
         "landingcreate_error_title": "Veröffentlichen ist nicht möglich.",
         "landingcreate_error_sub_p": "Veröffentlichen von Posts ist nicht möglich.",
         "landingcreate_error_sub_e": "Veröffentlichen von Events ist nicht möglich.",
@@ -511,6 +516,9 @@
         "502_bad_gateway": "Bad Gateway",
 
         "translation_title": "Automatische Übersetzung",
-        "translation_sub": "Dieser Text war ursprünglich Deutsch und wurde mit sotra.app ins Sorbische übersetzt."
+        "translation_sub": "Dieser Text war ursprünglich Deutsch und wurde mit sotra.app ins Sorbische übersetzt.",
+
+        "groups_general_title": "Allgemein",
+        "groups_general_description": "Diese Gruppe zeigt alle mögliche Inhalte. Du bekommst vorzugsweise die Inhalte der Nutzer gezeigt, denen du folgst, aber auch Inhalte von neuen Benutzern. So lernst du auch neue Menschen kennen."
     }
 }

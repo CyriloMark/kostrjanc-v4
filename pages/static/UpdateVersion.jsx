@@ -76,7 +76,7 @@ export default function UpdateVersion({ bottom }) {
                         {/* Title */}
                         <View style={{ flex: 0.75 }}>
                             <Text style={[style.TlgBd, style.tBlack]}>
-                                Nowa werija w {getStore()}.
+                                Nowa wersija w {getStore()}.
                             </Text>
                         </View>
 
@@ -115,7 +115,7 @@ export default function UpdateVersion({ bottom }) {
                                 style.TsmRg,
                                 { marginTop: style.defaultMsm },
                             ]}>
-                            Njejsy na najnowšim stawje aplikacije. Installuj sej
+                            Njejsy na najnowšim stawje aplikacije. Instaluj sej
                             nowu weriju kostrjanc w {getStore()}.
                         </Text>
                     ) : null}

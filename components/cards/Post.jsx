@@ -12,6 +12,7 @@ import {
 } from "../../constants/content/PlaceholderData";
 import { getUnsignedTranslationText } from "../../constants/content/translation";
 import { checkForUnnecessaryNewLine } from "../../constants/content";
+import { checkLinkedUser } from "../../constants/content/linking";
 
 export default function Post(props) {
     const [user, setUser] = useState(User_Placeholder);
@@ -120,11 +121,15 @@ export default function Post(props) {
 
                 {/* Text */}
                 <View style={[styles.textContainer]}>
-                    <Text style={[style.Tmd, style.tWhite]}>
-                        {getUnsignedTranslationText(
+                    {checkLinkedUser(
+                        getUnsignedTranslationText(
                             checkForUnnecessaryNewLine(post.title)
-                        )}
-                    </Text>
+                        )
+                    ).map((el, key) => (
+                        <Text key={key} style={[style.Tmd, style.tWhite]}>
+                            {el.text}
+                        </Text>
+                    ))}
                 </View>
             </Pressable>
         </View>

@@ -235,6 +235,7 @@
 
         "interactionbar_title": "Funkcije za wužiwarja:",
 
+        "landing_group_selectgroup": "Skupinu wolić",
         "landing_nocontenttext": "Wjac wobsahow njedawaja na kostrjanc.",
 
         "contentpage_search": "Pytaj něšto.",
@@ -246,6 +247,8 @@
         "contentpage_noevents": "Žane ewenty za ranking.",
 
         "content_aboutcreator": "Wo awtorje:",
+        "content_group_title": "Wo skupinje:",
+        "content_group_sub": "Tutón wobsah bu w jednej skupinje wozjewjeny. Jenož čłonojo skupiny móža tutón wobsah widźeć.",
         "content_comments_title": "Komentary:",
         "content_comments_newcommenttitle": "Nowy komentar:",
 
@@ -268,6 +271,8 @@
         "landingcreate_post_sub": "Chceš nowy post wozjewić?\nTutón wopřija wobraz z titulom a přidatnym tekstom.",
         "landingcreate_event_title": "Nowy ewent",
         "landingcreate_event_sub": "Chceš nowy ewent wozjewić?\nTutón wopřija městnosć na karće z titulom a přidatnymi informacijemi.",
+        "landingcreate_group_title": "Nowa skupina",
+        "landingcreate_group_sub": "Chceš nowu skupinu wotewrěć?\nK jednej skupinje móža lubowólnje wužiwarjo zastupić a widźeć, što je so w tutej skupinje dźěliło.",
         "landingcreate_error_title": "Wozjewjenje njeje móžne.",
         "landingcreate_error_sub_p": "Wozjewjenje posta njeje móžne.",
         "landingcreate_error_sub_e": "Wozjewjenje ewenta njeje móžne.",
@@ -511,6 +516,9 @@
         "502_bad_gateway": "Bad Gateway",
 
         "translation_title": "Awtomatiski přełožk",
-        "translation_sub": "Tutón tekst bě prěnjotnje němski a bu z sotra.app zeserbšćeny."
+        "translation_sub": "Tutón tekst bě prěnjotnje němski a bu z sotra.app zeserbšćeny.",
+
+        "groups_general_title": "Powšitkowne",
+        "groups_general_description": "Tuta skupina pokazuje wšitke móžne wobsahi. Dóstanješ předewšěm wobsahi wužiwarjow pokazane, kotrymž sćěhuješ, ale tež wobsahi nowych wužiwarjow. Tak zeznaješ tež nowych ludźi."
     }
 }

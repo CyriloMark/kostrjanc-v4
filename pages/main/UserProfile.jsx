@@ -321,7 +321,7 @@ export default function UserProfile({ navigation, onTut }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getLangs("profile_follower")}
@@ -347,7 +347,7 @@ export default function UserProfile({ navigation, onTut }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getLangs("profile_following")}
@@ -366,7 +366,7 @@ export default function UserProfile({ navigation, onTut }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getLangs("profile_contentlist")}

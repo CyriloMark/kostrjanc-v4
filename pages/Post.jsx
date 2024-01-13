@@ -16,6 +16,7 @@ import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 
 import {
+    Group_Placeholder,
     Post_Placeholder,
     User_Placeholder,
 } from "../constants/content/PlaceholderData";
@@ -40,6 +41,7 @@ import {
 } from "../constants/content/translation";
 import {
     checkForUnnecessaryNewLine,
+    checkForURLs,
     getTimePassed,
     insertCharacterOnCursor,
 } from "../constants/content";
@@ -56,6 +58,7 @@ import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 import TextField from "../components/TextField";
 
 import SVG_Translate from "../assets/svg/Translate";
+import { openLink } from "../constants";
 
 const KEYBOARDBUTTON_ENABLED = false;
 
@@ -78,6 +81,7 @@ export default function Post({ navigation, route, onTut }) {
 
     const [user, setUser] = useState(User_Placeholder);
     const [post, setPost] = useState(Post_Placeholder);
+    const [group, setGroup] = useState(Group_Placeholder);
 
     const [autoCorrect, setAutoCorrect] = useState({
         status: 100,
@@ -109,6 +113,8 @@ export default function Post({ navigation, route, onTut }) {
                     }
                 }
 
+                if (postData.group) getGroupData(postData.group);
+
                 setPost({
                     ...postData,
                     comments: postSnap.hasChild("comments")
@@ -136,6 +142,16 @@ export default function Post({ navigation, route, onTut }) {
             })
             .catch(error =>
                 console.log("pages/Post.jsx", "get post", error.code)
+            );
+    };
+
+    const getGroupData = groupId => {
+        get(child(ref(getDatabase()), `groups/${groupId}`))
+            .then(groupSnap => {
+                if (groupSnap.exists()) setGroup(groupSnap.val());
+            })
+            .catch(error =>
+                console.log("error getGroupData", "pages/Post.jsx", error.code)
             );
     };
 
@@ -318,7 +334,31 @@ export default function Post({ navigation, route, onTut }) {
                                     )
                                 ).map((el, key) =>
                                     !el.isLinked ? (
-                                        <Text key={key}>{el.text}</Text>
+                                        checkForURLs(el.text).map((el2, key2) =>
+                                            !el2.hasUrl ? (
+                                                <Text key={key2}>
+                                                    {el2.text}
+                                                </Text>
+                                            ) : (
+                                                <Text
+                                                    key={key2}
+                                                    style={[
+                                                        style.tBlue,
+                                                        {
+                                                            textDecorationLine:
+                                                                "underline",
+                                                            textDecorationColor:
+                                                                style.colors
+                                                                    .blue,
+                                                        },
+                                                    ]}
+                                                    onPress={() =>
+                                                        openLink(el2.text)
+                                                    }>
+                                                    {el2.text}
+                                                </Text>
+                                            )
+                                        )
                                     ) : (
                                         <Text
                                             key={key}
@@ -395,7 +435,31 @@ export default function Post({ navigation, route, onTut }) {
                                     )
                                 ).map((el, key) =>
                                     !el.isLinked ? (
-                                        <Text key={key}>{el.text}</Text>
+                                        checkForURLs(el.text).map((el2, key2) =>
+                                            !el2.hasUrl ? (
+                                                <Text key={key2}>
+                                                    {el2.text}
+                                                </Text>
+                                            ) : (
+                                                <Text
+                                                    key={key2}
+                                                    style={[
+                                                        style.tBlue,
+                                                        {
+                                                            textDecorationLine:
+                                                                "underline",
+                                                            textDecorationColor:
+                                                                style.colors
+                                                                    .blue,
+                                                        },
+                                                    ]}
+                                                    onPress={() =>
+                                                        openLink(el2.text)
+                                                    }>
+                                                    {el2.text}
+                                                </Text>
+                                            )
+                                        )
                                     ) : (
                                         <Text
                                             key={key}
@@ -456,6 +520,58 @@ export default function Post({ navigation, route, onTut }) {
                             </Text>
                         </Pressable>
                     </View>
+
+                    {/* Group */}
+                    {post.group ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("content_group_title")}
+                            </Text>
+
+                            <Pressable
+                                style={[styles.userContainer, style.Psm]}
+                                onPress={() =>
+                                    navigation.navigate({
+                                        name: "landing",
+                                        params: { group: group.id },
+                                        merge: true,
+                                    })
+                                }>
+                                <View
+                                    style={[
+                                        styles.userPbContainer,
+                                        { borderRadius: 10 },
+                                    ]}>
+                                    <Image
+                                        source={{
+                                            uri: group.imgUri,
+                                        }}
+                                        style={styles.userPb}
+                                        resizeMode="cover"
+                                        resizeMethod="auto"
+                                    />
+                                </View>
+                                <Text
+                                    style={[
+                                        style.Tmd,
+                                        style.tWhite,
+                                        {
+                                            marginLeft: style.defaultMmd,
+                                        },
+                                    ]}>
+                                    {group.name}
+                                </Text>
+                            </Pressable>
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                {getLangs("content_group_sub")}
+                            </Text>
+                        </View>
+                    ) : null}
 
                     {/* Comments Container */}
                     <View style={styles.sectionContainer}>

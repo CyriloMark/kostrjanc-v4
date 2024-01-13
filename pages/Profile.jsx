@@ -407,7 +407,7 @@ export default function Profile({ navigation, route }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getLangs("profile_follower")}
@@ -433,7 +433,7 @@ export default function Profile({ navigation, route }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getLangs("profile_following")}
@@ -452,7 +452,7 @@ export default function Profile({ navigation, route }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getLangs("profile_contentlist")}
