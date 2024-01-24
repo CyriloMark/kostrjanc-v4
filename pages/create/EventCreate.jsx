@@ -102,6 +102,8 @@ export default function EventCreate({ navigation, route }) {
 
     const [event, setEvent] = useState(Event_Placeholder);
     const [pin, setPin] = useState(initialRegion);
+    const [groups, setGroups] = useState([]);
+
     const [currentMapType, setCurrentMapType] = useState(0);
     const [checkedCategories, setCheckedCategories] = useState({
         type: false,
@@ -118,7 +120,43 @@ export default function EventCreate({ navigation, route }) {
 
     useEffect(() => {
         cursorPos = -1;
+        getGroups();
     }, []);
+
+    //#region get Groups of Client
+    const getGroupsData = g => {
+        if (!Array.isArray(g)) return;
+
+        const db = ref(getDatabase());
+        let output = [];
+
+        for (let i = 0; i < g.length; i++) {
+            get(child(db, `groups/${g[i]}`)).then(gSnap => {
+                if (gSnap.exists()) {
+                    const gData = gSnap.val();
+                    output.push({
+                        name: gData.name,
+                        imgUri: gData.imgUri,
+                        id: g[i],
+                    });
+                }
+                if (i === g.length - 1) setGroups(output);
+            });
+        }
+    };
+    const getGroups = async () => {
+        const userData = await getData("userData");
+
+        const db = ref(getDatabase());
+        if (!userData)
+            get(child(db, `users/${getAuth().currentUser.uid}/groups`)).then(
+                groupsSnap => {
+                    if (groupsSnap.exists()) getGroupsData(groupsSnap.val());
+                }
+            );
+        else if (userData.groups) getGroupsData(userData.groups);
+    };
+    //#endregion
 
     // From linking → when comes back fromLinking = true || = false
     const { fromLinking, linkingData } = route.params;
@@ -160,34 +198,49 @@ export default function EventCreate({ navigation, route }) {
         let aspect =
             pickerResult.assets[0].width / pickerResult.assets[0].width;
 
-        const croppedPicker = await manipulateAsync(
-            pickerResult.assets[0].uri,
-            [
+        try {
+            const croppedPicker = await manipulateAsync(
+                pickerResult.assets[0].uri,
+                [
+                    {
+                        resize: {
+                            width: 512 * aspect,
+                            height: 512,
+                        },
+                    },
+                ],
                 {
-                    resize: {
-                        width: 512 * aspect,
-                        height: 512,
-                    },
-                },
-            ],
-            {
-                compress: 0.5,
-                format: SaveFormat.JPEG,
-            }
-        );
+                    compress: 0.5,
+                    format: SaveFormat.JPEG,
+                }
+            );
 
-        setEvent(prev => {
-            return {
-                ...prev,
-                eventOptions: {
-                    ...prev.eventOptions,
-                    adBanner: {
-                        uri: croppedPicker.uri,
-                        aspect: aspect,
+            setEvent(prev => {
+                return {
+                    ...prev,
+                    eventOptions: {
+                        ...prev.eventOptions,
+                        adBanner: {
+                            uri: croppedPicker.uri,
+                            aspect: aspect,
+                        },
                     },
-                },
-            };
-        });
+                };
+            });
+        } catch (e) {
+            setEvent(prev => {
+                return {
+                    ...prev,
+                    eventOptions: {
+                        ...prev.eventOptions,
+                        adBanner: {
+                            uri: pickerResult.assets[0].uri,
+                            aspect: aspect,
+                        },
+                    },
+                };
+            });
+        }
     };
 
     const openCamera = async () => {
@@ -217,33 +270,48 @@ export default function EventCreate({ navigation, route }) {
 
         let aspect = camResult.assets[0].width / camResult.assets[0].width;
 
-        const croppedPicker = await manipulateAsync(
-            camResult.assets[0].uri,
-            [
+        try {
+            const croppedPicker = await manipulateAsync(
+                camResult.assets[0].uri,
+                [
+                    {
+                        resize: {
+                            width: 1024,
+                            height: 1024,
+                        },
+                    },
+                ],
                 {
-                    resize: {
-                        width: 1024,
-                        height: 1024,
+                    compress: 0.5,
+                    format: SaveFormat.JPEG,
+                }
+            );
+            setEvent(prev => {
+                return {
+                    ...prev,
+                    eventOptions: {
+                        ...prev.eventOptions,
+                        adBanner: {
+                            uri: croppedPicker.uri,
+                            aspect: aspect,
+                        },
                     },
-                },
-            ],
-            {
-                compress: 0.5,
-                format: SaveFormat.JPEG,
-            }
-        );
-        setEvent(prev => {
-            return {
-                ...prev,
-                eventOptions: {
-                    ...prev.eventOptions,
-                    adBanner: {
-                        uri: croppedPicker.uri,
-                        aspect: aspect,
+                };
+            });
+        } catch (e) {
+            setEvent(prev => {
+                return {
+                    ...prev,
+                    eventOptions: {
+                        ...prev.eventOptions,
+                        adBanner: {
+                            uri: camResult.assets[0].uri,
+                            aspect: aspect,
+                        },
                     },
-                },
-            };
-        });
+                };
+            });
+        }
     };
 
     const checkButton = () => {
@@ -1907,6 +1975,87 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
+                    {groups.length !== 0 ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("contentcreate_groupselect_title")}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                {getLangs("contentcreate_groupselect_hint")}
+                            </Text>
+
+                            <View style={[styles.groupSelectContainer]}>
+                                {groups.map((group, key) => (
+                                    <Pressable
+                                        key={key}
+                                        style={[
+                                            styles.groupSelectElement,
+                                            style.oHidden,
+                                            style.Psm,
+                                            style.allCenter,
+                                        ]}
+                                        onPress={() => {
+                                            setEvent(prev => {
+                                                if (!prev.group)
+                                                    return {
+                                                        ...prev,
+                                                        group: group.id,
+                                                    };
+                                                else if (
+                                                    prev.group === group.id
+                                                )
+                                                    return {
+                                                        ...prev,
+                                                        group: null,
+                                                    };
+                                                else
+                                                    return {
+                                                        ...prev,
+                                                        group: group.id,
+                                                    };
+                                            });
+                                        }}>
+                                        <View
+                                            style={[
+                                                styles.groupSelectElementImgContainer,
+                                                style.oHidden,
+                                                event.group == group.id
+                                                    ? {
+                                                          borderColor:
+                                                              style.colors.red,
+                                                          ...style.border,
+                                                      }
+                                                    : null,
+                                            ]}>
+                                            <Image
+                                                style={style.allMax}
+                                                source={{ uri: group.imgUri }}
+                                            />
+                                        </View>
+                                        <Text
+                                            style={[
+                                                event.group == group.id
+                                                    ? style.tRed
+                                                    : style.tWhite,
+                                                style.TsmRg,
+                                                {
+                                                    marginTop: style.defaultMsm,
+                                                    textAlign: "center",
+                                                },
+                                            ]}>
+                                            {group.name}
+                                        </Text>
+                                    </Pressable>
+                                ))}
+                            </View>
+                        </View>
+                    ) : null}
+
                     {/* Button */}
                     <View style={[style.allCenter, styles.button]}>
                         <EnterButton
@@ -2113,5 +2262,24 @@ const styles = StyleSheet.create({
     },
     timesContainerAndroid: {
         borderRadius: 10,
+    },
+
+    groupSelectContainer: {
+        marginTop: style.defaultMmd,
+        width: "100%",
+        flexDirection: "row",
+        flexWrap: "wrap",
+    },
+    groupSelectElement: {
+        margin: style.defaultMsm,
+        maxWidth: 72,
+        maxHeight: 128,
+    },
+    groupSelectElementImgContainer: {
+        aspectRatio: 4 / 5,
+        minWidth: 48,
+        minHeight: 48,
+        borderRadius: 10,
+        maxHeight: 72,
     },
 });

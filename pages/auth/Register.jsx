@@ -267,27 +267,36 @@ export default function Register({ navigation }) {
         });
         if (pickerResult.canceled) return;
 
-        const croppedPicker = await manipulateAsync(
-            pickerResult.assets[0].uri,
-            [
-                {
-                    resize: {
-                        width: 512,
-                        height: 512,
+        try {
+            const croppedPicker = await manipulateAsync(
+                pickerResult.assets[0].uri,
+                [
+                    {
+                        resize: {
+                            width: 512,
+                            height: 512,
+                        },
                     },
-                },
-            ],
-            {
-                compress: 0.5,
-                format: SaveFormat.JPEG,
-            }
-        );
+                ],
+                {
+                    compress: 0.5,
+                    format: SaveFormat.JPEG,
+                }
+            );
 
-        setRegisterData({
-            ...registerData,
-            pbUri: croppedPicker.uri,
-        });
-        setPbImageUri(pickerResult.assets[0].uri);
+            setRegisterData({
+                ...registerData,
+                pbUri: croppedPicker.uri,
+            });
+            setPbImageUri(pickerResult.assets[0].uri);
+        } catch (e) {
+            Alert.alert("Test");
+            setRegisterData({
+                ...registerData,
+                pbUri: pickerResult.assets[0].uri,
+            });
+            setPbImageUri(pickerResult.assets[0].uri);
+        }
     };
 
     const openCamera = async () => {
@@ -316,27 +325,35 @@ export default function Register({ navigation }) {
 
         if (camResult.canceled) return;
 
-        const croppedPicker = await manipulateAsync(
-            camResult.assets[0].uri,
-            [
-                {
-                    resize: {
-                        width: 512,
-                        height: 512,
+        try {
+            const croppedPicker = await manipulateAsync(
+                camResult.assets[0].uri,
+                [
+                    {
+                        resize: {
+                            width: 512,
+                            height: 512,
+                        },
                     },
-                },
-            ],
-            {
-                compress: 0.5,
-                format: SaveFormat.JPEG,
-            }
-        );
+                ],
+                {
+                    compress: 0.5,
+                    format: SaveFormat.JPEG,
+                }
+            );
 
-        setRegisterData({
-            ...registerData,
-            pbUri: croppedPicker.uri,
-        });
-        setPbImageUri(camResult.assets[0].uri);
+            setRegisterData({
+                ...registerData,
+                pbUri: croppedPicker.uri,
+            });
+            setPbImageUri(camResult.assets[0].uri);
+        } catch (e) {
+            setRegisterData({
+                ...registerData,
+                pbUri: camResult.assets[0].uri,
+            });
+            setPbImageUri(camResult.assets[0].uri);
+        }
     };
 
     const setUnfullfilledAlert = () => {

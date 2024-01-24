@@ -26,7 +26,12 @@ import { getDatabase, get, ref, child } from "firebase/database";
 
 // import Constants
 import { wait } from "../../constants/wait";
-import { lerp, sortByParameter, splitterForContent } from "../../constants";
+import {
+    arraySplitter,
+    lerp,
+    sortByParameter,
+    splitterForContent,
+} from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import { getData, hasData, storeData } from "../../constants/storage";
@@ -150,8 +155,8 @@ export default function Content({ navigation, onTut }) {
 
         if (currentRandomUsersList.length === 0) {
             makeRequest("/algo/follower", {
-                max_followers: 5,
-                max_out: 5,
+                max_followers: 4,
+                max_out: 4,
                 previous_followers: shownRandomUsersList,
             }).then(user => {
                 loadingUsers = false;
@@ -206,40 +211,42 @@ export default function Content({ navigation, onTut }) {
             setRandomUser(null);
             return;
         }
-        const currentUserId =
-            currentRandomUsersList[currentRandomUsersList.length - 1];
-        shownRandomUsersList.push(currentUserId);
-        currentRandomUsersList.pop();
 
         const db = getDatabase();
-        get(child(ref(db), `users/${currentUserId}`))
-            .then(userSnap => {
-                if (!userSnap.exists()) return;
-                const userData = userSnap.val();
 
-                const user = {
-                    id: currentUserId,
-                    name: userData["name"],
-                    pbUri: userData["pbUri"],
-                    isBanned: userData["isBanned"],
-                };
+        let outputUsersList = [];
+        for (let i = 0; i < currentRandomUsersList.length; i++) {
+            shownRandomUsersList.push(currentRandomUsersList[i]);
 
-                if (user.isBanned)
-                    if (currentRandomUsersList.length === 0)
-                        setRandomUser(null);
-                    else loadRandomUser();
-                else {
-                    setRandomUser(user);
-                    loadingUsers = false;
-                }
-            })
-            .catch(error =>
-                console.log(
-                    "error main/Content.jsx",
-                    "getRandomUser get user",
-                    error.code
-                )
-            );
+            get(child(ref(db), `users/${currentRandomUsersList[i]}`))
+                .then(userSnap => {
+                    if (!userSnap.exists()) return;
+                    const userData = userSnap.val();
+
+                    const user = {
+                        id: currentRandomUsersList[i],
+                        name: userData["name"],
+                        pbUri: userData["pbUri"],
+                        isBanned: userData["isBanned"],
+                    };
+                    outputUsersList.push(user);
+
+                    if (
+                        outputUsersList.length === currentRandomUsersList.length
+                    ) {
+                        currentRandomUsersList = [];
+                        setRandomUser(outputUsersList);
+                        loadingUsers = false;
+                    }
+                })
+                .catch(error =>
+                    console.log(
+                        "error main/Content.jsx",
+                        "getRandomUser get user",
+                        error.code
+                    )
+                );
+        }
     };
     //#endregion
 
@@ -438,17 +445,48 @@ export default function Content({ navigation, onTut }) {
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("contentpage_contenthint")}
                             </Text>
-                            <User
-                                onPress={() => {
-                                    navigation.navigate("profileView", {
-                                        id: randomUser.id,
-                                    });
-                                }}
-                                style={{
-                                    marginTop: style.defaultMmd,
-                                }}
-                                user={randomUser}
-                            />
+                            <View
+                                style={[
+                                    {
+                                        flexDirection: "row",
+                                        flexWrap: "wrap",
+                                        marginTop: style.defaultMsm,
+                                    },
+                                    style.allCenter,
+                                ]}>
+                                {arraySplitter(randomUser, 2).map(
+                                    (userRow, line) => (
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                flexDirection: "row",
+                                                ...style.allCenter,
+                                            }}
+                                            key={line}>
+                                            {userRow.map((user, key) =>
+                                                user && !user.isBanned ? (
+                                                    <User
+                                                        key={key}
+                                                        style={{
+                                                            // flex: 1,
+                                                            margin: style.defaultMsm,
+                                                        }}
+                                                        onPress={() => {
+                                                            navigation.navigate(
+                                                                "profileView",
+                                                                {
+                                                                    id: user.id,
+                                                                }
+                                                            );
+                                                        }}
+                                                        user={user}
+                                                    />
+                                                ) : null
+                                            )}
+                                        </View>
+                                    )
+                                )}
+                            </View>
                         </View>
                     ) : (
                         <Text

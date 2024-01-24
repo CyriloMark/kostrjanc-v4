@@ -1,5 +1,12 @@
 import React from "react";
-import { Pressable, View, StyleSheet, Text, Alert } from "react-native";
+import {
+    Pressable,
+    View,
+    StyleSheet,
+    Text,
+    Alert,
+    ScrollView,
+} from "react-native";
 
 import * as style from "../../styles";
 
@@ -12,9 +19,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Event from "../../assets/svg/Event";
 import SVG_Return from "../../assets/svg/Return";
+import SVG_Group from "../../assets/svg/Group";
 
 const POST_ENABLED = true;
 const EVENT_ENABLED = true;
+const GROUP_ENABLED = true;
 
 export default function LandingCreate({ navigation }) {
     const setErrorAlert = mode => {
@@ -42,7 +51,17 @@ export default function LandingCreate({ navigation }) {
                 <BackHeader title={""} onBack={() => navigation.goBack()} />
             </Pressable>
 
-            <View style={[style.container, style.pH, style.oVisible]}>
+            <ScrollView
+                style={[style.container, style.pH, style.oVisible]}
+                scrollEnabled
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={16}
+                keyboardShouldPersistTaps="handled"
+                automaticallyAdjustKeyboardInsets
+                automaticallyAdjustContentInsets
+                snapToAlignment="center"
+                snapToEnd>
                 <View style={styles.titleContainer}>
                     <Text style={[style.Ttitle2, style.tWhite]}>
                         {getLangs("landingcreate_title")}
@@ -162,7 +181,57 @@ export default function LandingCreate({ navigation }) {
                         </LinearGradient>
                     </Pressable>
                 </View>
-            </View>
+
+                {/* Post */}
+                <View style={[style.pH, styles.sectionContainer]}>
+                    <Pressable
+                        style={[styles.elementContainer, style.oHidden]}
+                        onPress={() => {
+                            if (GROUP_ENABLED)
+                                navigation.navigate("groupCreate");
+                            else setErrorAlert(2);
+                        }}>
+                        <LinearGradient
+                            style={[styles.elementInnerContainer, style.Plg]}
+                            colors={["#146314", "#1FE0E0"]}
+                            start={[-0.66, 0]}
+                            end={[1.5, 1]}>
+                            <View style={styles.elementSection1}>
+                                <SVG_Group
+                                    style={styles.icon}
+                                    fill={style.colors.white}
+                                />
+                                <Text
+                                    style={[
+                                        style.tWhite,
+                                        style.Ttitle2,
+                                        style.boxShadow,
+                                        { marginVertical: style.defaultMmd },
+                                    ]}>
+                                    {getLangs("landingcreate_group_title")}
+                                </Text>
+                                <Text
+                                    style={[
+                                        style.tWhite,
+                                        style.Tmd,
+                                        style.boxShadow,
+                                    ]}>
+                                    {getLangs("landingcreate_group_sub")}
+                                </Text>
+                            </View>
+                            <View style={styles.elementSection2}>
+                                <SVG_Return
+                                    fill={style.colors.white}
+                                    style={styles.icon}
+                                    rotation={1}
+                                />
+                            </View>
+                        </LinearGradient>
+                    </Pressable>
+                </View>
+
+                <View style={styles.sectionContainer} />
+            </ScrollView>
         </View>
     );
 }

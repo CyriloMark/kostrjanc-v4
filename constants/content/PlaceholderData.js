@@ -44,6 +44,17 @@ export const Event_Placeholder = {
     eventOptions: {},
 };
 
+export const Group_Placeholder = {
+    id: "",
+    name: "",
+    description: "",
+    members: [],
+    posts: [],
+    events: [],
+    imgUri: "https://www.colorhexa.com/587db0.png",
+    isDefaultGroup: false,
+};
+
 export const Banner_Placeholder = {
     id: 0,
     title: "",

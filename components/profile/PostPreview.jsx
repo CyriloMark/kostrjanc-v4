@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Pressable, StyleSheet, Image } from "react-native";
-
-import { get, getDatabase, child, ref } from "firebase/database";
 
 import * as s from "../../styles";
 

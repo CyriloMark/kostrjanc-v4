@@ -102,6 +102,7 @@
         "input_placeholder_search": "Suche nach etwas...",
         "input_placeholder_entercomment": "Gib dein Kommentar ein...",
         "input_placeholder_contentname": "Titel",
+        "input_placeholder_groupname": "Name der Gruppe",
 
         "newcomment_type": "Schreib etwas...",
         "comment_title": "Kommentar entfernen?",
@@ -293,7 +294,7 @@
         "eventcreate_headertitle": "Neues Event veröffentlichen",
         "eventcreate_eventtitle": "Titel",
         "eventcreate_eventdescription": "Beschreibung des Events",
-        "eventcreate_addinformation": "Informationen bearbeiten",
+        "eventcreate_addinformation": "Informationen bearbeiten:",
         "eventcreate_info_title": "Titel vom Event eingeben:",
         "eventcreate_info_description": "Beschreibung vom Event eingeben:",
         "eventcreate_info_times": "Eventzeiten:",
@@ -328,6 +329,21 @@
         "eventcreate_maphint": "Zoome und verschiebe die Karte, damit du die Position des Zeigers änderst. Der Zeiger deuted auf den Ort des Events.",
         "eventcreate_date": "Datum",
         "eventcreate_time": "Zeit",
+
+        "groupcreate_headertitle": "Neue Gruppe gründen",
+        "groupcreate_groupname": "Name der Gruppe",
+        "groupcreate_groupdescription": "Beschreibung der Gruppe",
+        "groupcreate_addinformation": "Informationen bearbeiten:",
+        "groupcreate_info_name": "Namen der Gruppe eingeben:",
+        "groupcreate_info_description": "Beschreibung der Gruppe eingeben:",
+        "groupcreate_publishsuccessful_title": "Erfolgreich gegründete Gruppe!",
+        "groupcreate_publishrejected_badwords_title": "Gruppe wurde abgelehnt",
+        "groupcreate_publishrejected_badwords_sub": "Deine Gruppe verwendet Sprache, die auf kostrjanc nicht gestattet ist.",
+        "groupcreate_publishrejected_title": "Gruppe wurde abgelehnt",
+        "groupcreate_publishrejected_sub": "Deine Gruppe wurde von unseren Systemen abgehlent, versuche es später erneut.",
+
+        "contentcreate_groupselect_title": "Gruppe wählen:",
+        "contentcreate_groupselect_hint": "Wenn du keine Gruppe auswählst, dann wird standardmäßig dieser Inhalt für jeden veröffentlich. Dieser Beitrag kann in der Allgemein-Gruppe zu Sehen sein.",
 
         "settings_landing_title": "Einstellungen",
         "settings_landing_bugbutton_title": "Teile uns dein Feedback!",
@@ -519,6 +535,18 @@
         "translation_sub": "Dieser Text war ursprünglich Deutsch und wurde mit sotra.app ins Sorbische übersetzt.",
 
         "groups_general_title": "Allgemein",
-        "groups_general_description": "Diese Gruppe zeigt alle mögliche Inhalte. Du bekommst vorzugsweise die Inhalte der Nutzer gezeigt, denen du folgst, aber auch Inhalte von neuen Benutzern. So lernst du auch neue Menschen kennen."
+        "groups_general_description": "Diese Gruppe zeigt alle mögliche Inhalte. Du bekommst vorzugsweise die Inhalte der Nutzer gezeigt, denen du folgst, aber auch Inhalte von neuen Benutzern. So lernst du auch neue Menschen kennen.",
+        "groups_foryou_title": "Kennlern-Modus",
+        "groups_foryou_description": "Diese Gruppe zeigt dir ausschließlich Inhalte von Benutzern, denen du noch nicht folgst. So kannst du perfekt Nutzer kennenlernen, die du noch nicht kennst.",
+
+        "groupselect_title": "Wähle eine Gruppe:",
+        "groupselect_sub": "Wähle eine Gruppe aus. Nach dem Bestätigen siehst du alle Inhalte, die in der Gruppe geteilt worden sind.",
+        "groups_membersingroup": " sind in der Gruppe.",
+
+        "grouppage_join": "Gruppe beitreten",
+        "grouppage_leave": "Gruppe verlassen",
+        "grouppage_members": "Mitglieder",
+        "grouppage_posts": "Posts",
+        "grouppage_events": "Events"
     }
 }

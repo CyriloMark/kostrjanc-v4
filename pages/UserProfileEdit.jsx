@@ -90,25 +90,30 @@ export default function UserProfileEdit({ navigation, route }) {
         });
         if (pickerResult.canceled) return;
 
-        const croppedPicker = await manipulateAsync(
-            pickerResult.assets[0].uri,
-            [
-                {
-                    resize: {
-                        width: 512,
-                        height: 512,
-                    },
-                },
-            ],
-            {
-                compress: 0.5,
-                format: SaveFormat.JPEG,
-            }
-        );
-
-        pbChanged = true;
         setButtonChecked(true);
-        setPbImageUri(croppedPicker.uri);
+        pbChanged = true;
+
+        try {
+            const croppedPicker = await manipulateAsync(
+                pickerResult.assets[0].uri,
+                [
+                    {
+                        resize: {
+                            width: 512,
+                            height: 512,
+                        },
+                    },
+                ],
+                {
+                    compress: 0.5,
+                    format: SaveFormat.JPEG,
+                }
+            );
+
+            setPbImageUri(croppedPicker.uri);
+        } catch (e) {
+            setPbImageUri(pickerResult.assets[0].uri);
+        }
     };
 
     const openCamera = async () => {
@@ -137,25 +142,30 @@ export default function UserProfileEdit({ navigation, route }) {
 
         if (camResult.canceled) return;
 
-        const croppedPicker = await manipulateAsync(
-            camResult.assets[0].uri,
-            [
-                {
-                    resize: {
-                        width: 512,
-                        height: 512,
-                    },
-                },
-            ],
-            {
-                compress: 0.5,
-                format: SaveFormat.JPEG,
-            }
-        );
-
         pbChanged = true;
         setButtonChecked(true);
-        setPbImageUri(croppedPicker.uri);
+
+        try {
+            const croppedPicker = await manipulateAsync(
+                camResult.assets[0].uri,
+                [
+                    {
+                        resize: {
+                            width: 512,
+                            height: 512,
+                        },
+                    },
+                ],
+                {
+                    compress: 0.5,
+                    format: SaveFormat.JPEG,
+                }
+            );
+
+            setPbImageUri(croppedPicker.uri);
+        } catch (e) {
+            setPbImageUri(camResult.assets[0].uri);
+        }
     };
 
     const checkButton = () => {

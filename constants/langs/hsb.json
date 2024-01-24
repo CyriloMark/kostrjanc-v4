@@ -102,6 +102,7 @@
         "input_placeholder_search": "Pytaj něšto...",
         "input_placeholder_entercomment": "Zapodaj komentar...",
         "input_placeholder_contentname": "Titul",
+        "input_placeholder_groupname": "Mjeno skupiny",
 
         "newcomment_type": "Pisaj něšto...",
         "comment_title": "Komentar wotstronić?",
@@ -329,6 +330,21 @@
         "eventcreate_date": "Datum",
         "eventcreate_time": "Čas",
 
+        "groupcreate_headertitle": "Nowu skupiwu załožić",
+        "groupcreate_groupname": "Mjeno skupiny",
+        "groupcreate_groupdescription": "Wopisowanje skupiny",
+        "groupcreate_addinformation": "Wobdźěłanje informacijow:",
+        "groupcreate_info_name": "Mjeno skupiny zapodać:",
+        "groupcreate_info_description": "Wopisowanje skupiny zapodać:",
+        "groupcreate_publishsuccessful_title": "Wuspěšnje załožena skupina!",
+        "groupcreate_publishrejected_badwords_title": "Skupina je so wotpokazała",
+        "groupcreate_publishrejected_badwords_sub": "Twója skupina wobsahuje rěč, kotraž njeje na kostrjancu dowolena.",
+        "groupcreate_publishrejected_title": "Skupina je so wotpokazała",
+        "groupcreate_publishrejected_sub": "Twója skupina je so wot našich systemow wotpokazała, spytaj pozdźišo hišće jónu.",
+
+        "contentcreate_groupselect_title": "Skupinu wolić:",
+        "contentcreate_groupselect_hint": "Hdyž žanu skupinu njewuzwoliš, potom so po standardźe tutón wobsah za kóždeho wozjewi. Tutón přinošk móže w Powšitkowne-skupinje widźeć być.",
+
         "settings_landing_title": "Zastajenja",
         "settings_landing_bugbutton_title": "Pósćel nam feedback!",
         "settings_landing_bugbutton_sub": "Hač přeća, problemy abo druhe maličkosće:\nSmy dźakowni přez wšitke zdźělenki.",
@@ -519,6 +535,18 @@
         "translation_sub": "Tutón tekst bě prěnjotnje němski a bu z sotra.app zeserbšćeny.",
 
         "groups_general_title": "Powšitkowne",
-        "groups_general_description": "Tuta skupina pokazuje wšitke móžne wobsahi. Dóstanješ předewšěm wobsahi wužiwarjow pokazane, kotrymž sćěhuješ, ale tež wobsahi nowych wužiwarjow. Tak zeznaješ tež nowych ludźi."
+        "groups_general_description": "Tuta skupina pokazuje wšitke móžne wobsahi. Dóstanješ předewšěm wobsahi wužiwarjow pokazane, kotrymž sćěhuješ, ale tež wobsahi nowych wužiwarjow. Tak zeznaješ tež nowych ludźi.",
+        "groups_foryou_title": "Ludźi-zeznać-modus",
+        "groups_foryou_description": "Tuta skupina pokazuje ći bjezwuwzaćnje wobsahi wužiwarjow, kotrymž hišće njesćěhuješ. Tak móžeš perfektnje wužiwarjow zeznać, kotrychž hišće njeznaješ.",
+
+        "groupselect_title": "Wuzwol sej skupinu:",
+        "groupselect_sub": "Wuzwol sej skupinu. Po wobkrućenju widźiš wšitke wobsahi, kotrež buchu do skupiny dźělene.",
+        "groups_membersingroup": " w skupinje.",
+
+        "grouppage_join": "Skupinu přistupić",
+        "grouppage_leave": "Skupinu wopušćić",
+        "grouppage_members": "Čłonojo",
+        "grouppage_posts": "Posty",
+        "grouppage_events": "Ewenty"
     }
 }

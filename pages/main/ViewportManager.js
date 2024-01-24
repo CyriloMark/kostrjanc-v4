@@ -19,11 +19,14 @@ import BottomTransitionBar from "../../components/BottomTransitionBar";
 import Landing from "./Landing";
 import Content from "./Content";
 
+import GroupSelect from "./GroupSelect";
+
 import UserProfile from "./UserProfile";
 
 import Post from "../Post";
 import Event from "../Event";
 import Profile from "../Profile";
+import Group from "../Group";
 
 import Settings from "../settings/Landing";
 import Settings_Language from "../settings/Language";
@@ -38,6 +41,7 @@ import Settings_BuyMeACoffee from "../settings/BuyMeACoffee";
 import LandingCreate from "../create/LandingCreate";
 import PostCreate from "../create/PostCreate";
 import EventCreate from "../create/EventCreate";
+import GroupCreate from "../create/GroupCreate";
 
 import UserProfileEdit from "../UserProfileEdit";
 
@@ -82,6 +86,9 @@ export default function ViewportManager({ onTut, hasRecentVersion }) {
                 <MainNavStack.Screen name="landing">
                     {props => <Landing {...props} onTut={onTut} />}
                 </MainNavStack.Screen>
+                <MainNavStack.Screen name="groupSelect">
+                    {props => <GroupSelect {...props} />}
+                </MainNavStack.Screen>
 
                 <MainNavStack.Screen name="userProfile">
                     {props => <UserProfile {...props} onTut={onTut} />}
@@ -94,6 +101,7 @@ export default function ViewportManager({ onTut, hasRecentVersion }) {
                     {props => <Event {...props} onTut={onTut} />}
                 </MainNavStack.Screen>
                 <MainNavStack.Screen name="profileView" component={Profile} />
+                <MainNavStack.Screen name="groupView" component={Group} />
 
                 <MainNavStack.Screen name="settings" component={Settings} />
 
@@ -139,6 +147,10 @@ export default function ViewportManager({ onTut, hasRecentVersion }) {
                 <MainNavStack.Screen
                     name="eventCreate"
                     component={EventCreate}
+                />
+                <MainNavStack.Screen
+                    name="groupCreate"
+                    component={GroupCreate}
                 />
 
                 <MainNavStack.Screen

@@ -16,22 +16,6 @@ import * as style from "../../styles";
 
 import { getAuth } from "firebase/auth";
 import { child, get, getDatabase, ref, set } from "firebase/database";
-import * as Storage from "firebase/storage";
-
-// import Constants
-import { Post_Placeholder } from "../../constants/content/PlaceholderData";
-import { getData, storeData } from "../../constants/storage";
-import { getLangs } from "../../constants/langs";
-import {
-    checkForLinkings,
-    LINKING_TYPES,
-} from "../../constants/content/linking";
-import makeRequest from "../../constants/request";
-import checkForAutoCorrectInside, {
-    getCursorPosition,
-} from "../../constants/content/autoCorrect";
-import { insertCharacterOnCursor } from "../../constants/content";
-import getStatusCodeText from "../../components/content/status";
 
 // import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
@@ -43,12 +27,16 @@ import {
     launchImageLibraryAsync,
     MediaTypeOptions,
     launchCameraAsync,
-    CameraType,
-    UIImagePickerPresentationStyle,
     requestCameraPermissionsAsync,
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+
+// Constants
+import { Group_Placeholder } from "../../constants/content/PlaceholderData";
+import { getLangs } from "../../constants/langs";
+import { insertCharacterOnCursor } from "../../constants/content";
+import getStatusCodeText from "../../components/content/status";
 
 // import Components
 import BackHeader from "../../components/BackHeader";
@@ -57,29 +45,54 @@ import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
 
+import Animated, {
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring,
+} from "react-native-reanimated";
+import checkForAutoCorrectInside, {
+    getCursorPosition,
+} from "../../constants/content/autoCorrect";
+
+const IMAGE_DEFAULT_WIDTH = 152;
+
 let cursorPos = -1;
-export default function PostCreate({ navigation, route }) {
+export default function GroupCreate({ navigation }) {
     let btnPressed = false;
     const [uploading, setUploading] = useState(btnPressed);
-
-    const [post, setPost] = useState(Post_Placeholder);
-    const [imageUri, setImageUri] = useState(null);
-    const [buttonChecked, setButtonChecked] = useState(false);
-    const [groups, setGroups] = useState([]);
 
     const [autoCorrect, setAutoCorrect] = useState({
         status: 100,
         content: [],
     });
 
+    const [group, setGroup] = useState({
+        ...Group_Placeholder,
+        members: [getAuth().currentUser.uid], // Client is always Member
+    });
+    const [buttonChecked, setButtonChecked] = useState(false);
+    const [imageUri, setImageUri] = useState(null);
+
     useEffect(() => {
         cursorPos = -1;
-        getGroups();
     }, []);
 
-    // From linking → when comes back fromLinking = true || = false
-    const { fromLinking, linkingData } = route.params;
+    useEffect(() => {
+        checkButton();
+    }, [group]);
 
+    const checkButton = () => {
+        let inputValid = false;
+        if (
+            group.name.length !== 0 &&
+            group.description.length !== 0 &&
+            group.imgUri !== Group_Placeholder.imgUri
+        )
+            inputValid = true;
+        setButtonChecked(inputValid);
+    };
+
+    //#region Camera and Gallery
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
         let permissionResult = await requestMediaLibraryPermissionsAsync(true);
@@ -123,8 +136,15 @@ export default function PostCreate({ navigation, route }) {
                     format: SaveFormat.JPEG,
                 }
             );
+
+            if (!imageUri)
+                imageWidthMultipier.value = withSpring(1, {
+                    damping: 10,
+                    stiffness: 50,
+                });
+
             setImageUri(pickerResult.assets[0].uri);
-            setPost(prev => {
+            setGroup(prev => {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
@@ -132,7 +152,7 @@ export default function PostCreate({ navigation, route }) {
             });
         } catch (e) {
             setImageUri(pickerResult.assets[0].uri);
-            setPost(prev => {
+            setGroup(prev => {
                 return {
                     ...prev,
                     imgUri: pickerResult.assets[0].uri,
@@ -183,8 +203,15 @@ export default function PostCreate({ navigation, route }) {
                     format: SaveFormat.JPEG,
                 }
             );
+
+            if (!imageUri)
+                imageWidthMultipier.value = withSpring(1, {
+                    damping: 10,
+                    stiffness: 50,
+                });
+
             setImageUri(camResult.assets[0].uri);
-            setPost(prev => {
+            setGroup(prev => {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
@@ -192,7 +219,7 @@ export default function PostCreate({ navigation, route }) {
             });
         } catch (e) {
             setImageUri(camResult.assets[0].uri);
-            setPost(prev => {
+            setGroup(prev => {
                 return {
                     ...prev,
                     imgUri: camResult.assets[0].uri,
@@ -200,25 +227,27 @@ export default function PostCreate({ navigation, route }) {
             });
         }
     };
+    //#endregion
 
-    const checkButton = () => {
-        let inputValid = false;
-        if (
-            post.title.length !== 0 &&
-            post.description.length !== 0 &&
-            post.imgUri !== Post_Placeholder.imgUri
-        )
-            inputValid = true;
-        setButtonChecked(inputValid);
+    const addToLocalStorage = id => {
+        getData("userData").then(userData => {
+            let groups = [];
+            if (userData["groups"]) groups = userData["groups"];
+            group.push(id);
+
+            storeData("userData", {
+                ...userData,
+                groups: groups,
+            }).finally(() => console.log("complete"));
+        });
     };
 
     const setUnfullfilledAlert = () => {
         let missing = "";
-        if (post.title.length === 0)
-            missing += `\n${getLangs("missing_title")}`;
-        if (post.description.length === 0)
+        if (group.name.length === 0) missing += `\n${getLangs("missing_name")}`;
+        if (group.description.length === 0)
             missing += `\n${getLangs("missing_description")}`;
-        if (post.imgUri === Post_Placeholder.imgUri)
+        if (group.imgUri === Group_Placeholder.imgUri)
             missing += `\n${getLangs("missing_img")}`;
 
         Alert.alert(
@@ -234,67 +263,9 @@ export default function PostCreate({ navigation, route }) {
         );
     };
 
-    useEffect(() => {
-        if (fromLinking) {
-            setButtonChecked(true);
-            // setPost(linkingData);
-            publishPost();
-        } else checkButton();
-    }, [post]);
-
-    //#region get Groups of Client
-    const getGroupsData = g => {
-        if (!Array.isArray(g)) return;
-
-        const db = ref(getDatabase());
-        let output = [];
-
-        for (let i = 0; i < g.length; i++) {
-            get(child(db, `groups/${g[i]}`)).then(gSnap => {
-                if (gSnap.exists()) {
-                    const gData = gSnap.val();
-                    output.push({
-                        name: gData.name,
-                        imgUri: gData.imgUri,
-                        id: g[i],
-                    });
-                }
-                if (i === g.length - 1) setGroups(output);
-            });
-        }
-    };
-    const getGroups = async () => {
-        const userData = await getData("userData");
-
-        const db = ref(getDatabase());
-        if (!userData)
-            get(child(db, `users/${getAuth().currentUser.uid}/groups`)).then(
-                groupsSnap => {
-                    if (groupsSnap.exists()) getGroupsData(groupsSnap.val());
-                }
-            );
-        else if (userData.groups) getGroupsData(userData.groups);
-    };
-    //#endregion
-
-    const publishPost = async () => {
+    const publishGroup = async () => {
         if (!buttonChecked) {
             setUnfullfilledAlert();
-            return;
-        }
-
-        if (
-            !fromLinking &&
-            !(
-                !checkForLinkings(post.title) &&
-                !checkForLinkings(post.description)
-            )
-        ) {
-            navigation.navigate("linkingScreen", {
-                content: post,
-                type: LINKING_TYPES.Post,
-                origin: "postCreate",
-            });
             return;
         }
 
@@ -303,22 +274,17 @@ export default function PostCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
-        const base64 = await FileSystem.readAsStringAsync(post.imgUri, {
+        const base64 = await FileSystem.readAsStringAsync(group.imgUri, {
             encoding: FileSystem.EncodingType.Base64,
         });
 
-        const response = await makeRequest("/post_event/publish", {
-            type: "post",
-            img: base64,
-            title: post.title,
-            description: post.description,
-            group: post.group,
-        });
+        // Yoo
+        /*
 
-        if (response.code < 400) {
+         if (response.code < 400) {
             addToLocalStorage(response.id);
             Alert.alert(
-                getLangs("postcreate_publishsuccessful_title"),
+                getLangs("groupcreate_publishsuccessful_title"),
                 getLangs(getStatusCodeText(response.code)),
                 [
                     {
@@ -331,7 +297,7 @@ export default function PostCreate({ navigation, route }) {
             );
         } else {
             Alert.alert(
-                getLangs("postcreate_publishrejected_title"),
+                getLangs("groupcreate_publishrejected_title"),
                 getLangs(getStatusCodeText(response.code)),
                 [
                     {
@@ -346,21 +312,20 @@ export default function PostCreate({ navigation, route }) {
                     },
                 ]
             );
-        }
+
+        */
     };
 
-    const addToLocalStorage = id => {
-        getData("userData").then(userData => {
-            let posts = [];
-            if (userData["posts"]) posts = userData["posts"];
-            posts.push(id);
+    //#region Animation
+    const imageWidthMultipier = useSharedValue(2);
 
-            storeData("userData", {
-                ...userData,
-                posts: posts,
-            }).finally(() => console.log("complete"));
-        });
-    };
+    const imageStyles = useAnimatedStyle(() => {
+        return {
+            width: IMAGE_DEFAULT_WIDTH * imageWidthMultipier.value,
+            height: IMAGE_DEFAULT_WIDTH * imageWidthMultipier.value,
+        };
+    });
+    //#endregion
 
     return (
         <View style={[style.container, style.bgBlack]}>
@@ -383,7 +348,7 @@ export default function PostCreate({ navigation, route }) {
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
-                        title={getLangs("postcreate_headertitle")}
+                        title={getLangs("groupcreate_headertitle")}
                         onBack={() => navigation.goBack()}
                         showReload={false}
                     />
@@ -401,134 +366,232 @@ export default function PostCreate({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    {/* Image Container */}
-                    <View>
-                        {/* Title */}
-                        <Text style={[style.tWhite, style.Ttitle2]}>
-                            {post.title.length === 0
-                                ? getLangs("postcreate_posttitle")
-                                : post.title}
-                        </Text>
+                    {/* Preview + Image select */}
+                    <View
+                        style={{
+                            marginTop: style.defaultMmd,
+                        }}>
+                        {/* Header Container */}
+                        <View style={{ alignItems: "center" }}>
+                            {/* Pb */}
 
-                        {/* Img */}
-                        <Pressable
-                            onPress={openImagePickerAsync}
-                            style={[
-                                styles.imageOutlineContainer,
-                                style.border,
-                                style.allCenter,
-                            ]}>
                             <View
                                 style={[
-                                    styles.imageContainer,
-                                    style.allCenter,
-                                    style.oHidden,
-                                    style.Psm,
+                                    style.shadowSec,
+                                    {
+                                        borderRadius: 25,
+                                        shadowOpacity: 0.33,
+                                        shadowRadius: 25,
+                                        shadowColor: imageUri
+                                            ? style.colors.red
+                                            : style.colors.black,
+                                    },
                                 ]}>
-                                {imageUri !== null ? (
-                                    <Image
-                                        source={{ uri: imageUri }}
-                                        style={styles.image}
-                                        resizeMode="cover"
-                                    />
-                                ) : (
-                                    <View
+                                <Animated.View
+                                    style={[
+                                        styles.imageOutlineContainer,
+                                        !imageUri ? style.border : null,
+                                        style.allCenter,
+                                        imageStyles,
+                                    ]}>
+                                    <Pressable
+                                        onPress={openImagePickerAsync}
                                         style={[
-                                            styles.image,
+                                            styles.imageContainer,
                                             style.allCenter,
-                                            styles.imageBorder,
+                                            style.oHidden,
+                                            !imageUri ? style.Psm : null,
                                         ]}>
-                                        {/* <SVG_Post
-                                            style={styles.hintIcon}
-                                            fill={style.colors.blue}
-                                        /> */}
-                                        <Text
-                                            style={[
-                                                style.Tmd,
-                                                style.tBlue,
-                                                styles.hintText,
-                                            ]}>
-                                            {getLangs("postcreate_imghint")}
-                                        </Text>
-                                        <View
-                                            style={
-                                                styles.imageHintOptSelectionContainer
-                                            }>
-                                            <Pressable
-                                                onPress={openImagePickerAsync}
+                                        {imageUri !== null ? (
+                                            <Image
+                                                source={{ uri: imageUri }}
+                                                style={styles.image}
+                                                resizeMode="cover"
+                                            />
+                                        ) : (
+                                            <View
                                                 style={[
-                                                    styles.imageHintOptItem,
-                                                    style.Pmd,
-                                                    style.border,
+                                                    styles.image,
                                                     style.allCenter,
+                                                    styles.imageBorder,
                                                 ]}>
-                                                <SVG_Post
-                                                    style={
-                                                        styles.imageHintOptSelectionImg
-                                                    }
-                                                    fill={style.colors.blue}
-                                                />
                                                 <Text
                                                     style={[
-                                                        style.TsmRg,
+                                                        style.Tmd,
                                                         style.tBlue,
-                                                        {
-                                                            marginTop:
-                                                                style.defaultMsm,
-                                                        },
+                                                        styles.hintText,
                                                     ]}>
-                                                    Galerija
+                                                    {getLangs(
+                                                        "postcreate_imghint"
+                                                    )}
                                                 </Text>
-                                            </Pressable>
-                                            <Pressable
-                                                onPress={openCamera}
-                                                style={[
-                                                    styles.imageHintOptItem,
-                                                    style.Pmd,
-                                                    style.border,
-                                                    style.allCenter,
-                                                ]}>
-                                                <SVG_Kamera
+                                                <View
                                                     style={
-                                                        styles.imageHintOptSelectionImg
-                                                    }
-                                                    fill={style.colors.blue}
-                                                />
-                                                <Text
-                                                    style={[
-                                                        style.TsmRg,
-                                                        style.tBlue,
-                                                        {
-                                                            marginTop:
-                                                                style.defaultMsm,
-                                                        },
-                                                    ]}>
-                                                    Kamera
-                                                </Text>
-                                            </Pressable>
-                                        </View>
-                                    </View>
-                                )}
+                                                        styles.imageHintOptSelectionContainer
+                                                    }>
+                                                    <Pressable
+                                                        onPress={
+                                                            openImagePickerAsync
+                                                        }
+                                                        style={[
+                                                            styles.imageHintOptItem,
+                                                            style.Pmd,
+                                                            style.border,
+                                                            style.allCenter,
+                                                        ]}>
+                                                        <SVG_Post
+                                                            style={
+                                                                styles.imageHintOptSelectionImg
+                                                            }
+                                                            fill={
+                                                                style.colors
+                                                                    .blue
+                                                            }
+                                                        />
+                                                        <Text
+                                                            style={[
+                                                                style.TsmRg,
+                                                                style.tBlue,
+                                                                {
+                                                                    marginTop:
+                                                                        style.defaultMsm,
+                                                                },
+                                                            ]}>
+                                                            Galerija
+                                                        </Text>
+                                                    </Pressable>
+                                                    <Pressable
+                                                        onPress={openCamera}
+                                                        style={[
+                                                            styles.imageHintOptItem,
+                                                            style.Pmd,
+                                                            style.border,
+                                                            style.allCenter,
+                                                        ]}>
+                                                        <SVG_Kamera
+                                                            style={
+                                                                styles.imageHintOptSelectionImg
+                                                            }
+                                                            fill={
+                                                                style.colors
+                                                                    .blue
+                                                            }
+                                                        />
+                                                        <Text
+                                                            style={[
+                                                                style.TsmRg,
+                                                                style.tBlue,
+                                                                {
+                                                                    marginTop:
+                                                                        style.defaultMsm,
+                                                                },
+                                                            ]}>
+                                                            Kamera
+                                                        </Text>
+                                                    </Pressable>
+                                                </View>
+                                            </View>
+                                        )}
+                                    </Pressable>
+                                </Animated.View>
                             </View>
-                        </Pressable>
 
-                        <View style={styles.textContainer}>
-                            <Text style={[style.Tmd, style.tWhite]}>
-                                {post.description.length === 0
-                                    ? getLangs("postcreate_postdescription")
-                                    : post.description}
-                            </Text>
+                            {/* Name */}
+                            <View style={styles.nameContainer}>
+                                <Text style={[style.tWhite, style.Ttitle2]}>
+                                    {group.name.length === 0
+                                        ? getLangs("groupcreate_groupname")
+                                        : group.name}
+                                </Text>
+                            </View>
+
+                            {/* Description */}
+                            <View style={styles.textContainer}>
+                                <Text style={[style.Tmd, style.tWhite]}>
+                                    {group.description.length === 0
+                                        ? getLangs(
+                                              "groupcreate_groupdescription"
+                                          )
+                                        : group.description}
+                                </Text>
+                            </View>
+                        </View>
+
+                        {/* Stats Container */}
+                        <View style={styles.sectionContainer}>
+                            <View style={styles.statsContainer}>
+                                {/* Members */}
+                                <View
+                                    style={[
+                                        style.allCenter,
+                                        styles.statElementContainer,
+                                    ]}>
+                                    <Text style={[style.tWhite, style.TlgBd]}>
+                                        {group.members
+                                            ? group.members.length
+                                            : "0"}
+                                    </Text>
+                                    <Text
+                                        style={[
+                                            style.tRed,
+                                            style.TsmRg,
+                                            { marginTop: style.defaultMsm },
+                                        ]}>
+                                        {getLangs("grouppage_members")}
+                                    </Text>
+                                </View>
+
+                                {/* Posts */}
+                                <View
+                                    style={[
+                                        style.allCenter,
+                                        styles.statElementContainer,
+                                    ]}>
+                                    <Text style={[style.tWhite, style.TlgBd]}>
+                                        {group.posts ? group.posts.length : "0"}
+                                    </Text>
+                                    <Text
+                                        style={[
+                                            style.tRed,
+                                            style.TsmRg,
+                                            { marginTop: style.defaultMsm },
+                                        ]}>
+                                        {getLangs("grouppage_posts")}
+                                    </Text>
+                                </View>
+
+                                {/* Events */}
+                                <View
+                                    style={[
+                                        style.allCenter,
+                                        styles.statElementContainer,
+                                    ]}>
+                                    <Text style={[style.tWhite, style.TlgBd]}>
+                                        {group.events
+                                            ? group.events.length
+                                            : "0"}
+                                    </Text>
+                                    <Text
+                                        style={[
+                                            style.tRed,
+                                            style.TsmRg,
+                                            { marginTop: style.defaultMsm },
+                                        ]}>
+                                        {getLangs("grouppage_events")}
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
 
                     {/* Info Edit */}
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            {getLangs("postcreate_addinformation")}
+                            {getLangs("groupcreate_addinformation")}
                         </Text>
                         <View
                             style={[style.pH, { marginTop: style.defaultMmd }]}>
-                            {/* Titel */}
+                            {/* Name */}
                             <View>
                                 <Text
                                     style={[
@@ -536,17 +599,17 @@ export default function PostCreate({ navigation, route }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    {getLangs("postcreate_info_title")}
+                                    {getLangs("groupcreate_info_name")}
                                 </Text>
                                 <InputField
                                     placeholder={getLangs(
-                                        "input_placeholder_contentname"
+                                        "input_placeholder_groupname"
                                     )}
                                     autoCapitalize="sentences"
                                     keyboardType="default"
-                                    value={post.title}
+                                    value={group.name}
                                     maxLength={128}
-                                    inputAccessoryViewID="post_title_InputAccessoryViewID"
+                                    inputAccessoryViewID="group_name_InputAccessoryViewID"
                                     icon={
                                         <SVG_Pencil fill={style.colors.blue} />
                                     }
@@ -557,7 +620,7 @@ export default function PostCreate({ navigation, route }) {
 
                                         const autoC =
                                             await checkForAutoCorrectInside(
-                                                post.title,
+                                                group.name,
                                                 cursorPos
                                             );
                                         setAutoCorrect(autoC);
@@ -565,14 +628,14 @@ export default function PostCreate({ navigation, route }) {
                                     onChangeText={async val => {
                                         // Check Selection
                                         cursorPos = getCursorPosition(
-                                            post.title,
+                                            group.name,
                                             val
                                         );
 
                                         // Add Input to Post Data -> Changes Title
-                                        setPost({
-                                            ...post,
-                                            title: val,
+                                        setGroup({
+                                            ...group,
+                                            name: val,
                                         });
 
                                         // Auto Correct
@@ -585,26 +648,26 @@ export default function PostCreate({ navigation, route }) {
                                     }}
                                     autoCorrection={autoCorrect}
                                     applyAutoCorrection={word => {
-                                        setPost(prev => {
-                                            let title = prev.title.split(" ");
-                                            let titlePartSplit = prev.title
+                                        setGroup(prev => {
+                                            let name = prev.name.split(" ");
+                                            let namePartSplit = prev.name
                                                 .substring(0, cursorPos)
                                                 .split(" ");
 
-                                            titlePartSplit.pop();
-                                            titlePartSplit.push(word);
+                                            namePartSplit.pop();
+                                            namePartSplit.push(word);
 
-                                            let newTitle = "";
-                                            titlePartSplit.forEach(
-                                                el => (newTitle += `${el} `)
+                                            let newName = "";
+                                            namePartSplit.forEach(
+                                                el => (newName += `${el} `)
                                             );
                                             for (
-                                                let i = titlePartSplit.length;
-                                                i < title.length;
+                                                let i = namePartSplit.length;
+                                                i < name.length;
                                                 i++
                                             )
-                                                newTitle += `${title[i]}${
-                                                    i == title.length - 1
+                                                newName += `${name[i]}${
+                                                    i == name.length - 1
                                                         ? ""
                                                         : " "
                                                 }`;
@@ -615,7 +678,7 @@ export default function PostCreate({ navigation, route }) {
                                             });
                                             return {
                                                 ...prev,
-                                                title: newTitle,
+                                                name: newName,
                                             };
                                         });
                                     }}
@@ -629,15 +692,15 @@ export default function PostCreate({ navigation, route }) {
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
                                     ]}>
-                                    {getLangs("postcreate_info_description")}
+                                    {getLangs("groupcreate_info_description")}
                                 </Text>
                                 <TextField
                                     placeholder={getLangs(
                                         "input_placeholder_description"
                                     )}
-                                    value={post.description}
+                                    value={group.description}
                                     maxLength={512}
-                                    inputAccessoryViewID="post_description_InputAccessoryViewID"
+                                    inputAccessoryViewID="group_description_InputAccessoryViewID"
                                     supportsAutoCorrect
                                     onSelectionChange={async e => {
                                         cursorPos =
@@ -645,7 +708,7 @@ export default function PostCreate({ navigation, route }) {
 
                                         const autoC =
                                             await checkForAutoCorrectInside(
-                                                post.description,
+                                                group.description,
                                                 cursorPos
                                             );
                                         setAutoCorrect(autoC);
@@ -653,13 +716,13 @@ export default function PostCreate({ navigation, route }) {
                                     onChangeText={async val => {
                                         // Check Selection
                                         cursorPos = getCursorPosition(
-                                            post.description,
+                                            group.description,
                                             val
                                         );
 
                                         // Add Input to Post Data -> Changes Desc
-                                        setPost({
-                                            ...post,
+                                        setGroup({
+                                            ...group,
                                             description: val,
                                         });
 
@@ -673,7 +736,7 @@ export default function PostCreate({ navigation, route }) {
                                     }}
                                     autoCorrection={autoCorrect}
                                     applyAutoCorrection={word => {
-                                        setPost(prev => {
+                                        setGroup(prev => {
                                             let desc =
                                                 prev.description.split(" ");
                                             let descPartSplit = prev.description
@@ -713,92 +776,10 @@ export default function PostCreate({ navigation, route }) {
                         </View>
                     </View>
 
-                    {/* Group Select */}
-                    {groups.length !== 0 ? (
-                        <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                {getLangs("contentcreate_groupselect_title")}
-                            </Text>
-                            <Text
-                                style={[
-                                    style.tWhite,
-                                    style.Tmd,
-                                    { marginTop: style.defaultMsm },
-                                ]}>
-                                {getLangs("contentcreate_groupselect_hint")}
-                            </Text>
-
-                            <View style={[styles.groupSelectContainer]}>
-                                {groups.map((group, key) => (
-                                    <Pressable
-                                        key={key}
-                                        style={[
-                                            styles.groupSelectElement,
-                                            style.oHidden,
-                                            style.Psm,
-                                            style.allCenter,
-                                        ]}
-                                        onPress={() => {
-                                            setPost(prev => {
-                                                if (!prev.group)
-                                                    return {
-                                                        ...prev,
-                                                        group: group.id,
-                                                    };
-                                                else if (
-                                                    prev.group === group.id
-                                                )
-                                                    return {
-                                                        ...prev,
-                                                        group: null,
-                                                    };
-                                                else
-                                                    return {
-                                                        ...prev,
-                                                        group: group.id,
-                                                    };
-                                            });
-                                        }}>
-                                        <View
-                                            style={[
-                                                styles.groupSelectElementImgContainer,
-                                                style.oHidden,
-                                                post.group == group.id
-                                                    ? {
-                                                          borderColor:
-                                                              style.colors.red,
-                                                          ...style.border,
-                                                      }
-                                                    : null,
-                                            ]}>
-                                            <Image
-                                                style={style.allMax}
-                                                source={{ uri: group.imgUri }}
-                                            />
-                                        </View>
-                                        <Text
-                                            style={[
-                                                post.group == group.id
-                                                    ? style.tRed
-                                                    : style.tWhite,
-                                                style.TsmRg,
-                                                {
-                                                    marginTop: style.defaultMsm,
-                                                    textAlign: "center",
-                                                },
-                                            ]}>
-                                            {group.name}
-                                        </Text>
-                                    </Pressable>
-                                ))}
-                            </View>
-                        </View>
-                    ) : null}
-
                     {/* Button */}
                     <View style={[style.allCenter, styles.button]}>
                         <EnterButton
-                            onPress={publishPost}
+                            onPress={publishGroup}
                             checked={buttonChecked}
                         />
                     </View>
@@ -808,60 +789,89 @@ export default function PostCreate({ navigation, route }) {
             {/* Title */}
             <AccessoryView
                 onElementPress={l => {
-                    setPost(prev => {
+                    setGroup(prev => {
                         return {
                             ...prev,
-                            title: insertCharacterOnCursor(
-                                post.title,
+                            name: insertCharacterOnCursor(
+                                group.name,
                                 cursorPos,
                                 l
                             ),
                         };
                     });
                 }}
-                nativeID={"post_title_InputAccessoryViewID"}
+                nativeID={"group_name_InputAccessoryViewID"}
             />
             {/* Description */}
             <AccessoryView
                 onElementPress={l => {
-                    setPost(prev => {
+                    setGroup(prev => {
                         return {
                             ...prev,
                             description: insertCharacterOnCursor(
-                                post.description,
+                                group.description,
                                 cursorPos,
                                 l
                             ),
                         };
                     });
                 }}
-                nativeID={"post_description_InputAccessoryViewID"}
+                nativeID={"group_description_InputAccessoryViewID"}
             />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    imageOutlineContainer: {
+    sectionContainer: {
         width: "100%",
-        borderRadius: 10,
-        aspectRatio: 1,
+        marginTop: style.defaultMlg,
+    },
+    loadingContainer: {
+        position: "absolute",
+    },
+
+    //#region Preview
+    nameContainer: {
+        flexDirection: "row",
         marginTop: style.defaultMmd,
+        ...style.allCenter,
+    },
+    textContainer: {
+        marginTop: style.defaultMmd,
+    },
+
+    statsContainer: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        flexWrap: "wrap",
+    },
+    statElementContainer: {
+        flexDirection: "column",
+    },
+    //#endregion
+
+    imageOutlineContainer: {
+        borderRadius: 25,
+        aspectRatio: 1,
         alignSelf: "center",
         zIndex: 3,
         borderColor: style.colors.blue,
+        // width: 152 * 2,
+        // height: 152 * 2,
     },
     imageContainer: {
         width: "100%",
-        borderRadius: 5,
+        borderRadius: 15,
     },
     image: {
         width: "100%",
         aspectRatio: 1,
-        borderRadius: 5,
+        borderRadius: 25,
     },
     imageBorder: {
-        borderRadius: 5,
+        borderRadius: 15,
         borderColor: style.colors.red,
         borderWidth: 1,
         borderStyle: "dashed",
@@ -875,12 +885,6 @@ const styles = StyleSheet.create({
         marginTop: style.defaultMmd,
         width: "100%",
         textAlign: "center",
-    },
-    textContainer: {
-        // paddingHorizontal: style.Psm.paddingHorizontal,
-        width: "100%",
-        justifyContent: "center",
-        marginTop: style.defaultMmd,
     },
     imageHintOptSelectionContainer: {
         width: "100%",
@@ -899,87 +903,7 @@ const styles = StyleSheet.create({
         height: 48,
     },
 
-    linkingsContainer: {
-        width: "100%",
-        minHeight: 12,
-        flexDirection: "column",
-        marginTop: style.defaultMmd,
-    },
-    linkingsElement: {
-        width: "100%",
-        marginTop: style.defaultMsm,
-        flexDirection: "row",
-        alignItems: "center",
-        flexWrap: "wrap",
-        // maxHeight: 24,
-    },
-    userContainer: {
-        marginLeft: style.defaultMmd,
-    },
-    userInner: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    userPbContainer: {
-        aspectRatio: 1,
-        flex: 1,
-        maxWidth: 32,
-        maxHeight: 32,
-        borderRadius: 100,
-        overflow: "hidden",
-        justifyContent: "center",
-    },
-    userPb: {
-        width: "100%",
-        height: "100%",
-    },
-
-    sectionContainer: {
-        width: "100%",
-        marginTop: style.defaultMlg,
-    },
-
     button: {
         marginVertical: style.defaultMlg,
-    },
-
-    selectUserContainer: {
-        marginTop: style.defaultMsm,
-        maxHeight: 32,
-        // maxWidth: Dimensions.get("screen").width,
-        maxWidth: "100%",
-        borderRadius: 25,
-    },
-    selectUserInner: {
-        flexDirection: "row",
-        justifyContent: "center",
-    },
-    selectUserIcon: {
-        aspectRatio: 1,
-        maxWidth: 12,
-        maxHeight: 12,
-    },
-
-    groupSelectContainer: {
-        marginTop: style.defaultMmd,
-        width: "100%",
-        flexDirection: "row",
-        flexWrap: "wrap",
-    },
-    groupSelectElement: {
-        margin: style.defaultMsm,
-        maxWidth: 72,
-        maxHeight: 128,
-    },
-    groupSelectElementImgContainer: {
-        aspectRatio: 4 / 5,
-        minWidth: 48,
-        minHeight: 48,
-        borderRadius: 10,
-        maxHeight: 72,
-    },
-
-    loadingContainer: {
-        position: "absolute",
     },
 });
