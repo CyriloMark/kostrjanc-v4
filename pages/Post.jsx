@@ -90,6 +90,7 @@ export default function Post({ navigation, route, onTut }) {
 
     const [commentVisible, setCommentVisible] = useState(false);
     const [currentCommentInput, setCurrentCommentInput] = useState("");
+    const [commentsList, setCommentsList] = useState([]);
 
     const loadData = () => {
         const db = getDatabase();
@@ -114,12 +115,10 @@ export default function Post({ navigation, route, onTut }) {
                 }
 
                 if (postData.group) getGroupData(postData.group);
+                if (postData.comments) setCommentsList(postData.comments);
 
                 setPost({
                     ...postData,
-                    comments: postSnap.hasChild("comments")
-                        ? postData["comments"]
-                        : [],
                     isBanned: false,
                 });
 
@@ -167,10 +166,6 @@ export default function Post({ navigation, route, onTut }) {
     //     publishComment();
     // }, [linkingData]);
 
-    useEffect(() => {
-        cursorPos = -1;
-    }, []);
-
     const publishComment = () => {
         if (post.isBanned) return;
         if (
@@ -201,16 +196,14 @@ export default function Post({ navigation, route, onTut }) {
                 else uid = getAuth().currentUser.uid;
             })
             .finally(() => {
-                let a = post.comments ? post.comments : [];
+                let a = commentsList;
+                setCommentsList([]);
                 a.unshift({
                     creator: uid,
                     created: Date.now(),
                     content: input,
                 });
-                setPost({
-                    ...post,
-                    comments: a,
-                });
+                setCommentsList(a);
 
                 const db = getDatabase();
                 set(ref(db, `posts/${id}/comments`), a);
@@ -218,17 +211,14 @@ export default function Post({ navigation, route, onTut }) {
     };
 
     const removeComment = comment => {
-        const newCommentList = post.comments.filter(c => c !== comment);
-        setPost(cur => {
-            return {
-                ...cur,
-                comments: newCommentList,
-            };
-        });
+        const newCommentList = commentsList.filter(c => c !== comment);
+        setCommentsList([]);
+        setCommentsList(newCommentList);
         set(ref(getDatabase(), `posts/${id}/comments`), newCommentList);
     };
 
     useEffect(() => {
+        cursorPos = -1;
         loadData();
         getIfAdmin();
         checkForTutorial();
@@ -405,6 +395,7 @@ export default function Post({ navigation, route, onTut }) {
                             </Pressable>
                         </View>
 
+                        {/* Bottom Text Container */}
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
                                 {checkIsTranslated(post.description) ? (
@@ -531,10 +522,8 @@ export default function Post({ navigation, route, onTut }) {
                             <Pressable
                                 style={[styles.userContainer, style.Psm]}
                                 onPress={() =>
-                                    navigation.navigate({
-                                        name: "landing",
-                                        params: { group: group.id },
-                                        merge: true,
+                                    navigation.push("groupView", {
+                                        groupId: group.id,
                                     })
                                 }>
                                 <View
@@ -748,16 +737,16 @@ export default function Post({ navigation, route, onTut }) {
                         <View
                             style={{
                                 marginTop: !commentVisible
-                                    ? post.comments.length === 0
+                                    ? commentsList.length === 0
                                         ? 0
                                         : style.defaultMmd
                                     : style.defaultMlg,
                             }}>
-                            {post.comments.map((comment, key) => (
+                            {commentsList.map((comment, key) => (
                                 <Comment
                                     key={key}
                                     style={
-                                        key != post.comments.length - 1
+                                        key != commentsList.length - 1
                                             ? { marginBottom: style.defaultMmd }
                                             : null
                                     }
@@ -788,7 +777,16 @@ export default function Post({ navigation, route, onTut }) {
                             ban={clientIsAdmin}
                             share
                             warn
+                            edit={clientIsCreator}
                             del={clientIsCreator}
+                            onEdit={() =>
+                                navigation.navigate("postCreate", {
+                                    fromLinking: false,
+                                    linkingData: null,
+                                    fromEdit: true,
+                                    editData: post,
+                                })
+                            }
                             onShare={() => share(0, id, post.title)}
                             onWarn={() =>
                                 navigation.navigate("report", {

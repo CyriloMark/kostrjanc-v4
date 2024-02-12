@@ -18,6 +18,7 @@ import { getAuth } from "firebase/auth";
 
 import {
     Event_Placeholder,
+    Group_Placeholder,
     User_Placeholder,
 } from "../constants/content/PlaceholderData";
 
@@ -95,6 +96,7 @@ export default function Event({ navigation, route, onTut }) {
 
     const [user, setUser] = useState(User_Placeholder);
     const [event, setEvent] = useState(Event_Placeholder);
+    const [group, setGroup] = useState(Group_Placeholder);
 
     const [autoCorrect, setAutoCorrect] = useState({
         status: 100,
@@ -107,6 +109,7 @@ export default function Event({ navigation, route, onTut }) {
 
     const [commentVisible, setCommentVisible] = useState(false);
     const [currentCommentInput, setCurrentCommentInput] = useState("");
+    const [commentsList, setCommentsList] = useState([]);
 
     useEffect(() => {
         cursorPos = -1;
@@ -134,13 +137,13 @@ export default function Event({ navigation, route, onTut }) {
                     }
                 }
 
+                if (eventData.group) getGroupData(eventData.group);
+                if (eventData.comments) setCommentsList(eventData.comments);
+
                 setEvent({
                     ...eventData,
                     checks: eventSnap.hasChild("checks")
                         ? eventData["checks"]
-                        : [],
-                    comments: eventSnap.hasChild("comments")
-                        ? eventData["comments"]
                         : [],
                     isBanned: false,
                 });
@@ -199,6 +202,16 @@ export default function Event({ navigation, route, onTut }) {
             })
             .catch(error =>
                 console.log("pages/Event.jsx", "get event", error.code)
+            );
+    };
+
+    const getGroupData = groupId => {
+        get(child(ref(getDatabase()), `groups/${groupId}`))
+            .then(groupSnap => {
+                if (groupSnap.exists()) setGroup(groupSnap.val());
+            })
+            .catch(error =>
+                console.log("error getGroupData", "pages/Event.jsx", error.code)
             );
     };
 
@@ -310,16 +323,14 @@ export default function Event({ navigation, route, onTut }) {
                 else uid = getAuth().currentUser.uid;
             })
             .finally(() => {
-                let a = event.comments ? event.comments : [];
+                let a = commentsList;
+                setCommentsList([]);
                 a.unshift({
                     creator: uid,
                     created: Date.now(),
                     content: input,
                 });
-                setEvent({
-                    ...event,
-                    comments: a,
-                });
+                setCommentsList(a);
 
                 const db = getDatabase();
                 set(ref(db, `events/${id}/comments`), a);
@@ -327,13 +338,9 @@ export default function Event({ navigation, route, onTut }) {
     };
 
     const removeComment = comment => {
-        const newCommentList = event.comments.filter(c => c !== comment);
-        setEvent(cur => {
-            return {
-                ...cur,
-                comments: newCommentList,
-            };
-        });
+        const newCommentList = commentsList.filter(c => c !== comment);
+        setCommentsList([]);
+        setCommentsList(newCommentList);
         set(ref(getDatabase(), `events/${id}/comments`), newCommentList);
     };
 
@@ -601,6 +608,55 @@ export default function Event({ navigation, route, onTut }) {
                             </Text>
                         </Pressable>
                     </View>
+                    {/* Group */}
+                    {event.group ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("content_group_title")}
+                            </Text>
+
+                            <Pressable
+                                style={[styles.userContainer, style.Psm]}
+                                onPress={() =>
+                                    navigation.push("groupView", {
+                                        groupId: group.id,
+                                    })
+                                }>
+                                <View
+                                    style={[
+                                        styles.userPbContainer,
+                                        { borderRadius: 10 },
+                                    ]}>
+                                    <Image
+                                        source={{
+                                            uri: group.imgUri,
+                                        }}
+                                        style={styles.userPb}
+                                        resizeMode="cover"
+                                        resizeMethod="auto"
+                                    />
+                                </View>
+                                <Text
+                                    style={[
+                                        style.Tmd,
+                                        style.tWhite,
+                                        {
+                                            marginLeft: style.defaultMmd,
+                                        },
+                                    ]}>
+                                    {group.name}
+                                </Text>
+                            </Pressable>
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                {getLangs("content_group_sub")}
+                            </Text>
+                        </View>
+                    ) : null}
 
                     {/* Event Data Container */}
 
@@ -988,16 +1044,16 @@ export default function Event({ navigation, route, onTut }) {
                         <View
                             style={{
                                 marginTop: !commentVisible
-                                    ? event.comments.length === 0
+                                    ? commentsList.length === 0
                                         ? 0
                                         : style.defaultMmd
                                     : style.defaultMlg,
                             }}>
-                            {event.comments.map((comment, key) => (
+                            {commentsList.map((comment, key) => (
                                 <Comment
                                     key={key}
                                     style={
-                                        key != event.comments.length - 1
+                                        key != commentsList.length - 1
                                             ? { marginBottom: style.defaultMmd }
                                             : null
                                     }
@@ -1028,7 +1084,16 @@ export default function Event({ navigation, route, onTut }) {
                             ban={clientIsAdmin}
                             share
                             warn
+                            edit={clientIsCreator}
                             del={clientIsCreator}
+                            onEdit={() =>
+                                navigation.navigate("eventCreate", {
+                                    fromLinking: false,
+                                    linkingData: null,
+                                    fromEdit: true,
+                                    editData: event,
+                                })
+                            }
                             onShare={() => share(1, id, event.title)}
                             onWarn={() =>
                                 navigation.navigate("report", {

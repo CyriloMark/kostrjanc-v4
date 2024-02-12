@@ -42,9 +42,10 @@ export default function TestView(props) {
                     setLangCriteriasReported(beta.reported);
                     setLoading(false);
                 })
-                .catch(error =>
-                    console.log("error in TestView", "getBetaData", error.code)
-                );
+                .catch(error => {
+                    console.log("error in TestView", "getBetaData", error.code);
+                    props.onCheck();
+                });
         }
     }, []);
 

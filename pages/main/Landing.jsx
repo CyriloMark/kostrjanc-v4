@@ -6,18 +6,26 @@ import {
     ScrollView,
     Text,
     View,
+    Image,
 } from "react-native";
+
+import { useIsFocused } from "@react-navigation/native";
 
 import * as style from "../../styles";
 
 // import Constants
 import { wait } from "../../constants/wait";
 import { getData, storeData } from "../../constants/storage";
-import { User_Placeholder } from "../../constants/content/PlaceholderData";
+import {
+    Group_Placeholder,
+    User_Placeholder,
+} from "../../constants/content/PlaceholderData";
+import { General_Group, ForYou_Group } from "../../constants/content/GroupData";
 import {
     lerp,
     openLink,
     sortArrayByDateFromUnderorderedKey,
+    makeId,
 } from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
@@ -34,6 +42,7 @@ import Event from "../../components/cards/Event";
 import Banner from "../../components/cards/Banner";
 import Refresh from "../../components/RefreshControl";
 import WarnButton from "../../components/settings/WarnButton";
+import GroupSelect from "../../components/landing/GroupSelect";
 
 import Loading from "../static/Loading";
 
@@ -44,6 +53,7 @@ let LAST_UPDATED = 0;
 let AMTs = [0, 0, 0, 0, false];
 let showingContent = [];
 
+let checkedUsersList = [];
 let checkedUsersListPosts = [];
 let checkedUsersListEvents = [];
 
@@ -56,8 +66,16 @@ let showingPosts = [];
 let showingEvents = [];
 
 const UPDATE_COOLDOWN = 1000;
+let GROUP_SELECT_PRESSED = false;
+
+let SELECTED_GROUP = {
+    id: 0,
+    groupData: General_Group,
+};
 
 export default function Landing({ navigation, onTut }) {
+    const isFocused = useIsFocused();
+
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -73,10 +91,10 @@ export default function Landing({ navigation, onTut }) {
         checkedUsersListEvents = [];
         LAST_UPDATED = 0;
 
-        mainScrollRef.current.scrollTo({
-            y: 72,
-            animated: true,
-        });
+        // mainScrollRef.current.scrollTo({
+        //     y: 72,
+        //     animated: true,
+        // });
 
         loadUser();
         wait(1000).then(() => setRefreshing(false));
@@ -86,7 +104,7 @@ export default function Landing({ navigation, onTut }) {
 
     const [loading, setLoading] = useState(true);
 
-    const mainScrollRef = useRef();
+    // const mainScrollRef = useRef();
 
     const [contentData, setContentData] = useState({
         banners: [],
@@ -107,7 +125,8 @@ export default function Landing({ navigation, onTut }) {
                 setUser(userData);
                 storeData("userData", userData);
 
-                ULTIMATIVE_ALGORITHM(id, userData, true);
+                // USER-ID, UserData, Should Load Banners
+                getGroupSpecificContent(id, userData, true, SELECTED_GROUP.id);
             })
             .catch(error =>
                 console.log(
@@ -124,11 +143,49 @@ export default function Landing({ navigation, onTut }) {
         checkForTutorial();
     }, []);
 
+    // Check for Group
+    useEffect(() => {
+        const focusUnsub = navigation.addListener("state", e => {
+            if (
+                GROUP_SELECT_PRESSED &&
+                e.data.state.routes.length === 1 &&
+                e.data.state.routes[0].params
+            ) {
+                const group = e.data.state.routes[0].params?.group;
+
+                if (group) SELECTED_GROUP = group;
+
+                getGroupSpecificContent(null, null, true, group.id);
+
+                GROUP_SELECT_PRESSED = false;
+            } else if (e.data.state.routes.length === 1) {
+                // If coming from other Screen
+
+                getGroupSpecificContent(null, null, true, SELECTED_GROUP.id);
+            }
+        });
+
+        return () => focusUnsub;
+    }, [navigation]);
+
+    const getGroupSpecificContent = async (
+        _id,
+        user,
+        updateBanners,
+        groupId
+    ) => {
+        if (groupId === 0) ULTIMATIVE_ALGORITHM(_id, user, updateBanners);
+        else if (groupId === 1) FORYOU_ALGORITHM(_id);
+        else GROUPCONTENT_ALGORITHM(_id);
+    };
+
     const checkForTutorial = async () => {
         const needTutorial = await checkIfTutorialNeeded(0);
         if (needTutorial) onTut(0);
     };
 
+    //#region GENERAL CONTENT
+    //#region OLD GENERAL
     /**
      * OBSOLETE
      * @param {string} _id User Id |Can be delivered directly
@@ -1633,6 +1690,7 @@ export default function Landing({ navigation, onTut }) {
         }
         //#endregion
     }
+    //#endregion
 
     async function ULTIMATIVE_ALGORITHM(_id, user, updateBanners) {
         //#region Loading Screen and avoid multiple calls
@@ -1715,16 +1773,16 @@ export default function Landing({ navigation, onTut }) {
         let clientFollowingList = userData.following;
         //#endregion
 
-        const POST_AMT = AMTs[0] - AMTs[2];
-        const EVENT_AMT = AMTs[1] - AMTs[3];
+        // const POST_AMT = AMTs[0] - AMTs[2];
+        // const EVENT_AMT = AMTs[1] - AMTs[3];
 
-        let postsList = await getPosts(clientFollowingList, POST_AMT);
-        let eventsLists = await getEvents(clientFollowingList, EVENT_AMT);
+        // let postsList = await getPosts(clientFollowingList, POST_AMT);
+        // let eventsLists = await getEvents(clientFollowingList, EVENT_AMT);
 
-        showingPosts.push(...postsList);
-        showingEvents.push(...eventsLists);
+        // showingPosts.push(...postsList);
+        // showingEvents.push(...eventsLists);
 
-        combinePostsAndEvents(postsList, eventsLists);
+        // combinePostsAndEvents(postsList, eventsLists);
 
         setContentData(prev => {
             return {
@@ -1737,6 +1795,104 @@ export default function Landing({ navigation, onTut }) {
         LOADING = false;
         LAST_UPDATED = Date.now();
     }
+    //#endregion
+
+    //#region FORYOU CONTENT
+    async function FORYOU_ALGORITHM(_id) {
+        //#region Loading Screen and avoid multiple calls
+        if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
+        if (LOADING) return;
+        LOADING = true;
+        //#endregion
+
+        console.log("FORYOU_ALGORITHM");
+
+        // Firebase Database Connection
+        const db = ref(getDatabase());
+
+        const currentDate = Date.now();
+
+        //#region get Amounts of Content 0: posts; 1: events; (2: ads);
+        if (!AMTs[4])
+            await get(child(db, `AMT_post-event-ad`))
+                .then(amtsSnap => {
+                    if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
+                    else return;
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "foryou_algo get amts",
+                        error.code
+                    )
+                );
+        //#endregion
+
+        const POST_AMT = AMTs[0];
+        const EVENT_AMT = AMTs[1];
+
+        let postsList = await foryou_getPosts(POST_AMT);
+        // let eventsLists = await getEvents(clientFollowingList, EVENT_AMT);
+
+        setContentData(prev => {
+            return {
+                ...prev,
+                content: showingContent,
+            };
+        });
+
+        setLoading(false);
+        LOADING = false;
+        LAST_UPDATED = Date.now();
+    }
+    //#endregion
+
+    //#region GROUP CONTENT
+    async function GROUPCONTENT_ALGORITHM(_id) {
+        //#region Loading Screen and avoid multiple calls
+        if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
+        if (LOADING) return;
+        LOADING = true;
+        //#endregion
+
+        console.log("GROUPCONTENT_ALGORITHM");
+
+        // Firebase Database Connection
+        const db = ref(getDatabase());
+
+        const currentDate = Date.now();
+
+        //#region get Amounts of Content 0: posts; 1: events; (2: ads);
+        if (!AMTs[4])
+            await get(child(db, `AMT_post-event-ad`))
+                .then(amtsSnap => {
+                    if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
+                    else return;
+                })
+                .catch(error =>
+                    console.log(
+                        "error pages/main/Landing.jsx",
+                        "foryou_algo get amts",
+                        error.code
+                    )
+                );
+        //#endregion
+
+        const POST_AMT = AMTs[0];
+        const EVENT_AMT = AMTs[1];
+
+        setContentData(prev => {
+            return {
+                ...prev,
+                content: showingContent,
+            };
+        });
+
+        setLoading(false);
+        LOADING = false;
+        LAST_UPDATED = Date.now();
+    }
+    //#endregion
 
     if (loading) return <Loading />;
 
@@ -1751,8 +1907,17 @@ export default function Landing({ navigation, onTut }) {
                 />
             </Pressable>
 
+            <GroupSelect
+                activeGroup={SELECTED_GROUP}
+                openGroupSelect={() => {
+                    GROUP_SELECT_PRESSED = true;
+                    navigation.navigate("groupSelect", {
+                        activeGroup: SELECTED_GROUP,
+                    });
+                }}
+            />
+
             <ScrollView
-                ref={mainScrollRef}
                 style={[style.container, style.pH, style.oVisible]}
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}
@@ -1761,11 +1926,7 @@ export default function Landing({ navigation, onTut }) {
                 automaticallyAdjustContentInsets
                 snapToAlignment="center"
                 snapToEnd
-                scrollEventThrottle={16}
-                contentOffset={{
-                    x: 0,
-                    y: Platform.OS === "android" ? 72 : 0,
-                }}
+                scrollEventThrottle={1024}
                 refreshControl={
                     Platform.OS === "ios" ? (
                         <Refresh
@@ -1775,6 +1936,7 @@ export default function Landing({ navigation, onTut }) {
                     ) : null
                 }
                 onScroll={({ nativeEvent }) => {
+                    if (!isFocused) return;
                     if (
                         Platform.OS === "android" &&
                         isOnTop(nativeEvent) &&
@@ -1782,7 +1944,12 @@ export default function Landing({ navigation, onTut }) {
                     )
                         onRefresh();
                     if (isCloseToBottom(nativeEvent) && !refreshing)
-                        ULTIMATIVE_ALGORITHM(null, null, false);
+                        getGroupSpecificContent(
+                            null,
+                            null,
+                            false,
+                            SELECTED_GROUP.id
+                        );
                 }}>
                 {Platform.OS === "android" ? (
                     <View
@@ -1806,21 +1973,6 @@ export default function Landing({ navigation, onTut }) {
                             <ActivityIndicator color={style.colors.blue} />
                         </View>
                     </View>
-                ) : null}
-                {Platform.OS === "android" &&
-                require("../../app.json").expo.android.package !==
-                    "de.kostrjanc.kostrjanc" ? (
-                    <WarnButton
-                        text={"Nowa kostrjanc App"}
-                        sub={
-                            "Nowe wersije wot kostrjanc namakaš wot něk pod linkom."
-                        }
-                        onPress={() =>
-                            openLink(
-                                "https://play.google.com/store/apps/details?id=de.kostrjanc.kostrjanc"
-                            )
-                        }
-                    />
                 ) : null}
 
                 {contentData.banners.map((banner, key) => (
@@ -1899,6 +2051,7 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     );
 };
 
+//#region GENERAL DATA
 //#region POSTs
 async function getPosts(userList, amt) {
     let postsList = safedPosts;
@@ -1923,6 +2076,7 @@ async function getPosts(userList, amt) {
             postsSortedList.slice(0, amt),
             randomPosts
         );
+
         safedPosts = postsSortedList.slice(amt);
 
         return clientPostsList;
@@ -2002,8 +2156,9 @@ async function getRandomPosts(amt) {
             max_out: 5,
             previous_followers: checkedUsersListPosts,
         });
+        // console.log(randomUsersList);
         if (randomUsersList.followers.length === 0) {
-            console.log("return line 2003");
+            console.log("return line 2098");
             return postsList;
         }
 
@@ -2319,4 +2474,58 @@ function sortContentRandomly(fixedList, insertList) {
     });
     return newOutputList;
 }
+//#endregion
+//#endregion
+
+//#region FORYOU
+//#region POSTS
+async function foryou_getPosts(amt) {
+    let postsList = safedPosts;
+
+    if (postsList.length >= amt) {
+        const postsSortedList = sortArrayByDateFromUnderorderedKey(
+            postsList,
+            "id"
+        );
+
+        const outputPostsList = postsSortedList.slice(0, amt);
+        safedPosts = postsSortedList.slice(amt);
+
+        return outputPostsList;
+    } else {
+        // Get New Posts Recursive
+
+        // Get new Random Users
+        let randomUsersList = await foryou_getRandomUsers(
+            10,
+            10,
+            checkedUsersList
+        );
+
+        // console.log(randomUsersList);
+        if (randomUsersList.followers.length === 0) {
+            console.log("return line 2098");
+            return postsList;
+        }
+
+        // ERROR CASE of getRandomUsers
+        if (!Array.isArray(randomUsersList.followers)) {
+            console.log("CATCH");
+            return postsList;
+        }
+
+        const db = ref(getDatabase());
+    }
+}
+//#endregion
+
+//#region getRandomUsers | Function to get a personalized User List Client is not Following
+async function foryou_getRandomUsers(maxFollower, maxOut, usedList) {
+    return await makeRequest("/algo/follower", {
+        max_followers: maxFollower,
+        max_out: maxOut,
+        previous_followers: usedList,
+    });
+}
+//#endregion
 //#endregion

@@ -54,15 +54,17 @@ export function getClearedLinkedText(input) {
     if (!input.includes(LINK_SIGN)) return input;
 
     const split = input.split(LINK_SIGN);
+    console.log(split);
     let outputTexts = [];
-    let a = 1;
 
+    let a = 1;
     if (!split[0].includes(LINK_SPLIT)) outputTexts.push(split[0]);
     else a = 0;
 
     for (let i = a; i < split.length; i++) {
         let splitSection = split[i].split(LINK_SPLIT);
-        outputTexts.push(splitSection[1]);
+        splitSection.shift();
+        outputTexts.push(...splitSection);
     }
 
     let output = "";

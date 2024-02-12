@@ -1,0 +1,207 @@
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import {
+    View,
+    StyleSheet,
+    ScrollView,
+    Pressable,
+    Text,
+    Image,
+    Platform,
+    Alert,
+} from "react-native";
+
+import * as style from "../../styles";
+
+import { getDatabase, ref, get, child, set } from "firebase/database";
+import { getAuth } from "firebase/auth";
+
+import { getLangs } from "../../constants/langs";
+import { Group_Placeholder } from "../../constants/content/PlaceholderData";
+import { ForYou_Group, General_Group } from "../../constants/content/GroupData";
+import { arraySplitter } from "../../constants";
+import { getData } from "../../constants/storage";
+import { wait } from "../../constants/wait";
+
+import BackHeader from "../../components/BackHeader";
+import EnterButton from "../../components/auth/EnterButton";
+import GroupElement from "../../components/cards/GroupElement";
+import Refresh from "../../components/RefreshControl";
+
+let CLIENT_GROUPS = null;
+export default function GroupSelect({ navigation, route }) {
+    const scrollRef = useRef();
+
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+
+        getClientGroups();
+        wait(1000).then(() => setRefreshing(false));
+    }, []);
+
+    const { activeGroup } = route.params;
+
+    const [groups, setGroups] = useState([0, 1]);
+    const [selectedGroup, setSelectedGroup] = useState(activeGroup);
+
+    const getClientGroups = async () => {
+        const user = await getData("userData");
+        if (!user)
+            get(
+                child(
+                    ref(getDatabase()),
+                    `users/${getAuth().currentUser.uid}/groups`
+                )
+            ).then(groupsSnap => {
+                if (groupsSnap.exists()) {
+                    CLIENT_GROUPS = [0, 1, ...groupsSnap.val()];
+                    setGroups([0, 1, ...groupsSnap.val()]);
+                }
+            });
+        else if (user.groups) {
+            CLIENT_GROUPS = [0, 1, ...user.groups];
+            setGroups([0, 1, ...user.groups]);
+        }
+    };
+
+    useEffect(() => {
+        if (!CLIENT_GROUPS) getClientGroups();
+        else setGroups(CLIENT_GROUPS);
+    }, []);
+
+    return (
+        <View style={[style.container, style.bgBlack]}>
+            {/* Header */}
+            <Pressable
+                style={{ zIndex: 10 }}
+                onPress={() =>
+                    scrollRef.current.scrollTo({
+                        y: 0,
+                        animated: true,
+                    })
+                }>
+                <BackHeader
+                    // title={user.name}
+                    title={""}
+                    onBack={() => navigation.goBack()}
+                    showReload
+                />
+            </Pressable>
+
+            <ScrollView
+                ref={scrollRef}
+                style={[style.container, style.pH, style.oVisible]}
+                scrollEnabled
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={16}
+                automaticallyAdjustKeyboardInsets
+                automaticallyAdjustContentInsets
+                snapToAlignment="center"
+                snapToEnd
+                refreshControl={
+                    Platform.OS === "ios" ? (
+                        <Refresh
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    ) : null
+                }>
+                {/* Title */}
+                <View>
+                    <Text style={[style.Ttitle2, style.tWhite]}>
+                        {getLangs("groupselect_title")}
+                    </Text>
+
+                    <Text
+                        style={[
+                            style.Tmd,
+                            style.tWhite,
+                            { marginTop: style.defaultMmd },
+                        ]}>
+                        {getLangs("groupselect_sub")}
+                    </Text>
+                </View>
+
+                {/* Groups */}
+                <View style={[styles.sectionContainer, styles.groupsContainer]}>
+                    {arraySplitter(groups, 2).map((groupLine, line) => (
+                        <View key={line} style={styles.groupsSelectLine}>
+                            {groupLine.map((group, key) =>
+                                group != null ? (
+                                    <GroupElement
+                                        key={key}
+                                        groupId={group}
+                                        press={data =>
+                                            setSelectedGroup({
+                                                groupData: data,
+                                                id: group,
+                                            })
+                                        }
+                                        active={
+                                            selectedGroup.id == group
+                                                ? true
+                                                : false
+                                        }
+                                        style={[
+                                            styles.groupsItem,
+                                            style.shadowSecSmall,
+                                            selectedGroup.id == group
+                                                ? {
+                                                      borderColor:
+                                                          style.colors.red,
+                                                      ...style.border,
+                                                  }
+                                                : null,
+                                        ]}
+                                    />
+                                ) : (
+                                    <View style={styles.groupsItem} key={key} />
+                                )
+                            )}
+                        </View>
+                    ))}
+                </View>
+
+                {/* Button */}
+                <View style={[style.allCenter, styles.sectionContainer]}>
+                    <EnterButton
+                        onPress={() =>
+                            navigation.navigate({
+                                name: "landing",
+                                params: {
+                                    group: selectedGroup,
+                                },
+                                merge: true,
+                            })
+                        }
+                        checked={true}
+                    />
+                </View>
+
+                <View style={styles.sectionContainer} />
+            </ScrollView>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    sectionContainer: {
+        width: "100%",
+        marginTop: style.defaultMlg,
+    },
+    groupsContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        flexBasis: "auto",
+    },
+    groupsSelectLine: {
+        width: "100%",
+        flexDirection: "row",
+    },
+    groupsItem: {
+        margin: style.defaultMsm,
+        flex: 1,
+        borderRadius: 10,
+    },
+});

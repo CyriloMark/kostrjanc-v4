@@ -44,8 +44,29 @@ export default function Comment({
     const [user, setUser] = useState(User_Placeholder);
     const [clientIsAdmin, setClientIsAdmin] = useState(false);
 
+    //#region Animations
     const x = useSharedValue(0);
     const iconScale = useSharedValue(1);
+
+    const panStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    translateX: x.value,
+                },
+            ],
+        };
+    });
+    const iconStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    scale: iconScale.value,
+                },
+            ],
+        };
+    });
+    //#endregion
 
     const getUserData = () => {
         const db = ref(getDatabase());
@@ -61,9 +82,9 @@ export default function Comment({
 
     useEffect(() => {
         getUserData();
+        // Check if Client is Admin
         getData("userData").then(res => {
-            if (res["isAdmin"] !== undefined && res["isAdmin"] === true)
-                setClientIsAdmin(true);
+            if (res["isAdmin"]) setClientIsAdmin(true);
             else setClientIsAdmin(false);
         });
     }, []);
@@ -111,25 +132,6 @@ export default function Comment({
             ]
         );
     };
-
-    const panStyle = useAnimatedStyle(() => {
-        return {
-            transform: [
-                {
-                    translateX: x.value,
-                },
-            ],
-        };
-    });
-    const iconStyle = useAnimatedStyle(() => {
-        return {
-            transform: [
-                {
-                    scale: iconScale.value,
-                },
-            ],
-        };
-    });
 
     return (
         <View style={style}>

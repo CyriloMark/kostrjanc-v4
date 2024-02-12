@@ -19,6 +19,12 @@ export function openLink(link) {
     ]);
 }
 
+/**
+ * This function splits an Array into an Array of Array: Each inner Array has max length of coloums
+ * @param {*[]} data the Array getting split
+ * @param {number} coloums an Integer number of coloums the Array should be split
+ * @returns
+ */
 export function arraySplitter(data, coloums) {
     let splitter =
         Math.floor(data.length / coloums) +
@@ -169,4 +175,24 @@ export function checkNumberInRanges(number, array) {
  */
 export function sortByParameter(array, parameter) {
     array.sort((a, b) => b[parameter] - a[parameter]);
+}
+
+/**
+ * Generates a UID
+ * @param {number} length Length of UID generating | default = 10
+ * @returns UID
+ */
+export function makeId(length) {
+    let result = "";
+    const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+        result += characters.charAt(
+            Math.floor(Math.random() * charactersLength)
+        );
+        counter += 1;
+    }
+    return result;
 }

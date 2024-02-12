@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 
-import { getDatabase, ref, get, child } from "firebase/database";
-
 import * as style from "../../styles";
-
-import { User_Placeholder } from "../../constants/content/PlaceholderData";
 
 export default function User(props) {
     return (
@@ -26,7 +22,7 @@ export default function User(props) {
                 </View>
                 <Text
                     style={[
-                        style.TlgRg,
+                        style.Tmd,
                         style.tWhite,
                         {
                             marginLeft: style.defaultMmd,
@@ -47,10 +43,8 @@ const styles = StyleSheet.create({
     },
     userPbContainer: {
         aspectRatio: 1,
-        flex: 1,
-        width: "100%",
-        maxWidth: 58,
-        maxHeight: 58,
+        width: 48,
+        height: 48,
         borderRadius: 100,
         overflow: "hidden",
         justifyContent: "center",

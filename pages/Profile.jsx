@@ -87,7 +87,7 @@ export default function Profile({ navigation, route }) {
                     .then(postSnap => {
                         if (postSnap.exists()) {
                             const postData = postSnap.val();
-                            if (!postData.isBanned)
+                            if (!postData.isBanned && !postData.group)
                                 postEventDatas.push(postData);
                             // if (!postData.isBanned) {
                             //     setUser(user => {
@@ -124,7 +124,7 @@ export default function Profile({ navigation, route }) {
                     .then(eventSnap => {
                         if (eventSnap.exists()) {
                             const eventData = eventSnap.val();
-                            if (!eventData.isBanned)
+                            if (!eventData.isBanned && !eventData.group)
                                 postEventDatas.push(eventData);
                             if (i === e.length - 1)
                                 setPostEventList(
