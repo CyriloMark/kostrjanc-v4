@@ -14,13 +14,14 @@ import {
 
 import * as style from "../../styles";
 
-import { getAuth } from "firebase/auth";
+import { getAuth, reauthenticateWithRedirect } from "firebase/auth";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 
 // import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Kamera from "../../assets/svg/Kamera";
+import SVG_Search from "../../assets/svg/Search";
 
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
@@ -33,10 +34,16 @@ import {
 import * as FileSystem from "expo-file-system";
 
 // Constants
-import { Group_Placeholder } from "../../constants/content/PlaceholderData";
+import {
+    Group_Placeholder,
+    User_Placeholder,
+} from "../../constants/content/PlaceholderData";
 import { getLangs } from "../../constants/langs";
 import { insertCharacterOnCursor } from "../../constants/content";
 import getStatusCodeText from "../../components/content/status";
+import checkForAutoCorrectInside, {
+    getCursorPosition,
+} from "../../constants/content/autoCorrect";
 
 // import Components
 import BackHeader from "../../components/BackHeader";
@@ -50,15 +57,15 @@ import Animated, {
     useSharedValue,
     withSpring,
 } from "react-native-reanimated";
-import checkForAutoCorrectInside, {
-    getCursorPosition,
-} from "../../constants/content/autoCorrect";
+import MemberElement from "../../components/groups/MemberElement";
+import makeRequest from "../../constants/request";
 
 const IMAGE_DEFAULT_WIDTH = 152;
 
 let cursorPos = -1;
-export default function GroupCreate({ navigation }) {
+export default function GroupCreate({ navigation, route }) {
     let btnPressed = false;
+
     const [uploading, setUploading] = useState(btnPressed);
 
     const [autoCorrect, setAutoCorrect] = useState({
@@ -66,15 +73,33 @@ export default function GroupCreate({ navigation }) {
         content: [],
     });
 
-    const [group, setGroup] = useState({
-        ...Group_Placeholder,
-        members: [getAuth().currentUser.uid], // Client is always Member
-    });
+    const [group, setGroup] = useState(Group_Placeholder);
     const [buttonChecked, setButtonChecked] = useState(false);
     const [imageUri, setImageUri] = useState(null);
 
+    const [userSearchInput, setUserSearchInput] = useState("");
+    const [userSearchResult, setUserSearchResult] = useState([]);
+    const [staticMembers, setStaticMembers] = useState([]);
+
+    const { fromEdit, editData } = route.params;
+
     useEffect(() => {
         cursorPos = -1;
+
+        if (fromEdit) {
+            setStaticMembers(editData.members);
+            setGroup(editData);
+            setImageUri(editData.imgUri);
+        } else {
+            const uid = getAuth().currentUser.uid;
+            setStaticMembers([uid]);
+            setGroup(prev => {
+                return {
+                    ...prev,
+                    members: [uid], // Client is always Member
+                };
+            });
+        }
     }, []);
 
     useEffect(() => {
@@ -315,6 +340,66 @@ export default function GroupCreate({ navigation }) {
 
         */
     };
+
+    //#region handleMembers
+    const searchUsers = val => {
+        makeRequest("/user/search", {
+            query: val,
+        })
+            .then(rsp => {
+                let results = [];
+                rsp.hits.map(hit =>
+                    results.push({
+                        name: hit.primary,
+                        pbUri: hit.img,
+                        id: hit.id.substring(2),
+                    })
+                );
+                setUserSearchResult(results);
+            })
+            .catch(error =>
+                console.log(
+                    "error getMeiliSearch request",
+                    "InputField pages/create/GroupCreate.jsx",
+                    error
+                )
+            );
+    };
+
+    const onMemberAdd = userId => {
+        if (group.members.includes(userId)) return;
+
+        setGroup(prev => {
+            let newMemberLit = prev.members.concat([userId]);
+            return {
+                ...prev,
+                members: newMemberLit,
+            };
+        });
+
+        setUserSearchInput("");
+        setUserSearchResult([]);
+    };
+
+    const onMemberRemove = userId => {
+        let userPos = group.members.indexOf(userId);
+        if (userPos == -1) return;
+
+        // setGroup(prev => {
+        //     let newMemberList = prev.members.filter(a => a != userId);
+
+        //     return {
+        //         ...prev,
+        //         members: newMemberList,
+        //     };
+        // });
+
+        setGroup({
+            ...group,
+            members: group.members.filter(a => a !== userId),
+        });
+    };
+    //#endregion
 
     //#region Animation
     const imageWidthMultipier = useSharedValue(2);
@@ -776,6 +861,116 @@ export default function GroupCreate({ navigation }) {
                         </View>
                     </View>
 
+                    {/* Search Input */}
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            {getLangs("groupcreate_addmembers_input_title")}
+                        </Text>
+                        <View
+                            style={[style.pH, { marginTop: style.defaultMmd }]}>
+                            <Text
+                                style={[
+                                    style.Tmd,
+                                    style.tWhite,
+                                    { marginBottom: style.defaultMsm },
+                                ]}>
+                                {getLangs("groupcreate_addmembers_input_sub")}
+                            </Text>
+                            <InputField
+                                placeholder={getLangs(
+                                    "input_placeholder_search"
+                                )}
+                                autoCapitalize="sentences"
+                                keyboardType="default"
+                                value={userSearchInput}
+                                maxLength={32}
+                                inputAccessoryViewID="group_usersearch_InputAccessoryViewID"
+                                icon={<SVG_Search fill={style.colors.blue} />}
+                                onSelectionChange={async e => {
+                                    cursorPos = e.nativeEvent.selection.start;
+                                }}
+                                onChangeText={async val => {
+                                    // Check Selection
+                                    cursorPos = getCursorPosition(
+                                        userSearchInput,
+                                        val
+                                    );
+
+                                    // Add Input to Post Data -> Changes Title
+                                    setUserSearchInput(val);
+
+                                    if (val !== "") searchUsers(val);
+                                }}
+                            />
+                        </View>
+                    </View>
+
+                    {/* Search Result */}
+                    {userSearchResult.length != 0 ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs(
+                                    "groupcreate_addmembers_result_title"
+                                )}
+                            </Text>
+                            {userSearchResult.map(user => (
+                                <Pressable
+                                    key={user.id}
+                                    style={[styles.userContainer, style.Psm]}
+                                    onPress={() => onMemberAdd(user.id)}>
+                                    <View style={styles.userPbContainer}>
+                                        <Image
+                                            source={{
+                                                uri: user.pbUri,
+                                            }}
+                                            style={styles.userPb}
+                                            resizeMode="cover"
+                                            resizeMethod="auto"
+                                        />
+                                    </View>
+                                    <Text
+                                        style={[
+                                            style.Tmd,
+                                            style.tWhite,
+                                            {
+                                                marginLeft: style.defaultMmd,
+                                            },
+                                        ]}>
+                                        {user.name}
+                                    </Text>
+                                </Pressable>
+                            ))}
+                        </View>
+                    ) : null}
+
+                    {/* Member List */}
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            {getLangs("groupcreate_addmembers_list_title")}
+                        </Text>
+                        <Text
+                            style={[
+                                style.Tmd,
+                                style.tWhite,
+                                { marginTop: style.defaultMsm },
+                            ]}>
+                            {getLangs("groupcreate_addmembers_list_hint")}
+                        </Text>
+                        <View style={styles.memberContainer}>
+                            {group.members.map(user => (
+                                <MemberElement
+                                    key={user}
+                                    id={user}
+                                    style={{
+                                        margin: style.defaultMsm,
+                                    }}
+                                    selectable={!staticMembers.includes(user)}
+                                    onPress={() => onMemberRemove(user)}
+                                />
+                            ))}
+                        </View>
+                    </View>
+
                     {/* Button */}
                     <View style={[style.allCenter, styles.button]}>
                         <EnterButton
@@ -817,6 +1012,15 @@ export default function GroupCreate({ navigation }) {
                     });
                 }}
                 nativeID={"group_description_InputAccessoryViewID"}
+            />
+            {/* User Search */}
+            <AccessoryView
+                onElementPress={l => {
+                    setUserSearchInput(prev => {
+                        return insertCharacterOnCursor(prev, cursorPos, l);
+                    });
+                }}
+                nativeID={"group_usersearch_InputAccessoryViewID"}
             />
         </View>
     );
@@ -901,6 +1105,35 @@ const styles = StyleSheet.create({
     imageHintOptSelectionImg: {
         width: 48,
         height: 48,
+    },
+
+    userContainer: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: style.defaultMsm,
+    },
+    userPbContainer: {
+        aspectRatio: 1,
+        flex: 1,
+        width: "100%",
+        maxWidth: 32,
+        maxHeight: 32,
+        borderRadius: 100,
+        overflow: "hidden",
+        justifyContent: "center",
+    },
+    userPb: {
+        width: "100%",
+        height: "100%",
+    },
+
+    memberContainer: {
+        width: "100%",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        marginTop: style.defaultMmd,
     },
 
     button: {

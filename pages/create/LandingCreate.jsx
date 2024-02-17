@@ -77,6 +77,8 @@ export default function LandingCreate({ navigation }) {
                                 navigation.navigate("postCreate", {
                                     fromLinking: false,
                                     linkingData: null,
+                                    fromEdit: false,
+                                    editData: null,
                                 });
                             else setErrorAlert(0);
                         }}>
@@ -135,6 +137,8 @@ export default function LandingCreate({ navigation }) {
                                 navigation.navigate("eventCreate", {
                                     fromLinking: false,
                                     linkingData: null,
+                                    fromEdit: false,
+                                    editData: null,
                                 });
                             else setErrorAlert(1);
                         }}>
@@ -188,7 +192,10 @@ export default function LandingCreate({ navigation }) {
                         style={[styles.elementContainer, style.oHidden]}
                         onPress={() => {
                             if (GROUP_ENABLED)
-                                navigation.navigate("groupCreate");
+                                navigation.navigate("groupCreate", {
+                                    fromEdit: false,
+                                    editData: null,
+                                });
                             else setErrorAlert(2);
                         }}>
                         <LinearGradient

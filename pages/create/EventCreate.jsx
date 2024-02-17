@@ -37,6 +37,7 @@ import {
 import { getLangs } from "../../constants/langs";
 import {
     checkForLinkings,
+    getClearedLinkedText,
     LINKING_TYPES,
 } from "../../constants/content/linking";
 import makeRequest from "../../constants/request";
@@ -118,9 +119,28 @@ export default function EventCreate({ navigation, route }) {
         content: [],
     });
 
+    // From linking → when comes back fromLinking = true || = false
+    const { fromLinking, linkingData, fromEdit, editData } = route.params;
+
     useEffect(() => {
         cursorPos = -1;
         getGroups();
+
+        if (fromEdit) {
+            setEvent({
+                ...editData,
+                title: getClearedLinkedText(editData.title),
+                description: getClearedLinkedText(editData.description),
+            });
+            setPin(editData.geoCords);
+            setCheckedCategories({
+                type: editData.type != undefined ? true : false,
+                entrance_fee: editData.entrance_fee != undefined ? true : false,
+                website: editData.website != undefined ? true : false,
+                adBanner: editData.adBanner != undefined ? true : false,
+                tags: editData.tags != undefined ? true : false,
+            });
+        }
     }, []);
 
     //#region get Groups of Client
@@ -157,9 +177,6 @@ export default function EventCreate({ navigation, route }) {
         else if (userData.groups) getGroupsData(userData.groups);
     };
     //#endregion
-
-    // From linking → when comes back fromLinking = true || = false
-    const { fromLinking, linkingData } = route.params;
 
     const [buttonChecked, setButtonChecked] = useState(false);
 
@@ -1975,7 +1992,7 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
-                    {groups.length !== 0 ? (
+                    {groups.length !== 0 && !fromEdit ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("contentcreate_groupselect_title")}
@@ -2053,6 +2070,22 @@ export default function EventCreate({ navigation, route }) {
                                     </Pressable>
                                 ))}
                             </View>
+                        </View>
+                    ) : fromEdit ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("contentcreate_groupselect_title")}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                {getLangs(
+                                    "contentcreate_groupselect_fromedit_hint"
+                                )}
+                            </Text>
                         </View>
                     ) : null}
 

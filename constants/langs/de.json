@@ -336,6 +336,11 @@
         "groupcreate_addinformation": "Informationen bearbeiten:",
         "groupcreate_info_name": "Namen der Gruppe eingeben:",
         "groupcreate_info_description": "Beschreibung der Gruppe eingeben:",
+        "groupcreate_addmembers_input_title": "Benutzer hinzufügen:",
+        "groupcreate_addmembers_input_sub": "Benutzernamen eingeben:",
+        "groupcreate_addmembers_result_title": "Suchergebnis:",
+        "groupcreate_addmembers_list_title": "Ausgewählte Benutzer:",
+        "groupcreate_addmembers_list_hint": "Um Benutzer wieder zu löschen tippe einfach auf den Namen.",
         "groupcreate_publishsuccessful_title": "Erfolgreich gegründete Gruppe!",
         "groupcreate_publishrejected_badwords_title": "Gruppe wurde abgelehnt",
         "groupcreate_publishrejected_badwords_sub": "Deine Gruppe verwendet Sprache, die auf kostrjanc nicht gestattet ist.",
@@ -344,6 +349,7 @@
 
         "contentcreate_groupselect_title": "Gruppe wählen:",
         "contentcreate_groupselect_hint": "Wenn du keine Gruppe auswählst, dann wird standardmäßig dieser Inhalt für jeden veröffentlich. Dieser Beitrag kann in der Allgemein-Gruppe zu Sehen sein.",
+        "contentcreate_groupselect_fromedit_hint": "Nach dem Veröffentlichen kannst du die Gruppe nicht mehr ändern.",
 
         "settings_landing_title": "Einstellungen",
         "settings_landing_bugbutton_title": "Teile uns dein Feedback!",
@@ -541,12 +547,14 @@
 
         "groupselect_title": "Wähle eine Gruppe:",
         "groupselect_sub": "Wähle eine Gruppe aus. Nach dem Bestätigen siehst du alle Inhalte, die in der Gruppe geteilt worden sind.",
+        "groupselect_viewbutton": "Gruppe anschauen",
         "groups_membersingroup": " sind in der Gruppe.",
 
         "grouppage_join": "Gruppe beitreten",
         "grouppage_leave": "Gruppe verlassen",
         "grouppage_members": "Mitglieder",
         "grouppage_posts": "Posts",
-        "grouppage_events": "Events"
+        "grouppage_events": "Events",
+        "grouppage_editbutton": "Gruppe bearbeiten"
     }
 }

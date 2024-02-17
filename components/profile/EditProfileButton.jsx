@@ -34,7 +34,7 @@ export default function EditProfileButton({ checked, title, style, onPress }) {
         <View style={[style, s.shadowSec, { borderRadius: 25 }]}>
             <Animated.View
                 style={[styles.container, s.oHidden, bgAnimationStyles]}>
-                <Pressable onPress={onPress}>
+                <Pressable onPress={checked ? onPress : null}>
                     <LinearGradient
                         style={[s.Pmd, styles.inner]}
                         colors={[s.colors.blue, s.colors.sec]}

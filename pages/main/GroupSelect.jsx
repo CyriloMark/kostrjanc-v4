@@ -5,19 +5,15 @@ import {
     ScrollView,
     Pressable,
     Text,
-    Image,
     Platform,
-    Alert,
 } from "react-native";
 
 import * as style from "../../styles";
 
-import { getDatabase, ref, get, child, set } from "firebase/database";
+import { getDatabase, ref, get, child } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 import { getLangs } from "../../constants/langs";
-import { Group_Placeholder } from "../../constants/content/PlaceholderData";
-import { ForYou_Group, General_Group } from "../../constants/content/GroupData";
 import { arraySplitter } from "../../constants";
 import { getData } from "../../constants/storage";
 import { wait } from "../../constants/wait";
@@ -26,6 +22,9 @@ import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import GroupElement from "../../components/cards/GroupElement";
 import Refresh from "../../components/RefreshControl";
+import ViewGroupButton from "../../components/groups/ViewGroupButton";
+
+const STATIC_GROUPS = [0, 1];
 
 let CLIENT_GROUPS = null;
 export default function GroupSelect({ navigation, route }) {
@@ -43,6 +42,7 @@ export default function GroupSelect({ navigation, route }) {
 
     const [groups, setGroups] = useState([0, 1]);
     const [selectedGroup, setSelectedGroup] = useState(activeGroup);
+    const [groupViewable, setGroupViewable] = useState(false);
 
     const getClientGroups = async () => {
         const user = await getData("userData");
@@ -63,6 +63,17 @@ export default function GroupSelect({ navigation, route }) {
             setGroups([0, 1, ...user.groups]);
         }
     };
+
+    //#region Edit Group
+    const checkIfGroupIsEditable = () => {
+        if (STATIC_GROUPS.includes(selectedGroup.id)) setGroupViewable(false);
+        else setGroupViewable(true);
+    };
+
+    useEffect(() => {
+        checkIfGroupIsEditable();
+    }, [selectedGroup]);
+    //#endregion
 
     useEffect(() => {
         if (!CLIENT_GROUPS) getClientGroups();
@@ -163,6 +174,17 @@ export default function GroupSelect({ navigation, route }) {
                     ))}
                 </View>
 
+                <View style={styles.editButton}>
+                    <ViewGroupButton
+                        checked={groupViewable}
+                        onPress={() =>
+                            navigation.navigate("groupView", {
+                                groupId: selectedGroup.id,
+                            })
+                        }
+                    />
+                </View>
+
                 {/* Button */}
                 <View style={[style.allCenter, styles.sectionContainer]}>
                     <EnterButton
@@ -203,5 +225,10 @@ const styles = StyleSheet.create({
         margin: style.defaultMsm,
         flex: 1,
         borderRadius: 10,
+    },
+
+    editButton: {
+        marginTop: style.defaultMlg,
+        alignSelf: "center",
     },
 });

@@ -27,6 +27,7 @@ import { getData } from "../constants/storage";
 import BackHeader from "../components/BackHeader";
 import Refresh from "../components/RefreshControl";
 import JoinButton from "../components/groups/JoinButton";
+import EditProfileButton from "../components/profile/EditProfileButton";
 
 export default function Group({ navigation, route }) {
     const scrollRef = useRef();
@@ -386,6 +387,19 @@ export default function Group({ navigation, route }) {
                         </View>
                     </View>
                 </View>
+
+                <View style={styles.editButton}>
+                    <EditProfileButton
+                        title={getLangs("grouppage_editbutton")}
+                        checked
+                        onPress={() =>
+                            navigation.navigate("groupCreate", {
+                                fromEdit: true,
+                                editData: group,
+                            })
+                        }
+                    />
+                </View>
             </ScrollView>
         </View>
     );
@@ -425,5 +439,11 @@ const styles = StyleSheet.create({
     },
     statElementContainer: {
         flexDirection: "column",
+    },
+
+    editButton: {
+        marginTop: style.defaultMlg,
+        marginVertical: style.defaultMlg,
+        alignSelf: "center",
     },
 });

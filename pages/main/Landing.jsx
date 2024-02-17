@@ -30,7 +30,7 @@ import {
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import makeRequest from "../../constants/request";
-import { clamp } from "../../constants/clamp";
+import handleGroupContent from "../../constants/content/groupContent";
 
 import { getAuth } from "firebase/auth";
 import { get, ref, getDatabase, child } from "firebase/database";
@@ -45,6 +45,8 @@ import WarnButton from "../../components/settings/WarnButton";
 import GroupSelect from "../../components/landing/GroupSelect";
 
 import Loading from "../static/Loading";
+import handleGeneralContent from "../../constants/content/generalContent";
+import handleBannerContent from "../../constants/content/bannerContent";
 
 let LOADING = false;
 
@@ -65,7 +67,7 @@ let safedRandomEvents = [];
 let showingPosts = [];
 let showingEvents = [];
 
-const UPDATE_COOLDOWN = 1000;
+const UPDATE_COOLDOWN = 2500;
 let GROUP_SELECT_PRESSED = false;
 
 let SELECTED_GROUP = {
@@ -143,6 +145,13 @@ export default function Landing({ navigation, onTut }) {
         checkForTutorial();
     }, []);
 
+    const refreshContent = () => {
+        console.log("refresh");
+        showingPosts = [];
+        showingEvents = [];
+        showingContent = [];
+    };
+
     // Check for Group
     useEffect(() => {
         const focusUnsub = navigation.addListener("state", e => {
@@ -153,15 +162,17 @@ export default function Landing({ navigation, onTut }) {
             ) {
                 const group = e.data.state.routes[0].params?.group;
 
-                if (group) SELECTED_GROUP = group;
+                if (group && group != SELECTED_GROUP) {
+                    SELECTED_GROUP = group;
 
-                getGroupSpecificContent(null, null, true, group.id);
+                    refreshContent();
+                    getGroupSpecificContent(null, null, true, group.id);
+                }
 
                 GROUP_SELECT_PRESSED = false;
             } else if (e.data.state.routes.length === 1) {
                 // If coming from other Screen
-
-                getGroupSpecificContent(null, null, true, SELECTED_GROUP.id);
+                // getGroupSpecificContent(null, null, true, SELECTED_GROUP.id);
             }
         });
 
@@ -174,9 +185,60 @@ export default function Landing({ navigation, onTut }) {
         updateBanners,
         groupId
     ) => {
-        if (groupId === 0) ULTIMATIVE_ALGORITHM(_id, user, updateBanners);
+        //#region Loading Screen and avoid multiple calls
+        if (groupId != 1) {
+            if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
+            if (LOADING) return;
+            LOADING = true;
+        }
+        //#endregion
+
+        //#region Handle banners
+        if (updateBanners) {
+            const banners = await handleBannerContent();
+            setContentData({
+                banners: banners,
+                content: [],
+            });
+        }
+        //#endregion
+
+        // Safe new Showing Content here
+        let newShowingContent = [];
+
+        //#region Handle different cases
+        if (groupId === 0)
+            newShowingContent = await handleGeneralContent(
+                user,
+                showingPosts,
+                showingEvents
+            );
         else if (groupId === 1) FORYOU_ALGORITHM(_id);
-        else GROUPCONTENT_ALGORITHM(_id);
+        else
+            newShowingContent = await handleGroupContent(
+                SELECTED_GROUP.groupData,
+                showingPosts,
+                showingEvents,
+                updateBanners
+            );
+        //#endregion
+
+        //#region Set Content
+        if (groupId !== 1)
+            setContentData(prev => {
+                showingContent.push(...newShowingContent);
+                return {
+                    ...prev,
+                    content: showingContent,
+                };
+            });
+        //#endregion
+
+        //#region Handle Loading
+        setLoading(false);
+        LOADING = false;
+        LAST_UPDATED = Date.now();
+        //#endregion
     };
 
     const checkForTutorial = async () => {
@@ -598,1098 +660,6 @@ export default function Landing({ navigation, onTut }) {
 
         //#endregion
     }
-
-    async function ULTIMATIVE_ALGORITHM_new(_id, user, updateBanners) {
-        //#region Loading Screen and avoid multiple calls
-        if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
-        if (LOADING) return;
-        LOADING = true;
-        //#endregion
-
-        console.log("ULTIMATIVE_ALGORITHM");
-
-        // Firebase Database Connection
-        const db = ref(getDatabase());
-
-        const currentDate = Date.now();
-        const uid = _id ? _id : await getData("userId");
-        const userData = user ? user : await getData("userData");
-
-        let hasPosts = false;
-        let hasEvents = false;
-
-        //#region get Amounts of Content 0: posts; 1: events; (2: ads);
-        if (!AMTs[4])
-            await get(child(db, `AMT_post-event-ad`))
-                .then(amtsSnap => {
-                    if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
-                    else return;
-                })
-                .catch(error =>
-                    console.log(
-                        "error pages/main/Landing.jsx",
-                        "ultimate_algo get amts",
-                        error.code
-                    )
-                );
-        //#endregion
-
-        //#region load Banners when updateBanners == true
-        if (updateBanners) {
-            get(child(db, `banners`))
-                .then(bannersSnap => {
-                    if (bannersSnap.exists()) {
-                        let outputBanners = [];
-                        //#region Check if Banners are in Time
-                        bannersSnap.forEach(banner => {
-                            if (
-                                banner.val().ending > currentDate &&
-                                banner.val().starting < currentDate
-                            )
-                                outputBanners.push(banner.key);
-                        });
-                        //#endregion
-                        // Set Banners to Final Data
-                        setContentData(prev => {
-                            return {
-                                ...prev,
-                                banners: outputBanners,
-                            };
-                        });
-                        // setLoading(false);
-                        // LOADING = false;
-                    }
-                })
-                .catch(error =>
-                    console.log(
-                        "error pages/main/Landing.jsx",
-                        "ultimate_algo get banners",
-                        error.code
-                    )
-                );
-        }
-        //#endregion
-
-        //#region load Following List
-        // Return nothing, when user does not have any Followings
-        if (!userData.following) {
-            console.log("no following");
-            setLoading(false);
-            LOADING = false;
-            return;
-        }
-
-        let clientHasFollowings = userData.following;
-
-        // Lists of Client Following
-        let clientFollowingList = clientHasFollowings ? userData.following : [];
-        //#endregion
-
-        let finalPostsList = [];
-        let finalEventsList = [];
-        getClientPosts();
-        getClientEvents();
-
-        //#region Get Posts
-        async function getClientPosts() {
-            let postsList = safedPosts;
-
-            const clientFollowingListFiltered = filterUsedUsers(
-                clientFollowingList,
-                checkedUsersList
-            );
-
-            console.log(
-                "clientFollowingListFiltered",
-                // clientFollowingListFiltered
-                checkedUsersList
-            );
-
-            // if there are safed Posts limited = true | don't need to fetch new Posts
-            let limited = false;
-            if (postsList.length >= AMTs[0] - AMTs[2]) limited = true;
-
-            if (limited) {
-                const POST_AMT = AMTs[0] - AMTs[2];
-
-                const postsSortedList = sortArrayByDateFromUnderorderedKey(
-                    postsList,
-                    "id"
-                );
-                finalPostsList = postsSortedList.slice(0, POST_AMT);
-                safedPosts = postsSortedList.slice(POST_AMT);
-
-                if (hasEvents) combinePostsAndEvents();
-                else hasPosts = true;
-            }
-
-            for (
-                let i = 0;
-                i < limited ? 0 : clientFollowingListFiltered.length;
-                i++
-            ) {
-                await get(
-                    child(db, `users/${clientFollowingListFiltered[i]}/posts`)
-                )
-                    .then(pSnap => {
-                        if (pSnap.exists())
-                            pSnap.forEach(p => {
-                                if (!checkForDuplicates(postsList, p.val())) {
-                                    postsList = [
-                                        ...postsList,
-                                        {
-                                            id: p.val(),
-                                            type: 0,
-                                        },
-                                    ];
-                                }
-                            });
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/main/Landing.jsx",
-                            "ULTIMATIVE_ALGORITHM getNewPosts",
-                            error.code
-                        )
-                    );
-
-                if (i === clientFollowingListFiltered.length - 1) {
-                    updateCheckedUsersList(...clientFollowingListFiltered);
-
-                    const POST_AMT = AMTs[0] - AMTs[2];
-                    const postsSortedList = sortArrayByDateFromUnderorderedKey(
-                        postsList,
-                        "id"
-                    );
-                    safedPosts = postsSortedList.slice(POST_AMT);
-
-                    if (postsList.length < POST_AMT) {
-                        const missingAmt = AMTs[0] - postsList.length;
-                        const randomPosts = await getRandomPosts(missingAmt);
-
-                        finalPostsList = postsSortedList.concat(randomPosts);
-
-                        if (hasEvents) combinePostsAndEvents();
-                        else hasPosts = true;
-                    } else {
-                        const clientPostsList = postsSortedList.slice(
-                            0,
-                            POST_AMT
-                        );
-
-                        const randomPosts = await getRandomPosts(AMTs[1]);
-
-                        finalPostsList = clientPostsList.concat(randomPosts);
-
-                        if (hasEvents) combinePostsAndEvents();
-                        else hasPosts = true;
-                    }
-                }
-            }
-        }
-        //#endregion
-
-        //#region Get Events
-        async function getClientEvents() {
-            let eventsList = safedEvents;
-
-            const clientFollowingListFiltered = filterUsedUsers(
-                clientFollowingList,
-                checkedUsersList
-            );
-
-            let limited = false;
-            if (eventsList.length >= AMTs[1] - AMTs[3]) limited = true;
-
-            if (limited) {
-                const EVENT_AMT = AMTs[1] - AMTs[3];
-
-                const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                    eventsList,
-                    "starting"
-                );
-                finalEventsList = eventsSortedList.slice(0, EVENT_AMT);
-
-                safedEvents = eventsSortedList.slice(EVENT_AMT);
-
-                if (hasPosts) combinePostsAndEvents();
-                else hasEvents = true;
-            }
-
-            for (
-                let i = 0;
-                i < limited ? 0 : clientFollowingListFiltered.length;
-                i++
-            ) {
-                await get(
-                    child(db, `users/${clientFollowingListFiltered[i]}/events`)
-                )
-                    .then(eSnap => {
-                        if (eSnap.exists())
-                            eSnap.forEach(async e => {
-                                if (!checkForDuplicates(eventsList, e.val())) {
-                                    await get(
-                                        child(db, `events/${e.val()}/starting`)
-                                    )
-                                        .then(startingSnap => {
-                                            if (startingSnap.exists)
-                                                eventsList = [
-                                                    ...eventsList,
-                                                    {
-                                                        id: e.val(),
-                                                        type: 1,
-                                                        starting:
-                                                            startingSnap.val(),
-                                                    },
-                                                ];
-                                        })
-                                        .catch(error =>
-                                            console.log(
-                                                "error pages/main/Landing.jsx",
-                                                "ULTIMATIVE_ALGORITHM getClientEvents get Event Starting",
-                                                error.code
-                                            )
-                                        );
-                                }
-                            });
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/main/Landing.jsx",
-                            "ULTIMATIVE_ALGORITHM getClientEvents",
-                            error.code
-                        )
-                    );
-
-                if (i === clientFollowingListFiltered.length - 1) {
-                    updateCheckedUsersList(clientFollowingListFiltered);
-
-                    const EVENT_AMT = AMTs[1] - AMTs[3];
-                    const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                        eventsList,
-                        "starting"
-                    );
-                    safedEvents = eventsSortedList.slice(EVENT_AMT);
-
-                    if (eventsList.length < EVENT_AMT) {
-                        const missingAmt = AMTs[1] - eventsList.length;
-                        const randomEvents = await getRandomEvents(missingAmt);
-
-                        finalEventsList = eventsSortedList.concat(randomEvents);
-
-                        if (hasPosts) combinePostsAndEvents();
-                        else hasEvents = true;
-                    } else {
-                        const clientEventsList = eventsSortedList.slice(
-                            0,
-                            EVENT_AMT
-                        );
-
-                        const randomEvents = await getRandomEvents(AMTs[3]);
-                        finalEventsList = clientEventsList.concat(randomEvents);
-
-                        if (hasPosts) combinePostsAndEvents();
-                        else hasEvents = true;
-                    }
-                }
-            }
-        }
-        //#endregion
-
-        //#region getRandomPosts
-        /**
-         * Function that generates Posts of Random Users Client is not Following
-         * @returns List of new Posts of Random Users
-         */
-        async function getRandomPosts(amt) {
-            let postsList = safedRandomPosts;
-
-            let randomUsersList = await getRandomUsers(10);
-            if (randomUsersList.length === 0) return [];
-
-            // if there are safed Posts limited = true | don't need to fetch new Posts
-            let limited = false;
-            if (postsList.length >= amt) limited = true;
-
-            if (limited) {
-                const postsSortedList = sortArrayByDateFromUnderorderedKey(
-                    postsList,
-                    "id"
-                );
-                finalPostsList = postsSortedList.slice(0, amt);
-
-                safedRandomPosts = postsSortedList.slice(amt);
-                return finalPostsList;
-            }
-
-            for (let i = 0; i < randomUsersList.length; i++) {
-                await get(child(db, `users/${randomUsersList[i]}/posts`))
-                    .then(pSnap => {
-                        if (pSnap.exists())
-                            pSnap.forEach(p => {
-                                if (!checkForDuplicates(postsList, p.val())) {
-                                    postsList = [
-                                        ...postsList,
-                                        {
-                                            id: p.val(),
-                                            type: 0,
-                                        },
-                                    ];
-                                }
-                            });
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/main/Landing.jsx",
-                            "ULTIMATIVE_ALGORITHM getRandomPosts",
-                            error.code
-                        )
-                    );
-
-                if (i === randomUsersList.length - 1) {
-                    updateCheckedUsersList(randomUsersList);
-
-                    const postsSortedList = sortArrayByDateFromUnderorderedKey(
-                        postsList,
-                        "id"
-                    );
-                    const outputPostsList = postsSortedList.slice(0, amt);
-
-                    safedRandomPosts = postsSortedList.slice(amt);
-                    return outputPostsList;
-                }
-            }
-        }
-        //#endregion
-
-        //#region getRandomEvents
-        /**
-         * Function that generates Events of Random Users Client is not Following
-         * @returns List of new Events of Random Users
-         */
-        async function getRandomEvents(amt) {
-            let eventsList = safedRandomEvents;
-
-            let randomUsersList = await getRandomUsers(10);
-            if (randomUsersList.length === 0) return [];
-
-            // if there are safed Posts limited = true | don't need to fetch new Posts
-            let limited = false;
-            if (eventsList.length >= amt) limited = true;
-
-            if (limited) {
-                const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                    eventsList,
-                    "starting"
-                );
-                const outputEventsList = eventsSortedList.slice(0, amt);
-                safedRandomEvents = eventsSortedList.slice(amt);
-                return outputEventsList;
-            }
-
-            for (let i = 0; i < randomUsersList.length; i++) {
-                await get(child(db, `users/${randomUsersList[i]}/events`))
-                    .then(eSnap => {
-                        if (eSnap.exists())
-                            eSnap.forEach(async e => {
-                                if (!checkForDuplicates(eventsList, e.val())) {
-                                    await get(
-                                        child(db, `events/${e.val()}/starting`)
-                                    )
-                                        .then(startingSnap => {
-                                            if (startingSnap.exists)
-                                                eventsList = [
-                                                    ...eventsList,
-                                                    {
-                                                        id: e.val(),
-                                                        type: 1,
-                                                        starting:
-                                                            startingSnap.val(),
-                                                    },
-                                                ];
-                                        })
-                                        .catch(error =>
-                                            console.log(
-                                                "error pages/main/Landing.jsx",
-                                                "ULTIMATIVE_ALGORITHM getRandomEvents get Event Starting",
-                                                error.code
-                                            )
-                                        );
-                                }
-                            });
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/main/Landing.jsx",
-                            "ULTIMATIVE_ALGORITHM getRandomEvents",
-                            error.code
-                        )
-                    );
-
-                if (i === randomUsersList.length - 1) {
-                    updateCheckedUsersList(randomUsersList);
-
-                    const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                        eventsList,
-                        "starting"
-                    );
-                    const outputEventsList = eventsSortedList.slice(0, amt);
-                    safedRandomEvents = eventsSortedList.slice(amt);
-                    return outputEventsList;
-                }
-            }
-        }
-        //#endregion
-
-        //#region updateCheckedUsersList
-        function updateCheckedUsersList(newContent) {
-            // console.log("newContent", newContent);
-            let newList = checkedUsersList;
-            newList.push(newContent);
-
-            filteredList = filterDuplicateUsers(newList);
-            checkedUsersList = filteredList;
-        }
-
-        //#region filterDuplicateUsers
-        function filterDuplicateUsers(list) {
-            const uniqueIds = new Set();
-
-            for (const id of list) uniqueIds.add(id);
-
-            const uniqueIdsArray = [...uniqueIds];
-            return uniqueIdsArray;
-        }
-        //#endregion
-        //#endregion
-
-        //#region getRandomUsers | Function to get a personalized User List Client is not Following
-        async function getRandomUsers(maxAmt) {
-            /*//#region  If API works use this
-            const newUsers = await makeRequest("/algo/follower", {
-                max_followers: maxAmt,
-                max_out: maxAmt,
-                previous_followers: checkedUsersList,
-            });
-
-            return newUsers;
-            //#endregion*/
-
-            if (uid === "BVKixOd9soY1lWArFChYWNI7ID22") return [];
-            else if (uid === "2ERCiXsoT1VDrqbthJUa0OCmysi2")
-                return [
-                    "7f1HFO6HIAW6jioXhEkY4kNGGfs2",
-                    "EvHwI4tVYtbPiPpdKZ9sD71F0q73",
-                    "UznKeGyHdTX0MoVrSRH5hqn8bkV2",
-                    "aWx8i9zMDPfkZTej1zN0TzfwwEF2",
-                    "lV2Ad1A17vYONZkmEKrbg04dkwq1",
-                    "wPozvkNuAhYNu34JnzW2dkkp95H2",
-                ];
-        }
-        //#endregion
-
-        //#region Combine Posts & Events
-        function combinePostsAndEvents() {
-            let newFinalContentList = finalPostsList;
-
-            finalEventsList.forEach(e => {
-                const rand = Math.random();
-                const index = Math.round(
-                    lerp(0, newFinalContentList.length, rand)
-                );
-                newFinalContentList.splice(index, 0, e);
-            });
-
-            showingContent = [...showingContent, ...newFinalContentList];
-            setContentData(prev => {
-                return {
-                    ...prev,
-                    content: showingContent,
-                };
-            });
-
-            setLoading(false);
-            LOADING = false;
-            LAST_UPDATED = Date.now();
-        }
-        //#endregion
-
-        //#region checkForDuplicates
-        /**
-         *
-         * @param {*[]} list List to check id
-         * @param {number} id id to find in list
-         * @returns {boolean} true if id is found in list
-         */
-        function checkForDuplicates(list, id) {
-            list.forEach(l => {
-                if (l.id === id) return true;
-            });
-            return false;
-        }
-        //#endregion
-
-        //#region filterUsedUsers
-        /**
-         *
-         * @param {*[]} toFilter
-         * @param {*[]} used
-         * @returns {*[]} List of Users doesn't used before
-         */
-        function filterUsedUsers(toFilter, used) {
-            let output = [];
-            toFilter.forEach(l => {
-                if (!used.includes(l)) output.push(l);
-            });
-            return output;
-        }
-        //#endregion
-    }
-
-    async function ULTIMATIVE_ALGORITHM_new2(_id, user, updateBanners) {
-        //#region Loading Screen and avoid multiple calls
-        if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
-        if (LOADING) return;
-        LOADING = true;
-        //#endregion
-
-        console.log("ULTIMATIVE_ALGORITHM");
-
-        // Firebase Database Connection
-        const db = ref(getDatabase());
-
-        const currentDate = Date.now();
-        const uid = _id ? _id : await getData("userId");
-        const userData = user ? user : await getData("userData");
-
-        let hasPosts = false;
-        let hasEvents = true;
-
-        //#region get Amounts of Content 0: posts; 1: events; (2: ads);
-        if (!AMTs[4])
-            await get(child(db, `AMT_post-event-ad`))
-                .then(amtsSnap => {
-                    if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
-                    else return;
-                })
-                .catch(error =>
-                    console.log(
-                        "error pages/main/Landing.jsx",
-                        "ultimate_algo get amts",
-                        error.code
-                    )
-                );
-        //#endregion
-
-        //#region load Banners when updateBanners == true
-        if (updateBanners) {
-            get(child(db, `banners`))
-                .then(bannersSnap => {
-                    if (bannersSnap.exists()) {
-                        let outputBanners = [];
-                        //#region Check if Banners are in Time
-                        bannersSnap.forEach(banner => {
-                            if (
-                                banner.val().ending > currentDate &&
-                                banner.val().starting < currentDate
-                            )
-                                outputBanners.push(banner.key);
-                        });
-                        //#endregion
-                        // Set Banners to Final Data
-                        setContentData(prev => {
-                            return {
-                                ...prev,
-                                banners: outputBanners,
-                            };
-                        });
-                        // setLoading(false);
-                        // LOADING = false;
-                    }
-                })
-                .catch(error =>
-                    console.log(
-                        "error pages/main/Landing.jsx",
-                        "ultimate_algo get banners",
-                        error.code
-                    )
-                );
-        }
-        //#endregion
-
-        //#region load Following List
-        // Return nothing, when user does not have any Followings
-        if (!userData.following) {
-            console.log("no following");
-            setLoading(false);
-            LOADING = false;
-            return;
-        }
-
-        // Lists of Client Following
-        let clientFollowingList = userData.following;
-        //#endregion
-
-        let finalPostsList = [];
-        let finalEventsList = [];
-        getClientPosts();
-        // getClientEvents();
-
-        //#region Get Posts
-        async function getClientPosts() {
-            let postsList = safedPosts;
-
-            // Get Users not used before
-            const clientFollowingListFiltered = filterUsedUsers(
-                clientFollowingList,
-                checkedUsersListPosts
-            );
-
-            // if there are safed Posts so that we dont need to fetch new => limited = true | don't need to fetch new Posts
-            let limited = false;
-            if (postsList.length >= AMTs[0] - AMTs[2]) limited = true;
-            if (limited || clientFollowingListFiltered.length == 0) {
-                const POST_AMT = AMTs[0] - AMTs[2];
-
-                const postsSortedList = sortArrayByDateFromUnderorderedKey(
-                    postsList,
-                    "id"
-                );
-
-                const clientPostsList = postsSortedList.slice(0, POST_AMT);
-                const randomPosts = await getRandomPosts(
-                    AMTs[0] - clientPostsList.length
-                );
-
-                finalPostsList = clientPostsList.concat(randomPosts);
-                safedPosts = postsSortedList.slice(POST_AMT);
-
-                if (hasEvents) combinePostsAndEvents();
-                else hasPosts = true;
-            } else {
-                for (let i = 0; i < clientFollowingListFiltered.length; i++) {
-                    await get(
-                        child(
-                            db,
-                            `users/${clientFollowingListFiltered[i]}/posts`
-                        )
-                    )
-                        .then(pSnap => {
-                            if (pSnap.exists())
-                                pSnap.forEach(p => {
-                                    if (
-                                        !checkForDuplicates(postsList, p.val())
-                                    ) {
-                                        postsList.push({
-                                            id: p.val(),
-                                            type: 0,
-                                        });
-                                    }
-                                });
-                        })
-                        .catch(error =>
-                            console.log(
-                                "error pages/main/Landing.jsx",
-                                "ULTIMATIVE_ALGORITHM getNewPosts",
-                                error.code
-                            )
-                        );
-
-                    if (i === clientFollowingListFiltered.length - 1) {
-                        updateCheckedUsersListPosts(
-                            clientFollowingListFiltered
-                        );
-
-                        const POST_AMT = AMTs[0] - AMTs[2];
-                        const postsSortedList =
-                            sortArrayByDateFromUnderorderedKey(postsList, "id");
-                        safedPosts = postsSortedList.slice(POST_AMT);
-                        if (postsList.length <= POST_AMT) {
-                            const missingAmt = AMTs[0] - postsList.length;
-                            const randomPosts = await getRandomPosts(
-                                missingAmt
-                            );
-
-                            finalPostsList =
-                                postsSortedList.concat(randomPosts);
-
-                            if (hasEvents) combinePostsAndEvents();
-                            else hasPosts = true;
-                        } else {
-                            const clientPostsList = postsSortedList.slice(
-                                0,
-                                POST_AMT
-                            );
-
-                            const randomPosts = await getRandomPosts(AMTs[2]);
-
-                            finalPostsList =
-                                clientPostsList.concat(randomPosts);
-
-                            if (hasEvents) combinePostsAndEvents();
-                            else hasPosts = true;
-                        }
-                    }
-                }
-            }
-        }
-        //#endregion
-
-        //#region getRandomPosts
-        /**
-         * Function that generates Posts of Random Users Client is not Following
-         * @returns List of new Posts of Random Users
-         */
-        async function getRandomPosts(amt) {
-            let postsList = safedRandomPosts;
-
-            // if there are safed Posts so that we dont have to fetch new posts => limited = true | don't need to fetch new Posts
-            let limited = false;
-            if (postsList.length >= amt) limited = true;
-
-            if (limited) {
-                const postsSortedList = sortArrayByDateFromUnderorderedKey(
-                    postsList,
-                    "id"
-                );
-
-                const outputPostsList = postsSortedList.slice(0, amt);
-                safedRandomPosts = postsSortedList.slice(amt);
-
-                return outputPostsList;
-            } else {
-                let randomUsersList = await getRandomUsers(
-                    5,
-                    checkedUsersListPosts
-                );
-                if (randomUsersList.followers.length === 0) return [];
-                console.log(randomUsersList); // <---------- Errror Catch
-
-                // console.log(randomUsersList.followers.isArray());
-                if (!Array.isArray(randomUsersList.followers)) {
-                    console.log("CATCH");
-                    return [];
-                }
-                for (let i = 0; i < randomUsersList.followers.length; i++) {
-                    await get(
-                        child(db, `users/${randomUsersList.followers[i]}/posts`)
-                    )
-                        .then(pSnap => {
-                            if (pSnap.exists())
-                                pSnap.forEach(p => {
-                                    if (
-                                        !checkForDuplicates(postsList, p.val())
-                                    ) {
-                                        postsList.push({
-                                            id: p.val(),
-                                            type: 0,
-                                        });
-                                    }
-                                });
-                        })
-                        .catch(error =>
-                            console.log(
-                                "error pages/main/Landing.jsx",
-                                "ULTIMATIVE_ALGORITHM getRandomPosts",
-                                error.code
-                            )
-                        );
-
-                    if (i === randomUsersList.followers.length - 1) {
-                        updateCheckedUsersListPosts(randomUsersList.followers);
-
-                        const postsSortedList =
-                            sortArrayByDateFromUnderorderedKey(postsList, "id");
-                        const outputPostsList = postsSortedList.slice(0, amt);
-
-                        safedRandomPosts = postsSortedList.slice(amt);
-                        return outputPostsList;
-                    }
-                }
-            }
-        }
-        //#endregion
-
-        //#region Get Events
-        async function getClientEvents() {
-            let eventsList = safedEvents;
-
-            const clientFollowingListFiltered = filterUsedUsers(
-                clientFollowingList,
-                checkedUsersListEvents
-            );
-
-            let limited = false;
-            if (eventsList.length >= AMTs[1] - AMTs[3]) limited = true;
-
-            if (limited) {
-                const EVENT_AMT = AMTs[1] - AMTs[3];
-
-                const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                    eventsList,
-                    "starting"
-                );
-                finalEventsList = eventsSortedList.slice(0, EVENT_AMT);
-
-                safedEvents = eventsSortedList.slice(EVENT_AMT);
-
-                if (hasPosts) combinePostsAndEvents();
-                else hasEvents = true;
-            }
-
-            for (
-                let i = 0;
-                i < limited ? 0 : clientFollowingListFiltered.length;
-                i++
-            ) {
-                await get(
-                    child(db, `users/${clientFollowingListFiltered[i]}/events`)
-                )
-                    .then(eSnap => {
-                        if (eSnap.exists())
-                            eSnap.forEach(async e => {
-                                if (!checkForDuplicates(eventsList, e.val())) {
-                                    await get(
-                                        child(db, `events/${e.val()}/starting`)
-                                    )
-                                        .then(startingSnap => {
-                                            if (startingSnap.exists)
-                                                eventsList = [
-                                                    ...eventsList,
-                                                    {
-                                                        id: e.val(),
-                                                        type: 1,
-                                                        starting:
-                                                            startingSnap.val(),
-                                                    },
-                                                ];
-                                        })
-                                        .catch(error =>
-                                            console.log(
-                                                "error pages/main/Landing.jsx",
-                                                "ULTIMATIVE_ALGORITHM getClientEvents get Event Starting",
-                                                error.code
-                                            )
-                                        );
-                                }
-                            });
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/main/Landing.jsx",
-                            "ULTIMATIVE_ALGORITHM getClientEvents",
-                            error.code
-                        )
-                    );
-
-                if (i === clientFollowingListFiltered.length - 1) {
-                    updateCheckedUsersListEvents(
-                        ...clientFollowingListFiltered
-                    );
-
-                    const EVENT_AMT = AMTs[1] - AMTs[3];
-                    const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                        eventsList,
-                        "starting"
-                    );
-                    safedEvents = eventsSortedList.slice(EVENT_AMT);
-
-                    if (eventsList.length < EVENT_AMT) {
-                        const missingAmt = AMTs[1] - eventsList.length;
-                        const randomEvents = await getRandomEvents(missingAmt);
-
-                        finalEventsList = eventsSortedList.concat(randomEvents);
-
-                        if (hasPosts) combinePostsAndEvents();
-                        else hasEvents = true;
-                    } else {
-                        const clientEventsList = eventsSortedList.slice(
-                            0,
-                            EVENT_AMT
-                        );
-
-                        const randomEvents = await getRandomEvents(AMTs[3]);
-                        finalEventsList = clientEventsList.concat(randomEvents);
-
-                        if (hasPosts) combinePostsAndEvents();
-                        else hasEvents = true;
-                    }
-                }
-            }
-        }
-        //#endregion
-
-        //#region getRandomEvents
-        /**
-         * Function that generates Events of Random Users Client is not Following
-         * @returns List of new Events of Random Users
-         */
-        async function getRandomEvents(amt) {
-            let eventsList = safedRandomEvents;
-
-            let randomUsersList = await getRandomUsers(25);
-            if (randomUsersList.followers.length === 0) return [];
-
-            // if there are safed Posts limited = true | don't need to fetch new Posts
-            let limited = false;
-            if (eventsList.length >= amt) limited = true;
-
-            if (limited) {
-                const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                    eventsList,
-                    "starting"
-                );
-                const outputEventsList = eventsSortedList.slice(0, amt);
-                safedRandomEvents = eventsSortedList.slice(amt);
-                return outputEventsList;
-            }
-
-            for (let i = 0; i < randomUsersList.followers.length; i++) {
-                await get(child(db, `users/${randomUsersList[i]}/events`))
-                    .then(eSnap => {
-                        if (eSnap.exists())
-                            eSnap.forEach(async e => {
-                                if (!checkForDuplicates(eventsList, e.val())) {
-                                    await get(
-                                        child(db, `events/${e.val()}/starting`)
-                                    )
-                                        .then(startingSnap => {
-                                            if (startingSnap.exists)
-                                                eventsList.push({
-                                                    id: e.val(),
-                                                    type: 1,
-                                                    starting:
-                                                        startingSnap.val(),
-                                                });
-                                        })
-                                        .catch(error =>
-                                            console.log(
-                                                "error pages/main/Landing.jsx",
-                                                "ULTIMATIVE_ALGORITHM getRandomEvents get Event Starting",
-                                                error.code
-                                            )
-                                        );
-                                }
-                            });
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/main/Landing.jsx",
-                            "ULTIMATIVE_ALGORITHM getRandomEvents",
-                            error.code
-                        )
-                    );
-
-                if (i === randomUsersList.followers.length - 1) {
-                    updateCheckedUsersListEvents(...randomUsersList.followers);
-
-                    const eventsSortedList = sortArrayByDateFromUnderorderedKey(
-                        eventsList,
-                        "starting"
-                    );
-                    const outputEventsList = eventsSortedList.slice(0, amt);
-                    safedRandomEvents = eventsSortedList.slice(amt);
-                    return outputEventsList;
-                }
-            }
-        }
-        //#endregion
-
-        //#region getRandomUsers | Function to get a personalized User List Client is not Following
-        async function getRandomUsers(maxAmt, usedList) {
-            const newUsers = await makeRequest("/algo/follower", {
-                max_followers: maxAmt,
-                max_out: maxAmt,
-                previous_followers: usedList,
-            });
-
-            return newUsers;
-        }
-        //#endregion
-
-        //#region Combine Posts & Events
-        function combinePostsAndEvents() {
-            let newFinalContentList = finalPostsList;
-
-            // finalEventsList.forEach(e => {
-            //     const rand = Math.random();
-            //     const index = Math.round(
-            //         lerp(0, newFinalContentList.length, rand)
-            //     );
-            //     newFinalContentList.splice(index, 0, e);
-            // });
-
-            // showingContent = [...showingContent, ...newFinalContentList];
-            // console.log("", newFinalContentList);
-
-            setContentData(prev => {
-                return {
-                    ...prev,
-                    content: newFinalContentList,
-                };
-            });
-
-            setLoading(false);
-            LOADING = false;
-            LAST_UPDATED = Date.now();
-        }
-        //#endregion
-
-        //#region filterUsedUsers
-        /**
-         *
-         * @param {*[]} toFilter
-         * @param {*[]} used
-         * @returns {*[]} List of Users don't used before
-         */
-        function filterUsedUsers(toFilter, used) {
-            let output = [];
-            toFilter.forEach(l => {
-                if (!used.includes(l)) output.push(l);
-            });
-            return output;
-        }
-        //#endregion
-
-        //#region updateCheckedUsersList
-        function updateCheckedUsersListPosts(newContent) {
-            // console.log("newContent", newContent);
-            let newList = checkedUsersListPosts.concat(newContent);
-            checkedUsersListPosts = newList;
-        }
-        function updateCheckedUsersListEvents(newContent) {
-            // console.log("newContent", newContent);
-            let newList = checkedUsersListEvents.concat(newContent);
-            checkedUsersListEvents = newList;
-        }
-        //#endregion
-
-        //#region checkForDuplicates
-        /**
-         *
-         * @param {*[]} list List to check id
-         * @param {number} id id to find in list
-         * @returns {boolean} true if id is found in list
-         */
-        function checkForDuplicates(list, id) {
-            list.forEach(l => {
-                if (l.id === id) return true;
-            });
-            return false;
-        }
-        //#endregion
-
-        //#region filterDuplicateUsers
-        function filterDuplicateUsers(list) {
-            const uniqueIds = new Set();
-
-            for (const id of list) uniqueIds.add(id);
-
-            const uniqueIdsArray = [...uniqueIds];
-            return uniqueIdsArray;
-        }
-        //#endregion
-    }
     //#endregion
 
     async function ULTIMATIVE_ALGORITHM(_id, user, updateBanners) {
@@ -1847,53 +817,6 @@ export default function Landing({ navigation, onTut }) {
     }
     //#endregion
 
-    //#region GROUP CONTENT
-    async function GROUPCONTENT_ALGORITHM(_id) {
-        //#region Loading Screen and avoid multiple calls
-        if (LAST_UPDATED > Date.now() - UPDATE_COOLDOWN) return;
-        if (LOADING) return;
-        LOADING = true;
-        //#endregion
-
-        console.log("GROUPCONTENT_ALGORITHM");
-
-        // Firebase Database Connection
-        const db = ref(getDatabase());
-
-        const currentDate = Date.now();
-
-        //#region get Amounts of Content 0: posts; 1: events; (2: ads);
-        if (!AMTs[4])
-            await get(child(db, `AMT_post-event-ad`))
-                .then(amtsSnap => {
-                    if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
-                    else return;
-                })
-                .catch(error =>
-                    console.log(
-                        "error pages/main/Landing.jsx",
-                        "foryou_algo get amts",
-                        error.code
-                    )
-                );
-        //#endregion
-
-        const POST_AMT = AMTs[0];
-        const EVENT_AMT = AMTs[1];
-
-        setContentData(prev => {
-            return {
-                ...prev,
-                content: showingContent,
-            };
-        });
-
-        setLoading(false);
-        LOADING = false;
-        LAST_UPDATED = Date.now();
-    }
-    //#endregion
-
     if (loading) return <Loading />;
 
     return (
@@ -2037,6 +960,7 @@ export default function Landing({ navigation, onTut }) {
     );
 }
 
+//#region onScrollEvents
 const isOnTop = ({ contentOffset }) => {
     const paddingToTop = 25;
     return contentOffset.y < paddingToTop;
@@ -2050,12 +974,11 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
         contentSize.height - paddingToBottom
     );
 };
+//#endregion
 
 //#region GENERAL DATA
 //#region POSTs
 async function getPosts(userList, amt) {
-    let postsList = safedPosts;
-
     // Get Users not used before
     const clientFollowingListFiltered = filterUsedUsers(
         userList,

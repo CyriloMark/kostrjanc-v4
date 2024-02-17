@@ -138,9 +138,14 @@ export default function Event(props) {
                         ).map((el, key) => (
                             <Text
                                 key={key}
-                                numberOfLines={1}
+                                // numberOfLines={1}
+                                numberOfLines={2}
                                 ellipsizeMode="tail"
-                                style={[style.TlgRg, style.tWhite]}>
+                                style={[
+                                    style.TlgRg,
+                                    style.tWhite,
+                                    style.oHidden,
+                                ]}>
                                 {el.text}
                             </Text>
                         ))}
@@ -243,6 +248,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         maxWidth: 32,
+        minWidth: 24,
         maxHeight: 32,
         justifyContent: "center",
         borderRadius: 100,

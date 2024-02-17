@@ -24,6 +24,7 @@ import { getData, storeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 import {
     checkForLinkings,
+    getClearedLinkedText,
     LINKING_TYPES,
 } from "../../constants/content/linking";
 import makeRequest from "../../constants/request";
@@ -72,13 +73,22 @@ export default function PostCreate({ navigation, route }) {
         content: [],
     });
 
+    // From linking → when comes back fromLinking = true || = false
+    const { fromLinking, linkingData, fromEdit, editData } = route.params;
+
     useEffect(() => {
         cursorPos = -1;
         getGroups();
-    }, []);
 
-    // From linking → when comes back fromLinking = true || = false
-    const { fromLinking, linkingData } = route.params;
+        if (fromEdit) {
+            setPost({
+                ...editData,
+                title: getClearedLinkedText(editData.title),
+                description: getClearedLinkedText(editData.description),
+            });
+            setImageUri(editData.imgUri);
+        }
+    }, []);
 
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
@@ -714,7 +724,7 @@ export default function PostCreate({ navigation, route }) {
                     </View>
 
                     {/* Group Select */}
-                    {groups.length !== 0 ? (
+                    {groups.length !== 0 && !fromEdit ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("contentcreate_groupselect_title")}
@@ -792,6 +802,22 @@ export default function PostCreate({ navigation, route }) {
                                     </Pressable>
                                 ))}
                             </View>
+                        </View>
+                    ) : fromEdit ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("contentcreate_groupselect_title")}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    { marginTop: style.defaultMsm },
+                                ]}>
+                                {getLangs(
+                                    "contentcreate_groupselect_fromedit_hint"
+                                )}
+                            </Text>
                         </View>
                     ) : null}
 

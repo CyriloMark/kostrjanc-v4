@@ -15,6 +15,7 @@ export default function GroupSelect({ activeGroup, openGroupSelect }) {
                     style.Tmd,
                     style.tWhite,
                     { fontFamily: "Barlow_Bold" },
+                    styles.textShadow,
                 ]}>
                 {getLangs("landing_group_selectgroup")}
             </Text>
@@ -36,12 +37,12 @@ export default function GroupSelect({ activeGroup, openGroupSelect }) {
                         />
                     </View>
                 </View>
-                <Text style={[style.tWhite, style.Tmd, {}]}>
-                    {activeGroup.id === -1
+                <Text style={[style.tWhite, style.Tmd, styles.textShadow]}>
+                    {activeGroup.id === 0
                         ? "Powšitkowne"
                         : activeGroup.groupData.name}
+                    {")"}
                 </Text>
-                <Text style={[style.Tmd, style.tWhite]}>{")"}</Text>
             </View>
         </Pressable>
     );
@@ -75,5 +76,14 @@ const styles = StyleSheet.create({
             y: 0,
         },
         shadowRadius: 10,
+    },
+    textShadow: {
+        textShadowOffset: {
+            height: 0,
+            width: 0,
+        },
+        textShadowRadius: 5,
+        textShadowColor: style.colors.black,
+        padding: 2,
     },
 });

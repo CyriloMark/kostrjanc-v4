@@ -16,8 +16,6 @@ import * as style from "../styles";
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import { child, get, getDatabase, ref } from "firebase/database";
-
 import Animated, {
     Easing,
     useAnimatedStyle,
@@ -42,8 +40,6 @@ import InputField from "../components/InputField";
 import SVG_Add from "../assets/svg/Add";
 import SVG_Pencil from "../assets/svg/Pencil";
 import SVG_Basket from "../assets/svg/Basket";
-
-let UsersData = null;
 
 export default function LinkingPage({ navigation, route }) {
     const { content, type, origin } = route.params;

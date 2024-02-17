@@ -7,14 +7,17 @@ import SVG_Basket from "../assets/svg/Basket";
 import SVG_Share from "../assets/svg/Share";
 import SVG_Warn from "../assets/svg/Warn";
 import SVG_Ban from "../assets/svg/Ban";
+import SVG_Pencil from "../assets/svg/Pencil_Fill";
 
 export default function InteractionBar({
     style,
+    edit,
     del,
     share,
     warn,
     ban,
     onDelete,
+    onEdit,
     onShare,
     onWarn,
     onBan,
@@ -45,6 +48,16 @@ export default function InteractionBar({
                             { marginLeft: s.defaultMlg },
                         ]}>
                         <SVG_Ban style={styles.icon} fill={s.colors.blue} />
+                    </Pressable>
+                ) : null}
+                {edit ? (
+                    <Pressable
+                        onPress={onEdit}
+                        style={[
+                            styles.iconContainer,
+                            { marginLeft: s.defaultMlg },
+                        ]}>
+                        <SVG_Pencil style={styles.icon} fill={s.colors.blue} />
                     </Pressable>
                 ) : null}
                 {del ? (

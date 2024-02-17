@@ -196,25 +196,27 @@ export default function Post({ navigation, route, onTut }) {
                 else uid = getAuth().currentUser.uid;
             })
             .finally(() => {
-                let a = commentsList;
-                setCommentsList([]);
-                a.unshift({
-                    creator: uid,
-                    created: Date.now(),
-                    content: input,
-                });
-                setCommentsList(a);
+                setCommentsList(prev => {
+                    let newList = [
+                        {
+                            creator: uid,
+                            created: Date.now(),
+                            content: input,
+                        },
+                    ].concat(prev);
 
-                const db = getDatabase();
-                set(ref(db, `posts/${id}/comments`), a);
+                    set(ref(getDatabase(), `posts/${id}/comments`), newList);
+                    return newList;
+                });
             });
     };
 
     const removeComment = comment => {
-        const newCommentList = commentsList.filter(c => c !== comment);
-        setCommentsList([]);
-        setCommentsList(newCommentList);
-        set(ref(getDatabase(), `posts/${id}/comments`), newCommentList);
+        setCommentsList(prev => {
+            let newList = prev.filter(c => c !== comment);
+            set(ref(getDatabase(), `posts/${id}/comments`), newList);
+            return newList;
+        });
     };
 
     useEffect(() => {
@@ -736,20 +738,12 @@ export default function Post({ navigation, route, onTut }) {
                         {/* Comments List */}
                         <View
                             style={{
-                                marginTop: !commentVisible
-                                    ? commentsList.length === 0
-                                        ? 0
-                                        : style.defaultMmd
-                                    : style.defaultMlg,
+                                marginTop: 0,
                             }}>
-                            {commentsList.map((comment, key) => (
+                            {commentsList.map(comment => (
                                 <Comment
-                                    key={key}
-                                    style={
-                                        key != commentsList.length - 1
-                                            ? { marginBottom: style.defaultMmd }
-                                            : null
-                                    }
+                                    key={comment.created}
+                                    style={{ marginTop: style.defaultMmd }}
                                     commentData={comment}
                                     onRemove={() => removeComment(comment)}
                                     onPress={id =>

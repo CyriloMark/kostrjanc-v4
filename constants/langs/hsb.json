@@ -336,6 +336,11 @@
         "groupcreate_addinformation": "Wobdźěłanje informacijow:",
         "groupcreate_info_name": "Mjeno skupiny zapodać:",
         "groupcreate_info_description": "Wopisowanje skupiny zapodać:",
+        "groupcreate_addmembers_input_title": "Wužiwarja přidać:",
+        "groupcreate_addmembers_input_sub": "Mjeno wužiwarja zapodać:",
+        "groupcreate_addmembers_result_title": "Pytanski wuslědk:",
+        "groupcreate_addmembers_list_title": "Wuzwoleni wužiwarjo:",
+        "groupcreate_addmembers_list_hint": "Zo by wužiwar zaso wotstronił stłóč jednorje na mjeno.",
         "groupcreate_publishsuccessful_title": "Wuspěšnje załožena skupina!",
         "groupcreate_publishrejected_badwords_title": "Skupina je so wotpokazała",
         "groupcreate_publishrejected_badwords_sub": "Twója skupina wobsahuje rěč, kotraž njeje na kostrjancu dowolena.",
@@ -344,6 +349,7 @@
 
         "contentcreate_groupselect_title": "Skupinu wolić:",
         "contentcreate_groupselect_hint": "Hdyž žanu skupinu njewuzwoliš, potom so po standardźe tutón wobsah za kóždeho wozjewi. Tutón přinošk móže w Powšitkowne-skupinje widźeć być.",
+        "contentcreate_groupselect_fromedit_hint": "Po wozjewjenju njemóžeš skupinu hižo změnić.",
 
         "settings_landing_title": "Zastajenja",
         "settings_landing_bugbutton_title": "Pósćel nam feedback!",
@@ -541,12 +547,14 @@
 
         "groupselect_title": "Wuzwol sej skupinu:",
         "groupselect_sub": "Wuzwol sej skupinu. Po wobkrućenju widźiš wšitke wobsahi, kotrež buchu do skupiny dźělene.",
+        "groupselect_viewbutton": "Skupinu sej wobhladać",
         "groups_membersingroup": " w skupinje.",
 
         "grouppage_join": "Skupinu přistupić",
         "grouppage_leave": "Skupinu wopušćić",
         "grouppage_members": "Čłonojo",
         "grouppage_posts": "Posty",
-        "grouppage_events": "Ewenty"
+        "grouppage_events": "Ewenty",
+        "grouppage_editbutton": "Skupinu wobdźěłać"
     }
 }
