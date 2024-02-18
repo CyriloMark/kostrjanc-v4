@@ -3,7 +3,7 @@ export const firebaseApp = {
     authDomain: "kostrjanc.firebaseapp.com",
     databaseURL:
         "https://kostrjanc-default-rtdb.europe-west1.firebasedatabase.app/",
-    // databaseURL: "https://kostrjanc-dev.europe-west1.firebasedatabase.app/",
+    //   databaseURL: "https://kostrjanc-dev.europe-west1.firebasedatabase.app/",
     projectId: "kostrjanc",
     storageBucket: "kostrjanc.appspot.com",
     messagingSenderId: "919686819174",

@@ -93,7 +93,7 @@ export default function GroupCreate({ navigation, route }) {
         } else {
             const uid = getAuth().currentUser.uid;
             setStaticMembers([uid]);
-            setGroup(prev => {
+            setGroup((prev) => {
                 return {
                     ...prev,
                     members: [uid], // Client is always Member
@@ -169,7 +169,7 @@ export default function GroupCreate({ navigation, route }) {
                 });
 
             setImageUri(pickerResult.assets[0].uri);
-            setGroup(prev => {
+            setGroup((prev) => {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
@@ -177,7 +177,7 @@ export default function GroupCreate({ navigation, route }) {
             });
         } catch (e) {
             setImageUri(pickerResult.assets[0].uri);
-            setGroup(prev => {
+            setGroup((prev) => {
                 return {
                     ...prev,
                     imgUri: pickerResult.assets[0].uri,
@@ -236,7 +236,7 @@ export default function GroupCreate({ navigation, route }) {
                 });
 
             setImageUri(camResult.assets[0].uri);
-            setGroup(prev => {
+            setGroup((prev) => {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
@@ -244,7 +244,7 @@ export default function GroupCreate({ navigation, route }) {
             });
         } catch (e) {
             setImageUri(camResult.assets[0].uri);
-            setGroup(prev => {
+            setGroup((prev) => {
                 return {
                     ...prev,
                     imgUri: camResult.assets[0].uri,
@@ -254,8 +254,8 @@ export default function GroupCreate({ navigation, route }) {
     };
     //#endregion
 
-    const addToLocalStorage = id => {
-        getData("userData").then(userData => {
+    const addToLocalStorage = (id) => {
+        getData("userData").then((userData) => {
             let groups = [];
             if (userData["groups"]) groups = userData["groups"];
             group.push(id);
@@ -304,9 +304,14 @@ export default function GroupCreate({ navigation, route }) {
         });
 
         // Yoo
-        /*
-
-         if (response.code < 400) {
+        const response = await makeRequest("/groups/create", {
+            name: group.name,
+            description: group.description,
+            members: group.members,
+            img: base64,
+        });
+        r;
+        if (response.code < 400) {
             addToLocalStorage(response.id);
             Alert.alert(
                 getLangs("groupcreate_publishsuccessful_title"),
@@ -337,18 +342,16 @@ export default function GroupCreate({ navigation, route }) {
                     },
                 ]
             );
-
-        */
+        }
     };
-
     //#region handleMembers
-    const searchUsers = val => {
+    const searchUsers = (val) => {
         makeRequest("/user/search", {
             query: val,
         })
-            .then(rsp => {
+            .then((rsp) => {
                 let results = [];
-                rsp.hits.map(hit =>
+                rsp.hits.map((hit) =>
                     results.push({
                         name: hit.primary,
                         pbUri: hit.img,
@@ -357,7 +360,7 @@ export default function GroupCreate({ navigation, route }) {
                 );
                 setUserSearchResult(results);
             })
-            .catch(error =>
+            .catch((error) =>
                 console.log(
                     "error getMeiliSearch request",
                     "InputField pages/create/GroupCreate.jsx",
@@ -366,10 +369,10 @@ export default function GroupCreate({ navigation, route }) {
             );
     };
 
-    const onMemberAdd = userId => {
+    const onMemberAdd = (userId) => {
         if (group.members.includes(userId)) return;
 
-        setGroup(prev => {
+        setGroup((prev) => {
             let newMemberLit = prev.members.concat([userId]);
             return {
                 ...prev,
@@ -381,7 +384,7 @@ export default function GroupCreate({ navigation, route }) {
         setUserSearchResult([]);
     };
 
-    const onMemberRemove = userId => {
+    const onMemberRemove = (userId) => {
         let userPos = group.members.indexOf(userId);
         if (userPos == -1) return;
 
@@ -396,9 +399,10 @@ export default function GroupCreate({ navigation, route }) {
 
         setGroup({
             ...group,
-            members: group.members.filter(a => a !== userId),
+            members: group.members.filter((a) => a !== userId),
         });
     };
+
     //#endregion
 
     //#region Animation
@@ -420,7 +424,8 @@ export default function GroupCreate({ navigation, route }) {
                         styles.loadingContainer,
                         style.allCenter,
                         style.allMax,
-                    ]}>
+                    ]}
+                >
                     <ActivityIndicator
                         size={"large"}
                         color={style.colors.blue}
@@ -429,7 +434,8 @@ export default function GroupCreate({ navigation, route }) {
             ) : null}
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
                 {/* Header */}
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
@@ -450,12 +456,14 @@ export default function GroupCreate({ navigation, route }) {
                     automaticallyAdjustKeyboardInsets
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
-                    snapToEnd>
+                    snapToEnd
+                >
                     {/* Preview + Image select */}
                     <View
                         style={{
                             marginTop: style.defaultMmd,
-                        }}>
+                        }}
+                    >
                         {/* Header Container */}
                         <View style={{ alignItems: "center" }}>
                             {/* Pb */}
@@ -471,14 +479,16 @@ export default function GroupCreate({ navigation, route }) {
                                             ? style.colors.red
                                             : style.colors.black,
                                     },
-                                ]}>
+                                ]}
+                            >
                                 <Animated.View
                                     style={[
                                         styles.imageOutlineContainer,
                                         !imageUri ? style.border : null,
                                         style.allCenter,
                                         imageStyles,
-                                    ]}>
+                                    ]}
+                                >
                                     <Pressable
                                         onPress={openImagePickerAsync}
                                         style={[
@@ -486,7 +496,8 @@ export default function GroupCreate({ navigation, route }) {
                                             style.allCenter,
                                             style.oHidden,
                                             !imageUri ? style.Psm : null,
-                                        ]}>
+                                        ]}
+                                    >
                                         {imageUri !== null ? (
                                             <Image
                                                 source={{ uri: imageUri }}
@@ -499,13 +510,15 @@ export default function GroupCreate({ navigation, route }) {
                                                     styles.image,
                                                     style.allCenter,
                                                     styles.imageBorder,
-                                                ]}>
+                                                ]}
+                                            >
                                                 <Text
                                                     style={[
                                                         style.Tmd,
                                                         style.tBlue,
                                                         styles.hintText,
-                                                    ]}>
+                                                    ]}
+                                                >
                                                     {getLangs(
                                                         "postcreate_imghint"
                                                     )}
@@ -513,7 +526,8 @@ export default function GroupCreate({ navigation, route }) {
                                                 <View
                                                     style={
                                                         styles.imageHintOptSelectionContainer
-                                                    }>
+                                                    }
+                                                >
                                                     <Pressable
                                                         onPress={
                                                             openImagePickerAsync
@@ -523,7 +537,8 @@ export default function GroupCreate({ navigation, route }) {
                                                             style.Pmd,
                                                             style.border,
                                                             style.allCenter,
-                                                        ]}>
+                                                        ]}
+                                                    >
                                                         <SVG_Post
                                                             style={
                                                                 styles.imageHintOptSelectionImg
@@ -541,7 +556,8 @@ export default function GroupCreate({ navigation, route }) {
                                                                     marginTop:
                                                                         style.defaultMsm,
                                                                 },
-                                                            ]}>
+                                                            ]}
+                                                        >
                                                             Galerija
                                                         </Text>
                                                     </Pressable>
@@ -552,7 +568,8 @@ export default function GroupCreate({ navigation, route }) {
                                                             style.Pmd,
                                                             style.border,
                                                             style.allCenter,
-                                                        ]}>
+                                                        ]}
+                                                    >
                                                         <SVG_Kamera
                                                             style={
                                                                 styles.imageHintOptSelectionImg
@@ -570,7 +587,8 @@ export default function GroupCreate({ navigation, route }) {
                                                                     marginTop:
                                                                         style.defaultMsm,
                                                                 },
-                                                            ]}>
+                                                            ]}
+                                                        >
                                                             Kamera
                                                         </Text>
                                                     </Pressable>
@@ -610,7 +628,8 @@ export default function GroupCreate({ navigation, route }) {
                                     style={[
                                         style.allCenter,
                                         styles.statElementContainer,
-                                    ]}>
+                                    ]}
+                                >
                                     <Text style={[style.tWhite, style.TlgBd]}>
                                         {group.members
                                             ? group.members.length
@@ -621,7 +640,8 @@ export default function GroupCreate({ navigation, route }) {
                                             style.tRed,
                                             style.TsmRg,
                                             { marginTop: style.defaultMsm },
-                                        ]}>
+                                        ]}
+                                    >
                                         {getLangs("grouppage_members")}
                                     </Text>
                                 </View>
@@ -631,7 +651,8 @@ export default function GroupCreate({ navigation, route }) {
                                     style={[
                                         style.allCenter,
                                         styles.statElementContainer,
-                                    ]}>
+                                    ]}
+                                >
                                     <Text style={[style.tWhite, style.TlgBd]}>
                                         {group.posts ? group.posts.length : "0"}
                                     </Text>
@@ -640,7 +661,8 @@ export default function GroupCreate({ navigation, route }) {
                                             style.tRed,
                                             style.TsmRg,
                                             { marginTop: style.defaultMsm },
-                                        ]}>
+                                        ]}
+                                    >
                                         {getLangs("grouppage_posts")}
                                     </Text>
                                 </View>
@@ -650,7 +672,8 @@ export default function GroupCreate({ navigation, route }) {
                                     style={[
                                         style.allCenter,
                                         styles.statElementContainer,
-                                    ]}>
+                                    ]}
+                                >
                                     <Text style={[style.tWhite, style.TlgBd]}>
                                         {group.events
                                             ? group.events.length
@@ -661,7 +684,8 @@ export default function GroupCreate({ navigation, route }) {
                                             style.tRed,
                                             style.TsmRg,
                                             { marginTop: style.defaultMsm },
-                                        ]}>
+                                        ]}
+                                    >
                                         {getLangs("grouppage_events")}
                                     </Text>
                                 </View>
@@ -675,7 +699,8 @@ export default function GroupCreate({ navigation, route }) {
                             {getLangs("groupcreate_addinformation")}
                         </Text>
                         <View
-                            style={[style.pH, { marginTop: style.defaultMmd }]}>
+                            style={[style.pH, { marginTop: style.defaultMmd }]}
+                        >
                             {/* Name */}
                             <View>
                                 <Text
@@ -683,7 +708,8 @@ export default function GroupCreate({ navigation, route }) {
                                         style.Tmd,
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
-                                    ]}>
+                                    ]}
+                                >
                                     {getLangs("groupcreate_info_name")}
                                 </Text>
                                 <InputField
@@ -699,7 +725,7 @@ export default function GroupCreate({ navigation, route }) {
                                         <SVG_Pencil fill={style.colors.blue} />
                                     }
                                     supportsAutoCorrect
-                                    onSelectionChange={async e => {
+                                    onSelectionChange={async (e) => {
                                         cursorPos =
                                             e.nativeEvent.selection.start;
 
@@ -710,7 +736,7 @@ export default function GroupCreate({ navigation, route }) {
                                             );
                                         setAutoCorrect(autoC);
                                     }}
-                                    onChangeText={async val => {
+                                    onChangeText={async (val) => {
                                         // Check Selection
                                         cursorPos = getCursorPosition(
                                             group.name,
@@ -732,8 +758,8 @@ export default function GroupCreate({ navigation, route }) {
                                         setAutoCorrect(autoC);
                                     }}
                                     autoCorrection={autoCorrect}
-                                    applyAutoCorrection={word => {
-                                        setGroup(prev => {
+                                    applyAutoCorrection={(word) => {
+                                        setGroup((prev) => {
                                             let name = prev.name.split(" ");
                                             let namePartSplit = prev.name
                                                 .substring(0, cursorPos)
@@ -744,7 +770,7 @@ export default function GroupCreate({ navigation, route }) {
 
                                             let newName = "";
                                             namePartSplit.forEach(
-                                                el => (newName += `${el} `)
+                                                (el) => (newName += `${el} `)
                                             );
                                             for (
                                                 let i = namePartSplit.length;
@@ -776,7 +802,8 @@ export default function GroupCreate({ navigation, route }) {
                                         style.Tmd,
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
-                                    ]}>
+                                    ]}
+                                >
                                     {getLangs("groupcreate_info_description")}
                                 </Text>
                                 <TextField
@@ -787,7 +814,7 @@ export default function GroupCreate({ navigation, route }) {
                                     maxLength={512}
                                     inputAccessoryViewID="group_description_InputAccessoryViewID"
                                     supportsAutoCorrect
-                                    onSelectionChange={async e => {
+                                    onSelectionChange={async (e) => {
                                         cursorPos =
                                             e.nativeEvent.selection.start;
 
@@ -798,7 +825,7 @@ export default function GroupCreate({ navigation, route }) {
                                             );
                                         setAutoCorrect(autoC);
                                     }}
-                                    onChangeText={async val => {
+                                    onChangeText={async (val) => {
                                         // Check Selection
                                         cursorPos = getCursorPosition(
                                             group.description,
@@ -820,8 +847,8 @@ export default function GroupCreate({ navigation, route }) {
                                         setAutoCorrect(autoC);
                                     }}
                                     autoCorrection={autoCorrect}
-                                    applyAutoCorrection={word => {
-                                        setGroup(prev => {
+                                    applyAutoCorrection={(word) => {
+                                        setGroup((prev) => {
                                             let desc =
                                                 prev.description.split(" ");
                                             let descPartSplit = prev.description
@@ -833,7 +860,7 @@ export default function GroupCreate({ navigation, route }) {
 
                                             let newDesc = "";
                                             descPartSplit.forEach(
-                                                el => (newDesc += `${el} `)
+                                                (el) => (newDesc += `${el} `)
                                             );
                                             for (
                                                 let i = descPartSplit.length;
@@ -867,13 +894,15 @@ export default function GroupCreate({ navigation, route }) {
                             {getLangs("groupcreate_addmembers_input_title")}
                         </Text>
                         <View
-                            style={[style.pH, { marginTop: style.defaultMmd }]}>
+                            style={[style.pH, { marginTop: style.defaultMmd }]}
+                        >
                             <Text
                                 style={[
                                     style.Tmd,
                                     style.tWhite,
                                     { marginBottom: style.defaultMsm },
-                                ]}>
+                                ]}
+                            >
                                 {getLangs("groupcreate_addmembers_input_sub")}
                             </Text>
                             <InputField
@@ -886,10 +915,10 @@ export default function GroupCreate({ navigation, route }) {
                                 maxLength={32}
                                 inputAccessoryViewID="group_usersearch_InputAccessoryViewID"
                                 icon={<SVG_Search fill={style.colors.blue} />}
-                                onSelectionChange={async e => {
+                                onSelectionChange={async (e) => {
                                     cursorPos = e.nativeEvent.selection.start;
                                 }}
-                                onChangeText={async val => {
+                                onChangeText={async (val) => {
                                     // Check Selection
                                     cursorPos = getCursorPosition(
                                         userSearchInput,
@@ -913,11 +942,12 @@ export default function GroupCreate({ navigation, route }) {
                                     "groupcreate_addmembers_result_title"
                                 )}
                             </Text>
-                            {userSearchResult.map(user => (
+                            {userSearchResult.map((user) => (
                                 <Pressable
                                     key={user.id}
                                     style={[styles.userContainer, style.Psm]}
-                                    onPress={() => onMemberAdd(user.id)}>
+                                    onPress={() => onMemberAdd(user.id)}
+                                >
                                     <View style={styles.userPbContainer}>
                                         <Image
                                             source={{
@@ -935,7 +965,8 @@ export default function GroupCreate({ navigation, route }) {
                                             {
                                                 marginLeft: style.defaultMmd,
                                             },
-                                        ]}>
+                                        ]}
+                                    >
                                         {user.name}
                                     </Text>
                                 </Pressable>
@@ -953,11 +984,12 @@ export default function GroupCreate({ navigation, route }) {
                                 style.Tmd,
                                 style.tWhite,
                                 { marginTop: style.defaultMsm },
-                            ]}>
+                            ]}
+                        >
                             {getLangs("groupcreate_addmembers_list_hint")}
                         </Text>
                         <View style={styles.memberContainer}>
-                            {group.members.map(user => (
+                            {group.members.map((user) => (
                                 <MemberElement
                                     key={user}
                                     id={user}
@@ -983,8 +1015,8 @@ export default function GroupCreate({ navigation, route }) {
 
             {/* Title */}
             <AccessoryView
-                onElementPress={l => {
-                    setGroup(prev => {
+                onElementPress={(l) => {
+                    setGroup((prev) => {
                         return {
                             ...prev,
                             name: insertCharacterOnCursor(
@@ -999,8 +1031,8 @@ export default function GroupCreate({ navigation, route }) {
             />
             {/* Description */}
             <AccessoryView
-                onElementPress={l => {
-                    setGroup(prev => {
+                onElementPress={(l) => {
+                    setGroup((prev) => {
                         return {
                             ...prev,
                             description: insertCharacterOnCursor(
@@ -1015,8 +1047,8 @@ export default function GroupCreate({ navigation, route }) {
             />
             {/* User Search */}
             <AccessoryView
-                onElementPress={l => {
-                    setUserSearchInput(prev => {
+                onElementPress={(l) => {
+                    setUserSearchInput((prev) => {
                         return insertCharacterOnCursor(prev, cursorPos, l);
                     });
                 }}
