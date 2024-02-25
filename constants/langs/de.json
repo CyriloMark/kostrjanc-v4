@@ -223,6 +223,8 @@
 
         "profile_follower": "Follower",
         "profile_following": "Folgt",
+        "profile_onfollow_error_title": "Fehler beim Folgen",
+        "profile_onfollow_error_sub": "Es ist ein Fehler aufgetreten. Fehler: ",
         "profile_contentlist": "Veröffentlichungen",
         "profile_editbuttontext": "Bearbeiten",
 
@@ -335,6 +337,8 @@
         "groupcreate_groupdescription": "Beschreibung der Gruppe",
         "groupcreate_addinformation": "Informationen bearbeiten:",
         "groupcreate_info_name": "Namen der Gruppe eingeben:",
+        "groupcreate_info_name_notavailable_title": "Gruppenname nicht verfügbar",
+        "groupcreate_info_name_notavailable_sub": "Es existiert bereits eine Gruppe mit diesem Namen. Bitte ändere deinen Gruppennamen.",
         "groupcreate_info_description": "Beschreibung der Gruppe eingeben:",
         "groupcreate_addmembers_input_title": "Benutzer hinzufügen:",
         "groupcreate_addmembers_input_sub": "Benutzernamen eingeben:",
@@ -485,6 +489,8 @@
         "missing_agb": "Akzeptieren von den allgemeinen Geschäftsbedingungen",
         "missing_type": "Typ",
         "missing_equaldata": "keine Daten haben sich geändert",
+        "missing_existinggroupname": "Gruppenname is belegt",
+        "missing_memberslist": "weitere Gruppenmitglieder",
 
         "no_map": "Keine Karte verfügbar.",
 
@@ -555,6 +561,8 @@
         "grouppage_members": "Mitglieder",
         "grouppage_posts": "Posts",
         "grouppage_events": "Events",
-        "grouppage_editbutton": "Gruppe bearbeiten"
+        "grouppage_editbutton": "Gruppe bearbeiten",
+        "grouppage_leavealert_sub": "Bist du sicher, dass du die Gruppe verlassen möchtest?",
+        "grouppage_leavealert_success": "Gruppe wurde verlassen."
     }
 }

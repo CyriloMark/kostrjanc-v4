@@ -21,6 +21,7 @@ import { getData, storeData } from "../constants/storage";
 import { wait } from "../constants/wait";
 import { arraySplitter, sortArrayByDate } from "../constants";
 import { getLangs } from "../constants/langs";
+import makeRequest from "../constants/request";
 
 import BackHeader from "../components/BackHeader";
 import InteractionBar from "../components/InteractionBar";
@@ -35,6 +36,8 @@ import SVG_Verify from "../assets/svg/Moderator";
 let UID = null;
 export default function Profile({ navigation, route }) {
     const scrollRef = useRef();
+
+    let followPressed = false;
 
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
@@ -198,77 +201,79 @@ export default function Profile({ navigation, route }) {
     };
 
     const follow = () => {
-        if (user.isBanned) return;
+        if (user.isBanned || followPressed) return;
+        followPressed = true;
 
-        const db = getDatabase();
-        get(child(ref(db), "users/" + UID))
-            .then(userSnap => {
-                if (userSnap.exists()) {
-                    const userData = userSnap.val();
+        const body = {
+            user: id,
+            follow: false,
+            unfollow: false,
+        };
 
-                    let f = [];
-                    if (userSnap.hasChild("following")) f = userData.following;
+        if (following) body.unfollow = true;
+        else body.follow = true;
 
-                    if (!following) f.push(id);
-                    else f.splice(f.indexOf(id), 1);
+        makeRequest("user/follow", body)
+            .then(rsp => {
+                if (rsp.code === 202) {
+                    setFollowing(prev => {
+                        // Remove from Follower List
+                        if (prev)
+                            setUser(userPrev => {
+                                let newFollowerList = userPrev.follower.filter(
+                                    el => el != UID
+                                );
+                                return {
+                                    ...userPrev,
+                                    follower: newFollowerList,
+                                };
+                            });
+                        // Add to Follower List
+                        else
+                            setUser(userPrev => {
+                                let newFollowerList = userPrev.follower.concat([
+                                    UID,
+                                ]);
+                                return {
+                                    ...userPrev,
+                                    follower: newFollowerList,
+                                };
+                            });
 
-                    set(ref(db, "users/" + UID), {
-                        ...userData,
-                        following: f,
-                    }).catch(error =>
-                        console.log(
-                            "error pages/Profile.jsx",
-                            "follow setuser",
-                            error.code
-                        )
-                    );
-                }
-            })
-            .catch(error =>
-                console.log(
-                    "error pages/Profile.jsx",
-                    "follow get local user",
-                    error.code
-                )
-            );
-        get(child(ref(db), "users/" + id))
-            .then(userSnap => {
-                if (userSnap.exists()) {
-                    const userData = userSnap.val();
-
-                    let f = [];
-                    if (userSnap.hasChild("follower")) f = userData.follower;
-
-                    if (!following) f.push(UID);
-                    else f.splice(f.indexOf(UID), 1);
-
-                    setUser(data => {
-                        return {
-                            ...data,
-                            follower: f,
-                        };
+                        return !prev;
                     });
-
-                    set(ref(db, "users/" + id), {
-                        ...userData,
-                        follower: f,
-                    }).catch(error =>
-                        console.log(
-                            "error pages/Profile.jsx",
-                            "follow setuser",
-                            error.code
-                        )
+                    followPressed = false;
+                } else
+                    Alert.alert(
+                        getLangs("profile_onfollow_error_title"),
+                        getLangs("profile_onfollow_error_sub") + rsp,
+                        [
+                            {
+                                isPreferred: true,
+                                text: "Ok",
+                                style: "default",
+                            },
+                        ]
                     );
-                }
             })
-            .catch(error =>
+            .catch(error => {
                 console.log(
-                    "error pages/Profile.jsx",
-                    "follow get local user",
-                    error.code
-                )
-            )
-            .finally(() => setFollowing(val => !val));
+                    "error in pages/Profile.jsx",
+                    "makeRequest user/follow",
+                    error
+                );
+                Alert.alert(
+                    getLangs("profile_onfollow_error_title"),
+                    getLangs("profile_onfollow_error_sub") + error,
+                    [
+                        {
+                            isPreferred: true,
+                            text: "Ok",
+                            style: "default",
+                        },
+                    ]
+                );
+            });
     };
 
     return (

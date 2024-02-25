@@ -223,6 +223,8 @@
 
         "profile_follower": "Sćěhowarjo",
         "profile_following": "Sćěhuje",
+        "profile_onfollow_error_title": "Zmylk při sćěhowanju",
+        "profile_onfollow_error_sub": "Je so zmylk jewił. Zmylk: ",
         "profile_contentlist": "Wozjewjenja",
         "profile_editbuttontext": "Wobdźěłać",
 
@@ -335,6 +337,8 @@
         "groupcreate_groupdescription": "Wopisowanje skupiny",
         "groupcreate_addinformation": "Wobdźěłanje informacijow:",
         "groupcreate_info_name": "Mjeno skupiny zapodać:",
+        "groupcreate_info_name_notavailable_title": "Skupinske mjeno je wobsadźene",
+        "groupcreate_info_name_notavailable_sub": "Eksistuje hižo skupina z tutym mjenom. Prošu změń swoje skupinske mjeno.",
         "groupcreate_info_description": "Wopisowanje skupiny zapodać:",
         "groupcreate_addmembers_input_title": "Wužiwarja přidać:",
         "groupcreate_addmembers_input_sub": "Mjeno wužiwarja zapodać:",
@@ -485,6 +489,8 @@
         "missing_agb": "přiznaće powšitkownych wobchodowych wuměnjenjow",
         "missing_type": "typ",
         "missing_equaldata": "ničo njeje so změniło",
+        "missing_existinggroupname": "skupinske mjeno je wobsadźene",
+        "missing_memberslist": "přidatne wužiwarjo",
 
         "no_map": "Žana karta wužijomna.",
 
@@ -555,6 +561,8 @@
         "grouppage_members": "Čłonojo",
         "grouppage_posts": "Posty",
         "grouppage_events": "Ewenty",
-        "grouppage_editbutton": "Skupinu wobdźěłać"
+        "grouppage_editbutton": "Skupinu wobdźěłać",
+        "grouppage_leavealert_sub": "Sy wěsty, zo chceš skupinu wopušćić?",
+        "grouppage_leavealert_success": "Skupina bu wopušćena."
     }
 }
