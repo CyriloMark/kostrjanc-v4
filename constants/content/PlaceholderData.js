@@ -83,3 +83,9 @@ export const Ban_Placeholder = {
     creator: "",
     description: "",
 };
+
+export const Notification_Placeholder = {
+    id: "",
+    title: "",
+    description: "",
+};
