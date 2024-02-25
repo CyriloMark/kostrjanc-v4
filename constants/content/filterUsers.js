@@ -29,3 +29,25 @@ export function filterDuplicateUsers(userList) {
     userList = result;
     return result;
 }
+
+const MAX_LINEAR_BOUND = 36;
+const MAX_LOGe_BOUND = 100;
+
+/**
+ *
+ * @param {String[]} userList Array of User Ids
+ */
+export function filterUsersByAmount(userList) {
+    if (userList.length <= MAX_LINEAR_BOUND) return userList;
+    else if (userList.length <= MAX_LOGe_BOUND) {
+        const cutPoint = Math.ceil(
+            Math.log(userList.length) * Math.sqrt(userList.length)
+        );
+        return userList.slice(-cutPoint);
+    } else {
+        const cutPoint = Math.ceil(
+            Math.log10(userList.length) * Math.sqrt(userList.length)
+        );
+        return userList.slice(-cutPoint);
+    }
+}

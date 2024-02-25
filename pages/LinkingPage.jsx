@@ -42,7 +42,7 @@ import SVG_Pencil from "../assets/svg/Pencil";
 import SVG_Basket from "../assets/svg/Basket";
 
 export default function LinkingPage({ navigation, route }) {
-    const { content, type, origin } = route.params;
+    const { content, type, origin, fromEdit } = route.params;
 
     const [buttonVisible, setButtonVisible] = useState(false);
 
@@ -432,9 +432,15 @@ export default function LinkingPage({ navigation, route }) {
         }
 
         // Navigate Back
-        navigation.navigate(origin, {
-            fromLinking: true,
-            linkingData: updatedContent,
+        navigation.navigate({
+            name: origin,
+            params: {
+                fromLinking: true,
+                // linkingData: updatedContent,
+                fromEdit: fromEdit,
+                editData: null,
+            },
+            merge: true,
         });
     };
 

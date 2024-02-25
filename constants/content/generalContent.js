@@ -8,11 +8,23 @@ import {
     mergeSortRandomly,
     sortIds_InsertionSort,
 } from "./filterPostsAndEvents";
-import { filterDuplicateUsers, filterUsers } from "./filterUsers";
+import {
+    filterDuplicateUsers,
+    filterUsers,
+    filterUsersByAmount,
+} from "./filterUsers";
 import { getData } from "../storage";
 import quicksort from "./contentSort";
+import fetchRandomUsers from "./randomUsers";
+
+const RANDOM_USER_MAX_OUT = 5;
+const MAX_RANDOM_USER_FETCH_AMT = 3;
 
 const safedContent = {
+    posts: [],
+    events: [],
+};
+const safedRandomContent = {
     posts: [],
     events: [],
 };
@@ -54,8 +66,9 @@ export default async function handleGeneralContent(
     followingList = filterDuplicateUsers(followingList);
 
     // let a = [1, 2, 3, 4, 5, 6];
-    // let b = a.splice(-1);
+    // let b = a.splice(-2);
     // console.log(a, b);
+    // output = [1, 2][(3, 4, 5, 6)];
 
     await getPosts(
         POST_AMT,
@@ -115,13 +128,12 @@ async function getPosts(
                     we also fetch straight Random Content */
     ) {
         // We dont need to sort the Content, because safedContent Lists are already sorted
-        let pList = safedContent.posts.splice(
-            safedContent.posts.length - AMT_UserRelatedPosts
-        );
+        let pList = safedContent.posts.splice(-AMT_UserRelatedPosts);
         postList.push(...pList);
     } else {
         // If we want to limit later on the amount of user fetches I add now the variable override
-        const limitedUserList = followingListFiltered;
+        // const limitedUserList = followingListFiltered; // 7,5 sec
+        const limitedUserList = filterUsersByAmount(followingListFiltered); // 1,7 sec
 
         // Fetch throw every User and get the Post List
         for (let i = 0; i < limitedUserList.length; i++)
@@ -134,7 +146,7 @@ async function getPosts(
         quicksort(postList, 0, postList.length - 1);
 
         // Splice to needed Amount
-        safedContent.posts = postList.reverse().splice(amt);
+        safedContent.posts = postList.reverse().splice(AMT_UserRelatedPosts);
         safedContent.posts.reverse();
         postList.reverse();
     }
@@ -196,7 +208,8 @@ async function getEvents(
         eventList.push(...eList);
     } else {
         // If we want to limit later on the amount of user fetches I add now the variable override
-        const limitedUserList = followingListFiltered;
+        // PREVIOUS const limitedUserList = followingListFiltered;
+        const limitedUserList = filterUsersByAmount(followingListFiltered);
 
         // Fetch throw every User and get the Events List
         for (let i = 0; i < limitedUserList.length; i++)
@@ -221,6 +234,7 @@ async function getEvents(
     const randomEvents = await handleRandomEvents(
         correctAmt,
         prevContentEvents,
+        currentDate,
         db
     );
 
@@ -291,12 +305,156 @@ async function fetchUserEvents(userId, currentDate, db) {
     return output;
 }
 
+let randomPostFetchCount = 0;
 async function handleRandomPosts(amt, prevContentPosts, db) {
-    return [];
+    /*
+        Function works recursivly: 
+        First it checks, if there are enough safed random Posts.
+        If yes, then use these; else do the following:
+        Fetch a List of unused User Ids and fetch all Posts of them.
+        Sort all new Posts and safe them in safedRandomPosts.posts.
+        Repeat.
+    */
+
+    // Decleration of postList <=> output List;
+    let postList = [];
+
+    // Check if already enough Posts are safed
+    if (safedRandomContent.posts.length >= amt) {
+        // Safed Posts are already sorted, therefore we also dont need to sort here
+        let pList = safedRandomContent.posts.splice(-amt);
+        postList.push(...pList);
+    } else {
+        // Add already fetched Posts
+        postList.push(...safedRandomContent.posts);
+
+        const randomUserList = await fetchRandomUsers(
+            checkedUserContent.posts,
+            RANDOM_USER_MAX_OUT,
+            RANDOM_USER_MAX_OUT
+        );
+
+        // Fetch throw every User and get the Post List
+        for (let i = 0; i < randomUserList.followers.length; i++)
+            postList.push(
+                ...(await fetchUserPosts(randomUserList.followers[i], db))
+            );
+
+        // Update Checked Users List
+        checkedUserContent.posts.push(...randomUserList.followers);
+
+        // Filter Already Used Posts
+        filterPostsAndEvents(
+            {
+                posts: postList,
+                events: [],
+            },
+            {
+                posts: prevContentPosts,
+                events: [],
+            }
+        );
+
+        // Sort List and safe
+        quicksort(postList, 0, postList.length - 1);
+
+        // Splice to needed Amount
+        safedRandomContent.posts = postList.reverse().splice(amt);
+        safedRandomContent.posts.reverse();
+        postList.reverse();
+
+        // Check if another Fetch is needed
+        if (
+            postList.length < amt &&
+            randomPostFetchCount < MAX_RANDOM_USER_FETCH_AMT
+        ) {
+            // Fetch recursivly
+            randomPostFetchCount++;
+            handleRandomPosts(amt, prevContentPosts, db);
+        }
+        // Amount of Posts is enough
+        else randomPostFetchCount = 0;
+    }
+
+    return postList;
 }
 
-async function handleRandomEvents(amt, prevContentEvents, db) {
-    return [];
+let randomEventFetchCount = 0;
+async function handleRandomEvents(amt, prevContentEvents, currentDate, db) {
+    /*
+        Function works recursivly: 
+        First it checks, if there are enough safed random Events.
+        If yes, then use these; else do the following:
+        Fetch a List of unused User Ids and fetch all Events of them.
+        Sort all new Events and safe them in safedRandomContent.events.
+        Repeat.
+    */
+
+    // Decleration of postList <=> output List;
+    let eventList = [];
+
+    // Check if already enough Events are safed
+    if (safedRandomContent.events.length >= amt) {
+        // Safed Events are already sorted, therefore we also dont need to sort here
+        let eList = safedRandomContent.events.splice(-amt);
+        eventList.push(...eList);
+    } else {
+        // Add already fetched Events
+        eventList.push(...safedRandomContent.events);
+
+        const randomUserList = await fetchRandomUsers(
+            checkedUserContent.events,
+            RANDOM_USER_MAX_OUT,
+            RANDOM_USER_MAX_OUT
+        );
+
+        // Fetch throw every User and get the Event List
+        for (let i = 0; i < randomUserList.followers.length; i++)
+            eventList.push(
+                ...(await fetchUserEvents(
+                    randomUserList.followers[i],
+                    currentDate,
+                    db
+                ))
+            );
+
+        // Update Checked Users List
+        checkedUserContent.events.push(...randomUserList.followers);
+
+        // Filter Already Used Events
+        filterPostsAndEvents(
+            {
+                events: eventList,
+                posts: [],
+            },
+            {
+                events: prevContentEvents,
+                posts: [],
+            }
+        );
+
+        // Sort List and safe
+        quicksort(eventList, 0, eventList.length - 1);
+
+        // Splice to needed Amount
+        safedRandomContent.events = eventList.reverse().splice(amt);
+        safedRandomContent.events.reverse();
+        eventList.reverse();
+
+        // Check if another Fetch is needed
+        if (
+            eventList.length < amt &&
+            randomEventFetchCount < MAX_RANDOM_USER_FETCH_AMT
+        ) {
+            // Fetch recursivly
+            randomEventFetchCount++;
+            handleRandomEvents(amt, prevContentEvents, currentDate, db);
+        }
+        // Amount of Events is enough
+        else randomEventFetchCount = 0;
+    }
+
+    return eventList;
 }
 
 /**

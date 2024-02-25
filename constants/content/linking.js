@@ -18,6 +18,7 @@ export function checkLinkedUser(input) {
 
     const split = input.split(LINK_SIGN);
     const output = [];
+
     let a = 1;
 
     if (!split[0].includes(LINK_SPLIT))

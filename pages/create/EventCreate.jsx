@@ -45,7 +45,7 @@ import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
 import getStatusCodeText from "../../components/content/status";
-import { insertCharacterOnCursor } from "../../constants/content";
+import { getImageData, insertCharacterOnCursor } from "../../constants/content";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -134,24 +134,29 @@ export default function EventCreate({ navigation, route }) {
             });
             setPin(editData.geoCords);
             setCheckedCategories({
-                type: editData.type != undefined ? true : false,
-                entrance_fee: editData.entrance_fee != undefined ? true : false,
-                website: editData.website != undefined ? true : false,
-                adBanner: editData.adBanner != undefined ? true : false,
-                tags: editData.tags != undefined ? true : false,
+                type: editData.eventOptions.type != undefined ? true : false,
+                entrance_fee:
+                    editData.eventOptions.entrance_fee != undefined
+                        ? true
+                        : false,
+                website:
+                    editData.eventOptions.website != undefined ? true : false,
+                adBanner:
+                    editData.eventOptions.adBanner != undefined ? true : false,
+                tags: editData.eventOptions.tags != undefined ? true : false,
             });
         }
     }, []);
 
     //#region get Groups of Client
-    const getGroupsData = (g) => {
+    const getGroupsData = g => {
         if (!Array.isArray(g)) return;
 
         const db = ref(getDatabase());
         let output = [];
 
         for (let i = 0; i < g.length; i++) {
-            get(child(db, `groups/${g[i]}`)).then((gSnap) => {
+            get(child(db, `groups/${g[i]}`)).then(gSnap => {
                 if (gSnap.exists()) {
                     const gData = gSnap.val();
                     output.push({
@@ -170,7 +175,7 @@ export default function EventCreate({ navigation, route }) {
         const db = ref(getDatabase());
         if (!userData)
             get(child(db, `users/${getAuth().currentUser.uid}/groups`)).then(
-                (groupsSnap) => {
+                groupsSnap => {
                     if (groupsSnap.exists()) getGroupsData(groupsSnap.val());
                 }
             );
@@ -180,12 +185,12 @@ export default function EventCreate({ navigation, route }) {
 
     const [buttonChecked, setButtonChecked] = useState(false);
 
-    const openDatePickerAndroid = (options) => {
+    const openDatePickerAndroid = options => {
         if (Platform.OS !== "android") return;
         DateTimePickerAndroid.open(options);
     };
 
-    // IMG Load + Compress
+    //#region IMG Load + Compress
     const openImagePickerAsync = async () => {
         let permissionResult = await requestMediaLibraryPermissionsAsync();
         if (!permissionResult.granted) {
@@ -232,7 +237,7 @@ export default function EventCreate({ navigation, route }) {
                 }
             );
 
-            setEvent((prev) => {
+            setEvent(prev => {
                 return {
                     ...prev,
                     eventOptions: {
@@ -245,7 +250,7 @@ export default function EventCreate({ navigation, route }) {
                 };
             });
         } catch (e) {
-            setEvent((prev) => {
+            setEvent(prev => {
                 return {
                     ...prev,
                     eventOptions: {
@@ -303,7 +308,7 @@ export default function EventCreate({ navigation, route }) {
                     format: SaveFormat.JPEG,
                 }
             );
-            setEvent((prev) => {
+            setEvent(prev => {
                 return {
                     ...prev,
                     eventOptions: {
@@ -316,7 +321,7 @@ export default function EventCreate({ navigation, route }) {
                 };
             });
         } catch (e) {
-            setEvent((prev) => {
+            setEvent(prev => {
                 return {
                     ...prev,
                     eventOptions: {
@@ -330,6 +335,7 @@ export default function EventCreate({ navigation, route }) {
             });
         }
     };
+    //#endregion
 
     const checkButton = () => {
         let inputValid = false;
@@ -344,12 +350,11 @@ export default function EventCreate({ navigation, route }) {
     };
 
     useEffect(() => {
-        if (fromLinking) {
+        if (!fromLinking) checkButton();
+        else {
             setButtonChecked(true);
-            // setEvent(linkingData);
             publishEvent();
         }
-        checkButton();
     }, [event]);
 
     const setUnfullfilledAlert = () => {
@@ -392,6 +397,7 @@ export default function EventCreate({ navigation, route }) {
                 content: event,
                 type: LINKING_TYPES.Event,
                 origin: "eventCreate",
+                fromEdit: fromEdit,
             });
             return;
         }
@@ -442,6 +448,8 @@ export default function EventCreate({ navigation, route }) {
             group: event.group,
         };
 
+        // if (fromEdit) params["id"] = event.id;
+
         if (
             event.eventOptions.adBanner !== undefined &&
             checkedCategories.adBanner
@@ -462,6 +470,10 @@ export default function EventCreate({ navigation, route }) {
             //   }
             // }
 
+            // const imgFile = await getImageData(img_url, event.id, fromEdit);
+            // const base64 = await FileSystem.readAsStringAsync(imgFile, {
+            //     encoding: FileSystem.EncodingType.Base64,
+            // });
             const base64 = await FileSystem.readAsStringAsync(img_url, {
                 encoding: FileSystem.EncodingType.Base64,
             });
@@ -507,8 +519,8 @@ export default function EventCreate({ navigation, route }) {
         }
     };
 
-    const addToLocalStorage = (id) => {
-        getData("userData").then((userData) => {
+    const addToLocalStorage = id => {
+        getData("userData").then(userData => {
             let events = [];
             if (userData["events"]) events = userData["events"];
             events.push(id);
@@ -528,8 +540,7 @@ export default function EventCreate({ navigation, route }) {
                         { position: "absolute" },
                         style.allCenter,
                         style.allMax,
-                    ]}
-                >
+                    ]}>
                     <ActivityIndicator
                         size={"large"}
                         color={style.colors.blue}
@@ -538,13 +549,11 @@ export default function EventCreate({ navigation, route }) {
             ) : null}
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-            >
+                behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 {/* Header */}
                 <Pressable
                     style={{ zIndex: 10 }}
-                    onPress={openDatePickerAndroid}
-                >
+                    onPress={openDatePickerAndroid}>
                     <BackHeader
                         title={getLangs("eventcreate_headertitle")}
                         onBack={() => navigation.goBack()}
@@ -563,8 +572,7 @@ export default function EventCreate({ navigation, route }) {
                     automaticallyAdjustKeyboardInsets
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
-                    snapToEnd
-                >
+                    snapToEnd>
                     {/* Map Container */}
                     <View>
                         {/* Title */}
@@ -580,8 +588,7 @@ export default function EventCreate({ navigation, route }) {
                                 styles.mapContainer,
                                 style.allCenter,
                                 style.oHidden,
-                            ]}
-                        >
+                            ]}>
                             <MapView
                                 ref={mapRef}
                                 style={style.allMax}
@@ -604,9 +611,8 @@ export default function EventCreate({ navigation, route }) {
                                 //         250
                                 //     )
                                 // }
-                                onRegionChange={(result) => setPin(result)}
-                                initialRegion={event.geoCords}
-                            >
+                                onRegionChange={result => setPin(result)}
+                                initialRegion={event.geoCords}>
                                 {/* <Marker
                                     focusable
                                     title={event.title}
@@ -653,8 +659,7 @@ export default function EventCreate({ navigation, route }) {
                             style={[
                                 styles.underSectionContainer,
                                 styles.rowContainer,
-                            ]}
-                        >
+                            ]}>
                             <Text style={[style.tWhite, style.Tmd]}>
                                 {event.starting === null
                                     ? getLangs("eventcreate_nostart")
@@ -673,8 +678,7 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.rowContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Text style={[style.Tmd, style.tWhite]}>
                                     {getLangs("event_about_type")}{" "}
                                     {getLangs(
@@ -691,8 +695,7 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.rowContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Text style={[style.Tmd, style.tWhite]}>
                                     {getLangs("event_about_entranefee")}{" "}
                                     {event.eventOptions.entrance_fee}€
@@ -715,8 +718,7 @@ export default function EventCreate({ navigation, route }) {
                                                 textDecorationColor:
                                                     style.colors.blue,
                                             },
-                                        ]}
-                                    >
+                                        ]}>
                                         {event.eventOptions.website}
                                     </Text>
                                 </Text>
@@ -735,8 +737,7 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.rowContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Image
                                     style={[
                                         styles.adBanner,
@@ -761,8 +762,7 @@ export default function EventCreate({ navigation, route }) {
                                     styles.underSectionContainer,
                                     styles.rowContainer,
                                     { flexWrap: "wrap" },
-                                ]}
-                            >
+                                ]}>
                                 {event.eventOptions.tags.map((tag, key) => (
                                     <Tag
                                         key={key}
@@ -781,8 +781,7 @@ export default function EventCreate({ navigation, route }) {
                         </Text>
 
                         <View
-                            style={[style.pH, { marginTop: style.defaultMmd }]}
-                        >
+                            style={[style.pH, { marginTop: style.defaultMmd }]}>
                             {/* Mjeno */}
                             <View>
                                 <Text
@@ -790,8 +789,7 @@ export default function EventCreate({ navigation, route }) {
                                         style.Tmd,
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
-                                    ]}
-                                >
+                                    ]}>
                                     {getLangs("eventcreate_info_title")}
                                 </Text>
                                 <InputField
@@ -807,7 +805,7 @@ export default function EventCreate({ navigation, route }) {
                                         <SVG_Pencil fill={style.colors.blue} />
                                     }
                                     supportsAutoCorrect
-                                    onSelectionChange={async (e) => {
+                                    onSelectionChange={async e => {
                                         cursorPos =
                                             e.nativeEvent.selection.start;
 
@@ -818,7 +816,7 @@ export default function EventCreate({ navigation, route }) {
                                             );
                                         setAutoCorrect(autoC);
                                     }}
-                                    onChangeText={async (val) => {
+                                    onChangeText={async val => {
                                         // Check Selection
                                         cursorPos = getCursorPosition(
                                             event.title,
@@ -840,8 +838,8 @@ export default function EventCreate({ navigation, route }) {
                                         setAutoCorrect(autoC);
                                     }}
                                     autoCorrection={autoCorrect}
-                                    applyAutoCorrection={(word) => {
-                                        setEvent((prev) => {
+                                    applyAutoCorrection={word => {
+                                        setEvent(prev => {
                                             let title = prev.title.split(" ");
                                             let titlePartSplit = prev.title
                                                 .substring(0, cursorPos)
@@ -852,7 +850,7 @@ export default function EventCreate({ navigation, route }) {
 
                                             let newTitle = "";
                                             titlePartSplit.forEach(
-                                                (el) => (newTitle += `${el} `)
+                                                el => (newTitle += `${el} `)
                                             );
                                             for (
                                                 let i = titlePartSplit.length;
@@ -884,8 +882,7 @@ export default function EventCreate({ navigation, route }) {
                                         style.Tmd,
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
-                                    ]}
-                                >
+                                    ]}>
                                     {getLangs("eventcreate_info_description")}
                                 </Text>
                                 <TextField
@@ -897,7 +894,7 @@ export default function EventCreate({ navigation, route }) {
                                     maxLength={512}
                                     inputAccessoryViewID="event_description_InputAccessoryViewID"
                                     supportsAutoCorrect
-                                    onSelectionChange={async (e) => {
+                                    onSelectionChange={async e => {
                                         cursorPos =
                                             e.nativeEvent.selection.start;
 
@@ -908,7 +905,7 @@ export default function EventCreate({ navigation, route }) {
                                             );
                                         setAutoCorrect(autoC);
                                     }}
-                                    onChangeText={async (val) => {
+                                    onChangeText={async val => {
                                         // Check Selection
                                         cursorPos = getCursorPosition(
                                             event.description,
@@ -930,8 +927,8 @@ export default function EventCreate({ navigation, route }) {
                                         setAutoCorrect(autoC);
                                     }}
                                     autoCorrection={autoCorrect}
-                                    applyAutoCorrection={(word) => {
-                                        setEvent((prev) => {
+                                    applyAutoCorrection={word => {
+                                        setEvent(prev => {
                                             let desc =
                                                 prev.description.split(" ");
                                             let descPartSplit = prev.description
@@ -943,7 +940,7 @@ export default function EventCreate({ navigation, route }) {
 
                                             let newDesc = "";
                                             descPartSplit.forEach(
-                                                (el) => (newDesc += `${el} `)
+                                                el => (newDesc += `${el} `)
                                             );
                                             for (
                                                 let i = descPartSplit.length;
@@ -976,8 +973,7 @@ export default function EventCreate({ navigation, route }) {
                                         style.Tmd,
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
-                                    ]}
-                                >
+                                    ]}>
                                     {getLangs("eventcreate_info_times")} (
                                     {getLangs("eventcreate_info_times_hint")})
                                 </Text>
@@ -990,14 +986,12 @@ export default function EventCreate({ navigation, route }) {
                                             style.oHidden,
                                             style.allMax,
                                             style.Pmd,
-                                        ]}
-                                    >
+                                        ]}>
                                         <View
                                             style={[
                                                 styles.timesIcon,
                                                 style.allCenter,
-                                            ]}
-                                        >
+                                            ]}>
                                             <SVG_Time
                                                 fill={style.colors.blue}
                                             />
@@ -1008,8 +1002,7 @@ export default function EventCreate({ navigation, route }) {
                                                 style.tWhite,
                                                 style.Tmd,
                                                 style.pH,
-                                            ]}
-                                        >
+                                            ]}>
                                             {Platform.OS === "ios" ? (
                                                 <DateTimePicker
                                                     value={
@@ -1023,7 +1016,7 @@ export default function EventCreate({ navigation, route }) {
                                                         ev,
                                                         selectedDate
                                                     ) =>
-                                                        setEvent((cur) => {
+                                                        setEvent(cur => {
                                                             return {
                                                                 ...cur,
                                                                 starting:
@@ -1080,9 +1073,7 @@ export default function EventCreate({ navigation, route }) {
                                                                         selectedDate
                                                                     ) =>
                                                                         setEvent(
-                                                                            (
-                                                                                cur
-                                                                            ) => {
+                                                                            cur => {
                                                                                 return {
                                                                                     ...cur,
                                                                                     starting:
@@ -1092,14 +1083,12 @@ export default function EventCreate({ navigation, route }) {
                                                                         ),
                                                                 }
                                                             );
-                                                        }}
-                                                    >
+                                                        }}>
                                                         <Text
                                                             style={[
                                                                 style.Tmd,
                                                                 style.tWhite,
-                                                            ]}
-                                                        >
+                                                            ]}>
                                                             {event.starting
                                                                 ? convertTimestampToDate(
                                                                       event.starting
@@ -1151,9 +1140,7 @@ export default function EventCreate({ navigation, route }) {
                                                                         selectedDate
                                                                     ) =>
                                                                         setEvent(
-                                                                            (
-                                                                                cur
-                                                                            ) => {
+                                                                            cur => {
                                                                                 return {
                                                                                     ...cur,
                                                                                     starting:
@@ -1163,14 +1150,12 @@ export default function EventCreate({ navigation, route }) {
                                                                         ),
                                                                 }
                                                             );
-                                                        }}
-                                                    >
+                                                        }}>
                                                         <Text
                                                             style={[
                                                                 style.Tmd,
                                                                 style.tWhite,
-                                                            ]}
-                                                        >
+                                                            ]}>
                                                             {event.starting
                                                                 ? convertTimestampToTime(
                                                                       event.starting
@@ -1195,14 +1180,12 @@ export default function EventCreate({ navigation, route }) {
                                                 style.oHidden,
                                                 style.allMax,
                                                 style.Pmd,
-                                            ]}
-                                        >
+                                            ]}>
                                             <View
                                                 style={[
                                                     styles.timesIcon,
                                                     style.allCenter,
-                                                ]}
-                                            >
+                                                ]}>
                                                 <SVG_Flag
                                                     fill={style.colors.blue}
                                                 />
@@ -1213,8 +1196,7 @@ export default function EventCreate({ navigation, route }) {
                                                     style.tWhite,
                                                     style.Tmd,
                                                     style.pH,
-                                                ]}
-                                            >
+                                                ]}>
                                                 {Platform.OS === "ios" ? (
                                                     <DateTimePicker
                                                         value={
@@ -1229,7 +1211,7 @@ export default function EventCreate({ navigation, route }) {
                                                             ev,
                                                             selectedDate
                                                         ) =>
-                                                            setEvent((cur) => {
+                                                            setEvent(cur => {
                                                                 return {
                                                                     ...cur,
                                                                     ending: selectedDate.getTime(),
@@ -1293,9 +1275,7 @@ export default function EventCreate({ navigation, route }) {
                                                                                 selectedDate
                                                                             ) =>
                                                                                 setEvent(
-                                                                                    (
-                                                                                        cur
-                                                                                    ) => {
+                                                                                    cur => {
                                                                                         return {
                                                                                             ...cur,
                                                                                             ending: selectedDate.getTime(),
@@ -1304,14 +1284,12 @@ export default function EventCreate({ navigation, route }) {
                                                                                 ),
                                                                     }
                                                                 );
-                                                            }}
-                                                        >
+                                                            }}>
                                                             <Text
                                                                 style={[
                                                                     style.Tmd,
                                                                     style.tWhite,
-                                                                ]}
-                                                            >
+                                                                ]}>
                                                                 {event.ending
                                                                     ? convertTimestampToDate(
                                                                           event.ending
@@ -1366,9 +1344,7 @@ export default function EventCreate({ navigation, route }) {
                                                                                 selectedDate
                                                                             ) =>
                                                                                 setEvent(
-                                                                                    (
-                                                                                        cur
-                                                                                    ) => {
+                                                                                    cur => {
                                                                                         return {
                                                                                             ...cur,
                                                                                             ending: selectedDate.getTime(),
@@ -1377,14 +1353,12 @@ export default function EventCreate({ navigation, route }) {
                                                                                 ),
                                                                     }
                                                                 );
-                                                            }}
-                                                        >
+                                                            }}>
                                                             <Text
                                                                 style={[
                                                                     style.Tmd,
                                                                     style.tWhite,
-                                                                ]}
-                                                            >
+                                                                ]}>
                                                                 {event.ending
                                                                     ? convertTimestampToTime(
                                                                           event.ending
@@ -1468,13 +1442,12 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.checkContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Check
                                     color={1}
                                     checked={checkedCategories.type}
                                     onPress={() => {
-                                        setCheckedCategories((prev) => {
+                                        setCheckedCategories(prev => {
                                             return {
                                                 ...prev,
                                                 type: !prev.type,
@@ -1483,8 +1456,7 @@ export default function EventCreate({ navigation, route }) {
                                     }}
                                 />
                                 <Text
-                                    style={[style.tWhite, style.Tmd, style.pH]}
-                                >
+                                    style={[style.tWhite, style.Tmd, style.pH]}>
                                     {getLangs("eventcreate_eventdata_type")}
                                 </Text>
                             </View>
@@ -1493,13 +1465,12 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.checkContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Check
                                     color={1}
                                     checked={checkedCategories.entrance_fee}
                                     onPress={() => {
-                                        setCheckedCategories((prev) => {
+                                        setCheckedCategories(prev => {
                                             return {
                                                 ...prev,
                                                 entrance_fee:
@@ -1509,8 +1480,7 @@ export default function EventCreate({ navigation, route }) {
                                     }}
                                 />
                                 <Text
-                                    style={[style.tWhite, style.Tmd, style.pH]}
-                                >
+                                    style={[style.tWhite, style.Tmd, style.pH]}>
                                     {getLangs(
                                         "eventcreate_eventdata_entrancefee"
                                     )}
@@ -1521,13 +1491,12 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.checkContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Check
                                     color={1}
                                     checked={checkedCategories.website}
                                     onPress={() => {
-                                        setCheckedCategories((prev) => {
+                                        setCheckedCategories(prev => {
                                             return {
                                                 ...prev,
                                                 website: !prev.website,
@@ -1536,8 +1505,7 @@ export default function EventCreate({ navigation, route }) {
                                     }}
                                 />
                                 <Text
-                                    style={[style.tWhite, style.Tmd, style.pH]}
-                                >
+                                    style={[style.tWhite, style.Tmd, style.pH]}>
                                     {getLangs("eventcreate_eventdata_website")}
                                 </Text>
                             </View>
@@ -1546,13 +1514,12 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.checkContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Check
                                     color={1}
                                     checked={checkedCategories.adBanner}
                                     onPress={() => {
-                                        setCheckedCategories((prev) => {
+                                        setCheckedCategories(prev => {
                                             return {
                                                 ...prev,
                                                 adBanner: !prev.adBanner,
@@ -1561,8 +1528,7 @@ export default function EventCreate({ navigation, route }) {
                                     }}
                                 />
                                 <Text
-                                    style={[style.tWhite, style.Tmd, style.pH]}
-                                >
+                                    style={[style.tWhite, style.Tmd, style.pH]}>
                                     {getLangs("eventcreate_eventdata_adbanner")}
                                 </Text>
                             </View>
@@ -1571,13 +1537,12 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     styles.underSectionContainer,
                                     styles.checkContainer,
-                                ]}
-                            >
+                                ]}>
                                 <Check
                                     color={1}
                                     checked={checkedCategories.tags}
                                     onPress={() => {
-                                        setCheckedCategories((prev) => {
+                                        setCheckedCategories(prev => {
                                             return {
                                                 ...prev,
                                                 tags: !prev.tags,
@@ -1586,8 +1551,7 @@ export default function EventCreate({ navigation, route }) {
                                     }}
                                 />
                                 <Text
-                                    style={[style.tWhite, style.Tmd, style.pH]}
-                                >
+                                    style={[style.tWhite, style.Tmd, style.pH]}>
                                     {getLangs("eventcreate_eventdata_tags")}
                                 </Text>
                             </View>
@@ -1597,8 +1561,7 @@ export default function EventCreate({ navigation, route }) {
                                 style.TsmRg,
                                 style.tWhite,
                                 { marginTop: style.defaultMmd },
-                            ]}
-                        >
+                            ]}>
                             <Text style={style.tBlue}>*</Text>{" "}
                             {getLangs("eventcreate_eventdata_hint")}
                         </Text>
@@ -1615,8 +1578,9 @@ export default function EventCreate({ navigation, route }) {
                                     (list, listKey) => (
                                         <View
                                             key={listKey}
-                                            style={styles.typeItemListContainer}
-                                        >
+                                            style={
+                                                styles.typeItemListContainer
+                                            }>
                                             {list.map((type, key) =>
                                                 type !== null ? (
                                                     <SelectableButton
@@ -1639,7 +1603,7 @@ export default function EventCreate({ navigation, route }) {
                                                             { flex: 1 },
                                                         ]}
                                                         onPress={() => {
-                                                            setEvent((prev) => {
+                                                            setEvent(prev => {
                                                                 return {
                                                                     ...prev,
                                                                     eventOptions:
@@ -1681,15 +1645,13 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     style.pH,
                                     { marginTop: style.defaultMmd },
-                                ]}
-                            >
+                                ]}>
                                 <Text
                                     style={[
                                         style.Tmd,
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
-                                    ]}
-                                >
+                                    ]}>
                                     {getLangs("eventcreate_entrancefee_sub")}
                                 </Text>
                                 <InputField
@@ -1699,8 +1661,9 @@ export default function EventCreate({ navigation, route }) {
                                     keyboardType="numeric"
                                     icon={<SVG_Cash fill={style.colors.blue} />}
                                     maxLength={8}
-                                    onChangeText={(val) => {
-                                        setEvent((prev) => {
+                                    value={event.eventOptions.entrance_fee}
+                                    onChangeText={val => {
+                                        setEvent(prev => {
                                             return {
                                                 ...prev,
                                                 eventOptions: {
@@ -1726,15 +1689,13 @@ export default function EventCreate({ navigation, route }) {
                                 style={[
                                     style.pH,
                                     { marginTop: style.defaultMmd },
-                                ]}
-                            >
+                                ]}>
                                 <Text
                                     style={[
                                         style.Tmd,
                                         style.tWhite,
                                         { marginBottom: style.defaultMsm },
-                                    ]}
-                                >
+                                    ]}>
                                     {getLangs("eventcreate_website_sub")}
                                 </Text>
                                 <InputField
@@ -1744,8 +1705,9 @@ export default function EventCreate({ navigation, route }) {
                                     keyboardType="url"
                                     maxLength={128}
                                     icon={<SVG_Web fill={style.colors.blue} />}
-                                    onChangeText={(val) => {
-                                        setEvent((prev) => {
+                                    value={event.eventOptions.website}
+                                    onChangeText={val => {
+                                        setEvent(prev => {
                                             return {
                                                 ...prev,
                                                 eventOptions: {
@@ -1774,16 +1736,14 @@ export default function EventCreate({ navigation, route }) {
                                     styles.imageOutlineContainer,
                                     style.border,
                                     style.allCenter,
-                                ]}
-                            >
+                                ]}>
                                 <View
                                     style={[
                                         styles.imageContainer,
                                         style.allCenter,
                                         style.oHidden,
                                         style.Psm,
-                                    ]}
-                                >
+                                    ]}>
                                     {event.eventOptions.adBanner !==
                                     undefined ? (
                                         <Image
@@ -1808,8 +1768,7 @@ export default function EventCreate({ navigation, route }) {
                                                 style.allCenter,
                                                 styles.imageBorder,
                                                 { aspectRatio: 1 },
-                                            ]}
-                                        >
+                                            ]}>
                                             {/* <SVG_Post
                                                 style={styles.hintIcon}
                                                 fill={style.colors.blue}
@@ -1819,8 +1778,7 @@ export default function EventCreate({ navigation, route }) {
                                                     style.Tmd,
                                                     style.tBlue,
                                                     styles.hintText,
-                                                ]}
-                                            >
+                                                ]}>
                                                 {getLangs(
                                                     "eventcreate_adbanner_imghint"
                                                 )}
@@ -1828,8 +1786,7 @@ export default function EventCreate({ navigation, route }) {
                                             <View
                                                 style={
                                                     styles.imageHintOptSelectionContainer
-                                                }
-                                            >
+                                                }>
                                                 <Pressable
                                                     onPress={
                                                         openImagePickerAsync
@@ -1839,8 +1796,7 @@ export default function EventCreate({ navigation, route }) {
                                                         style.Pmd,
                                                         style.border,
                                                         style.allCenter,
-                                                    ]}
-                                                >
+                                                    ]}>
                                                     <SVG_Post
                                                         style={
                                                             styles.imageHintOptSelectionImg
@@ -1855,8 +1811,7 @@ export default function EventCreate({ navigation, route }) {
                                                                 marginTop:
                                                                     style.defaultMsm,
                                                             },
-                                                        ]}
-                                                    >
+                                                        ]}>
                                                         Galerija
                                                     </Text>
                                                 </Pressable>
@@ -1867,8 +1822,7 @@ export default function EventCreate({ navigation, route }) {
                                                         style.Pmd,
                                                         style.border,
                                                         style.allCenter,
-                                                    ]}
-                                                >
+                                                    ]}>
                                                     <SVG_Kamera
                                                         style={
                                                             styles.imageHintOptSelectionImg
@@ -1883,8 +1837,7 @@ export default function EventCreate({ navigation, route }) {
                                                                 marginTop:
                                                                     style.defaultMsm,
                                                             },
-                                                        ]}
-                                                    >
+                                                        ]}>
                                                         Kamera
                                                     </Text>
                                                 </Pressable>
@@ -1919,16 +1872,14 @@ export default function EventCreate({ navigation, route }) {
                                         style={{ width: "100%" }}
                                         contentContainerStyle={{
                                             flexDirection: "column",
-                                        }}
-                                    >
+                                        }}>
                                         {splitArrayIntoNEqualy(
                                             Event_Tags,
                                             tagLineAmt
                                         ).map((line, lineKey) => (
                                             <View
                                                 key={lineKey}
-                                                style={styles.tagLineContainer}
-                                            >
+                                                style={styles.tagLineContainer}>
                                                 {line.map((tag, key) => (
                                                     <Tag
                                                         key={key}
@@ -1980,7 +1931,7 @@ export default function EventCreate({ navigation, route }) {
                                                                     1
                                                                 );
 
-                                                            setEvent((prev) => {
+                                                            setEvent(prev => {
                                                                 return {
                                                                     ...prev,
                                                                     eventOptions:
@@ -2039,7 +1990,7 @@ export default function EventCreate({ navigation, route }) {
                                                         1
                                                     );
 
-                                                setEvent((prev) => {
+                                                setEvent(prev => {
                                                     return {
                                                         ...prev,
                                                         eventOptions: {
@@ -2066,8 +2017,7 @@ export default function EventCreate({ navigation, route }) {
                                     style.tWhite,
                                     style.Tmd,
                                     { marginTop: style.defaultMsm },
-                                ]}
-                            >
+                                ]}>
                                 {getLangs("contentcreate_groupselect_hint")}
                             </Text>
 
@@ -2079,10 +2029,9 @@ export default function EventCreate({ navigation, route }) {
                                             styles.groupSelectElement,
                                             style.oHidden,
                                             style.Psm,
-                                            style.allCenter,
                                         ]}
                                         onPress={() => {
-                                            setEvent((prev) => {
+                                            setEvent(prev => {
                                                 if (!prev.group)
                                                     return {
                                                         ...prev,
@@ -2101,8 +2050,7 @@ export default function EventCreate({ navigation, route }) {
                                                         group: group.id,
                                                     };
                                             });
-                                        }}
-                                    >
+                                        }}>
                                         <View
                                             style={[
                                                 styles.groupSelectElementImgContainer,
@@ -2114,8 +2062,7 @@ export default function EventCreate({ navigation, route }) {
                                                           ...style.border,
                                                       }
                                                     : null,
-                                            ]}
-                                        >
+                                            ]}>
                                             <Image
                                                 style={style.allMax}
                                                 source={{ uri: group.imgUri }}
@@ -2131,8 +2078,7 @@ export default function EventCreate({ navigation, route }) {
                                                     marginTop: style.defaultMsm,
                                                     textAlign: "center",
                                                 },
-                                            ]}
-                                        >
+                                            ]}>
                                             {group.name}
                                         </Text>
                                     </Pressable>
@@ -2149,8 +2095,7 @@ export default function EventCreate({ navigation, route }) {
                                     style.tWhite,
                                     style.Tmd,
                                     { marginTop: style.defaultMsm },
-                                ]}
-                            >
+                                ]}>
                                 {getLangs(
                                     "contentcreate_groupselect_fromedit_hint"
                                 )}
@@ -2170,8 +2115,8 @@ export default function EventCreate({ navigation, route }) {
 
             {/* Title */}
             <AccessoryView
-                onElementPress={(l) => {
-                    setEvent((prev) => {
+                onElementPress={l => {
+                    setEvent(prev => {
                         return {
                             ...prev,
                             title: insertCharacterOnCursor(
@@ -2186,8 +2131,8 @@ export default function EventCreate({ navigation, route }) {
             />
             {/* Description */}
             <AccessoryView
-                onElementPress={(l) => {
-                    setEvent((prev) => {
+                onElementPress={l => {
+                    setEvent(prev => {
                         return {
                             ...prev,
                             description: insertCharacterOnCursor(

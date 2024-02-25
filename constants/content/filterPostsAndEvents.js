@@ -126,7 +126,7 @@ export function sortIds_InsertionSort(L, key) {
 export function mergeSortRandomly(original, second) {
     second.forEach(e => {
         const rand = Math.random();
-        const index = Math.round(lerp(0, newOutputList.length, rand));
+        const index = Math.round(lerp(0, original.length, rand));
         original.splice(index, 0, e);
     });
 }

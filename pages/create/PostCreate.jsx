@@ -31,7 +31,7 @@ import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
-import { insertCharacterOnCursor } from "../../constants/content";
+import { getImageData, insertCharacterOnCursor } from "../../constants/content";
 import getStatusCodeText from "../../components/content/status";
 
 // import SVGs
@@ -44,8 +44,6 @@ import {
     launchImageLibraryAsync,
     MediaTypeOptions,
     launchCameraAsync,
-    CameraType,
-    UIImagePickerPresentationStyle,
     requestCameraPermissionsAsync,
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
@@ -74,7 +72,7 @@ export default function PostCreate({ navigation, route }) {
     });
 
     // From linking → when comes back fromLinking = true || = false
-    const { fromLinking, linkingData, fromEdit, editData } = route.params;
+    const { fromLinking, /*linkingData,*/ fromEdit, editData } = route.params;
 
     useEffect(() => {
         cursorPos = -1;
@@ -90,7 +88,7 @@ export default function PostCreate({ navigation, route }) {
         }
     }, []);
 
-    // IMG Load + Compress
+    //#region IMG Load + Compress
     const openImagePickerAsync = async () => {
         let permissionResult = await requestMediaLibraryPermissionsAsync(true);
         if (!permissionResult.granted) {
@@ -210,6 +208,7 @@ export default function PostCreate({ navigation, route }) {
             });
         }
     };
+    //#endregion
 
     const checkButton = () => {
         let inputValid = false;
@@ -245,11 +244,11 @@ export default function PostCreate({ navigation, route }) {
     };
 
     useEffect(() => {
-        if (fromLinking) {
+        if (!fromLinking) checkButton();
+        else {
             setButtonChecked(true);
-            // setPost(linkingData);
             publishPost();
-        } else checkButton();
+        }
     }, [post]);
 
     //#region get Groups of Client
@@ -304,6 +303,7 @@ export default function PostCreate({ navigation, route }) {
                 content: post,
                 type: LINKING_TYPES.Post,
                 origin: "postCreate",
+                fromEdit: fromEdit,
             });
             return;
         }
@@ -313,17 +313,21 @@ export default function PostCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
-        const base64 = await FileSystem.readAsStringAsync(post.imgUri, {
+        const imgFile = await getImageData(post.imgUri, post.id, fromEdit);
+        const base64 = await FileSystem.readAsStringAsync(imgFile, {
             encoding: FileSystem.EncodingType.Base64,
         });
 
-        const response = await makeRequest("/post_event/publish", {
+        const body = {
             type: "post",
             img: base64,
             title: post.title,
             description: post.description,
             group: post.group,
-        });
+        };
+        if (fromEdit) body["id"] = post.id;
+
+        const response = await makeRequest("/post_event/publish", body);
 
         if (response.code < 400) {
             addToLocalStorage(response.id);
@@ -422,7 +426,7 @@ export default function PostCreate({ navigation, route }) {
 
                         {/* Img */}
                         <Pressable
-                            onPress={openImagePickerAsync}
+                            onPress={!fromEdit ? openImagePickerAsync : null}
                             style={[
                                 styles.imageOutlineContainer,
                                 style.border,
@@ -746,7 +750,6 @@ export default function PostCreate({ navigation, route }) {
                                             styles.groupSelectElement,
                                             style.oHidden,
                                             style.Psm,
-                                            style.allCenter,
                                         ]}
                                         onPress={() => {
                                             setPost(prev => {

@@ -490,3 +490,20 @@ export function checkForURLs(text) {
 
     return output;
 }
+
+import { createDownloadResumable, documentDirectory } from "expo-file-system";
+export async function getImageData(uri, fromEdit, id) {
+    if (!fromEdit) return uri;
+
+    const downloadResumable = createDownloadResumable(
+        uri,
+        documentDirectory + id + ".jpg"
+    );
+
+    try {
+        const { uri } = await downloadResumable.downloadAsync();
+        return uri;
+    } catch (e) {
+        console.error(e);
+    }
+}

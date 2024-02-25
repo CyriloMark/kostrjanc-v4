@@ -115,6 +115,7 @@ export default function Event(props) {
         loadData();
     }, []);
 
+    if (!props.group && event.group) return null;
     if (event.isBanned) return null;
     return (
         <View style={[props.style, { marginVertical: style.defaultMmd }]}>

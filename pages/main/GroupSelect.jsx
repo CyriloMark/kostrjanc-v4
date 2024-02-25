@@ -15,7 +15,6 @@ import { getAuth } from "firebase/auth";
 
 import { getLangs } from "../../constants/langs";
 import { arraySplitter } from "../../constants";
-import { getData } from "../../constants/storage";
 import { wait } from "../../constants/wait";
 
 import BackHeader from "../../components/BackHeader";
@@ -24,7 +23,7 @@ import GroupElement from "../../components/cards/GroupElement";
 import Refresh from "../../components/RefreshControl";
 import ViewGroupButton from "../../components/groups/ViewGroupButton";
 
-const STATIC_GROUPS = [0, 1];
+const STATIC_GROUPS = [0];
 
 let CLIENT_GROUPS = null;
 export default function GroupSelect({ navigation, route }) {
@@ -40,28 +39,22 @@ export default function GroupSelect({ navigation, route }) {
 
     const { activeGroup } = route.params;
 
-    const [groups, setGroups] = useState([0, 1]);
+    const [groups, setGroups] = useState([0]);
     const [selectedGroup, setSelectedGroup] = useState(activeGroup);
     const [groupViewable, setGroupViewable] = useState(false);
 
     const getClientGroups = async () => {
-        const user = await getData("userData");
-        if (!user)
-            get(
-                child(
-                    ref(getDatabase()),
-                    `users/${getAuth().currentUser.uid}/groups`
-                )
-            ).then(groupsSnap => {
-                if (groupsSnap.exists()) {
-                    CLIENT_GROUPS = [0, 1, ...groupsSnap.val()];
-                    setGroups([0, 1, ...groupsSnap.val()]);
-                }
-            });
-        else if (user.groups) {
-            CLIENT_GROUPS = [0, 1, ...user.groups];
-            setGroups([0, 1, ...user.groups]);
-        }
+        get(
+            child(
+                ref(getDatabase()),
+                `users/${getAuth().currentUser.uid}/groups`
+            )
+        ).then(groupsSnap => {
+            if (groupsSnap.exists()) {
+                CLIENT_GROUPS = [...STATIC_GROUPS, ...groupsSnap.val()];
+                setGroups([...STATIC_GROUPS, ...groupsSnap.val()]);
+            }
+        });
     };
 
     //#region Edit Group

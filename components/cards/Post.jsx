@@ -66,6 +66,7 @@ export default function Post(props) {
         loadData();
     }, []);
 
+    if (!props.group && post.group) return null;
     if (post.isBanned) return null;
     return (
         <View

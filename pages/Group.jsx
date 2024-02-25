@@ -7,7 +7,6 @@ import {
     Text,
     Image,
     Platform,
-    KeyboardAvoidingView,
     Alert,
 } from "react-native";
 
@@ -16,17 +15,14 @@ import * as style from "../styles";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 
-import {
-    Group_Placeholder,
-    User_Placeholder,
-} from "../constants/content/PlaceholderData";
+import { Group_Placeholder } from "../constants/content/PlaceholderData";
 import { wait } from "../constants/wait";
 import { getLangs } from "../constants/langs";
 import { getData } from "../constants/storage";
 
 import BackHeader from "../components/BackHeader";
 import Refresh from "../components/RefreshControl";
-import JoinButton from "../components/groups/JoinButton";
+import LeaveButton from "../components/groups/LeaveButton";
 import EditProfileButton from "../components/profile/EditProfileButton";
 
 export default function Group({ navigation, route }) {
@@ -47,7 +43,6 @@ export default function Group({ navigation, route }) {
     const { groupId } = route.params;
 
     const [group, setGroup] = useState(Group_Placeholder);
-    const [joined, setJoined] = useState(false);
 
     const loadData = () => {
         get(child(ref(getDatabase()), `groups/${groupId}`))
@@ -64,166 +59,141 @@ export default function Group({ navigation, route }) {
 
     useEffect(() => {
         loadData();
-        checkIfJoined();
     }, []);
 
-    const join = () => {
+    const leave = () => {
         if (joining || group.isBanned) return;
         joining = true;
 
-        uid = getAuth().currentUser.uid;
+        Alert.alert(
+            getLangs("grouppage_leave"),
+            getLangs("grouppage_leavealert_sub"),
+            [
+                {
+                    text: getLangs("no"),
+                    style: "destructive",
+                    isPreferred: true,
+                },
+                {
+                    text: getLangs("yes"),
+                    style: "default",
+                    onPress: () => {
+                        uid = getAuth().currentUser.uid;
 
-        const db = getDatabase();
+                        const db = getDatabase();
+                        // Get Members List
+                        get(child(ref(db), `groups/${groupId}/members`))
+                            .then(membersSnap => {
+                                let members = [];
+                                if (membersSnap.exists())
+                                    members = membersSnap.val();
 
-        //#region Run this when User is not joined in Group
-        // Get Members List
-        if (!joined)
-            get(child(ref(db), `groups/${groupId}/members`))
-                .then(membersSnap => {
-                    let members = [];
-                    if (membersSnap.exists()) members = membersSnap.val();
+                                members.splice(members.indexOf(uid), 1);
 
-                    members.push(uid);
-
-                    // Override Members List
-                    set(ref(db, `groups/${groupId}/members`), members)
-                        .then(() => {
-                            // Get USERS Group List
-                            get(child(ref(db), `users/${uid}/groups`))
-                                .then(groupsSnap => {
-                                    let groups = [];
-                                    if (groupsSnap.exists())
-                                        groups = groupsSnap.val();
-                                    groups.push(groupId);
-                                    // Override Users Group List
-                                    set(ref(db, `users/${uid}/groups`), groups)
-                                        .then(() => {
-                                            // Change Client UI
-                                            setJoined(true);
-                                            setGroup(prev => {
-                                                let members = prev.members
-                                                    ? prev.members
-                                                    : [];
-                                                members.push(uid);
-                                                return {
-                                                    ...prev,
-                                                    members: members,
-                                                };
-                                            });
-                                            joining = false;
-                                        })
-                                        .catch(error =>
-                                            console.log(
-                                                "error join set users group list",
-                                                "pages/Group.jsx",
-                                                error.code
+                                // Override Members List
+                                set(
+                                    ref(db, `groups/${groupId}/members`),
+                                    members
+                                )
+                                    .then(() => {
+                                        // Get USERS Group List
+                                        get(
+                                            child(
+                                                ref(db),
+                                                `users/${uid}/groups`
                                             )
-                                        );
-                                })
-                                .catch(error =>
-                                    console.log(
-                                        "error join get users group list",
-                                        "pages/Group.jsx",
-                                        error.code
-                                    )
-                                );
-                        })
-                        .catch(error =>
-                            console.log(
-                                "error join set group members",
-                                "pages/Group.jsx",
-                                error.code
-                            )
-                        );
-                })
-                .catch(error =>
-                    console.log(
-                        "error join get group members list",
-                        "pages/Group.jsx",
-                        error.code
-                    )
-                );
-        //#endregion
-        else
-            get(child(ref(db), `groups/${groupId}/members`))
-                .then(membersSnap => {
-                    let members = [];
-                    if (membersSnap.exists()) members = membersSnap.val();
+                                        )
+                                            .then(groupsSnap => {
+                                                let groups = [];
+                                                if (groupsSnap.exists())
+                                                    groups = groupsSnap.val();
 
-                    members.splice(members.indexOf(uid), 1);
-
-                    // Override Members List
-                    set(ref(db, `groups/${groupId}/members`), members)
-                        .then(() => {
-                            // Get USERS Group List
-                            get(child(ref(db), `users/${uid}/groups`))
-                                .then(groupsSnap => {
-                                    let groups = [];
-                                    if (groupsSnap.exists())
-                                        groups = groupsSnap.val();
-
-                                    groups.splice(groups.indexOf(groupId), 1);
-
-                                    // Override Users Group List
-                                    set(ref(db, `users/${uid}/groups`), groups)
-                                        .then(() => {
-                                            setJoined(false);
-                                            setGroup(prev => {
-                                                let members = prev.members;
-                                                members.splice(
-                                                    members.indexOf(uid),
+                                                groups.splice(
+                                                    groups.indexOf(groupId),
                                                     1
                                                 );
-                                                return {
-                                                    ...prev,
-                                                    members: members,
-                                                };
-                                            });
-                                            joining = false;
-                                        })
-                                        .catch(error =>
-                                            console.log(
-                                                "error unjoin set users group list",
-                                                "pages/Group.jsx",
-                                                error.code
-                                            )
-                                        );
-                                })
-                                .catch(error =>
-                                    console.log(
-                                        "error unjoin get users group list",
-                                        "pages/Group.jsx",
-                                        error.code
-                                    )
-                                );
-                        })
-                        .catch(error =>
-                            console.log(
-                                "error unjoin set group members",
-                                "pages/Group.jsx",
-                                error.code
-                            )
-                        );
-                })
-                .catch(error =>
-                    console.log(
-                        "error unjoin get group members list",
-                        "pages/Group.jsx",
-                        error.code
-                    )
-                );
-    };
 
-    const checkIfJoined = async () => {
-        joining = true;
-        if (!uid) uid = getAuth().currentUser.uid;
-
-        get(child(ref(getDatabase()), `users/${uid}/groups`))
-            .then(gSnap => {
-                if (gSnap.exists())
-                    if (gSnap.val().includes(groupId)) setJoined(true);
-            })
-            .finally(() => (joining = false));
+                                                // Override Users Group List
+                                                set(
+                                                    ref(
+                                                        db,
+                                                        `users/${uid}/groups`
+                                                    ),
+                                                    groups
+                                                )
+                                                    .then(() => {
+                                                        setGroup(prev => {
+                                                            let members =
+                                                                prev.members;
+                                                            members.splice(
+                                                                members.indexOf(
+                                                                    uid
+                                                                ),
+                                                                1
+                                                            );
+                                                            return {
+                                                                ...prev,
+                                                                members:
+                                                                    members,
+                                                            };
+                                                        });
+                                                        joining = false;
+                                                    })
+                                                    .finally(() =>
+                                                        Alert.alert(
+                                                            getLangs(
+                                                                "grouppage_leavealert_success"
+                                                            ),
+                                                            "",
+                                                            [
+                                                                {
+                                                                    isPreferred: true,
+                                                                    text: "Ok",
+                                                                    style: "default",
+                                                                    onPress:
+                                                                        () =>
+                                                                            navigation.navigate(
+                                                                                "landing"
+                                                                            ),
+                                                                },
+                                                            ]
+                                                        )
+                                                    )
+                                                    .catch(error =>
+                                                        console.log(
+                                                            "error unjoin set users group list",
+                                                            "pages/Group.jsx",
+                                                            error.code
+                                                        )
+                                                    );
+                                            })
+                                            .catch(error =>
+                                                console.log(
+                                                    "error unjoin get users group list",
+                                                    "pages/Group.jsx",
+                                                    error.code
+                                                )
+                                            );
+                                    })
+                                    .catch(error =>
+                                        console.log(
+                                            "error unjoin set group members",
+                                            "pages/Group.jsx",
+                                            error.code
+                                        )
+                                    );
+                            })
+                            .catch(error =>
+                                console.log(
+                                    "error unjoin get group members list",
+                                    "pages/Group.jsx",
+                                    error.code
+                                )
+                            );
+                    },
+                },
+            ]
+        );
     };
 
     return (
@@ -314,9 +284,9 @@ export default function Group({ navigation, route }) {
                     </View>
                 </View>
 
-                {/* Follow Btn */}
+                {/* Leave Btn */}
                 <View style={styles.followButton}>
-                    <JoinButton checked={joined} onPress={join} />
+                    <LeaveButton onPress={leave} />
                 </View>
 
                 {/* Stats Container */}
