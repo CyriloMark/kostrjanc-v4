@@ -824,12 +824,12 @@ export default function Landing({ navigation, onTut }) {
                 }
                 onScroll={({ nativeEvent }) => {
                     if (!isFocused) return;
-                    if (
-                        Platform.OS === "android" &&
-                        isOnTop(nativeEvent) &&
-                        !refreshing
-                    )
-                        onRefresh();
+                    // if (
+                    //     Platform.OS === "android" &&
+                    //     isOnTop(nativeEvent) &&
+                    //     !refreshing
+                    // )
+                    //     onRefresh();
                     if (isCloseToBottom(nativeEvent) && !refreshing)
                         getGroupSpecificContent(
                             null,
@@ -838,7 +838,7 @@ export default function Landing({ navigation, onTut }) {
                             SELECTED_GROUP.id
                         );
                 }}>
-                {Platform.OS === "android" ? (
+                {/* {Platform.OS === "android" ? (
                     <View
                         style={[
                             style.allCenter,
@@ -860,7 +860,7 @@ export default function Landing({ navigation, onTut }) {
                             <ActivityIndicator color={style.colors.blue} />
                         </View>
                     </View>
-                ) : null}
+                ) : null} */}
 
                 {contentData.banners.map((banner, key) => (
                     <Banner

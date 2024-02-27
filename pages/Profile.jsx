@@ -213,7 +213,7 @@ export default function Profile({ navigation, route }) {
         if (following) body.unfollow = true;
         else body.follow = true;
 
-        makeRequest("user/follow", body)
+        makeRequest("/user/follow", body)
             .then(rsp => {
                 if (rsp.code === 202) {
                     setFollowing(prev => {

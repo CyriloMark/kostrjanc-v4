@@ -196,3 +196,18 @@ export function makeId(length) {
     }
     return result;
 }
+
+/**
+ * Checks two Arrays for same Elements
+ * @param {*[]} a First Array
+ * @param {*[]} b Second Array
+ * @returns {boolean} True if a and b are the same
+ */
+export function arrayEquals(a, b) {
+    return (
+        Array.isArray(a) &&
+        Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((val, index) => val === b[index])
+    );
+}

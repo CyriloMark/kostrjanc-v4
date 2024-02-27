@@ -211,13 +211,21 @@ export default function PostCreate({ navigation, route }) {
     //#endregion
 
     const checkButton = () => {
-        let inputValid = false;
+        let inputValid = true;
         if (
-            post.title.length !== 0 &&
-            post.description.length !== 0 &&
-            post.imgUri !== Post_Placeholder.imgUri
+            post.title.length === 0 ||
+            post.description.length === 0 ||
+            post.imgUri === Post_Placeholder.imgUri
         )
-            inputValid = true;
+            inputValid = false;
+
+        if (
+            fromEdit &&
+            post.title == getClearedLinkedText(editData.title) &&
+            post.description == getClearedLinkedText(editData.description)
+        )
+            inputValid = false;
+
         setButtonChecked(inputValid);
     };
 
@@ -229,6 +237,13 @@ export default function PostCreate({ navigation, route }) {
             missing += `\n${getLangs("missing_description")}`;
         if (post.imgUri === Post_Placeholder.imgUri)
             missing += `\n${getLangs("missing_img")}`;
+
+        if (
+            fromEdit &&
+            post.title == getClearedLinkedText(editData.title) &&
+            post.description == getClearedLinkedText(editData.description)
+        )
+            missing += `\n${getLangs("missing_equaldata")}`;
 
         Alert.alert(
             getLangs("missing_alert_title"),
@@ -313,8 +328,12 @@ export default function PostCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
-        const imgFile = await getImageData(post.imgUri, post.id, fromEdit);
-        const base64 = await FileSystem.readAsStringAsync(imgFile, {
+        if (!fromEdit) publishPostNew();
+        else publishPostEdit();
+    };
+
+    const publishPostNew = async () => {
+        const base64 = await FileSystem.readAsStringAsync(post.imgUri, {
             encoding: FileSystem.EncodingType.Base64,
         });
 
@@ -325,7 +344,6 @@ export default function PostCreate({ navigation, route }) {
             description: post.description,
             group: post.group,
         };
-        if (fromEdit) body["id"] = post.id;
 
         const response = await makeRequest("/post_event/publish", body);
 
@@ -361,6 +379,48 @@ export default function PostCreate({ navigation, route }) {
                 ]
             );
         }
+    };
+
+    const publishPostEdit = async () => {
+        const body = {
+            type: "post",
+            id: post.id,
+            title: post.title,
+            description: post.description,
+        };
+
+        const response = await makeRequest("/post_event/edit", body);
+
+        if (response.code < 400)
+            Alert.alert(
+                getLangs("postcreate_editsuccessful_title"),
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => navigation.goBack(),
+                    },
+                ]
+            );
+        else
+            Alert.alert(
+                getLangs("postcreate_publishrejected_title"),
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            btnPressed = false;
+                            setUploading(false);
+                            checkButton();
+                        },
+                    },
+                ]
+            );
     };
 
     const addToLocalStorage = id => {

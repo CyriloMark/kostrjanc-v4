@@ -55,7 +55,6 @@ export function getClearedLinkedText(input) {
     if (!input.includes(LINK_SIGN)) return input;
 
     const split = input.split(LINK_SIGN);
-    console.log(split);
     let outputTexts = [];
 
     let a = 1;

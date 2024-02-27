@@ -49,6 +49,7 @@ export default function Group({ navigation, route }) {
             .then(groupSnap => {
                 if (groupSnap.exists()) {
                     const groupData = groupSnap.val();
+                    console.log(groupData);
                     if (!groupData.isBanned) setGroup(groupData);
                 }
             })

@@ -133,18 +133,25 @@ export default function EventCreate({ navigation, route }) {
                 description: getClearedLinkedText(editData.description),
             });
             setPin(editData.geoCords);
-            setCheckedCategories({
-                type: editData.eventOptions.type != undefined ? true : false,
-                entrance_fee:
-                    editData.eventOptions.entrance_fee != undefined
-                        ? true
-                        : false,
-                website:
-                    editData.eventOptions.website != undefined ? true : false,
-                adBanner:
-                    editData.eventOptions.adBanner != undefined ? true : false,
-                tags: editData.eventOptions.tags != undefined ? true : false,
-            });
+            if (editData.eventOptions)
+                setCheckedCategories({
+                    type:
+                        editData.eventOptions.type != undefined ? true : false,
+                    entrance_fee:
+                        editData.eventOptions.entrance_fee != undefined
+                            ? true
+                            : false,
+                    website:
+                        editData.eventOptions.website != undefined
+                            ? true
+                            : false,
+                    adBanner:
+                        editData.eventOptions.adBanner != undefined
+                            ? true
+                            : false,
+                    tags:
+                        editData.eventOptions.tags != undefined ? true : false,
+                });
         }
     }, []);
 
@@ -338,14 +345,26 @@ export default function EventCreate({ navigation, route }) {
     //#endregion
 
     const checkButton = () => {
-        let inputValid = false;
+        let inputValid = true;
+
         if (
-            event.title.length !== 0 &&
-            event.description.length !== 0 &&
-            event.starting &&
-            event.ending
+            event.title.length === 0 ||
+            event.description.length === 0 ||
+            !event.starting ||
+            !event.ending
         )
-            inputValid = true;
+            inputValid = false;
+
+        if (
+            fromEdit &&
+            event.title == editData.title &&
+            event.description == getClearedLinkedText(editData.description) &&
+            event.starting == editData.starting &&
+            event.ending == editData.ending &&
+            event.eventOptions == editData.eventOptions
+        )
+            inputValid = false;
+
         setButtonChecked(inputValid);
     };
 
@@ -366,6 +385,16 @@ export default function EventCreate({ navigation, route }) {
             missing += `\n${getLangs("missing_description")}`;
         if (!event.starting) missing += `\n${getLangs("missing_start")}`;
         if (!event.ending) missing += `\n${getLangs("missing_end")}`;
+
+        if (
+            fromEdit &&
+            event.title == getClearedLinkedText(editData.title) &&
+            event.description == getClearedLinkedText(editData.description) &&
+            event.starting == editData.starting &&
+            event.ending == editData.ending &&
+            event.eventOptions == editData.eventOptions
+        )
+            missing += `\n${getLangs("missing_equaldata")}`;
 
         Alert.alert(
             getLangs("missing_alert_title"),
@@ -437,6 +466,11 @@ export default function EventCreate({ navigation, route }) {
                 };
         }
 
+        if (!fromEdit) publishEventNew(eventOptions);
+        else publishEventEdit(eventOptions);
+    };
+
+    const publishEventNew = async eventOptions => {
         let params = {
             type: "event",
             title: event.title,
@@ -448,8 +482,6 @@ export default function EventCreate({ navigation, route }) {
             group: event.group,
         };
 
-        // if (fromEdit) params["id"] = event.id;
-
         if (
             event.eventOptions.adBanner !== undefined &&
             checkedCategories.adBanner
@@ -457,23 +489,6 @@ export default function EventCreate({ navigation, route }) {
             console.log("detected image");
 
             let img_url = event.eventOptions.adBanner.uri;
-
-            // if (Platform.OS === "android") {
-            //   if (
-            //     !(await FileSystem.getInfoAsync(cacheDirectory + "uploads/")).exists
-            //   ) {
-            //     await FileSystem.makeDirectoryAsync(cacheDirectory + "uploads/");
-            //     const cacheFilePath =
-            //       FileSystem.cacheDirectory + "uploads/" + event.id;
-            //     await FileSystem.copyAsync({ from: img_url, to: cacheFilePath });
-            //     img_url = cacheFilePath;
-            //   }
-            // }
-
-            // const imgFile = await getImageData(img_url, event.id, fromEdit);
-            // const base64 = await FileSystem.readAsStringAsync(imgFile, {
-            //     encoding: FileSystem.EncodingType.Base64,
-            // });
             const base64 = await FileSystem.readAsStringAsync(img_url, {
                 encoding: FileSystem.EncodingType.Base64,
             });
@@ -517,6 +532,52 @@ export default function EventCreate({ navigation, route }) {
                 ]
             );
         }
+    };
+
+    const publishEventEdit = async eventOptions => {
+        let params = {
+            id: event.id,
+            type: "event",
+            title: event.title,
+            description: event.description,
+            starting: event.starting,
+            ending: event.ending,
+            geoCords: pin,
+            eventOptions: eventOptions,
+        };
+
+        const response = await makeRequest("/post_event/edit", params);
+
+        if (response.code < 400)
+            Alert.alert(
+                getLangs("eventcreate_editsuccessful_title"),
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => navigation.goBack(),
+                    },
+                ]
+            );
+        else
+            Alert.alert(
+                getLangs("eventcreate_publishrejected_title"),
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            btnPressed = false;
+                            setUploading(false);
+                            checkButton();
+                        },
+                    },
+                ]
+            );
     };
 
     const addToLocalStorage = id => {
@@ -1723,7 +1784,21 @@ export default function EventCreate({ navigation, route }) {
                     ) : null}
 
                     {/* Ad Banner */}
-                    {checkedCategories.adBanner ? (
+                    {fromEdit ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("eventcreate_adbanner_title")}
+                            </Text>
+                            <Text
+                                style={[
+                                    style.Tmd,
+                                    style.tWhite,
+                                    { marginTop: style.defaultMmd },
+                                ]}>
+                                {getLangs("eventcreate_adbanner_edithint")}
+                            </Text>
+                        </View>
+                    ) : checkedCategories.adBanner ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("eventcreate_adbanner_title")}

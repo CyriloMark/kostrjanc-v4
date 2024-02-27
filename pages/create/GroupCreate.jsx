@@ -42,6 +42,7 @@ import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
 import { getData, storeData } from "../../constants/storage";
+import { arrayEquals } from "../../constants";
 
 // import Components
 import BackHeader from "../../components/BackHeader";
@@ -106,21 +107,35 @@ export default function GroupCreate({ navigation, route }) {
     }, [group]);
 
     const checkButton = () => {
-        let inputValid = false;
+        let inputValid = true;
+
         if (
-            group.name.length !== 0 &&
-            !groupNameIsNotAvailable &&
-            group.description.length !== 0 &&
-            group.imgUri !== Group_Placeholder.imgUri &&
-            group.members.length > 1
+            group.name.length === 0 ||
+            groupNameIsNotAvailable ||
+            group.description.length === 0 ||
+            group.imgUri === Group_Placeholder.imgUri ||
+            group.members.length <= 1
         )
-            inputValid = true;
+            inputValid = false;
+
+        if (
+            fromEdit &&
+            group.description == editData.description &&
+            arrayEquals(group.members, editData.members)
+        )
+            inputValid = false;
+
         setButtonChecked(inputValid);
     };
 
     //#region Camera and Gallery
     // IMG Load + Compress
     const openImagePickerAsync = async () => {
+        if (fromEdit) {
+            setImageNotEditableAlert();
+            return;
+        }
+
         let permissionResult = await requestMediaLibraryPermissionsAsync(true);
         if (!permissionResult.granted) {
             Alert.alert(
@@ -188,6 +203,11 @@ export default function GroupCreate({ navigation, route }) {
     };
 
     const openCamera = async () => {
+        if (fromEdit) {
+            setImageNotEditableAlert();
+            return;
+        }
+
         let permissionResult = await requestCameraPermissionsAsync();
         if (!permissionResult.granted) {
             Alert.alert(
@@ -253,20 +273,21 @@ export default function GroupCreate({ navigation, route }) {
             });
         }
     };
-    //#endregion
 
-    const addToLocalStorage = id => {
-        getData("userData").then(userData => {
-            let groups = [];
-            if (userData["groups"]) groups = userData["groups"];
-            group.push(id);
-
-            storeData("userData", {
-                ...userData,
-                groups: groups,
-            }).finally(() => console.log("complete"));
-        });
+    const setImageNotEditableAlert = () => {
+        Alert.alert(
+            getLangs("groupcreate_editimage_hint_title"),
+            getLangs("groupcreate_editimage_hint_sub"),
+            [
+                {
+                    isPreferred: true,
+                    text: "Ok",
+                    style: "default",
+                },
+            ]
+        );
     };
+    //#endregion
 
     const setUnfullfilledAlert = () => {
         let missing = "";
@@ -279,6 +300,13 @@ export default function GroupCreate({ navigation, route }) {
             missing += `\n${getLangs("missing_img")}`;
         if (group.members <= 1)
             missing += `\n${getLangs("missing_memberslist")}`;
+
+        if (
+            fromEdit &&
+            group.description == editData.description &&
+            arrayEquals(group.members, editData.members)
+        )
+            missing += `\n${getLangs("missing_equaldata")}`;
 
         Alert.alert(
             getLangs("missing_alert_title"),
@@ -293,7 +321,7 @@ export default function GroupCreate({ navigation, route }) {
         );
     };
 
-    const publishGroup = async () => {
+    const publishGroup = () => {
         if (!buttonChecked) {
             setUnfullfilledAlert();
             return;
@@ -304,20 +332,26 @@ export default function GroupCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
+        if (!fromEdit) publishGroupNew();
+        else publishGroupEdit();
+    };
+
+    const publishGroupNew = async () => {
+        console.log("publishGroupNew");
+
         const base64 = await FileSystem.readAsStringAsync(group.imgUri, {
             encoding: FileSystem.EncodingType.Base64,
         });
 
-        // Yoo
         const response = await makeRequest("/groups/create", {
+            id: group.name,
             name: group.name,
             description: group.description,
             members: group.members,
             img: base64,
         });
 
-        if (response.code < 400) {
-            addToLocalStorage(response.id);
+        if (response.code < 400)
             Alert.alert(
                 getLangs("groupcreate_publishsuccessful_title"),
                 getLangs(getStatusCodeText(response.code)),
@@ -330,7 +364,7 @@ export default function GroupCreate({ navigation, route }) {
                     },
                 ]
             );
-        } else {
+        else
             Alert.alert(
                 getLangs("groupcreate_publishrejected_title"),
                 getLangs(getStatusCodeText(response.code)),
@@ -347,7 +381,47 @@ export default function GroupCreate({ navigation, route }) {
                     },
                 ]
             );
-        }
+    };
+
+    const publishGroupEdit = async () => {
+        console.log("publishGroupEdit");
+
+        const response = await makeRequest("/groups/edit", {
+            id: group.id,
+            description: group.description,
+            members: group.members,
+        });
+
+        if (response.code < 400)
+            Alert.alert(
+                getLangs("groupcreate_editsuccessful_title"),
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => navigation.goBack(),
+                    },
+                ]
+            );
+        else
+            Alert.alert(
+                getLangs("groupcreate_publishrejected_title"),
+                getLangs(getStatusCodeText(response.code)),
+                [
+                    {
+                        text: "Ok",
+                        isPreferred: true,
+                        style: "cancel",
+                        onPress: () => {
+                            btnPressed = false;
+                            setUploading(false);
+                            checkButton();
+                        },
+                    },
+                ]
+            );
     };
 
     //#region handleMembers

@@ -233,18 +233,26 @@ export default function Post({ navigation, route, onTut }) {
 
     const [clientIsAdmin, setClintIsAdmin] = useState(false);
     const getIfAdmin = async () => {
-        await getData("userIsAdmin").then(isAdmin => {
-            if (isAdmin === null) return setClintIsAdmin(false);
-            return setClintIsAdmin(isAdmin);
-        });
+        try {
+            await getData("userIsAdmin").then(isAdmin => {
+                if (isAdmin === null) return setClintIsAdmin(false);
+                return setClintIsAdmin(isAdmin);
+            });
+        } catch (e) {
+            setClintIsAdmin(false);
+        }
     };
 
     const [clientIsCreator, setClientIsCreator] = useState(false);
     const getIfCreatorIsClient = async creator => {
-        await getData("userId").then(id => {
-            if (id === creator) return setClientIsCreator(true);
-            return setClientIsCreator(false);
-        });
+        try {
+            await getData("userId").then(id => {
+                if (id === creator) return setClientIsCreator(true);
+                return setClientIsCreator(false);
+            });
+        } catch (e) {
+            setClientIsCreator(false);
+        }
     };
 
     return (
