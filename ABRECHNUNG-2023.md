@@ -1,6 +1,7 @@
 # Wotličenje za 2023
 
-Za wotličenje sćěhuje připódla powšitkowne wujasnjenje rozrjadowanja našeho projekta. Wšitke slědowace wobsahi sćěhuja w němskej rěči, dokelž to za dokumentaciju (za Cyrila na Mac) jednorišo padnje.
+> [!NOTE]
+> Za wotličenje sćěhuje připódla powšitkowne wujasnjenje rozrjadowanja našeho projekta. Wšitke slědowace wobsahi sćěhuja w němskej rěči, dokelž to za dokumentaciju (za Cyrila na Mac) jednorišo padnje.
 
 ## 0 Gliederung
 
@@ -61,33 +62,13 @@ Unter folgendem Link befindet sich die `kostrjanc` Website mit nützlichen Infor
 
 ### 1.5 Copyright
 
-### $\copyright \text{ Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024}$
+&copy; Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
 
 Dieses und alle mit kostrjanc gekennzeichneten (softwaretechnischen) Produkte sind in Besitz von der Karl Baier und Cyril Mark kostrjanc GbR und sind nicht zu missbrauchen. Es gelten die AGB.
 
 ## 2 Übersicht der Module
 
-$
-    \begin{array}{c|c}
-\text{Nr.} & \text{Name des Modules} \\ \hline \\
-\text{1} & \text{Prototyp modula "pisanska podpěra za serbšćinu" finalizować}\\\\
-\text{2} & \text{Prototyp modula "algoritmus za doporučenje serbskich wobsahow na hłownej strony" finalizować} \\ \\
-\text{3} & \text{Prototyp modula "awtomatiske přełožowanje němskich wobsahow do serbšćiny" finalizować} \\\\
-\text{4} & \text{Prototyp modula "žana marěć" finalizować} \\\\
-\text{5} & \text{Prototyp modula "dźělenje wobsahow" finalizować} \\\\
-\text{6} & \text{Protyp modula "moderacija/přizjewjenje wobsahow" finalizować} \\\\
-\text{7} & \text{Prototyp modula "powěsćowe zastajenja a dopomnjenki" finalizować} \\\\
-\text{8} & \text{Pomocna strona, datowy škit a impresum} \\\\
-\text{9} & \text{Protyp modula "doporučenje wužiwarja" finalizować} \\\\
-\text{10} & \text{Protyp regulow kostrjanc finalizować} \\\\
-\text{11} & \text{Korektura maličkosćow na wužiwarskim powěrchu} \\\\
-\text{12} & \text{Prototyp modula "składowanje na lokalnej runinje wužiwarja" korigować} \\\\
-\end {array}
-$
-
-## 3 Vertiefung in die Module
-
-Die Numerierung im folgendem Kapitel entspricht der im [Kapitel 2](./ABRECHNUNG-2023.md#2-übersicht-der-module) aufgelisteten Module. Anbei befindet sich die Verlinkung zu den einzelnen Modulbeschreibungen
+Anbei befindet sich die Verlinkung zu den einzelnen Modulbeschreibungen:
 
 1. Prototyp modula "pisanska podpěra za serbšćinu" finalizować: [Link](./overview_modules/01_PISANSKA_PODPERA.md)
 1. Prototyp modula "algoritmus za doporučenje serbskich wobsahow na hłownej strony" finalizować: [Link](./overview_modules/02_ALGORITMUS_DOPORUCENJE.md)
