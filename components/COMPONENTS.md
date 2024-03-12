@@ -1,12 +1,20 @@
-# Komponenten
+# Allgemeine Komponenten der Applikation
 
-## 1 Übersicht
+## 1 Übersicht der Dateien
 
 Anbei befinden sich jegliche Erklärungen zu allen in `kostrjanc` implementierten Komponenten
 
-#### Liste aller Komponenten
-
--   [/AccessoryView.jsx](./COMPONENTS.md#21-accessoryview)
+```
+AccessoryView.js
+BackHeader.js
+BottomTransitionBar.js
+Check.js
+InputField.js
+InteractionBar.js
+OptionButton.js
+RefreshControl.js
+TextField.js
+```
 
 ## 2 Erklärungen der Komponenten
 
