@@ -5,10 +5,10 @@
 
 ## 0 Gliederung
 
-1. [Informationen](./ABRECHNUNG-2023.md#1-informationen)
-2. [Übersicht der Module](./ABRECHNUNG-2023.md#2-übersicht-der-module)
-3. [Installation](./ABRECHNUNG-2023.md#3-installation)
-4. [Impressum](./ABRECHNUNG-2023.md#4-impressum)
+1. [Informationen](./STIFTUNG-2023.md#1-informationen)
+2. [Übersicht der Module](./STIFTUNG-2023.md#2-übersicht-der-module)
+3. [Installation](./STIFTUNG-2023.md#3-installation)
+4. [Impressum](./STIFTUNG-2023.md#4-impressum)
 
 ## 1 Informationen
 
@@ -62,7 +62,8 @@ Unter folgendem Link befindet sich die `kostrjanc` Website mit nützlichen Infor
 
 ### 1.5 Copyright
 
-&copy; Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
+> [!IMPORTANT]
+> &copy; Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
 
 Dieses und alle mit kostrjanc gekennzeichneten (softwaretechnischen) Produkte sind in Besitz von der Karl Baier und Cyril Mark kostrjanc GbR und sind nicht zu missbrauchen. Es gelten die AGB.
 
@@ -107,12 +108,18 @@ expo start
 
 #### Geschäftsführer sind
 
-$
-\begin{array}{ccc}
-\text{Cyrill Mark} & &\text{Karl Baier}\\
-\text{Hermann-Liebmann-Straße 31} & \text{und} & \text{Mittelweg 12}\\
-\text{04315 Leipzig} && \text{01920 Panschwitz-Kuckau}\\
-\end{array}
-$
+```
+Cyrill Mark
+Hermann-Liebmann-Straße 31
+04315 Leipzig
+```
+
+und
+
+```
+Karl Georg Josef Baier
+Mittelweg 12
+01920 Panschwitz-Kuckau
+```
 
 Alle anderen Angaben zum Impressum befinden sich unter [kostrjanc.de](https://kostrjanc.de/pages/impresum.html)
