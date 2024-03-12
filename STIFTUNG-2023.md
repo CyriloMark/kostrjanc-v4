@@ -32,6 +32,7 @@ Unter folgendem Link befindet sich die `kostrjanc` Website mit nützlichen Infor
 -   [Firebase](https://firebase.google.com)
 -   [MeiliSearch](https://www.meilisearch.com)
 -   [Google Cloud](https://cloud.google.com)
+-   [Sotra](https://sotra.app)
 
 ### 1.4 Allgemeine Gliederung
 
@@ -62,8 +63,7 @@ Unter folgendem Link befindet sich die `kostrjanc` Website mit nützlichen Infor
 
 ### 1.5 Copyright
 
-> [!IMPORTANT]
-> &copy; Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
+> [!IMPORTANT] > &copy; Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
 
 Dieses und alle mit kostrjanc gekennzeichneten (softwaretechnischen) Produkte sind in Besitz von der Karl Baier und Cyril Mark kostrjanc GbR und sind nicht zu missbrauchen. Es gelten die AGB.
 

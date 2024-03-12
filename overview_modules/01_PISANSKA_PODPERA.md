@@ -10,8 +10,10 @@
 
 ```
 constants/content/autoCorrect.js
+
 components/InputField.js
 components/TextInput.js
+
 components/AccessoryView.js
 ```
 
@@ -195,3 +197,7 @@ Die Initialisierung erfolgt am Schluss der Seite. Diese Komponente ist ein _self
 ### Zusammenfassung
 
 `<AccessoryView>` ist eine schöne Möglichkeit das Tippen in Obersorbisch zu vereinfachen. Man bekommt die Möglichkeit, einfach und schnell diakritische obersorbische Zeichen in seinen Texten zu verwenden. Selbst wenn die eigene Tastatur diese Zeichen nicht zur Verfügung stellt.
+
+<hr>
+
+#### Last Updated 12.03.2024
