@@ -33,3 +33,5 @@ randomUsers.js
 #### `insertCharacterOnCursor(text, selection, char)`
 
 ### `autoCorrect.js`
+
+### `translation.js`

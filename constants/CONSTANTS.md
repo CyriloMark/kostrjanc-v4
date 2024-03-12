@@ -27,4 +27,6 @@ Spezifischere Funktionalitäten der einzelnen Komponenten befinden sich in folge
 -   [storage]()
 -   [tutorial]()
 
-### `makeRequest`
+### `request` [(Link)](./request.js)
+
+### `share.js` [(Link)](./share.js)

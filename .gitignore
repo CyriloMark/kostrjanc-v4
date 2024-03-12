@@ -14,5 +14,8 @@ credentials/
 # ignores all .env files
 .env*
 
+# ignore eas.json
+eas.json
+
 # macOS
 .DS_Store
