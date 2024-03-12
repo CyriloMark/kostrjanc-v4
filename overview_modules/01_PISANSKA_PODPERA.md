@@ -19,7 +19,7 @@ components/AccessoryView.js
 
 #### Funktionenen in autoCorrect.js
 
-> [!HINT]
+> [!NOTE]
 > Anbei werden die folgenden Funktionen grob beschrieben. Tiefgründigere Erklärungen der Funktionalitäten und konkrete Erklärung von Return-Types, Input-Verarbeitungen, etc. findet man unter [autoCorrect.md](../constants/content/CONSTANTS_CONTENT.md#autocorrectjs)
 
 ```
@@ -48,7 +48,7 @@ Diese Funktion ist eine Erweiterung der `checkForAutoCorrect(input)` Funktion. D
 
 ### Implementierung
 
-> [!HINT]
+> [!NOTE]
 > Eine Liste aller Implementierungen von der automatischen Korrektur befindet sich unter der o.g. tiefgründigeren Beschreibung.
 
 Anbei wird die Implementierung aus `pages/create/PostCreate.jsx` beschrieben. Die Implementierung in allen anderen Fällen erfolgt auf identischer Art und Weise.
@@ -64,7 +64,7 @@ Folgende Schritte beinhaltet die Implementierung:
 
 Eher wichtiger ist die Erläuterung der Funktionen in den beiden Komponenten.
 
-> [!HINT]
+> [!NOTE]
 > Die Implementierung der o.g. Funktionen in `<InputField>` und `<TextField>` ist technisch dieselbe.
 
 #### `supportsAutoCorrect`
@@ -157,7 +157,7 @@ Für die Fälle 1 und 2 werden entsprechende Hinweise dargestellt in Form von Te
 
 ## `components/AccessoryView.js`
 
-> [!HINT]
+> [!NOTE]
 > Anbei werden die folgenden Funktionen grob beschrieben. Tiefgründigere Erklärungen der Funktionalitäten und konkrete Erklärung von Return-Types, Input-Verarbeitungen, etc. findet man unter [AccessoryView.md](../components/COMPONENTS.md#21-accessoryview-link-zum-code)
 
 > [!IMPORTANT]
@@ -171,7 +171,7 @@ Damit ein AccessoryView eindeutig zugeordnet werden kann, braucht man eine einde
 
 ### Implementierung
 
-> [!HINT]
+> [!NOTE]
 > Eine Liste aller Implementierungen von dem AccessoryView befindet sich unter der o.g. tiefgründigeren Beschreibung.
 
 Anbei wird die Implementierung aus `pages/create/PostCreate.jsx` beschrieben. Die Implementierung in allen anderen Fällen erfolgt auf identischer Art und Weise.
