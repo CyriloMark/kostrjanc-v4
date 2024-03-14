@@ -114,7 +114,7 @@ export default function Landing({ navigation }) {
                     text={getLangs("settings_landing_bugbutton_title")}
                     sub={getLangs("settings_landing_bugbutton_sub")}
                     onPress={() =>
-                        openLink("https://kostrjanc.de/pomoc/formular#bugs")
+                        openLink("https://kostrjanc.de/pages/pomoc.html")
                     }
                     style={{
                         marginHorizontal: style.defaultMmd * 2,

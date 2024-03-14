@@ -37,7 +37,7 @@ Um die Arbeit zu vereinfach und Übersicht zu Bergen benutzen wir zu bei überse
 
 #### `checkIsTranslated(text)`
 
-Diese Funktion nimmt ein _String_ als Parameter uns gibt `true` zurück, falls der Paramtertext mit dem o.g. `TRANSLATION_SIGN` beginnt. Ansonsten ist `false` der Rückgabewert.
+Diese Funktion nimmt ein _String_ als Parameter uns gibt `true` zurück, falls der Parametertext mit dem o.g. `TRANSLATION_SIGN` beginnt. Ansonsten ist `false` der Rückgabewert.
 
 #### `getUnsignedTranslationText(text)`
 
@@ -72,4 +72,4 @@ In `kostrjanc` kann man sogar sorbisch schreiben, ohne sorbisch sprechen zu kön
 
 <hr>
 
-#### Last Updated 12.03.2024
+#### Last Updated 14.03.2024

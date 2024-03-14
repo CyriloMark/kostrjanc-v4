@@ -1,6 +1,6 @@
 # Allgemeine Komponenten der Applikation
 
-## 1 Übersicht der Dateien
+## Übersicht der Dateien
 
 Anbei befinden sich jegliche Erklärungen zu allen in `kostrjanc` implementierten Komponenten
 
@@ -16,9 +16,7 @@ RefreshControl.js
 TextField.js
 ```
 
-## 2 Erklärungen der Komponenten
-
-### 2.1 AccessoryView [(Link zum Code)](./AccessoryView.js)
+### `AccessoryView` [(Link)](./AccessoryView.js)
 
 ```
 pages/main/Content.jsx
@@ -31,3 +29,5 @@ pages/create/GroupCreate.jsx
 pages/interaction/Report.jsx
 pages/auth/Register.js
 ```
+
+### `OptionButton` [(Link)](./OptionButton.js)

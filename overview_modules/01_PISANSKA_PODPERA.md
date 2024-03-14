@@ -160,7 +160,7 @@ Für die Fälle 1 und 2 werden entsprechende Hinweise dargestellt in Form von Te
 ## `components/AccessoryView.js`
 
 > [!NOTE]
-> Anbei werden die folgenden Funktionen grob beschrieben. Tiefgründigere Erklärungen der Funktionalitäten und konkrete Erklärung von Return-Types, Input-Verarbeitungen, etc. findet man unter [AccessoryView.md](../components/COMPONENTS.md#21-accessoryview-link-zum-code)
+> Anbei werden die folgenden Funktionen grob beschrieben. Tiefgründigere Erklärungen der Funktionalitäten und konkrete Erklärung von Return-Types, Input-Verarbeitungen, etc. findet man unter [AccessoryView.md](../components/COMPONENTS.md#accessoryview-link)
 
 > [!IMPORTANT]
 > Die Implementierung des Komponents basiert auf dem InputAccessoryView von React-Native. Dieses wird zurzeit nur für iOS Systeme unterstützt. Das heißt alle folgenden Funktionalitäten sind nur auf Apple-Handys verfügbar.
@@ -200,4 +200,4 @@ Die Initialisierung erfolgt am Schluss der Seite. Diese Komponente ist ein _self
 
 <hr>
 
-#### Last Updated 12.03.2024
+#### Last Updated 14.03.2024

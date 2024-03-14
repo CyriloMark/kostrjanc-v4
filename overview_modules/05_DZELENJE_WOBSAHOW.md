@@ -32,7 +32,7 @@ share(type, id, title) { }
 
 #### `share(type, id, title)`
 
-Diese Funktion nimmt folgende Paramter:
+Diese Funktion nimmt folgende Parameter:
 
 -   `type`: `0` für _Posts_ und `1` für _Events_
 -   `id`: Die `id` des zu teilenden Inhaltes
@@ -50,4 +50,4 @@ Das Fenster zum Teilen besitzt dann den Titel des Parameters `title`. Und beim T
 
 <hr>
 
-#### Last Updated 12.03.2024
+#### Last Updated 14.03.2024
