@@ -112,7 +112,7 @@ Am Ende der Seite befindet sich ein _Button_. Wenn Benutzer auf diesen drücken,
 -   sämtliche Tests mit den Expo [Push notification tool](https://expo.dev/notifications)
 -   lokale Tests haben funktioniert, auch auf Android
 -   nach dem Deploy in den Play Store und App Store mehrere globale Tests mit mäßigen erfolgen
-    $\rarr$ auf iOS können manuelle Benachrichtigungen verschickt werden, Android nicht
+    $\to$ auf iOS können manuelle Benachrichtigungen verschickt werden, Android nicht
 
 ### Wo kann der Fehler liegen?
 
