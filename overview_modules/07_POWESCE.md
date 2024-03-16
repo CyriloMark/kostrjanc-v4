@@ -12,7 +12,8 @@
 > [!IMPORTANT]
 > Wie in den einzelnen Fällen die Benachrichtigungen aufgerufen und verschickt werden ist Teil der Backend Technologie und werden auf dem Server verarbeitet.
 
-> [!NOTE] > _Das zielgerichtete Versenden von Benachrichtigungen an die etwaigen Benutzer_ funktioniert sehr eingeschrenkt. Nach vielseitigen Versuchen erreicht mehr oder weniger zufällig einige Apple Benutzer manchmal eine Benachrichtigungen. Für Android Benutzer klappt die Technologie gar nicht.
+> [!NOTE]
+> "Das zielgerichtete Versenden von Benachrichtigungen an die etwaigen Benutzer" funktioniert sehr eingeschrenkt. Nach vielseitigen Versuchen erreicht mehr oder weniger zufällig einige Apple Benutzer manchmal eine Benachrichtigungen. Für Android Benutzer klappt die Technologie gar nicht.
 
 ## Übersicht der Dateien
 
