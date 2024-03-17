@@ -110,7 +110,7 @@ export default function GroupCreate({ navigation, route }) {
         let inputValid = true;
 
         if (
-            group.name.length === 0 ||
+            group.name.length > 3 ||
             groupNameIsNotAvailable ||
             group.description.length === 0 ||
             group.imgUri === Group_Placeholder.imgUri ||
@@ -291,7 +291,7 @@ export default function GroupCreate({ navigation, route }) {
 
     const setUnfullfilledAlert = () => {
         let missing = "";
-        if (group.name.length === 0) missing += `\n${getLangs("missing_name")}`;
+        if (group.name.length > 3) missing += `\n${getLangs("missing_name")}`;
         if (groupNameIsNotAvailable)
             missing += `\n${getLangs("missing_existinggroupname")}`;
         if (group.description.length === 0)

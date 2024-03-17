@@ -8,7 +8,11 @@ import { ref, child, getDatabase, get } from "firebase/database";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { Group_Placeholder } from "../../constants/content/PlaceholderData";
-import { ForYou_Group, General_Group } from "../../constants/content/GroupData";
+import {
+    ForYou_Group,
+    General_Group,
+    Challenge_Group,
+} from "../../constants/content/GroupData";
 import { getCurrentLanguage, getLangs } from "../../constants/langs";
 
 export default function GroupElement({ groupId, active, style, press }) {
@@ -64,6 +68,7 @@ export default function GroupElement({ groupId, active, style, press }) {
     useEffect(() => {
         if (groupId === 0) setGroup(General_Group);
         else if (groupId === 1) setGroup(ForYou_Group);
+        else if (groupId === 2) setGroup(Challenge_Group);
         else loadGroup();
     }, []);
 

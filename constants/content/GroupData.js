@@ -21,3 +21,14 @@ export const ForYou_Group = {
     imgUri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/groups%2Fgroup_img_random%20.jpg?alt=media&token=09570104-0fe5-41df-b6aa-272fca3d61d3",
     isDefaultGroup: true,
 };
+
+export const Challenge_Group = {
+    id: 2,
+    name: getLangs("groups_challenge_title"),
+    description: getLangs("groups_challenge_description"),
+    members: [-1],
+    posts: [],
+    events: [],
+    imgUri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/groups%2Fgroup_img_challenge.png?alt=media&token=d2be8980-8eb5-4fad-99f0-d5066af79db6",
+    isDefaultGroup: true,
+};

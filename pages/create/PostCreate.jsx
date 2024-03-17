@@ -55,6 +55,7 @@ import EnterButton from "../../components/auth/EnterButton";
 import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
+import ChallengeSubmitButton from "../../components/groups/ChallengeSubmitButton";
 
 let cursorPos = -1;
 export default function PostCreate({ navigation, route }) {
@@ -65,6 +66,7 @@ export default function PostCreate({ navigation, route }) {
     const [imageUri, setImageUri] = useState(null);
     const [buttonChecked, setButtonChecked] = useState(false);
     const [groups, setGroups] = useState([]);
+    const [canUploadForChallenge, setCanUploadForChallenge] = useState(false);
 
     const [autoCorrect, setAutoCorrect] = useState({
         status: 100,
@@ -77,6 +79,7 @@ export default function PostCreate({ navigation, route }) {
     useEffect(() => {
         cursorPos = -1;
         getGroups();
+        checkForChallengeable();
 
         if (fromEdit) {
             setPost({
@@ -258,6 +261,36 @@ export default function PostCreate({ navigation, route }) {
         );
     };
 
+    const checkForChallengeable = async () => {
+        const hasUploadForChallenge = await getData("hasUploadForChallenge");
+        if (hasUploadForChallenge != null)
+            return setCanUploadForChallenge(!hasUploadForChallenge);
+
+        const data = await getData("userData");
+        if (!data.posts) return setCanUploadForChallenge(true);
+
+        let postsList = data.posts;
+
+        let count = 0;
+        for (let i = postsList.length; i > 0; i--)
+            get(
+                child(ref(getDatabase()), `posts/${postsList[i - 1]}/group`)
+            ).then(groupSnap => {
+                if (groupSnap.exists())
+                    if (groupSnap.val() == 2) {
+                        console.log("3");
+                        setCanUploadForChallenge(false);
+                        storeData("hasUploadForChallenge", true);
+                        i = 0;
+                    } else count++;
+                else count++;
+                if (i === 1 && count === postsList.length) {
+                    setCanUploadForChallenge(true);
+                    storeData("hasUploadForChallenge", false);
+                }
+            });
+    };
+
     useEffect(() => {
         if (!fromLinking) checkButton();
         else {
@@ -348,7 +381,9 @@ export default function PostCreate({ navigation, route }) {
         const response = await makeRequest("/post_event/publish", body);
 
         if (response.code < 400) {
+            if (post.group === 2) storeData("hasUploadForChallenge", true);
             addToLocalStorage(response.id);
+
             Alert.alert(
                 getLangs("postcreate_publishsuccessful_title"),
                 getLangs(getStatusCodeText(response.code)),
@@ -786,6 +821,59 @@ export default function PostCreate({ navigation, route }) {
                             </View>
                         </View>
                     </View>
+
+                    {/* Challenge Group Select */}
+                    {!fromEdit ? (
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("postcreate_challengeselect_title")}
+                            </Text>
+
+                            {canUploadForChallenge ? (
+                                <View style={{ marginTop: style.defaultMsm }}>
+                                    <Text style={[style.tWhite, style.Tmd]}>
+                                        {getLangs(
+                                            "postcreate_challengeselect_description"
+                                        )}
+                                    </Text>
+
+                                    <ChallengeSubmitButton
+                                        active={post.group === 2}
+                                        onPress={() =>
+                                            setPost(prev => {
+                                                if (!prev.group)
+                                                    return {
+                                                        ...prev,
+                                                        group: 2,
+                                                    };
+                                                else if (prev.group === 2)
+                                                    return {
+                                                        ...prev,
+                                                        group: null,
+                                                    };
+                                                else
+                                                    return {
+                                                        ...prev,
+                                                        group: 2,
+                                                    };
+                                            })
+                                        }
+                                    />
+                                </View>
+                            ) : (
+                                <Text
+                                    style={[
+                                        style.tWhite,
+                                        style.Tmd,
+                                        { marginTop: style.defaultMsm },
+                                    ]}>
+                                    {getLangs(
+                                        "postcreate_challengeselect_alreadysent"
+                                    )}
+                                </Text>
+                            )}
+                        </View>
+                    ) : null}
 
                     {/* Group Select */}
                     {groups.length !== 0 && !fromEdit ? (

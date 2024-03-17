@@ -23,7 +23,7 @@ import GroupElement from "../../components/cards/GroupElement";
 import Refresh from "../../components/RefreshControl";
 import ViewGroupButton from "../../components/groups/ViewGroupButton";
 
-const STATIC_GROUPS = [0];
+const STATIC_GROUPS = [0, 2];
 
 let CLIENT_GROUPS = null;
 export default function GroupSelect({ navigation, route }) {
@@ -39,7 +39,7 @@ export default function GroupSelect({ navigation, route }) {
 
     const { activeGroup } = route.params;
 
-    const [groups, setGroups] = useState([0]);
+    const [groups, setGroups] = useState(STATIC_GROUPS);
     const [selectedGroup, setSelectedGroup] = useState(activeGroup);
     const [groupViewable, setGroupViewable] = useState(false);
 
