@@ -1,13 +1,5 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import {
-    ActivityIndicator,
-    Platform,
-    Pressable,
-    ScrollView,
-    Text,
-    View,
-    Image,
-} from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
+import { Platform, Pressable, ScrollView, Text, View } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -21,7 +13,6 @@ import { General_Group } from "../../constants/content/GroupData";
 import { lerp, sortArrayByDateFromUnderorderedKey } from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
-import handleGroupContent from "../../constants/content/groupContent";
 
 import { getAuth } from "firebase/auth";
 import { get, ref, getDatabase, child } from "firebase/database";
@@ -35,8 +26,9 @@ import Refresh from "../../components/RefreshControl";
 import GroupSelect from "../../components/landing/GroupSelect";
 
 import Loading from "../static/Loading";
-import handleGeneralContent from "../../constants/content/generalContent";
 import handleBannerContent from "../../constants/content/bannerContent";
+import handleGeneralContent from "../../constants/content/generalContent";
+import handleGroupContent from "../../constants/content/groupContent";
 
 let LOADING = false;
 let LAST_UPDATED = 0;
@@ -73,8 +65,6 @@ export default function Landing({ navigation, onTut }) {
     const [user, setUser] = useState(User_Placeholder);
 
     const [loading, setLoading] = useState(true);
-
-    // const mainScrollRef = useRef();
 
     const [contentData, setContentData] = useState({
         banners: [],
@@ -181,6 +171,7 @@ export default function Landing({ navigation, onTut }) {
                 showingEvents
             );
         else if (groupId === 1) FORYOU_ALGORITHM(_id);
+        else if (groupId === 2) CHALLENGE_ALGORITHM(_id);
         else
             newShowingContent = await handleGroupContent(
                 SELECTED_GROUP.groupData,
@@ -890,6 +881,7 @@ export default function Landing({ navigation, onTut }) {
                         <Post
                             key={key}
                             id={item.id}
+                            likeable={SELECTED_GROUP.id === 2}
                             group={
                                 !(
                                     SELECTED_GROUP.id == 0 ||
