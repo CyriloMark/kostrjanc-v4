@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 
 import { Pressable, View, StyleSheet, Image, Text } from "react-native";
 
-import { getDatabase, ref, get, child } from "firebase/database";
+// import Firebase
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, get, child, set } from "firebase/database";
 
 import * as style from "../../styles";
 
+// import Constants
 import {
     User_Placeholder,
     Post_Placeholder,
@@ -13,10 +16,18 @@ import {
 import { getUnsignedTranslationText } from "../../constants/content/translation";
 import { checkForUnnecessaryNewLine } from "../../constants/content";
 import { checkLinkedUser } from "../../constants/content/linking";
+import { getData } from "../../constants/storage";
+
+// import Components
+import LikeButton from "../content/LikeButton";
 
 export default function Post(props) {
+    let LIKING = false;
+    let UID = null;
+
     const [user, setUser] = useState(User_Placeholder);
     const [post, setPost] = useState(Post_Placeholder);
+    const [liked, setLiked] = useState(false);
 
     const loadData = () => {
         const db = getDatabase();
@@ -42,6 +53,9 @@ export default function Post(props) {
 
                 setPost(postData);
 
+                if (props.likeable && postSnap.hasChild("likes"))
+                    loadLikes(postData.likes);
+
                 get(child(ref(db), "users/" + postData["creator"]))
                     .then(userSnap => {
                         if (!userSnap.exists()) {
@@ -62,9 +76,57 @@ export default function Post(props) {
             );
     };
 
+    const loadLikes = async likeList => {
+        if (UID === null) {
+            UID = await getData("userId");
+            if (UID === null) UID = getAuth().currentUser.uid;
+        }
+
+        if (likeList !== null) setLiked(likeList.includes(UID));
+    };
+
     useEffect(() => {
         loadData();
     }, []);
+
+    const like = async () => {
+        if (!props.likeable || LIKING) return;
+        LIKING = true;
+
+        if (UID === null) {
+            UID = await getData("userId");
+            if (UID === null) UID = getAuth().currentUser.uid;
+        }
+
+        const db = getDatabase();
+
+        get(child(ref(db), `posts/${props.id}/likes`))
+            .then(likesSnap => {
+                let l = [];
+                if (likesSnap.exists()) l = likesSnap.val();
+
+                if (l.includes(UID)) l.splice(l.indexOf(UID), 1);
+                else l.push(UID);
+
+                set(ref(db, `posts/${props.id}/likes`), l)
+                    .finally(() => (LIKING = false))
+                    .then(() => setLiked(!liked))
+                    .catch(error =>
+                        console.log(
+                            "error in components/card/Post.jsx",
+                            "like set DB",
+                            error.code
+                        )
+                    );
+            })
+            .catch(error =>
+                console.log(
+                    "error in components/cards/Post.jsx",
+                    "like get Likes",
+                    error.code
+                )
+            );
+    };
 
     if (!props.group && post.group) return null;
     if (post.isBanned) return null;
@@ -121,17 +183,37 @@ export default function Post(props) {
                 </View>
 
                 {/* Text */}
-                <View style={[styles.textContainer]}>
-                    {checkLinkedUser(
-                        getUnsignedTranslationText(
-                            checkForUnnecessaryNewLine(post.title)
-                        )
-                    ).map((el, key) => (
-                        <Text key={key} style={[style.Tmd, style.tWhite]}>
-                            {el.text}
-                        </Text>
-                    ))}
-                </View>
+                {!props.likeable ? (
+                    <View style={[styles.textContainer]}>
+                        {checkLinkedUser(
+                            getUnsignedTranslationText(
+                                checkForUnnecessaryNewLine(post.title)
+                            )
+                        ).map((el, key) => (
+                            <Text key={key} style={[style.Tmd, style.tWhite]}>
+                                {el.text}
+                            </Text>
+                        ))}
+                    </View>
+                ) : (
+                    <View style={styles.likeContainer}>
+                        <LikeButton
+                            style={{ marginRight: style.defaultMmd }}
+                            liked={liked}
+                            onPress={like}
+                        />
+
+                        {checkLinkedUser(
+                            getUnsignedTranslationText(
+                                checkForUnnecessaryNewLine(post.title)
+                            )
+                        ).map((el, key) => (
+                            <Text key={key} style={[style.Tmd, style.tWhite]}>
+                                {el.text}
+                            </Text>
+                        ))}
+                    </View>
+                )}
             </Pressable>
         </View>
     );
@@ -179,5 +261,13 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         marginTop: style.defaultMsm,
+    },
+
+    likeContainer: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: style.defaultMmd,
+        marginLeft: style.defaultMsm,
     },
 });
