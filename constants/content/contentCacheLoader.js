@@ -1,44 +1,35 @@
 // import Constats
 import { getData, storeData, hasData } from "../storage";
-import { Group_Placeholder } from "./PlaceholderData";
 
-const SAFE_KEY_FORMAT = "async_{group_id}";
+const SAFE_KEY_FORMAT = "cachedContentData_{group_id}";
 
 /**
- * Fetches last seen Data in Async Storage for further use
- * @param {Group_Placeholder} group Group to fetch from Async Storage
+ *
+ * @param {*} groupId Group Id
  */
-export async function getCachedGroupContent(group) {
-    const key = buildKey(group.id);
+export default async function fetchCachedContentData(groupId) {
+    const key = buildKey(groupId);
 
-    if (!hasData(key)) return null;
+    if (!(await hasData(key))) return null;
 
-    getData(key)
-        .then(data => {
-            return JSON.parse(data);
-        })
-        .catch(error =>
-            console.log(
-                "error in constants/content/contentCacheLoader.js",
-                error
-            )
-        );
+    const data = await getData(key);
+    return JSON.parse(data);
 }
 
 /**
  * Caches currently fetched Data from Group-Content into Cache
- * @param {Group_Placeholder} group Active Group
+ * @param {*} groupId Active Group
  * @param {*} data Data to Store in Cache
  */
-export async function setCachedGroupContent(group, data) {
-    const key = buildKey(group.id);
+export async function setCachedContentData(groupId, data) {
+    const key = buildKey(groupId);
 
-    storeData(key, JSON.stringify(data));
+    return await storeData(key, JSON.stringify(data));
 }
 
 /**
  * Builds the Key for Stored Data according to SAFE_KEY_FORMAT
- * @param {String} groupId Id of Group
+ * @param {*} groupId Id of Group
  * @returns
  */
 function buildKey(groupId) {

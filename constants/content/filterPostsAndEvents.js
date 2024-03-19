@@ -11,9 +11,9 @@ export function filterPostsAndEvents(contentData, filterData) {
     if (filterData.posts.length == 0 && filterData.events.length == 0)
         return contentData;
 
-    if (!filterData.posts.length == 0)
+    if (filterData.posts.length !== 0)
         filter_handlePosts(contentData.posts, filterData.posts);
-    if (!filterData.events.length == 0)
+    if (filterData.events.length !== 0)
         filter_handleEvents(contentData.events, filterData.events);
 
     return contentData;
@@ -25,9 +25,10 @@ export function filterPostsAndEvents(contentData, filterData) {
  * @param {number[]} filterPosts Array of Posts Ids to filter
  */
 function filter_handlePosts(posts, filterPosts) {
-    const m = Math.floor(Math.sqrt(posts.length));
+    // const m = Math.floor(Math.sqrt(posts.length));
 
-    jumpFilter(0, m, posts, filterPosts);
+    // jumpFilter(0, m, posts, filterPosts);
+    o_n_2Filter(posts, filterPosts);
 }
 
 /**
@@ -36,9 +37,10 @@ function filter_handlePosts(posts, filterPosts) {
  * @param {number[]} filterEvents Array of Events Ids to filter
  */
 function filter_handleEvents(events, filterEvents) {
-    const m = Math.floor(Math.sqrt(events.length));
+    // const m = Math.floor(Math.sqrt(events.length));
 
-    jumpFilter(0, m, events, filterEvents);
+    // jumpFilter(0, m, events, filterEvents);
+    o_n_2Filter(events, filterEvents);
 }
 
 /**
@@ -54,6 +56,8 @@ function jumpFilter(i, m, content, filter) {
     const currentFilterElement = filter[filter.length - 1];
 
     if (pos < 0) pos = 0;
+
+    console.log(content.length, filter.length);
 
     if (content[pos] > currentFilterElement)
         return jumpFilter(i + 1, m, content, filter);
@@ -71,6 +75,20 @@ function jumpFilter(i, m, content, filter) {
                 if (j > 0) return jumpFilter(i, m, content, filter);
             }
         }
+    }
+}
+
+/**
+ *
+ * @param {number[]} content Array of Content Ids
+ * @param {number[]} filter Array of Content Ids to filter
+ */
+function o_n_2Filter(content, filter) {
+    for (let i = 0; i < filter.length; i++) {
+        if (!content.includes(filter)) continue;
+
+        const pos = content.indexOf(filter[i]);
+        content.splice(pos, 1);
     }
 }
 
