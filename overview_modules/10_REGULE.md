@@ -59,7 +59,7 @@ Zur Prävention von Missbrauch haben wir die im Kapitel [04 Žana marěč](./04_
 -   Wortfilter
 -   Erkennung von verbotenen Inhalten auf Bildern
 
-Weiter gibt es wie im Kapitel [06 Moderacija](./06_MODERACIJA.md) (Stand 13.03.2024 noch leer) angesprochen die Moderatoren und Admins. Diese besonderen Rollen teilen das Recht, Inhalte (Posts und Events) wie auch ganze Benutzerkonten zu bannen.
+Weiter gibt es wie im Kapitel [06 Moderacija](./06_MODERACIJA.md) angesprochen die Moderatoren und Admins. Diese besonderen Rollen teilen das Recht, Inhalte (Posts und Events) wie auch ganze Benutzerkonten zu bannen.
 
 Sollte es trotzdem zum Verstoß der Regeln von `kostrjanc` kommen, haben alle Benutzer die Möglichkeit, Inhalte zu melden.
 

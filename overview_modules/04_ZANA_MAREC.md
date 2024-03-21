@@ -18,6 +18,10 @@ pages/create/EventCreate.jsx
 pages/create/GroupCreate.jsx
 ```
 
+## Video
+
+Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden ([zum Video](../videos/04_zana_marec.mov)).
+
 ## `pages/create/*.jsx`
 
 Alle drei o.g. Dateien dienen zum Erstellen von Inhalten. Dabei werden Texte und Bilder auf anstößige und nicht wünschenswerte Inhalte nach dem abschicken mittels `makeRequest` in `publishPost` / `publishEvent` / `publishGroup` geprüft. Sollten unsere Systeme auf dem Server etwas Unerwünschtes erkennen, so wird der Vorgang des Veröffentlichens abgebrochen und das Request schickt einen Fehlercode zurück.
@@ -39,4 +43,4 @@ Code 452 wird gesendet, wenn verbotene Inhalte bzw. Inhalte die nicht den AGBs v
 
 <hr>
 
-#### Last Updated 12.03.2024
+#### Last Updated 21.03.2024
