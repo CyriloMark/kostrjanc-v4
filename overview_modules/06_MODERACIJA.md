@@ -23,7 +23,7 @@ pages/static/Ban.jsx
 
 ## Video
 
-Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden ([zum Video](../videos/06_moderacija.mov)).
+Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden.
 
 ## `constants/content/PlaceholderData.js`
 

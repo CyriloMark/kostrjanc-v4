@@ -21,7 +21,7 @@ pages/Event.jsx
 
 ## Video
 
-Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden ([zum Video](../videos/05_dzelenje.mov)).
+Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden.
 
 ## `constants/share.js`
 
