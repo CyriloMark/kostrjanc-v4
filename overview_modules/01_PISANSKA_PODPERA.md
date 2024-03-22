@@ -19,7 +19,7 @@ components/AccessoryView.js
 
 ## Video
 
-Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden.
+Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden ([Zum Video](../assets/videos/01_pisanska_podpera.mov)).
 
 ## `constants/content/autoCorrect.js`
 
