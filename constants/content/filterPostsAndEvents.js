@@ -11,9 +11,9 @@ export function filterPostsAndEvents(contentData, filterData) {
     if (filterData.posts.length == 0 && filterData.events.length == 0)
         return contentData;
 
-    if (!filterData.posts.length == 0)
+    if (filterData.posts.length !== 0)
         filter_handlePosts(contentData.posts, filterData.posts);
-    if (!filterData.events.length == 0)
+    if (filterData.events.length !== 0)
         filter_handleEvents(contentData.events, filterData.events);
 
     return contentData;

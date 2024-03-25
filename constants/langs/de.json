@@ -233,10 +233,17 @@
         "profile_role_admin": "Admin",
         "profile_role_mod": "Moderator",
 
+        "profile_score_title": "Wettbewerb-Score",
+        "profile_score_sub_1": " hat ",
+        "profile_score_sub_2": " Punkte in den wöchentlichen Wettbewerben gesammelt.",
+
         "conent_translation_title": "Inhalt übersetzt",
         "conent_translation_sub": "Dieser Inhalt wurde mit sotra.app übersetzt.",
 
         "interactionbar_title": "Funktionen für Nutzer:",
+
+        "challengecard_subtitle": "Der neue wöchentliche Wettbewerb heißt:",
+        "challengecard_hint": "Gehe in die Wettbewerb-Gruppe und like Posts die dir gefallen. Poste selber ein passendes Bild zum Thema und gewinne Punkte auf dein Profil.",
 
         "landing_group_selectgroup": "Gruppe wählen",
         "landing_nocontenttext": "Mehr Inhalte gibt es nicht auf kostrjanc.",
