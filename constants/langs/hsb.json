@@ -233,10 +233,17 @@
         "profile_role_admin": "admin",
         "profile_role_mod": "moderator",
 
+        "profile_score_title": "Wubědźowanje-Score",
+        "profile_score_sub_1": " je ",
+        "profile_score_sub_2": " dypkow w tydźenskich wubědźowanjach zhromadźił.",
+
         "conent_translation_title": "Wobsah přełoženy",
         "conent_translation_sub": "Tutón wobsah bu z sotra.app přełoženy.",
 
         "interactionbar_title": "Funkcije za wužiwarja:",
+
+        "challengecard_subtitle": "Nowe tydźenske wubědźowanje rěka:",
+        "challengecard_hint": "Dźi do wubědźowanskeje skupiny a likeuj posty kotrež so ći lubja. Postuj sam so hodźacy wobraz k temje a zdobudź sej dypki na swój profil.",
 
         "landing_group_selectgroup": "Skupinu wolić",
         "landing_nocontenttext": "Wjac wobsahow njedawaja na kostrjanc.",

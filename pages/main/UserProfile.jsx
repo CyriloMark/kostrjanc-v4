@@ -28,6 +28,7 @@ import PostPreview from "../../components/profile/PostPreview";
 import EventPreview from "../../components/profile/EventPreview";
 import EditProfileButton from "../../components/profile/EditProfileButton";
 import Refresh from "../../components/RefreshControl";
+import ScoreCounter from "../../components/profile/ScoreCounter";
 
 import SVG_Admin from "../../assets/svg/Admin";
 import SVG_Verify from "../../assets/svg/Moderator";
@@ -270,15 +271,23 @@ export default function UserProfile({ navigation, onTut }) {
                                     style={style.allMax}
                                 />
                             </Pressable>
-                        ) : user.isMod ? (
+                        ) : null}
+                        {user.isMod ? (
                             <Pressable
                                 style={styles.nameIcon}
                                 onPress={alertForRoles}>
                                 <SVG_Verify
                                     fill={style.colors.red}
-                                    style={style.allMax}
+                                    style={[style.allMax]}
                                 />
                             </Pressable>
+                        ) : null}
+                        {user.score != null ? (
+                            <ScoreCounter
+                                count={user.score}
+                                style={styles.nameScore}
+                                userName={user.name}
+                            />
                         ) : null}
                         {/* <Pressable
                             style={{ marginRight: style.defaultMmd }}
@@ -461,6 +470,10 @@ const styles = StyleSheet.create({
         height: 24,
         marginRight: style.defaultMmd,
         marginTop: style.defaultMsm,
+    },
+    nameScore: {
+        marginTop: style.defaultMsm,
+        marginRight: style.defaultMmd,
     },
     textContainer: {
         marginTop: style.defaultMmd,
