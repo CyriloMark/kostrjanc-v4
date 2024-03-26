@@ -16,6 +16,7 @@ import {
 import { getData } from "../storage";
 import quicksort from "./contentSort";
 import fetchRandomUsers from "./randomUsers";
+import makeRequest from "../request";
 
 const RANDOM_USER_MAX_OUT = 5;
 const MAX_RANDOM_USER_FETCH_AMT = 3;
@@ -41,55 +42,78 @@ export default async function handleGeneralContent(
 ) {
     console.log("handleGeneralContent");
 
-    // Firebase Database Connection
-    const db = ref(getDatabase());
+    // // Firebase Database Connection
+    // const db = ref(getDatabase());
 
-    const currentDate = Date.now();
-    const userData = user ? user : await getData("userData");
+    // const currentDate = Date.now();
+    // const userData = user ? user : await getData("userData");
 
-    // Load correct Amount of Contents
+    // // Load correct Amount of Contents
+    // await getAMTs();
+
+    // const contentData = {
+    //     posts: [],
+    //     events: [],
+    // };
+
+    // // Set over-all Amount of each Content-Type
+    // const POST_AMT = AMTs[0];
+    // const POST_RANDOM_AMT = AMTs[1];
+    // const EVENT_AMT = AMTs[2];
+    // const EVENT_RANDOM_AMT = AMTs[3];
+
+    // // Lists of Client Following and filter
+    // let followingList = userData.following;
+    // followingList = filterDuplicateUsers(followingList);
+
+    // // let a = [1, 2, 3, 4, 5, 6];
+    // // let b = a.splice(-2);
+    // // console.log(a, b);
+    // // output = [1, 2][(3, 4, 5, 6)];
+
+    // await getPosts(
+    //     POST_AMT,
+    //     POST_RANDOM_AMT,
+    //     followingList,
+    //     contentData.posts,
+    //     prevContentPosts,
+    //     db
+    // );
+    // await getEvents(
+    //     EVENT_AMT,
+    //     EVENT_RANDOM_AMT,
+    //     followingList,
+    //     contentData.events,
+    //     prevContentEvents,
+    //     currentDate,
+    //     db
+    // );
+
     await getAMTs();
 
     console.log(prevContentPosts);
 
+    const POST_AMT = AMTs[0] + AMTs[1];
+    const EVENT_AMT = AMTs[2] + AMTs[3];
+
+    let data = await makeRequest("/algo/fetch_feed", {
+        prev_posts: safedContent.posts,
+        prev_events: safedContent.events,
+    });
+
+    safedContent.posts = data.posts
+        .slice(0, POST_AMT)
+        .push(...safedRandomContent.posts);
+    safedContent.events = data.events
+        .slice(0, EVENT_AMT)
+        .push(...safedRandomContent.events);
+
     const contentData = {
-        posts: [],
-        events: [],
+        posts: data.posts.slice(0, POST_AMT),
+        events: data.events.slice(0, EVENT_AMT),
     };
 
-    // Set over-all Amount of each Content-Type
-    const POST_AMT = AMTs[0];
-    const POST_RANDOM_AMT = AMTs[1];
-    const EVENT_AMT = AMTs[2];
-    const EVENT_RANDOM_AMT = AMTs[3];
-
-    // Lists of Client Following and filter
-    let followingList = userData.following;
-    followingList = filterDuplicateUsers(followingList);
-
-    // let a = [1, 2, 3, 4, 5, 6];
-    // let b = a.splice(-2);
-    // console.log(a, b);
-    // output = [1, 2][(3, 4, 5, 6)];
-
-    await getPosts(
-        POST_AMT,
-        POST_RANDOM_AMT,
-        followingList,
-        contentData.posts,
-        prevContentPosts,
-        db
-    );
-    await getEvents(
-        EVENT_AMT,
-        EVENT_RANDOM_AMT,
-        followingList,
-        contentData.events,
-        prevContentEvents,
-        currentDate,
-        db
-    );
-
+    console.log(safedContent);
     return combineContent(contentData);
 }
 

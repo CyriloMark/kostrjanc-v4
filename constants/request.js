@@ -11,7 +11,7 @@ const makeRequest = (url, body) => {
     return new Promise((resolve, reject) => {
         getAuth()
             .currentUser.getIdToken()
-            .then(token => {
+            .then((token) => {
                 fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}${url}`, {
                     method: "POST",
                     headers: {
@@ -22,18 +22,18 @@ const makeRequest = (url, body) => {
                         token: url == "/post_event/check_words" ? null : token,
                     }),
                 })
-                    .then(rsp =>
+                    .then((rsp) =>
                         rsp
                             .json()
-                            .then(data => {
+                            .then((data) => {
                                 resolve(data);
                                 // console.log(data);
                             })
-                            .catch(e => {
+                            .catch((e) => {
                                 reject(e);
                             })
                     )
-                    .catch(e => {
+                    .catch((e) => {
                         reject(e);
                     });
             });
