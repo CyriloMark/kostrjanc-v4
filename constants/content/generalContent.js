@@ -50,7 +50,24 @@ export default async function handleGeneralContent(
     // Load correct Amount of Contents
     await getAMTs();
 
+<<<<<<<<< Temporary merge branch 1
+    const POST_AMT = AMTs[0] + AMTs[1];
+    const EVENT_AMT = AMTs[2] + AMTs[3];
+
+    let data = await makeRequest("/algo/fetch_feed", {
+        prev_posts: safedContent.posts,
+        prev_events: safedContent.events,
+    });
+
+    safedContent.posts = data.posts
+        .slice(0, POST_AMT)
+        .push(...safedRandomContent.posts);
+    safedContent.events = data.events
+        .slice(0, EVENT_AMT)
+        .push(...safedRandomContent.events);
+=========
     console.log(prevContentPosts);
+>>>>>>>>> Temporary merge branch 2
 
     const contentData = {
         posts: [],
