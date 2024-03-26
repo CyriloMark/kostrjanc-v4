@@ -224,204 +224,233 @@ export default function Admin({ navigation }) {
 
                                 <View style={styles.challengeResultContainer}>
                                     {/* // Winner */}
-                                    <View
-                                        style={[
-                                            styles.challengeResultItemContainer,
-                                            styles.first,
-                                            style.allCenter,
-                                        ]}>
-                                        <Image
-                                            style={styles.challengeResultImage}
-                                            source={{
-                                                uri: challengeResult[0].imgUri,
-                                            }}
-                                        />
-                                        <Text
+                                    {challengeResult.length > 0 ? (
+                                        <View
                                             style={[
-                                                style.tWhite,
-                                                style.TlgRg,
-                                                styles.challengeResultText,
+                                                styles.challengeResultItemContainer,
                                                 styles.first,
+                                                style.allCenter,
                                             ]}>
-                                            {challengeResult[0].userName}
-                                        </Text>
-                                        <Text
-                                            style={[
-                                                style.Tmd,
-                                                style.tBlue,
-                                                styles.likesText,
+                                            <Image
+                                                style={
+                                                    styles.challengeResultImage
+                                                }
+                                                source={{
+                                                    uri: challengeResult[0]
+                                                        .imgUri,
+                                                }}
+                                            />
+                                            <Text
+                                                style={[
+                                                    style.tWhite,
+                                                    style.TlgRg,
+                                                    styles.challengeResultText,
+                                                    styles.first,
+                                                ]}>
+                                                {challengeResult[0].userName}
+                                            </Text>
+                                            <Text
+                                                style={[
+                                                    style.Tmd,
+                                                    style.tBlue,
+                                                    styles.likesText,
+                                                    {
+                                                        fontFamily:
+                                                            "RobotoMono_Thin",
+                                                    },
+                                                ]}>
                                                 {
-                                                    fontFamily:
-                                                        "RobotoMono_Thin",
-                                                },
-                                            ]}>
-                                            {challengeResult[0].likes.length}
-                                            {getCorrectLikeWord(
-                                                challengeResult[0].likes.length
-                                            )}
-                                        </Text>
-                                    </View>
+                                                    challengeResult[0].likes
+                                                        .length
+                                                }
+                                                {getCorrectLikeWord(
+                                                    challengeResult[0].likes
+                                                        .length
+                                                )}
+                                            </Text>
+                                        </View>
+                                    ) : null}
                                     <View
                                         style={[
                                             styles.challengeResultOtherContainer,
                                         ]}>
                                         {/* 2nd Place */}
-                                        <View
-                                            style={[
-                                                styles.challengeResultOtherItem,
-                                                styles.second,
-                                            ]}>
-                                            <Image
-                                                style={
-                                                    styles.challengeResultOtherImage
-                                                }
-                                                source={{
-                                                    uri: challengeResult[1]
-                                                        .imgUri,
-                                                }}
-                                            />
-                                            <Text
+                                        {challengeResult.length > 1 ? (
+                                            <View
                                                 style={[
-                                                    style.Tmd,
-                                                    style.tWhite,
-                                                    styles.challengeResultOtherText,
+                                                    styles.challengeResultOtherItem,
                                                     styles.second,
                                                 ]}>
-                                                {challengeResult[1].userName}
-                                            </Text>
-                                            <Text
-                                                style={[
-                                                    style.TsmLt,
-                                                    style.tBlue,
-                                                    styles.likesText,
-                                                    styles.second,
-                                                ]}>
-                                                {
-                                                    challengeResult[1].likes
-                                                        .length
-                                                }
-                                                {getCorrectLikeWord(
-                                                    challengeResult[1].likes
-                                                        .length
-                                                )}
-                                            </Text>
-                                        </View>
+                                                <Image
+                                                    style={
+                                                        styles.challengeResultOtherImage
+                                                    }
+                                                    source={{
+                                                        uri: challengeResult[1]
+                                                            .imgUri,
+                                                    }}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.Tmd,
+                                                        style.tWhite,
+                                                        styles.challengeResultOtherText,
+                                                        styles.second,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[1]
+                                                            .userName
+                                                    }
+                                                </Text>
+                                                <Text
+                                                    style={[
+                                                        style.TsmLt,
+                                                        style.tBlue,
+                                                        styles.likesText,
+                                                        styles.second,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[1].likes
+                                                            .length
+                                                    }
+                                                    {getCorrectLikeWord(
+                                                        challengeResult[1].likes
+                                                            .length
+                                                    )}
+                                                </Text>
+                                            </View>
+                                        ) : null}
                                         {/* 3rd Place */}
-                                        <View
-                                            style={[
-                                                styles.challengeResultOtherItem,
-                                                styles.third,
-                                            ]}>
-                                            <Image
-                                                style={
-                                                    styles.challengeResultOtherImage
-                                                }
-                                                source={{
-                                                    uri: challengeResult[2]
-                                                        .imgUri,
-                                                }}
-                                            />
-                                            <Text
+                                        {challengeResult.length > 2 ? (
+                                            <View
                                                 style={[
-                                                    style.Tmd,
-                                                    style.tWhite,
-                                                    styles.challengeResultOtherText,
+                                                    styles.challengeResultOtherItem,
                                                     styles.third,
                                                 ]}>
-                                                {challengeResult[2].userName}
-                                            </Text>
-                                            <Text
-                                                style={[
-                                                    style.TsmLt,
-                                                    style.tBlue,
-                                                    styles.likesText,
-                                                ]}>
-                                                {
-                                                    challengeResult[2].likes
-                                                        .length
-                                                }
-                                                {getCorrectLikeWord(
-                                                    challengeResult[2].likes
-                                                        .length
-                                                )}
-                                            </Text>
-                                        </View>
+                                                <Image
+                                                    style={
+                                                        styles.challengeResultOtherImage
+                                                    }
+                                                    source={{
+                                                        uri: challengeResult[2]
+                                                            .imgUri,
+                                                    }}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.Tmd,
+                                                        style.tWhite,
+                                                        styles.challengeResultOtherText,
+                                                        styles.third,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[2]
+                                                            .userName
+                                                    }
+                                                </Text>
+                                                <Text
+                                                    style={[
+                                                        style.TsmLt,
+                                                        style.tBlue,
+                                                        styles.likesText,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[2].likes
+                                                            .length
+                                                    }
+                                                    {getCorrectLikeWord(
+                                                        challengeResult[2].likes
+                                                            .length
+                                                    )}
+                                                </Text>
+                                            </View>
+                                        ) : null}
                                         {/* 4th Place */}
-                                        <View
-                                            style={[
-                                                styles.challengeResultOtherItem,
-                                            ]}>
-                                            <Image
-                                                style={
-                                                    styles.challengeResultOtherImage
-                                                }
-                                                source={{
-                                                    uri: challengeResult[3]
-                                                        .imgUri,
-                                                }}
-                                            />
-                                            <Text
+                                        {challengeResult.length > 3 ? (
+                                            <View
                                                 style={[
-                                                    style.Tmd,
-                                                    style.tWhite,
-                                                    styles.challengeResultOtherText,
+                                                    styles.challengeResultOtherItem,
                                                 ]}>
-                                                {challengeResult[3].userName}
-                                            </Text>
-                                            <Text
-                                                style={[
-                                                    style.TsmLt,
-                                                    style.tBlue,
-                                                    styles.likesText,
-                                                ]}>
-                                                {
-                                                    challengeResult[3].likes
-                                                        .length
-                                                }
-                                                {getCorrectLikeWord(
-                                                    challengeResult[3].likes
-                                                        .length
-                                                )}
-                                            </Text>
-                                        </View>
+                                                <Image
+                                                    style={
+                                                        styles.challengeResultOtherImage
+                                                    }
+                                                    source={{
+                                                        uri: challengeResult[3]
+                                                            .imgUri,
+                                                    }}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.Tmd,
+                                                        style.tWhite,
+                                                        styles.challengeResultOtherText,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[3]
+                                                            .userName
+                                                    }
+                                                </Text>
+                                                <Text
+                                                    style={[
+                                                        style.TsmLt,
+                                                        style.tBlue,
+                                                        styles.likesText,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[3].likes
+                                                            .length
+                                                    }
+                                                    {getCorrectLikeWord(
+                                                        challengeResult[3].likes
+                                                            .length
+                                                    )}
+                                                </Text>
+                                            </View>
+                                        ) : null}
                                         {/* 5th Place */}
-                                        <View
-                                            style={[
-                                                styles.challengeResultOtherItem,
-                                            ]}>
-                                            <Image
-                                                style={
-                                                    styles.challengeResultOtherImage
-                                                }
-                                                source={{
-                                                    uri: challengeResult[4]
-                                                        .imgUri,
-                                                }}
-                                            />
-                                            <Text
+                                        {challengeResult.length > 4 ? (
+                                            <View
                                                 style={[
-                                                    style.Tmd,
-                                                    style.tWhite,
-                                                    styles.challengeResultOtherText,
+                                                    styles.challengeResultOtherItem,
                                                 ]}>
-                                                {challengeResult[4].userName}
-                                            </Text>
-                                            <Text
-                                                style={[
-                                                    style.TsmLt,
-                                                    style.tBlue,
-                                                    styles.likesText,
-                                                ]}>
-                                                {
-                                                    challengeResult[4].likes
-                                                        .length
-                                                }
-                                                {getCorrectLikeWord(
-                                                    challengeResult[4].likes
-                                                        .length
-                                                )}
-                                            </Text>
-                                        </View>
+                                                <Image
+                                                    style={
+                                                        styles.challengeResultOtherImage
+                                                    }
+                                                    source={{
+                                                        uri: challengeResult[4]
+                                                            .imgUri,
+                                                    }}
+                                                />
+                                                <Text
+                                                    style={[
+                                                        style.Tmd,
+                                                        style.tWhite,
+                                                        styles.challengeResultOtherText,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[4]
+                                                            .userName
+                                                    }
+                                                </Text>
+                                                <Text
+                                                    style={[
+                                                        style.TsmLt,
+                                                        style.tBlue,
+                                                        styles.likesText,
+                                                    ]}>
+                                                    {
+                                                        challengeResult[4].likes
+                                                            .length
+                                                    }
+                                                    {getCorrectLikeWord(
+                                                        challengeResult[4].likes
+                                                            .length
+                                                    )}
+                                                </Text>
+                                            </View>
+                                        ) : null}
                                     </View>
                                 </View>
                             </View>

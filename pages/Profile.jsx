@@ -154,7 +154,6 @@ export default function Profile({ navigation, route }) {
 
             let userData = userSnap.val();
             setUserData(userData);
-            storeData(`user_${id}`, userData);
         });
     };
 

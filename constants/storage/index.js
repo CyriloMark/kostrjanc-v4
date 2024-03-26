@@ -41,6 +41,21 @@ export const removeData = async key => {
     }
 };
 
+const KEYS_LIST = [
+    "userIsAdmin",
+    "userData",
+    "userId",
+    "hasUploadForChallenge",
+];
+
+export const removeAll = async () => {
+    try {
+        await AsyncStorage.multiRemove(KEYS_LIST);
+    } catch (e) {
+        console.log("error storage/index.js removeAll", e);
+    }
+};
+
 export const hasData = async key => {
     try {
         const hasKey = (await AsyncStorage.getAllKeys()).includes(key);

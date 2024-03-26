@@ -6,7 +6,7 @@ import * as Storage from "firebase/storage";
 
 // import Constants
 import { getAuthErrorMsg } from "../../constants/error/auth";
-import { removeData } from "../../constants/storage";
+import { removeAll, removeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 import makeRequest from "../../constants/request";
 
@@ -29,8 +29,7 @@ export function logout() {
                         Alert.alert(getAuthErrorMsg(error.code));
                         console.log("error logout", error.code);
                     });
-                    removeData("userId");
-                    removeData("userData");
+                    removeAll();
                 },
             },
         ]
@@ -370,8 +369,7 @@ export function deleteAccount(uid, userData) {
                                                 )
                                                     .finally(() => {
                                                         // Remove Cached User Data
-                                                        removeData("userId");
-                                                        removeData("userData");
+                                                        removeAll();
                                                         // Delete User in Auth
                                                         deleteUser(
                                                             getAuth()
