@@ -23,6 +23,33 @@ pages/Event.jsx
 
 Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden ([Zum Video](../assets/videos/05_dzelenje.mov)).
 
+## Erklärung der Funktionalität
+
+Um Inhalte durch die App zu Teilen gibt es mehrere Methoden. Bekannt ist schließlich auch die Art und Weise, dass eine URL geteilt werden kann und beim Drücken darauf wird die Ziel-App wieder geöffnet mit dem gewünschten Inhalt. In React-Native passiert das durch sogenannte Deep-Links.
+
+Da diese Deep-Links in der Implementierung in Expo ziemlich kompliziert sind, und zu dem Zeitpunkt wo wir diese erstmalig Einbetten wollten haben wir mitbekommen, dass der Aufbau und die Übermittlung von Daten durch `routes` beim Öffnen von neuen Seiten in der App nicht für dieses Deep-Linking ausgelegt wäre. Darum musste eine Alternative her.
+
+Die Alternative ist die folgende: Beim Teilen wird ebenfalls ein Link generiert und mit diesem kommt der Benutzer auf die [kostrjanc.de](https://www.kostrjanc.de) Website. Dieser Link hat den Typen des Inhaltes, also Post = p oder Event = e und die Id des Inhaltes als Parameter in der URL. Wird die URL im Browser geöffnet, so öffnet sich also nicht die kostrjanc-App, sondern die kostrjanc-Website.
+
+Beim Öffnen werden die zwei Parameter (Typ und Id) extrahiert und es wird eine Anfrage an das kostrjanc-Backend mit diesen Informationen gesendet und zurück kommen die Daten des Inhaltes:
+
+-   Titel
+-   Beschreibung
+-   Benutzername und Profilbild des Erstellers
+-   beim Post URL des geposteten Bildes
+
+Diese Daten bekommt der Benutzer im Browser nachgebiltet und zusätzlich steht die Information, dass es sich dabei um eine Vorschau handelt und dass sich alle Inhalte in der kostrjanc-App befinden.
+
+## Aufbau der URL
+
+Die URL hat immer denselben Aufbau. Diese URL wird direkt beim Betätigen des u.g. Teilen-_Button_ im Frontend erstellt. Diese hat einen statischen "linken" Teil `https://www.kostrjanc.de/pages/share.html` und hinzugefügt werden die Parameter `t=typ_des_Inhaltes` und `id=id_des_Inhaltes`. Ein Beispiel für so eine URL ist zum Beispiel:
+
+```
+https://www.kostrjanc.de/pages/share.html?t=p?id=1711361548922
+```
+
+PS: Beim Probieren hat die Seite knapp 5 Sek geladen, aber der Inhalt ist trotzdem erschienen. Also bitte kurz warten.
+
 ## `constants/share.js`
 
 #### Funktionenen in autoCorrect.js
@@ -54,4 +81,4 @@ Das Fenster zum Teilen besitzt dann den Titel des Parameters `title`. Und beim T
 
 <hr>
 
-#### Last Updated 21.03.2024
+#### Last Updated 26.03.2024

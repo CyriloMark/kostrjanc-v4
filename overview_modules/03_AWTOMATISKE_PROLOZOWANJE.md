@@ -12,11 +12,20 @@
 ## Übersicht der Dateien
 
 ```
+pages/create/PostCreate.jsx
+pages/create/EventCreate.jsx
+
 constants/content/translation.js
 
 pages/Post.jsx
 pages/Event.jsx
 ```
+
+## `pages/create/PostCreate.jsx` und `pages/create/EventCreate.jsx`
+
+Neu Erstellte Inhalte werden direkt im Veröffentlichungsprozess auf die Sprache überprüft und ggf. übersetzt. Wenn alle nötigen Informationen eingegeben wurden, wird nach dem Betätigen des Abschicken-_Buttons_ die Funktion `publishPost` bzw. `publishEvent` aufgerufen.
+
+In dieser wird der Body mit den relevanten Informationen formatiert und mittels `makeRequest` an das Backend übermittelt, wo die weitere Verarbeitung geschieht, darunter auch die Überprüfung der Sprache und das Übersetzt und die Anbindung an [Sotra](https://sotra.app).
 
 ## `constants/content/translation.js`
 
@@ -72,4 +81,4 @@ In `kostrjanc` kann man sogar sorbisch schreiben, ohne sorbisch sprechen zu kön
 
 <hr>
 
-#### Last Updated 14.03.2024
+#### Last Updated 26.03.2024

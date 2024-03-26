@@ -22,6 +22,12 @@ pages/settings/DataSecurityImpressum.jsx
 
 -   Sichterheit der Benutzer
 
+## Unterschied zu 08 Pomocna strona, datowy škit a impresum
+
+Das achte Modul bezieht sich inhaltlich mehr darauf, rechtliche Aspekte abzudecken, falls es eben mal zum Fall kommen sollte, dass eine Klage/Anzeige o.ä. kommen sollte.
+
+Dieses Modul bezieht sich darauf, dass für die Benutzer Regeln zur Nutzung auf kostrjanc festgelegt werden, auf welche diese sich halten müssen. Und darüber hinaus Sicherheitsvorkehrungen, diese sind aber relevant in den Kapiteln [04 žana marěć](./04_ZANA_MAREC.md) und [06 moderacija](./06_MODERACIJA.md).
+
 ## `pages/auth/Register.jsx`
 
 Diese Seite ist im Allgemeinen die Registrierungsseite. Benutzer, die sich ein neues Konto auf `kostrjanc` anlegen wollen, kehren auf diese Seite hin.

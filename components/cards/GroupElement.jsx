@@ -15,7 +15,13 @@ import {
 } from "../../constants/content/GroupData";
 import { getCurrentLanguage, getLangs } from "../../constants/langs";
 
-export default function GroupElement({ groupId, active, style, press }) {
+export default function GroupElement({
+    groupId,
+    active,
+    style,
+    press,
+    longPress,
+}) {
     const [group, setGroup] = useState(Group_Placeholder);
 
     const loadGroup = () => {
@@ -76,7 +82,8 @@ export default function GroupElement({ groupId, active, style, press }) {
         <View style={style}>
             <Pressable
                 style={[styles.container, s.oHidden]}
-                onPress={() => press(group)}>
+                onPress={() => press(group)}
+                onLongPress={() => longPress(group)}>
                 <Image
                     resizeMethod="resize"
                     resizeMode="cover"

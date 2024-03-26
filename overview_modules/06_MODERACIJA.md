@@ -25,6 +25,34 @@ pages/static/Ban.jsx
 
 Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden ([Zum Video](../assets/videos/06_moderacija.mov)).
 
+## Moderatoren und Admins
+
+Auf `kostrjanc` unterscheidet man zurzeit zwei resp. drei Benutzerrollen:
+
+-   Admins
+-   Moderatoren
+-   (Benutzer ohne Rolle)
+
+Für die ersten zwei Rollen werden etwaige _Icons_ im Profil neben dem Namen angezeigt. Nur Admins und Moderatoren haben Zugriff auf das `kostrjanc Dashboard`.
+
+#### Admin
+
+Admins sind die Chefs auf `kostrjanc`. Diese Rolle besitzen lediglich Cyril, Korla und der Admin-Account selbst. Mit dieser Rolle kann man Inhalte bannen, Benutzer bannen und den Server regulieren.
+
+#### Moderatoren
+
+Moderatoren sind "schwächere" Admins. Diese können auch Inhalte und Benutzer bannen, aber können nicht den Server regulieren.
+
+#### Benutzer ohne Rolle
+
+Jeder neu Registrierte Benutzer "besitzt" diese Rolle. Mit dieser Rolle kann man weder Inhalte und Benutzer bannen, noch den Server regulieren.
+
+#### Warum Benutzerrollen?
+
+Es gibt Benutzerrollen, damit nicht jeder Benutzer die Möglichkeit hat Inhalte zu bannen oder sogar den Server auf offline zu setzen. Das Risiko, dass diese Rechte ausgenutzt werden ist zu groß.
+
+Darüber hinaus sind diese Rollen nötig, da so schnell und einfach Inhalte, die nicht erwünscht sind, entfernt werden können.
+
 ## `constants/content/PlaceholderData.js`
 
 In dieser Datei werden typische Datenstruckturen mit ihren Komponenten definiert. Unter anderem sind hier `Report` und `Ban` definiert. Also hier wird definiert, wie ein Eintrag von einem `Report` resp. `Ban` in der Datenbank ausschaut.
@@ -64,34 +92,6 @@ Diese Seite bekommt man normalerweise nie zu sehen, wenn man sich artig auf `kos
 
 Ist ein Benutzerkonto mit dem Flag `isBanned` gleich `true` versehen, so wird dieser nur noch diese Seite zu Sehen bekommen. Diese Seite zeigt den Hinweis, dass das Benutzerkonte gesperrt wurde, und einen Hinweis, wo man Hilfe bekommen kann.
 
-## Moderatoren und Admins
-
-Auf `kostrjanc` unterscheidet man zurzeit zwei resp. drei Benutzerrollen:
-
--   Admins
--   Moderatoren
--   (Benutzer ohne Rolle)
-
-Für die ersten zwei Rollen werden etwaige _Icons_ im Profil neben dem Namen angezeigt. Nur Admins und Moderatoren haben Zugriff auf das `kostrjanc Dashboard`.
-
-#### Admin
-
-Admins sind die Chefs auf `kostrjanc`. Diese Rolle besitzen lediglich Cyril, Korla und der Admin-Account selbst. Mit dieser Rolle kann man Inhalte bannen, Benutzer bannen und den Server regulieren.
-
-#### Moderatoren
-
-Moderatoren sind "schwächere" Admins. Diese können auch Inhalte und Benutzer bannen, aber können nicht den Server regulieren.
-
-#### Benutzer ohne Rolle
-
-Jeder neu Registrierte Benutzer "besitzt" diese Rolle. Mit dieser Rolle kann man weder Inhalte und Benutzer bannen, noch den Server regulieren.
-
-#### Warum Benutzerrollen?
-
-Es gibt Benutzerrollen, damit nicht jeder Benutzer die Möglichkeit hat Inhalte zu bannen oder sogar den Server auf offline zu setzen. Das Risiko, dass diese Rechte ausgenutzt werden ist zu groß.
-
-Darüber hinaus sind diese Rollen nötig, da so schnell und einfach Inhalte, die nicht erwünscht sind, entfernt werden können.
-
 <hr>
 
-#### Last Updated 21.03.2024
+#### Last Updated 26.03.2024
