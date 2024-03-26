@@ -81,7 +81,7 @@ export default function Landing({ navigation, onTut }) {
 
         const db = getDatabase();
         get(child(ref(db), "users/" + id))
-            .then((userSnap) => {
+            .then(userSnap => {
                 if (!userSnap.exists()) return;
                 const userData = userSnap.val();
 
@@ -92,7 +92,7 @@ export default function Landing({ navigation, onTut }) {
                 // USER-ID, UserData, Should Load Banners
                 getGroupSpecificContent(id, userData, true, SELECTED_GROUP.id);
             })
-            .catch((error) =>
+            .catch(error =>
                 console.log(
                     "error main/Landing.jsx",
                     "get user data",
@@ -115,7 +115,7 @@ export default function Landing({ navigation, onTut }) {
 
     // Check for Group
     useEffect(() => {
-        const focusUnsub = navigation.addListener("state", (e) => {
+        const focusUnsub = navigation.addListener("state", e => {
             if (
                 GROUP_SELECT_PRESSED &&
                 e.data.state.routes.length === 1 &&
@@ -192,7 +192,7 @@ export default function Landing({ navigation, onTut }) {
 
         //#region Set Content
         if (groupId !== 1)
-            setContentData((prev) => {
+            setContentData(prev => {
                 showingContent.push(...newShowingContent);
                 return {
                     ...prev,
@@ -235,11 +235,11 @@ export default function Landing({ navigation, onTut }) {
         // Amounts of Content 0: posts; 1: events; (2: ads);
         if (!AMTs[4])
             await get(child(db, `AMT_post-event-ad`))
-                .then((amtsSnap) => {
+                .then(amtsSnap => {
                     if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
                     else return;
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "ultimate_algo get amts",
@@ -250,17 +250,17 @@ export default function Landing({ navigation, onTut }) {
         //#region Banners
         if (updateBanners) {
             get(child(db, `banners`))
-                .then((bannersSnap) => {
+                .then(bannersSnap => {
                     if (bannersSnap.exists()) {
                         let outputBanners = [];
-                        bannersSnap.forEach((banner) => {
+                        bannersSnap.forEach(banner => {
                             if (
                                 banner.val().ending > currentDate &&
                                 banner.val().starting < currentDate
                             )
                                 outputBanners.push(banner.key);
                         });
-                        setContentData((prev) => {
+                        setContentData(prev => {
                             return {
                                 ...prev,
                                 banners: outputBanners,
@@ -268,7 +268,7 @@ export default function Landing({ navigation, onTut }) {
                         });
                     }
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "ultimate_algo get banners",
@@ -307,10 +307,10 @@ export default function Landing({ navigation, onTut }) {
 
         for (let i = 0; i < clientFolloweringList.length; i++) {
             await get(child(db, `users/${clientFolloweringList[i]}/posts`))
-                .then((fPostsSnap) => {
+                .then(fPostsSnap => {
                     if (fPostsSnap.exists()) {
                         const fPOutput = [];
-                        fPostsSnap.forEach((p) => {
+                        fPostsSnap.forEach(p => {
                             fPOutput.push({
                                 id: p.val(),
                                 type: 0,
@@ -322,7 +322,7 @@ export default function Landing({ navigation, onTut }) {
                         ];
                     }
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "ultimate algo get followeringlist posts",
@@ -330,10 +330,10 @@ export default function Landing({ navigation, onTut }) {
                     )
                 );
             await get(child(db, `users/${clientFolloweringList[i]}/events`))
-                .then((fEventsSnap) => {
+                .then(fEventsSnap => {
                     if (fEventsSnap.exists()) {
                         const fEOutput = [];
-                        fEventsSnap.forEach((e) => {
+                        fEventsSnap.forEach(e => {
                             fEOutput.push({
                                 id: e.val(),
                                 type: 1,
@@ -345,7 +345,7 @@ export default function Landing({ navigation, onTut }) {
                         ];
                     }
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "ultimate algo get followeringlist events",
@@ -368,10 +368,10 @@ export default function Landing({ navigation, onTut }) {
                     return true;
                 });
             const currentPList = followeringContentSortedList
-                .filter((item) => item.type === 0)
+                .filter(item => item.type === 0)
                 .slice(0, AMTs[0]);
             const currentEList = followeringContentSortedList
-                .filter((item) => item.type === 1)
+                .filter(item => item.type === 1)
                 .slice(0, AMTs[1]);
 
             const finalFolloweringList = sortArrayByDateFromUnderorderedKey(
@@ -383,7 +383,7 @@ export default function Landing({ navigation, onTut }) {
                 currentPList.length === AMTs[0] &&
                 currentEList.length === AMTs[1]
             ) {
-                setContentData((prev) => {
+                setContentData(prev => {
                     return {
                         ...prev,
                         content: [...showingContent, ...finalFolloweringList],
@@ -413,7 +413,7 @@ export default function Landing({ navigation, onTut }) {
             //#region Get Random Person based on Followering
             let randomUserList = [];
             const clientFolloweringFilteredList = clientFolloweringList.filter(
-                (user) => !checkedRandomUsers.includes(user)
+                user => !checkedRandomUsers.includes(user)
             );
             if (clientFolloweringFilteredList.length === 0) {
                 console.log("no users left");
@@ -432,7 +432,7 @@ export default function Landing({ navigation, onTut }) {
             checkedRandomUsers.push(randomFolloweringOfClient);
 
             await get(child(db, `users/${randomFolloweringOfClient}`))
-                .then((userSnap) => {
+                .then(userSnap => {
                     if (userSnap.exists()) {
                         const userData = userSnap.val();
 
@@ -443,19 +443,19 @@ export default function Landing({ navigation, onTut }) {
                             users.push(...userData.following);
 
                         users
-                            .filter((user) => user !== uid)
+                            .filter(user => user !== uid)
 
                             .filter(function (item, pos) {
                                 return users.indexOf(item) == pos;
                             })
                             .filter(
-                                (user) => !clientFolloweringList.includes(user)
+                                user => !clientFolloweringList.includes(user)
                             )
-                            .filter((user) => !checkedPEUsers.includes(user))
-                            .forEach((user) => randomUserList.push(user));
+                            .filter(user => !checkedPEUsers.includes(user))
+                            .forEach(user => randomUserList.push(user));
                     }
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "getClientUnbasedContent get randomFolloweingOfClient Data",
@@ -468,10 +468,10 @@ export default function Landing({ navigation, onTut }) {
             if (usedPosts.length < AMTs[0]) {
                 for (let i = 0; i < randomUserList.length; i++) {
                     await get(child(db, `users/${randomUserList[i]}/posts`))
-                        .then((rPostsSnap) => {
+                        .then(rPostsSnap => {
                             if (rPostsSnap.exists()) {
                                 const rPOutput = [];
-                                rPostsSnap.forEach((p) => {
+                                rPostsSnap.forEach(p => {
                                     rPOutput.push({
                                         id: p.val(),
                                         type: 0,
@@ -495,7 +495,7 @@ export default function Landing({ navigation, onTut }) {
                                 );
                             }
                         })
-                        .catch((error) =>
+                        .catch(error =>
                             console.log(
                                 "error pages/main/Landing.jsx",
                                 "ultimate algo getClientUnbasedContent get posts events",
@@ -509,10 +509,10 @@ export default function Landing({ navigation, onTut }) {
             if (usedEvents.length < AMTs[1]) {
                 for (let i = 0; i < randomUserList.length; i++) {
                     await get(child(db, `users/${randomUserList[i]}/events`))
-                        .then((rEventsSnap) => {
+                        .then(rEventsSnap => {
                             if (rEventsSnap.exists()) {
                                 const rEOutput = [];
-                                rEventsSnap.forEach((e) => {
+                                rEventsSnap.forEach(e => {
                                     rEOutput.push({
                                         id: e.val(),
                                         type: 1,
@@ -536,7 +536,7 @@ export default function Landing({ navigation, onTut }) {
                                 );
                             }
                         })
-                        .catch((error) =>
+                        .catch(error =>
                             console.log(
                                 "error pages/main/Landing.jsx",
                                 "ultimate algo getClientUnbasedContent get events events",
@@ -572,7 +572,7 @@ export default function Landing({ navigation, onTut }) {
                     "id"
                 );
 
-                setContentData((prev) => {
+                setContentData(prev => {
                     return {
                         ...prev,
                         content: [...showingContent, ...finalRandomList],
@@ -610,7 +610,7 @@ export default function Landing({ navigation, onTut }) {
                         "id"
                     );
 
-                    setContentData((prev) => {
+                    setContentData(prev => {
                         return {
                             ...prev,
                             content: [...showingContent, ...finalRandomList],
@@ -646,11 +646,11 @@ export default function Landing({ navigation, onTut }) {
         //#region get Amounts of Content 0: posts; 1: events; (2: ads);
         if (!AMTs[4])
             await get(child(db, `AMT_post-event-ad`))
-                .then((amtsSnap) => {
+                .then(amtsSnap => {
                     if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
                     else return;
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "ultimate_algo get amts",
@@ -662,11 +662,11 @@ export default function Landing({ navigation, onTut }) {
         //#region load Banners when updateBanners == true
         if (updateBanners) {
             get(child(db, `banners`))
-                .then((bannersSnap) => {
+                .then(bannersSnap => {
                     if (bannersSnap.exists()) {
                         let outputBanners = [];
                         //#region Check if Banners are in Time
-                        bannersSnap.forEach((banner) => {
+                        bannersSnap.forEach(banner => {
                             if (
                                 banner.val().ending > currentDate &&
                                 banner.val().starting < currentDate
@@ -675,7 +675,7 @@ export default function Landing({ navigation, onTut }) {
                         });
                         //#endregion
                         // Set Banners to Final Data
-                        setContentData((prev) => {
+                        setContentData(prev => {
                             return {
                                 ...prev,
                                 banners: outputBanners,
@@ -685,7 +685,7 @@ export default function Landing({ navigation, onTut }) {
                         // LOADING = false;
                     }
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "ultimate_algo get banners",
@@ -719,7 +719,7 @@ export default function Landing({ navigation, onTut }) {
 
         // combinePostsAndEvents(postsList, eventsLists);
 
-        setContentData((prev) => {
+        setContentData(prev => {
             return {
                 ...prev,
                 content: showingContent,
@@ -750,11 +750,11 @@ export default function Landing({ navigation, onTut }) {
         //#region get Amounts of Content 0: posts; 1: events; (2: ads);
         if (!AMTs[4])
             await get(child(db, `AMT_post-event-ad`))
-                .then((amtsSnap) => {
+                .then(amtsSnap => {
                     if (amtsSnap.exists()) AMTs = [...amtsSnap.val(), true];
                     else return;
                 })
-                .catch((error) =>
+                .catch(error =>
                     console.log(
                         "error pages/main/Landing.jsx",
                         "foryou_algo get amts",
@@ -769,7 +769,7 @@ export default function Landing({ navigation, onTut }) {
         let postsList = await foryou_getPosts(POST_AMT);
         // let eventsLists = await getEvents(clientFollowingList, EVENT_AMT);
         console.log(showingContent);
-        setContentData((prev) => {
+        setContentData(prev => {
             return {
                 ...prev,
                 content: showingContent,
@@ -837,8 +837,7 @@ export default function Landing({ navigation, onTut }) {
                             false,
                             SELECTED_GROUP.id
                         );
-                }}
-            >
+                }}>
                 {/* {Platform.OS === "android" ? (
                     <View
                         style={[
@@ -948,8 +947,7 @@ export default function Landing({ navigation, onTut }) {
                         style.TsmLt,
                         style.tCenter,
                         { marginVertical: style.defaultMmd },
-                    ]}
-                >
+                    ]}>
                     {getLangs("landing_nocontenttext")}
                 </Text>
             </ScrollView>
