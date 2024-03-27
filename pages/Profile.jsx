@@ -29,6 +29,7 @@ import FollowButton from "../components/profile/FollowButton";
 import PostPreview from "../components/profile/PostPreview";
 import EventPreview from "../components/profile/EventPreview";
 import Refresh from "../components/RefreshControl";
+import ScoreCounter from "../components/profile/ScoreCounter";
 
 import SVG_Admin from "../assets/svg/Admin";
 import SVG_Verify from "../assets/svg/Moderator";
@@ -153,7 +154,6 @@ export default function Profile({ navigation, route }) {
 
             let userData = userSnap.val();
             setUserData(userData);
-            storeData(`user_${id}`, userData);
         });
     };
 
@@ -360,7 +360,8 @@ export default function Profile({ navigation, route }) {
                                     style={style.allMax}
                                 />
                             </Pressable>
-                        ) : user.isMod ? (
+                        ) : null}
+                        {user.isMod ? (
                             <Pressable
                                 style={styles.nameIcon}
                                 onPress={alertForRoles}>
@@ -369,6 +370,13 @@ export default function Profile({ navigation, route }) {
                                     style={style.allMax}
                                 />
                             </Pressable>
+                        ) : null}
+                        {user.score != null ? (
+                            <ScoreCounter
+                                count={user.score}
+                                style={styles.nameScore}
+                                userName={user.name}
+                            />
                         ) : null}
 
                         <Text style={[style.tWhite, style.Ttitle2]}>
@@ -574,6 +582,10 @@ const styles = StyleSheet.create({
         height: 24,
         marginRight: style.defaultMmd,
         marginTop: style.defaultMsm,
+    },
+    nameScore: {
+        marginTop: style.defaultMsm,
+        marginRight: style.defaultMmd,
     },
     textContainer: {
         marginTop: style.defaultMmd,

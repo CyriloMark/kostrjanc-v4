@@ -18,11 +18,17 @@ Hier befindet sich die aktuelle Version unseres Github Repositories.
 
 [kostrjanc na GitHub](https://github.com/CyriloMark/kostrjanc-v4)
 
+[kostrjanc Website na GitHub](https://github.com/CyriloMark/kostrjanc-website/tree/main)
+
+[kostrjanc Backend na GitHub](https://github.com/Korla-tech/kostrjanc-scripts)
+
 ### 1.2 Unsere Website
 
 Unter folgendem Link befindet sich die `kostrjanc` Website mit nützlichen Informationen.
 
-[kostrjanc Website](https://kostrjanc.de)
+[kostrjanc Website](https://www.kostrjanc.de)
+
+[kostrjanc Dashboard](https://dashboard.kostrjanc.de)
 
 ### 1.3 Benutzte Technologien
 
@@ -64,7 +70,7 @@ Unter folgendem Link befindet sich die `kostrjanc` Website mit nützlichen Infor
 ### 1.5 Copyright
 
 > [!IMPORTANT]
-> &copy; Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
+> © Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
 
 Dieses und alle mit kostrjanc gekennzeichneten (softwaretechnischen) Produkte sind in Besitz von der Karl Baier und Cyril Mark kostrjanc GbR und sind nicht zu missbrauchen. Es gelten die AGB.
 
@@ -124,3 +130,7 @@ Mittelweg 12
 ```
 
 Alle anderen Angaben zum Impressum befinden sich unter [kostrjanc.de](https://kostrjanc.de/pages/impresum.html)
+
+<hr>
+
+#### Last Updated 19.03.2024

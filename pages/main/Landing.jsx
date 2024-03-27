@@ -24,14 +24,18 @@ import AppHeader from "../../components/landing/AppHeader";
 import Post from "../../components/cards/Post";
 import Event from "../../components/cards/Event";
 import Banner from "../../components/cards/Banner";
+import Challenge from "../../components/cards/Challenge";
 import Refresh from "../../components/RefreshControl";
 import GroupSelect from "../../components/landing/GroupSelect";
+import ShowNewButton from "../../components/content/ShowNewButton";
 
 import Loading from "../static/Loading";
+
+// import Content Algorithms
 import handleBannerContent from "../../constants/content/bannerContent";
 import handleGeneralContent from "../../constants/content/generalContent";
 import handleGroupContent from "../../constants/content/groupContent";
-import ShowNewButton from "../../components/content/ShowNewButton";
+import handleChallengeContent from "../../constants/content/challengeContent";
 
 let LOADING = false;
 let LAST_UPDATED = 0;
@@ -197,7 +201,12 @@ export default function Landing({ navigation, onTut }) {
                 showingEvents
             );
         else if (groupId === 1) FORYOU_ALGORITHM(_id);
-        else if (groupId === 2) CHALLENGE_ALGORITHM(_id);
+        else if (groupId === 2)
+            newShowingContent = await handleChallengeContent(
+                SELECTED_GROUP.groupData,
+                showingPosts,
+                updateBanners
+            );
         else
             newShowingContent = await handleGroupContent(
                 SELECTED_GROUP.groupData,
@@ -796,7 +805,7 @@ export default function Landing({ navigation, onTut }) {
 
         let postsList = await foryou_getPosts(POST_AMT);
         // let eventsLists = await getEvents(clientFollowingList, EVENT_AMT);
-
+        console.log(showingContent);
         setContentData(prev => {
             return {
                 ...prev,
@@ -915,6 +924,25 @@ export default function Landing({ navigation, onTut }) {
                         </View>
                     </View>
                 ) : null} */}
+
+                <Challenge
+                    style={{
+                        marginTop: style.defaultMmd,
+                        marginHorizontal: style.defaultMmd * 2,
+                        marginBottom: style.defaultMsm,
+
+                        // Shadow
+                        shadowColor: "#8829ac",
+                        shadowRadius: 15,
+                        shadowOpacity: 0.75,
+                        shadowOffset: {
+                            width: 0,
+                            height: 0,
+                        },
+                        backgroundColor: style.colors.black,
+                        borderRadius: 10,
+                    }}
+                />
 
                 {contentData.banners.map((banner, key) => (
                     <Banner

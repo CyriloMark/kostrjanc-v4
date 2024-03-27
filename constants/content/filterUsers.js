@@ -20,6 +20,8 @@ export function filterDuplicateUsers(userList) {
     let seen = {};
     let result = [];
 
+    if (!userList) return;
+
     for (let i = 0; i < userList.length; i++)
         if (!seen[userList[i]]) {
             seen[userList[i]] = true;

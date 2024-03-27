@@ -17,6 +17,10 @@ components/TextInput.js
 components/AccessoryView.js
 ```
 
+## Video
+
+Für dieses Modul ist ein kurzes Video verfügbar, in dem die Funktionalitäten gezeigt werden ([Zum Video](../assets/videos/01_pisanska_podpera.mov)).
+
 ## `constants/content/autoCorrect.js`
 
 #### Funktionenen in autoCorrect.js
@@ -200,4 +204,4 @@ Die Initialisierung erfolgt am Schluss der Seite. Diese Komponente ist ein _self
 
 <hr>
 
-#### Last Updated 14.03.2024
+#### Last Updated 21.03.2024

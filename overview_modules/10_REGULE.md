@@ -22,6 +22,12 @@ pages/settings/DataSecurityImpressum.jsx
 
 -   Sichterheit der Benutzer
 
+## Unterschied zu 08 Pomocna strona, datowy škit a impresum
+
+Das achte Modul bezieht sich inhaltlich mehr darauf, rechtliche Aspekte abzudecken, falls es eben mal zum Fall kommen sollte, dass eine Klage/Anzeige o.ä. kommen sollte.
+
+Dieses Modul bezieht sich darauf, dass für die Benutzer Regeln zur Nutzung auf kostrjanc festgelegt werden, auf welche diese sich halten müssen. Und darüber hinaus Sicherheitsvorkehrungen, diese sind aber relevant in den Kapiteln [04 žana marěć](./04_ZANA_MAREC.md) und [06 moderacija](./06_MODERACIJA.md).
+
 ## `pages/auth/Register.jsx`
 
 Diese Seite ist im Allgemeinen die Registrierungsseite. Benutzer, die sich ein neues Konto auf `kostrjanc` anlegen wollen, kehren auf diese Seite hin.
@@ -59,7 +65,7 @@ Zur Prävention von Missbrauch haben wir die im Kapitel [04 Žana marěč](./04_
 -   Wortfilter
 -   Erkennung von verbotenen Inhalten auf Bildern
 
-Weiter gibt es wie im Kapitel [06 Moderacija](./06_MODERACIJA.md) (Stand 13.03.2024 noch leer) angesprochen die Moderatoren und Admins. Diese besonderen Rollen teilen das Recht, Inhalte (Posts und Events) wie auch ganze Benutzerkonten zu bannen.
+Weiter gibt es wie im Kapitel [06 Moderacija](./06_MODERACIJA.md) angesprochen die Moderatoren und Admins. Diese besonderen Rollen teilen das Recht, Inhalte (Posts und Events) wie auch ganze Benutzerkonten zu bannen.
 
 Sollte es trotzdem zum Verstoß der Regeln von `kostrjanc` kommen, haben alle Benutzer die Möglichkeit, Inhalte zu melden.
 

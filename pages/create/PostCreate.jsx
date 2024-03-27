@@ -361,6 +361,7 @@ export default function PostCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
+        console.log("1", fromEdit);
         if (!fromEdit) publishPostNew();
         else publishPostEdit();
     };
@@ -379,6 +380,7 @@ export default function PostCreate({ navigation, route }) {
         };
 
         const response = await makeRequest("/post_event/publish", body);
+        console.log(response);
 
         if (response.code < 400) {
             if (post.group === 2) storeData("hasUploadForChallenge", true);

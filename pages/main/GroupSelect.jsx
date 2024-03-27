@@ -136,6 +136,18 @@ export default function GroupSelect({ navigation, route }) {
                                     <GroupElement
                                         key={key}
                                         groupId={group}
+                                        longPress={data =>
+                                            navigation.navigate({
+                                                name: "landing",
+                                                params: {
+                                                    group: {
+                                                        id: group,
+                                                        groupData: data,
+                                                    },
+                                                },
+                                                merge: true,
+                                            })
+                                        }
                                         press={data =>
                                             setSelectedGroup({
                                                 groupData: data,

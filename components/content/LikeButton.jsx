@@ -62,14 +62,15 @@ export default function LikeButton({ style, onPress, liked }) {
                 onPress={onPress}>
                 <AnimatedLinearGradient
                     style={[s.allMax, { position: "absolute" }, gradientStyles]}
-                    colors={[s.colors.red, s.colors.white]}
-                    end={{ x: 0.5, y: 2.5 }}
-                    locations={[0, 0.75]}
+                    colors={["#8829ac", "#ca55e7"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    locations={[0, 0.66]}
                 />
 
                 <AnimatedHeartSVG
                     style={[styles.icon, heartStyles]}
-                    fill={liked ? s.colors.red : s.colors.black}
+                    fill={liked ? "purpleGradient" : s.colors.black}
                 />
             </Pressable>
         </View>

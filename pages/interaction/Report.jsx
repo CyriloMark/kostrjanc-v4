@@ -119,7 +119,7 @@ export default function Report({ navigation, route }) {
             id: item.id,
         });
 
-        if (response == "content has already been reported!") {
+        if (response.code == 290)
             Alert.alert(
                 getLangs("report_successful_title"),
                 `${item.title} (${itemType()}) ${getLangs(
@@ -132,28 +132,12 @@ export default function Report({ navigation, route }) {
                         style: "cancel",
                         onPress: () => {
                             navigation.goBack();
+                            setLoading(false);
                         },
                     },
                 ]
             );
-        } else if (response == "reported succesfully") {
-            Alert.alert(
-                getLangs("report_successful_title"),
-                `${item.title} (${itemType()}) ${getLangs(
-                    "report_successful_sub"
-                )}`,
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => {
-                            navigation.goBack();
-                        },
-                    },
-                ]
-            );
-        } else {
+        else {
             Alert.alert(
                 getLangs("report_unsuccessful_title"),
                 getLangs("report_unsuccessful_sub"),

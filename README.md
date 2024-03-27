@@ -1,52 +1,86 @@
-# kostrjanc
+# kostrjanc - 1. Serbski Social Media
 
-kostrjanc - 1. Serbski Social Media
+kostrjanc je prěnja a jenička serbskorěčna socialna syć za šmóratko. Tutón projekt Cyril Mark a Korla Baier wot februara 2022 wuwiwaja a wobstajnje dale wobdźěłuja. Hobby za programěrowanje nas hižo wjacore lěta přewodźa a jako prěni wulki, zhromadny projekt nasta tuta app ze wšěmi přisłušacymi systemami. Dźěło rozdźěli so "fairnje" do połojcy: hdźež Cyril na frontendće pasli wobhospodarja Korla wjele ličenskich dźěłow w backend a optiměruje funkcionality, zo by kostrjanc kóždy dźeń kusk rostł.
 
-## Licence
+## Wobsah
 
-&copy; 2022-2024 Cyrill Mark, Korla Baier
+1. [Powšitkowne](#1-powšitkowne)
+2. [Technologije](#2-technologije)
+3. [Instalacija](#3-instalacija)
+4. [Kolaboracija](#4-kolaboracija)
 
-All Rights Reserved
+## 1. Powšitkowne
 
-GPL-3.0 LICENCE
+### Licenca a Copyright
 
-## Content
+> © Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
 
-1. [General] #general
-2. [Technologies] #technologies
-3. [Installation] #installation
-4. [Collaboration] #collaboration
+Licenca je `GPL-3.0 LICENCE` tuta namaka so tu: [Link](./LICENSE).
 
-### General
+### Naša Website
 
-"kostrjanc" je prěni serbski socialny medium, kotryž so jako aplikacija poskići.
-"kostrjanc" zmóžni jednore zwjazanje Serbow přez internet.
+Pod slědowacymaj linkowaj namakaš kostrjanc webstronu z wjele wužitnymi informacijemi, a kostrjanc moderator Dashboard.
 
-"kostrjanc" ist das Erste Sorbische Sozial Media, die als App zur Verfügung steht.
-"kostrjanc" ermöglicht die einfache Kommunikation von Sorben durch das Internet.
+[kostrjanc Website](https://www.kostrjanc.de)
 
-"kostrjanc" is the first Sorbian social media avaidable as an application.
-"kostrjanc" enables Sorbians to communicate easily through the internet.
+[kostrjanc Dashboard](https://dashboard.kostrjanc.de)
 
-### Technologies
+## 2. Technologije
 
--- nodejs
--- react / react-native
--- JavaScript / Typescript
--- firebase
+-   [React](https://legacy.reactjs.org)
+-   [React Native](https://reactnative.dev)
+-   [Expo](https://expo.dev)
+-   [Firebase](https://firebase.google.com)
+-   [MeiliSearch](https://www.meilisearch.com)
+-   [Google Cloud](https://cloud.google.com)
+-   [Sotra](https://sotra.app)
 
-### Installation
+## 3. Instalacija
 
-INIT: ./src/app.jsx
+1. Wuwjedź prosće sćěhowace kročele:
 
-```bash
-$ git clone https://github.com/CyriloMark/kostrjanc
-$ cd ../kostrjanc/
-$ npm install
-$ npm start
+```
+git clone https://github.com/CyriloMark/kostrjanc-v4.git
+cd kostrjanc-v4
+npm install
 ```
 
-### Collaboration
+2. Nastaj dataju `.env` a napjelń wotpowědnje `example.env` twoje API-kluče.
 
--- Mark, Cyrill
--- Baier, Korla
+3. Wuwjedź:
+
+```
+expo start
+```
+
+4. Wočiń Expo-Go app a scannuj QR-Ceode z konsole. Dźiwaj na to, zo twój dźěłowy PC a twoje šmóratko stej w samsnej syći.
+
+## 4. Kolaboracija
+
+Tutón projekt słuša _Karl Baier und Cyril Mark kostrjanc GbR_.
+Jednaćelej staj:
+
+```
+Cyrill Mark
+Hermann-Liebmann-Straße 31
+04315 Leipzig
+```
+
+a
+
+```
+Karl Georg Josef Baier
+Mittelweg 12
+01920 Panschwitz-Kuckau
+```
+
+Dale na tutym projekće dźěłać a nas podpěruja:
+
+-   Bernhard Baier [(GitHub-Profil)](https://github.com/bmjbaier)
+-   Daniel Zoba [(GitHub-Profil)](https://github.com/zobadaniel)
+
+Wšitke trěbne prawniske informacije hodźa so pod linkomn namakać: [kostrjanc.de](https://kostrjanc.de/pages/impresum.html).
+
+<hr>
+
+#### Last Updated 26.03.2024
