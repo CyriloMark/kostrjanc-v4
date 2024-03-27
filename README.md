@@ -11,11 +11,11 @@ kostrjanc je prěnja a jenička serbskorěčna socialna syć za šmóratko. Tut�
 
 ## 1. Powšitkowne
 
-### Licensa a Copyright
+### Licenca a Copyright
 
 > © Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2024
 
-Licensa je `GPL-3.0 LICENCE` tuta namaka so tu: [Link](./LICENSE).
+Licenca je `GPL-3.0 LICENCE` tuta namaka so tu: [Link](./LICENSE).
 
 ### Naša Website
 
