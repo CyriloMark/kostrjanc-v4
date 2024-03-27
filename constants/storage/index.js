@@ -60,5 +60,8 @@ export const hasData = async key => {
     try {
         const hasKey = (await AsyncStorage.getAllKeys()).includes(key);
         return hasKey;
-    } catch (e) {}
+    } catch (e) {
+        console.log("error in hasData");
+        return false;
+    }
 };

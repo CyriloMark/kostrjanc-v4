@@ -7,6 +7,7 @@ import {
     filterPostsAndEvents,
     sortIds_InsertionSort,
 } from "./filterPostsAndEvents";
+import { setCachedContentData } from "./contentCacheLoader";
 
 /**
  * Gets User-Specific Content for Group
@@ -58,7 +59,7 @@ export default async function handleGroupContent(
     prevContentPosts.push(...usingContentData.posts);
     prevContentEvents.push(...usingContentData.events);
 
-    return combineContent(usingContentData);
+    return combineContent(usingContentData, group.id);
 }
 
 /**
@@ -163,7 +164,7 @@ async function removeObsoleteEvents(eventsList, currentDate) {
  * @param {Object} usingContentData Object with Posts and Events Ids as childs
  * @returns {Object[]}
  */
-function combineContent(usingContentData) {
+function combineContent(usingContentData, groupId) {
     // Idea: Sort Posts and Events by publish Data
 
     let finalContentList = [];
@@ -180,5 +181,7 @@ function combineContent(usingContentData) {
 
     sortIds_InsertionSort(finalContentList, "id");
 
+    setCachedContentData(groupId, finalContentList);
+    console.log(finalContentList);
     return finalContentList;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Platform, Pressable, ScrollView, Text, View } from "react-native";
 
 import { useIsFocused } from "@react-navigation/native";
@@ -13,7 +13,9 @@ import { General_Group } from "../../constants/content/GroupData";
 import { lerp, sortArrayByDateFromUnderorderedKey } from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
+import fetchCachedContentData from "../../constants/content/contentCacheLoader";
 
+// import Firebase
 import { getAuth } from "firebase/auth";
 import { get, ref, getDatabase, child } from "firebase/database";
 
@@ -25,6 +27,7 @@ import Banner from "../../components/cards/Banner";
 import Challenge from "../../components/cards/Challenge";
 import Refresh from "../../components/RefreshControl";
 import GroupSelect from "../../components/landing/GroupSelect";
+import ShowNewButton from "../../components/content/ShowNewButton";
 
 import Loading from "../static/Loading";
 
@@ -36,6 +39,7 @@ import handleChallengeContent from "../../constants/content/challengeContent";
 
 let LOADING = false;
 let LAST_UPDATED = 0;
+let SETTING_NEW_CONTENT = false;
 
 let showingContent = [];
 
@@ -52,6 +56,8 @@ let SELECTED_GROUP = {
 
 export default function Landing({ navigation, onTut }) {
     const isFocused = useIsFocused();
+
+    const mainScrollViewRef = useRef();
 
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
@@ -74,6 +80,7 @@ export default function Landing({ navigation, onTut }) {
         banners: [],
         content: [],
     });
+    const [newFetchedContent, setNewFetchedContent] = useState(null);
 
     const loadUser = async () => {
         const id = getAuth().currentUser.uid;
@@ -102,6 +109,7 @@ export default function Landing({ navigation, onTut }) {
     };
 
     useEffect(() => {
+        SETTING_NEW_CONTENT = false;
         setLoading(true);
         loadUser();
         checkForTutorial();
@@ -164,6 +172,24 @@ export default function Landing({ navigation, onTut }) {
         }
         //#endregion
 
+        const cachedData = await fetchCachedContentData(SELECTED_GROUP.id);
+        if (cachedData !== null) {
+            setContentData(prev => {
+                showingContent = cachedData;
+                setCorrectShowingPostEventLists(cachedData);
+                return {
+                    ...prev,
+                    content: cachedData,
+                };
+            });
+
+            //#region Handle Loading
+            setLoading(false);
+            LOADING = false;
+            LAST_UPDATED = Date.now();
+            //#endregion
+        }
+
         // Safe new Showing Content here
         let newShowingContent = [];
 
@@ -192,20 +218,31 @@ export default function Landing({ navigation, onTut }) {
 
         //#region Set Content
         if (groupId !== 1)
-            setContentData(prev => {
-                showingContent.push(...newShowingContent);
-                return {
-                    ...prev,
-                    content: showingContent,
-                };
-            });
+            if (cachedData === null)
+                setContentData(prev => {
+                    showingContent.push(...newShowingContent);
+                    return {
+                        ...prev,
+                        content: showingContent,
+                    };
+                });
+            else setNewFetchedContent(showingContent);
+
         //#endregion
 
         //#region Handle Loading
-        setLoading(false);
-        LOADING = false;
-        LAST_UPDATED = Date.now();
+        if (cachedData === null) {
+            setLoading(false);
+            LOADING = false;
+            LAST_UPDATED = Date.now();
+        }
         //#endregion
+    };
+
+    const setCorrectShowingPostEventLists = content => {
+        for (let i = 0; i < content.length; i++)
+            if (content[i].type === 0) showingPosts.push(content[i].id);
+            else if (content[i].type === 1) showingEvents.push(content[i].id);
     };
 
     const checkForTutorial = async () => {
@@ -782,6 +819,27 @@ export default function Landing({ navigation, onTut }) {
     }
     //#endregion
 
+    const setNewCachedContent = () => {
+        if (newFetchedContent === null || SETTING_NEW_CONTENT) return;
+        SETTING_NEW_CONTENT = true;
+
+        console.log("halo");
+        showingContent.push(...newFetchedContent);
+        setContentData(prev => {
+            return {
+                ...prev,
+                content: showingContent,
+            };
+        });
+        setNewCachedContent(null);
+
+        mainScrollViewRef.current?.scrollTo({
+            y: 0,
+            animated: true,
+        });
+        SETTING_NEW_CONTENT = false;
+    };
+
     if (loading) return <Loading />;
 
     return (
@@ -804,7 +862,12 @@ export default function Landing({ navigation, onTut }) {
                 }}
             />
 
+            {newFetchedContent !== null ? (
+                <ShowNewButton onPress={setNewCachedContent} />
+            ) : null}
+
             <ScrollView
+                ref={mainScrollViewRef}
                 style={[style.container, style.pH, style.oVisible]}
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}

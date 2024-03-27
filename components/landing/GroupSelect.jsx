@@ -50,7 +50,7 @@ export default function GroupSelect({ activeGroup, openGroupSelect }) {
 
 const styles = StyleSheet.create({
     container: {
-        zIndex: 10,
+        zIndex: 20,
         flexDirection: "row",
     },
 

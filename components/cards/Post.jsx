@@ -136,6 +136,7 @@ export default function Post(props) {
                 props.style,
                 {
                     marginVertical: style.defaultMmd,
+                    zIndex: 10,
                 },
             ]}>
             <Pressable style={styles.container} onPress={props.onPress}>
@@ -224,6 +225,7 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "column",
         justifyContent: "center",
+        zIndex: 10,
     },
 
     headerContainer: {

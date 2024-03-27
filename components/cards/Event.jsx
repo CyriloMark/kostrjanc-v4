@@ -118,7 +118,11 @@ export default function Event(props) {
     if (!props.group && event.group) return null;
     if (event.isBanned) return null;
     return (
-        <View style={[props.style, { marginVertical: style.defaultMmd }]}>
+        <View
+            style={[
+                props.style,
+                { marginVertical: style.defaultMmd, zIndex: 10 },
+            ]}>
             <Pressable style={styles.container} onPress={props.onPress}>
                 {/* Header */}
                 <View style={[styles.headerContainer]}>

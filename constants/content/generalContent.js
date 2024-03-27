@@ -16,6 +16,7 @@ import {
 import { getData } from "../storage";
 import quicksort from "./contentSort";
 import fetchRandomUsers from "./randomUsers";
+import { setCachedContentData } from "./contentCacheLoader";
 
 const RANDOM_USER_MAX_OUT = 5;
 const MAX_RANDOM_USER_FETCH_AMT = 3;
@@ -208,7 +209,7 @@ async function getEvents(
         eventList.push(...eList);
     } else {
         // If we want to limit later on the amount of user fetches I add now the variable override
-        // PREVIOUS const limitedUserList = followingListFiltered;
+        // const limitedUserList = followingListFiltered;
         const limitedUserList = filterUsersByAmount(followingListFiltered);
 
         // Fetch throw every User and get the Events List
@@ -479,5 +480,6 @@ function combineContent(usingContentData) {
 
     sortIds_InsertionSort(finalContentList, "id");
 
+    setCachedContentData(0, finalContentList);
     return finalContentList;
 }
