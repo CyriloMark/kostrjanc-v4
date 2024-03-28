@@ -480,6 +480,6 @@ function combineContent(usingContentData) {
 
     sortIds_InsertionSort(finalContentList, "id");
 
-    setCachedContentData(0, finalContentList);
+    // setCachedContentData(0, finalContentList);
     return finalContentList;
 }

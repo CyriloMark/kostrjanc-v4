@@ -8,6 +8,8 @@ const SAFE_KEY_FORMAT = "cachedContentData_{group_id}";
  * @param {*} groupId Group Id
  */
 export default async function fetchCachedContentData(groupId) {
+    if (groupId != 2) return null;
+
     const key = buildKey(groupId);
 
     if (!(await hasData(key))) return null;

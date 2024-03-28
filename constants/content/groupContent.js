@@ -181,7 +181,7 @@ function combineContent(usingContentData, groupId) {
 
     sortIds_InsertionSort(finalContentList, "id");
 
-    setCachedContentData(groupId, finalContentList);
-    console.log(finalContentList);
+    // setCachedContentData(groupId, finalContentList);
+
     return finalContentList;
 }

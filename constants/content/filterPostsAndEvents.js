@@ -148,3 +148,13 @@ export function mergeSortRandomly(original, second) {
         original.splice(index, 0, e);
     });
 }
+
+/**
+ *
+ * @param {number[]} postList List of Post Ids
+ * @param {number[]} filterList List of Post Ids to filter
+ */
+export function filterChallengePosts(postList, filterList) {
+    for (let i = 0; i < postList.length; i++)
+        if (filterList.includes(postList[i])) postList.splice(i, 1);
+}
