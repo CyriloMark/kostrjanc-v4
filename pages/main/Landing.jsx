@@ -14,6 +14,7 @@ import { lerp, sortArrayByDateFromUnderorderedKey } from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import fetchCachedContentData from "../../constants/content/contentCacheLoader";
+import { checkForChallengable } from "../../constants/content";
 
 // import Firebase
 import { getAuth } from "firebase/auth";
@@ -89,6 +90,8 @@ export default function Landing({ navigation, onTut }) {
                 // Man könnte hier ban abfragen
                 setUser(userData);
                 storeData("userData", userData);
+
+                if (userData.posts) checkForChallengable(userData.posts);
 
                 // USER-ID, UserData, Should Load Banners
                 getGroupSpecificContent(id, userData, true, SELECTED_GROUP.id);

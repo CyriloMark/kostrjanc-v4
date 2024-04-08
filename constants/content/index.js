@@ -507,3 +507,27 @@ export async function getImageData(uri, fromEdit, id) {
         console.error(e);
     }
 }
+
+import { get, ref, child, getDatabase } from "firebase/database";
+import { storeData } from "../storage";
+/**
+ *
+ * @param {number[]} postsList List of Post Ids
+ */
+export async function checkForChallengable(postsList) {
+    await get(child(ref(getDatabase()), `groups/2/posts`)).then(
+        async challengeSnap => {
+            if (!challengeSnap.exists())
+                return await storeData("hasUploadForChallenge", false);
+
+            const challengeData = challengeSnap.val();
+
+            let isInList = false;
+            challengeData.forEach(el => {
+                if (postsList.includes(el)) isInList = true;
+            });
+
+            await storeData("hasUploadForChallenge", isInList);
+        }
+    );
+}
