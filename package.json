@@ -1,6 +1,6 @@
 {
     "name": "kostrjanc",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "scripts": {
         "start": "expo start",
         "devstart": "expo start --dev-client",

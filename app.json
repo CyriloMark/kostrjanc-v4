@@ -22,7 +22,7 @@
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "de.kostrjanc.kostrjanc",
-            "buildNumber": "4.0.1",
+            "buildNumber": "4.0.2",
             "config": {
                 "googleMapsApiKey": "AIzaSyCMn8UNxdrveua2TUaPczfuXo0qpB28u6s"
             }
@@ -35,7 +35,7 @@
             },
             "softwareKeyboardLayoutMode": "pan",
             "package": "de.kostrjanc.kostrjanc",
-            "versionCode": 17,
+            "versionCode": 18,
             "config": {
                 "googleMaps": {
                     "apiKey": "AIzaSyCIoPcZR2nHZ2qsNb5b-n1JvFCeZGPOb5k"
