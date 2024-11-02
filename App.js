@@ -85,7 +85,7 @@ export default function App() {
     const [loggedIn, setLoggedIn] = useState(false);
 
     const [langIsSet, setLangIsSet] = useState(null);
-    const [testIsChecked, setTestIsChecked] = useState(false);
+    const [testIsChecked, setTestIsChecked] = useState(true);
 
     const [banned, setBanned] = useState(false);
     const [isRecentVersion, setIsRecentVersion] = useState({

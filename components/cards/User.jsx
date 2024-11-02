@@ -23,9 +23,10 @@ export default function User(props) {
                 <Text
                     style={[
                         style.Tmd,
-                        style.tWhite,
+                        style.tBlack,
                         {
                             marginLeft: style.defaultMmd,
+                            fontFamily: "Barlow_Bold",
                         },
                     ]}>
                     {props.user.name}
@@ -46,11 +47,21 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
         borderRadius: 100,
-        overflow: "hidden",
+
+        overflow: "visible",
         justifyContent: "center",
+
+        shadowColor: style.colors.black,
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0.33,
+        shadowRadius: 10,
     },
     userPb: {
         width: "100%",
         height: "100%",
+        borderRadius: 100,
     },
 });

@@ -41,14 +41,14 @@ export default function UpdateVersion({ bottom }) {
         switch (Platform.OS) {
             case "android":
                 link =
-                    "https://play.google.com/store/apps/details?id=de.zsl.kostrjanc";
+                    "https://play.google.com/store/apps/details?id=de.kostrjanc.kostrjanc";
                 break;
             case "ios":
                 link = "https://apps.apple.com/us/app/kostrjanc/id6463418677";
                 break;
             default:
                 link =
-                    "https://play.google.com/store/apps/details?id=de.zsl.kostrjanc";
+                    "https://play.google.com/store/apps/details?id=de.kostrjanc.kostrjanc";
                 break;
         }
         openLink(link);
