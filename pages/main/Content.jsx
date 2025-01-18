@@ -437,118 +437,118 @@ export default function Content({ navigation, onTut }) {
                     onPress={Keyboard.dismiss}
                     style={{ alignItems: "center" }}>
                     {randomUser ? (
-                        // <View
-                        //     style={{
-                        //         marginTop: style.defaultMmd,
-                        //         width: "100%",
-                        //         alignItems: "center",
-                        //     }}>
-                        //     <Text style={[style.tWhite, style.TlgBd]}>
-                        //         {getLangs("contentpage_contenthint")}
-                        //     </Text>
-                        //     <View
-                        //         style={[
-                        //             {
-                        //                 flexDirection: "row",
-                        //                 flexWrap: "wrap",
-                        //                 marginTop: style.defaultMsm,
-                        //             },
-                        //             style.allCenter,
-                        //         ]}>
-                        //         {arraySplitter(randomUser, 2).map(
-                        //             (userRow, line) => (
-                        //                 <View
-                        //                     style={{
-                        //                         width: "100%",
-                        //                         flexDirection: "row",
-                        //                         ...style.allCenter,
-                        //                     }}
-                        //                     key={line}>
-                        //                     {userRow.map((user, key) =>
-                        //                         user && !user.isBanned ? (
-                        //                             <User
-                        //                                 key={key}
-                        //                                 style={{
-                        //                                     // flex: 1,
-                        //                                     margin: style.defaultMsm,
-                        //                                 }}
-                        //                                 onPress={() => {
-                        //                                     navigation.navigate(
-                        //                                         "profileView",
-                        //                                         {
-                        //                                             id: user.id,
-                        //                                         }
-                        //                                     );
-                        //                                 }}
-                        //                                 user={user}
-                        //                             />
-                        //                         ) : null
-                        //                     )}
-                        //                 </View>
-                        //             )
-                        //         )}
-                        //     </View>
-                        // </View>
-
                         <View
                             style={{
                                 marginTop: style.defaultMmd,
-                                width: "90%",
+                                width: "100%",
+                                alignItems: "center",
                             }}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("contentpage_contenthint")}
+                            </Text>
                             <View
                                 style={[
-                                    styles.randomUserContainer,
-                                    style.shadowSec,
+                                    {
+                                        flexDirection: "row",
+                                        flexWrap: "wrap",
+                                        marginTop: style.defaultMsm,
+                                    },
+                                    style.allCenter,
                                 ]}>
-                                <LinearGradient
-                                    style={[styles.randomUserInner, style.Plg]}
-                                    colors={[
-                                        style.colors.blue,
-                                        style.colors.sec,
-                                    ]}
-                                    end={{ x: -0.5, y: 0.5 }}
-                                    locations={[0, 0.75]}>
-                                    <View
-                                        style={[
-                                            styles.randomUserIconContainer,
-                                            style.allCenter,
-                                        ]}>
-                                        <SVG_Dice
-                                            number={3}
-                                            style={{ width: 32, height: 32 }}
-                                            randomUserSpinning={refreshing}
-                                        />
-                                    </View>
-                                    <View
-                                        style={[
-                                            styles.randomUserUserContainer,
-                                            style.pV,
-                                        ]}>
-                                        {randomUser.map((user, key) =>
-                                            user && !user.isBanned ? (
-                                                <User
-                                                    key={key}
-                                                    style={{
-                                                        // flex: 1,
-                                                        margin: style.defaultMsm,
-                                                    }}
-                                                    onPress={() => {
-                                                        navigation.navigate(
-                                                            "profileView",
-                                                            {
-                                                                id: user.id,
-                                                            }
-                                                        );
-                                                    }}
-                                                    user={user}
-                                                />
-                                            ) : null
-                                        )}
-                                    </View>
-                                </LinearGradient>
+                                {arraySplitter(randomUser, 2).map(
+                                    (userRow, line) => (
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                flexDirection: "row",
+                                                ...style.allCenter,
+                                            }}
+                                            key={line}>
+                                            {userRow.map((user, key) =>
+                                                user && !user.isBanned ? (
+                                                    <User
+                                                        key={key}
+                                                        style={{
+                                                            // flex: 1,
+                                                            margin: style.defaultMsm,
+                                                        }}
+                                                        onPress={() => {
+                                                            navigation.navigate(
+                                                                "profileView",
+                                                                {
+                                                                    id: user.id,
+                                                                }
+                                                            );
+                                                        }}
+                                                        user={user}
+                                                    />
+                                                ) : null
+                                            )}
+                                        </View>
+                                    )
+                                )}
                             </View>
                         </View>
                     ) : (
+                        // <View
+                        //     style={{
+                        //         marginTop: style.defaultMmd,
+                        //         width: "90%",
+                        //     }}>
+                        //     <View
+                        //         style={[
+                        //             styles.randomUserContainer,
+                        //             style.shadowSec,
+                        //         ]}>
+                        //         <LinearGradient
+                        //             style={[styles.randomUserInner, style.Plg]}
+                        //             colors={[
+                        //                 style.colors.blue,
+                        //                 style.colors.sec,
+                        //             ]}
+                        //             end={{ x: -0.5, y: 0.5 }}
+                        //             locations={[0, 0.75]}>
+                        //             <View
+                        //                 style={[
+                        //                     styles.randomUserIconContainer,
+                        //                     style.allCenter,
+                        //                 ]}>
+                        //                 <SVG_Dice
+                        //                     number={3}
+                        //                     style={{ width: 32, height: 32 }}
+                        //                     randomUserSpinning={refreshing}
+                        //                 />
+                        //             </View>
+                        //             <View
+                        //                 style={[
+                        //                     styles.randomUserUserContainer,
+                        //                     style.pV,
+                        //                     { height: 500 },
+                        //                 ]}>
+                        //                 {randomUser.map((user, key) =>
+                        //                     user && !user.isBanned ? (
+                        //                         <User
+                        //                             key={key}
+                        //                             style={{
+                        //                                 // flex: 1,
+                        //                                 margin: style.defaultMsm,
+                        //                             }}
+                        //                             onPress={() => {
+                        //                                 navigation.navigate(
+                        //                                     "profileView",
+                        //                                     {
+                        //                                         id: user.id,
+                        //                                     }
+                        //                                 );
+                        //                             }}
+                        //                             user={user}
+                        //                         />
+                        //                     ) : null
+                        //                 )}
+                        //             </View>
+                        //         </LinearGradient>
+                        //     </View>
+                        // </View>
                         <Text
                             style={[
                                 style.tWhite,

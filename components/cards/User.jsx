@@ -23,7 +23,7 @@ export default function User(props) {
                 <Text
                     style={[
                         style.Tmd,
-                        style.tBlack,
+                        style.tWhite,
                         {
                             marginLeft: style.defaultMmd,
                             fontFamily: "Barlow_Bold",
