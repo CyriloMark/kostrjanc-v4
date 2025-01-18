@@ -119,7 +119,7 @@ export default function Landing({ navigation }) {
                 <Text style={[style.TsmLt, style.tWhite, style.tCenter]}>
                     Version {require("../../app.json").expo.version}
                     {"\n"}
-                    Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2024 All
+                    Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2025 All
                     Rights Reserved
                 </Text>
             </View>
