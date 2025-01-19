@@ -35,6 +35,7 @@ import ListButton from "../components/event/ListButton";
 import Refresh from "../components/RefreshControl";
 import TextField from "../components/TextField";
 import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
+import Map from "../components/event/Map";
 
 import SVG_Live from "../assets/svg/Live";
 import SVG_Pin from "../assets/svg/Pin3.0";
@@ -82,6 +83,8 @@ let cursorPos = -1;
 export default function Event({ navigation, route, onTut }) {
     const mapRef = useRef();
     const commentInputRef = useRef();
+
+    const [scrollable, setScrollable] = useState(true);
 
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
@@ -150,7 +153,13 @@ export default function Event({ navigation, route, onTut }) {
 
                 getIfCreatorIsClient(eventData.creator);
 
-                mapRef.current.animateToRegion(eventData["geoCords"], 2500);
+                mapRef.current.postMessage(
+                    JSON.stringify({
+                        action: "animate",
+                        ...event.geoCords,
+                        duration: 1,
+                    })
+                );
 
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
@@ -363,7 +372,7 @@ export default function Event({ navigation, route, onTut }) {
                 </Pressable>
 
                 <ScrollView
-                    scrollEnabled
+                    scrollEnabled={scrollable}
                     automaticallyAdjustKeyboardInsets
                     automaticallyAdjustContentInsets
                     keyboardDismissMode="interactive"
@@ -391,15 +400,16 @@ export default function Event({ navigation, route, onTut }) {
                                     onPress={alertForTranslation}
                                     style={[
                                         {
-                                            width: 28,
+                                            width: 34,
                                             height: 34,
                                             marginHorizontal: style.defaultMmd,
+                                            paddingTop: 6,
                                         },
                                         style.allCenter,
                                     ]}>
                                     <SVG_Translate
                                         style={{
-                                            width: 28,
+                                            width: 26,
                                             aspectRatio: 1,
                                         }}
                                     />
@@ -454,45 +464,36 @@ export default function Event({ navigation, route, onTut }) {
                                 styles.mapContainer,
                                 style.allCenter,
                                 style.oHidden,
-                            ]}>
-                            <MapView
-                                ref={mapRef}
+                            ]}
+                            onTouchStart={() => setScrollable(false)}
+                            onTouchEnd={() => setScrollable(true)}>
+                            <Map
+                                mapRef={mapRef}
                                 style={style.allMax}
-                                userInterfaceStyle="dark"
-                                showsUserLocation
-                                showsScale
-                                customMapStyle={mapStylesDefault}
-                                provider={PROVIDER_DEFAULT}
-                                accessible={false}
-                                focusable={false}
+                                accessible={true}
                                 initialRegion={event.geoCords}
-                                onPress={() => {
-                                    mapRef.current.animateToRegion(
-                                        event.geoCords,
-                                        1000
+                                marker={true}
+                                // onPress={() => {
+                                //     mapRef.current.animateToRegion(
+                                //         event.geoCords,
+                                //         1000
+                                //     );
+                                // }}
+                                title={getUnsignedTranslationText(event.title)}
+                                //showsUserLocation
+                                //userInterfaceStyle="dark"
+                                //showsScale
+                                //focusable={false}
+                                onLongPress={() => {
+                                    mapRef.current.postMessage(
+                                        JSON.stringify({
+                                            action: "animate",
+                                            ...event.geoCords,
+                                            duration: 1,
+                                        })
                                     );
                                 }}
-                                // mapType={mapTypes[currentMapType]}
-                                // onLongPress={() => {
-                                //     setCurrentMapType(cur => {
-                                //         return cur === 0 ? 1 : 0;
-                                //     });
-                                // }}
-                            >
-                                <Marker
-                                    focusable
-                                    draggable={false}
-                                    title={event.title}
-                                    style={{ transform: [{ translateY: -16 }] }}
-                                    coordinate={event.geoCords}>
-                                    <View>
-                                        <SVG_Pin
-                                            fill={style.colors.red}
-                                            style={styles.marker}
-                                        />
-                                    </View>
-                                </Marker>
-                            </MapView>
+                            />
                         </View>
 
                         <View style={styles.textContainer}>

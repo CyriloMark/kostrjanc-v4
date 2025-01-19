@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Pressable, View, StyleSheet, Text, Image } from "react-native";
 
@@ -24,9 +24,9 @@ import { getLangs } from "../../constants/langs";
 import { getUnsignedTranslationText } from "../../constants/content/translation";
 import { checkForUnnecessaryNewLine } from "../../constants/content";
 import { checkLinkedUser } from "../../constants/content/linking";
+import Map from "../event/Map";
 
 export default function Event(props) {
-    const mapRef = useRef();
     const [event, setEvent] = useState(Event_Placeholder);
     const [isLive, setIsLive] = useState(false);
     const [imgUris, setImgUris] = useState([]);
@@ -50,8 +50,6 @@ export default function Event(props) {
                         return;
                     }
                 }
-
-                mapRef.current.animateToRegion(eventData["geoCords"], 0);
 
                 setEvent({
                     ...eventData,
@@ -173,31 +171,14 @@ export default function Event(props) {
                         style.allCenter,
                         style.oHidden,
                     ]}>
-                    <MapView
-                        ref={mapRef}
+                    <Map
                         style={style.allMax}
                         accessible={false}
-                        userInterfaceStyle="dark"
-                        focusable={false}
-                        rotateEnabled={false}
-                        provider={PROVIDER_DEFAULT}
-                        customMapStyle={mapStylesDefault}
-                        zoomEnabled={false}
-                        pitchEnabled={false}
-                        scrollEnabled={false}
                         initialRegion={event.geoCords}
-                        onPress={props.onPress}>
-                        <Marker
-                            coordinate={event.geoCords}
-                            draggable={false}
-                            style={{ transform: [{ translateY: -16 }] }}
-                            tappable={false}>
-                            <SVG_Pin
-                                fill={style.colors.red}
-                                style={styles.marker}
-                            />
-                        </Marker>
-                    </MapView>
+                        onPress={props.onPress}
+                        title={event.title}
+                        marker={true}
+                    />
                 </View>
 
                 {/* Checks PBs */}

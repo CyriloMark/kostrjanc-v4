@@ -7,6 +7,7 @@ import { getDatabase, ref, get, child } from "firebase/database";
 import * as s from "../../styles";
 
 import MapView, { Marker } from "react-native-maps";
+import Map from "../event/Map";
 
 import { Event_Placeholder } from "../../constants/content/PlaceholderData";
 
@@ -49,19 +50,14 @@ export default function Event({ id, onPress, style, asCard }) {
             <Pressable style={styles.container} onPress={onPress}>
                 {/* Map */}
                 <View style={[styles.mapContainer, s.allCenter, s.oHidden]}>
-                    <MapView
+                    <Map
                         style={s.allMax}
-                        accessible={false}
-                        focusable={false}
-                        rotateEnabled={false}
-                        zoomEnabled={false}
-                        pitchEnabled={false}
                         initialRegion={event.geoCords}
-                        scrollEnabled={false}
-                        userInterfaceStyle="dark"
-                        onPress={onPress}>
-                        <Marker coordinate={event.geoCords} />
-                    </MapView>
+                        title={event.title}
+                        onPress={onPress}
+                        accessible={false}
+                        marker={true}
+                    />
                 </View>
             </Pressable>
         </View>

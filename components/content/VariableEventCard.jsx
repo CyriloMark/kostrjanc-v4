@@ -9,6 +9,7 @@ import * as s from "../../styles";
 import SVG_Live from "../../assets/svg/Live";
 import SVG_Pin from "../../assets/svg/Pin3.0";
 import SVG_Return from "../../assets/svg/Return";
+import SVG_Translate from "../../assets/svg/Translate";
 
 // import Constants
 import { checkIfLive, mapStylesDefault } from "../../constants/event";
@@ -18,6 +19,20 @@ import {
     convertTimestampToString,
 } from "../../constants/time";
 import { getLangs } from "../../constants/langs";
+import { checkLinkedUser } from "../../constants/content/linking";
+import {
+    alertForTranslation,
+    checkIsTranslated,
+    getUnsignedTranslationText,
+} from "../../constants/content/translation";
+import {
+    checkForUnnecessaryNewLine,
+    checkForURLs,
+} from "../../constants/content";
+import { openLink } from "../../constants";
+
+// import Components
+import Map from "../event/Map";
 
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { LinearGradient } from "expo-linear-gradient";
@@ -57,9 +72,12 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             },
                         });
 
-                        mapRef.current.animateToRegion(
-                            eventData["geoCords"],
-                            0
+                        mapRef.current.postMessage(
+                            JSON.stringify({
+                                action: "animate",
+                                ...eventData["geoCords"],
+                                duration: 0,
+                            })
                         );
                     })
                     .catch(error =>
@@ -91,7 +109,69 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                     {/* Header */}
                     <View style={[styles_big.headerContainer, s.allCenter]}>
                         {/* Title */}
-                        <Text style={[s.TlgBd, s.tWhite]}>{event.title}</Text>
+                        <Text style={[s.TlgBd, s.tWhite]}>
+                            {checkIsTranslated(event.title) ? (
+                                <Pressable
+                                    onPress={alertForTranslation}
+                                    style={[
+                                        {
+                                            width: 34,
+                                            height: 24,
+                                            marginHorizontal: s.defaultMmd,
+                                            paddingTop: 2,
+                                        },
+                                        s.allCenter,
+                                    ]}>
+                                    <SVG_Translate
+                                        style={{
+                                            width: 24,
+                                            aspectRatio: 1,
+                                        }}
+                                    />
+                                </Pressable>
+                            ) : null}
+                            {checkLinkedUser(
+                                getUnsignedTranslationText(
+                                    checkForUnnecessaryNewLine(event.title)
+                                )
+                            ).map((el, key) =>
+                                !el.isLinked ? (
+                                    checkForURLs(el.text).map((el2, key2) =>
+                                        !el2.hasUrl ? (
+                                            <Text key={key2}>{el2.text}</Text>
+                                        ) : (
+                                            <Text
+                                                key={key2}
+                                                style={[
+                                                    s.tBlue,
+                                                    {
+                                                        textDecorationLine:
+                                                            "underline",
+                                                        textDecorationColor:
+                                                            s.colors.blue,
+                                                    },
+                                                ]}
+                                                onPress={() =>
+                                                    openLink(el2.text)
+                                                }>
+                                                {el2.text}
+                                            </Text>
+                                        )
+                                    )
+                                ) : (
+                                    <Text
+                                        key={key}
+                                        style={s.tBlue}
+                                        onPress={() =>
+                                            navigation.push("profileView", {
+                                                id: el.id,
+                                            })
+                                        }>
+                                        {el.text}
+                                    </Text>
+                                )
+                            )}
+                        </Text>
                         {/* Creator Container */}
                         <View
                             style={[
@@ -147,33 +227,17 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             s.allCenter,
                             s.oHidden,
                         ]}>
-                        <MapView
-                            ref={mapRef}
-                            style={s.allMax}
+                        <Map
+                            mapRef={mapRef}
                             accessible={false}
-                            userInterfaceStyle="dark"
-                            focusable={false}
-                            rotateEnabled={false}
-                            provider={PROVIDER_DEFAULT}
-                            customMapStyle={mapStylesDefault}
-                            zoomEnabled={false}
-                            pitchEnabled={false}
-                            scrollEnabled={false}
                             initialRegion={event.geoCords}
-                            onPress={onPress}>
-                            <Marker
-                                focusable
-                                draggable={false}
-                                style={{ transform: [{ translateY: -16 }] }}
-                                title={event.title}
-                                coordinate={event.geoCords}>
-                                <SVG_Pin
-                                    fill={s.colors.red}
-                                    style={styles.marker}
-                                />
-                            </Marker>
-                        </MapView>
+                            style={s.allMax}
+                            onPress={onPress}
+                            title={event.title}
+                            marker={true}
+                        />
                     </View>
+
                     {/* Checks */}
                     <View style={[styles_big.checkContainer]}>
                         <View style={styles_big.checksContainer}>
@@ -243,7 +307,49 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
                                 style={[s.TlgBd, s.tWhite]}>
-                                {event.title}
+                                {checkLinkedUser(
+                                    getUnsignedTranslationText(
+                                        checkForUnnecessaryNewLine(event.title)
+                                    )
+                                ).map((el, key) =>
+                                    !el.isLinked ? (
+                                        checkForURLs(el.text).map((el2, key2) =>
+                                            !el2.hasUrl ? (
+                                                <Text key={key2}>
+                                                    {el2.text}
+                                                </Text>
+                                            ) : (
+                                                <Text
+                                                    key={key2}
+                                                    style={[
+                                                        s.tBlue,
+                                                        {
+                                                            textDecorationLine:
+                                                                "underline",
+                                                            textDecorationColor:
+                                                                s.colors.blue,
+                                                        },
+                                                    ]}
+                                                    onPress={() =>
+                                                        openLink(el2.text)
+                                                    }>
+                                                    {el2.text}
+                                                </Text>
+                                            )
+                                        )
+                                    ) : (
+                                        <Text
+                                            key={key}
+                                            style={s.tBlue}
+                                            onPress={() =>
+                                                navigation.push("profileView", {
+                                                    id: el.id,
+                                                })
+                                            }>
+                                            {el.text}
+                                        </Text>
+                                    )
+                                )}
                             </Text>
 
                             <View style={[styles.userContainer, s.Psm]}>
@@ -289,31 +395,15 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             s.allCenter,
                             s.oHidden,
                         ]}>
-                        <MapView
-                            ref={mapRef}
+                        <Map
+                            mapRef={mapRef}
                             style={s.allMax}
                             accessible={false}
-                            userInterfaceStyle="dark"
-                            focusable={false}
-                            rotateEnabled={false}
-                            provider={PROVIDER_DEFAULT}
-                            customMapStyle={mapStylesDefault}
-                            zoomEnabled={false}
-                            pitchEnabled={false}
-                            scrollEnabled={false}
                             initialRegion={event.geoCords}
-                            onPress={onPress}>
-                            <Marker
-                                coordinate={event.geoCords}
-                                draggable={false}
-                                style={{ transform: [{ translateY: -16 }] }}
-                                tappable={false}>
-                                <SVG_Pin
-                                    fill={s.colors.red}
-                                    style={styles.marker}
-                                />
-                            </Marker>
-                        </MapView>
+                            onPress={onPress}
+                            title={event.title}
+                            marker={true}
+                        />
                     </View>
 
                     {/* Checks */}
@@ -372,7 +462,49 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                     {/* Text Area */}
                     <View style={[styles_small.infoContainer]}>
                         {/* Title */}
-                        <Text style={[s.tWhite, s.TlgBd]}>{event.title}</Text>
+                        <Text style={[s.tWhite, s.TlgBd]}>
+                            {checkLinkedUser(
+                                getUnsignedTranslationText(
+                                    checkForUnnecessaryNewLine(event.title)
+                                )
+                            ).map((el, key) =>
+                                !el.isLinked ? (
+                                    checkForURLs(el.text).map((el2, key2) =>
+                                        !el2.hasUrl ? (
+                                            <Text key={key2}>{el2.text}</Text>
+                                        ) : (
+                                            <Text
+                                                key={key2}
+                                                style={[
+                                                    s.tBlue,
+                                                    {
+                                                        textDecorationLine:
+                                                            "underline",
+                                                        textDecorationColor:
+                                                            s.colors.blue,
+                                                    },
+                                                ]}
+                                                onPress={() =>
+                                                    openLink(el2.text)
+                                                }>
+                                                {el2.text}
+                                            </Text>
+                                        )
+                                    )
+                                ) : (
+                                    <Text
+                                        key={key}
+                                        style={s.tBlue}
+                                        onPress={() =>
+                                            navigation.push("profileView", {
+                                                id: el.id,
+                                            })
+                                        }>
+                                        {el.text}
+                                    </Text>
+                                )
+                            )}
+                        </Text>
                         <View style={[styles.userContainer, s.Psm]}>
                             <View style={styles.userPbContainer}>
                                 <Image
@@ -442,31 +574,15 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             s.oHidden,
                             s.allCenter,
                         ]}>
-                        <MapView
-                            ref={mapRef}
+                        <Map
+                            mapRef={mapRef}
                             style={s.allMax}
-                            accessible={false}
-                            userInterfaceStyle="dark"
-                            focusable={false}
-                            rotateEnabled={false}
-                            provider={PROVIDER_DEFAULT}
-                            customMapStyle={mapStylesDefault}
-                            zoomEnabled={false}
-                            pitchEnabled={false}
-                            scrollEnabled={false}
                             initialRegion={event.geoCords}
-                            onPress={onPress}>
-                            <Marker
-                                coordinate={event.geoCords}
-                                draggable={false}
-                                style={{ transform: [{ translateY: -16 }] }}
-                                tappable={false}>
-                                <SVG_Pin
-                                    fill={s.colors.red}
-                                    style={styles.marker}
-                                />
-                            </Marker>
-                        </MapView>
+                            onPress={onPress}
+                            accessible={false}
+                            title={event.title}
+                            marker={true}
+                        />
                     </View>
                 </Pressable>
             </View>

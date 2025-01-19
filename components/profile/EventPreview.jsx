@@ -8,7 +8,7 @@ import MapView, {
     PROVIDER_DEFAULT,
     PROVIDER_GOOGLE,
 } from "react-native-maps";
-import { mapStylesDefault } from "../../constants/event";
+import Map from "../event/Map";
 
 import SVG_Pin from "../../assets/svg/Pin3.0";
 
@@ -18,27 +18,14 @@ export default function EventPreview({ style, onPress, data }) {
             <Pressable
                 style={[styles.container, s.oHidden, s.allCenter]}
                 onPress={onPress}>
-                <MapView
+                <Map
                     style={s.allMax}
                     accessible={false}
-                    focusable={false}
-                    rotateEnabled={false}
-                    zoomEnabled={false}
-                    provider={PROVIDER_DEFAULT}
-                    customMapStyle={mapStylesDefault}
-                    initialRegion={data.geoCords}
-                    pitchEnabled={false}
                     onPress={onPress}
-                    userInterfaceStyle="dark"
-                    scrollEnabled={false}>
-                    <Marker
-                        coordinate={data.geoCords}
-                        style={{ transform: [{ translateY: -16 }] }}
-                        focusable={false}
-                        draggable={false}>
-                        <SVG_Pin fill={s.colors.red} style={styles.pin} />
-                    </Marker>
-                </MapView>
+                    initialRegion={data.geoCords}
+                    title={""}
+                    marker={true}
+                />
             </Pressable>
         </View>
     );

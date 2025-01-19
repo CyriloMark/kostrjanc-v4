@@ -81,6 +81,7 @@ import Check from "../../components/Check";
 import SelectableButton from "../../components/event/SelectableButton";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
+import Map from "../../components/event/Map";
 
 import * as FileSystem from "expo-file-system";
 
@@ -98,6 +99,8 @@ let cursorPos = -1;
 export default function EventCreate({ navigation, route }) {
     let btnPressed = false;
     const [uploading, setUploading] = useState(btnPressed);
+
+    const [scrollable, setScrollable] = useState(true);
 
     const mapRef = useRef();
 
@@ -593,6 +596,23 @@ export default function EventCreate({ navigation, route }) {
         });
     };
 
+    const overridePin = event => {
+        const data = JSON.parse(event.nativeEvent.data);
+        if (data.action === "boundsChanged") {
+            let latiduteDelta = (data.bounds.north - data.bounds.south) / 2;
+            let longitudeDelta = (data.bounds.east - data.bounds.west) / 2;
+            let latidute = data.bounds.north + latiduteDelta;
+            let longitude = data.bounds.east + longitudeDelta;
+
+            setPin({
+                latitude: latidute,
+                latitudeDelta: latiduteDelta,
+                longitude: longitude,
+                longitudeDelta: longitudeDelta,
+            });
+        }
+    };
+
     return (
         <View style={[style.container, style.bgBlack]}>
             {uploading ? (
@@ -625,7 +645,7 @@ export default function EventCreate({ navigation, route }) {
                 <ScrollView
                     style={[style.container, style.pH, style.oVisible]}
                     keyboardDismissMode="interactive"
-                    scrollEnabled
+                    scrollEnabled={scrollable}
                     keyboardShouldPersistTaps="handled"
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
@@ -645,36 +665,48 @@ export default function EventCreate({ navigation, route }) {
 
                         {/* Map */}
                         <View
+                            onTouchStart={() => setScrollable(false)}
+                            onTouchEnd={() => setScrollable(true)}
                             style={[
                                 styles.mapContainer,
                                 style.allCenter,
                                 style.oHidden,
                             ]}>
-                            <MapView
-                                ref={mapRef}
+                            <Map
+                                mapRef={mapRef}
                                 style={style.allMax}
-                                userInterfaceStyle="dark"
-                                showsUserLocation
-                                customMapStyle={mapStylesDefault}
-                                provider={PROVIDER_DEFAULT}
-                                showsScale
-                                accessible={false}
-                                focusable={false}
-                                // mapType={mapTypes[currentMapType]}
-                                // onLongPress={() => {
-                                //     setCurrentMapType(cur => {
-                                //         return cur === 0 ? 1 : 0;
-                                //     });
-                                // }}
-                                // onPress={ev =>
-                                //     mapRef.current.animateToRegion(
-                                //         ev.nativeEvent.coordinate,
-                                //         250
-                                //     )
-                                // }
-                                onRegionChange={result => setPin(result)}
-                                initialRegion={event.geoCords}>
-                                {/* <Marker
+                                initialRegion={event.geoCords}
+                                marker={false}
+                                title={""}
+                                accessible={true}
+                                onMessage={overridePin}
+                            />
+                            {false ? (
+                                <MapView
+                                    ref={mapRef}
+                                    style={style.allMax}
+                                    userInterfaceStyle="dark"
+                                    showsUserLocation
+                                    customMapStyle={mapStylesDefault}
+                                    provider={PROVIDER_DEFAULT}
+                                    showsScale
+                                    accessible={false}
+                                    focusable={false}
+                                    // mapType={mapTypes[currentMapType]}
+                                    // onLongPress={() => {
+                                    //     setCurrentMapType(cur => {
+                                    //         return cur === 0 ? 1 : 0;
+                                    //     });
+                                    // }}
+                                    // onPress={ev =>
+                                    //     mapRef.current.animateToRegion(
+                                    //         ev.nativeEvent.coordinate,
+                                    //         250
+                                    //     )
+                                    // }
+                                    onRegionChange={result => setPin(result)}
+                                    initialRegion={event.geoCords}>
+                                    {/* <Marker
                                     focusable
                                     title={event.title}
                                     coordinate={pin}>
@@ -683,7 +715,8 @@ export default function EventCreate({ navigation, route }) {
                                         style={styles.marker}
                                     />
                                 </Marker> */}
-                            </MapView>
+                                </MapView>
+                            ) : null}
                             <SVG_Pin
                                 fill={style.colors.red}
                                 style={styles.mapPin}
