@@ -309,16 +309,17 @@ export default function Post({ navigation, route, onTut }) {
                                         onPress={alertForTranslation}
                                         style={[
                                             {
-                                                width: 28,
+                                                width: 34,
                                                 height: 34,
                                                 marginHorizontal:
                                                     style.defaultMmd,
+                                                paddingTop: 6,
                                             },
                                             style.allCenter,
                                         ]}>
                                         <SVG_Translate
                                             style={{
-                                                width: 28,
+                                                width: 26,
                                                 aspectRatio: 1,
                                             }}
                                         />

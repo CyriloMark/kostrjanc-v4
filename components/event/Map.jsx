@@ -30,6 +30,7 @@ export default function Map({
     const htmlContent = `
             <html>
             <head>
+                <meta name="viewport" content="user-scalable=0">
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
                 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
                 <style>
@@ -37,6 +38,13 @@ export default function Map({
                         -ms-touch-action: ${accessible};
                         touch-action: ${accessible};
                     }
+
+                    .leaflet-container {
+  touch-action: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
                 </style>
             </head>
             <body style="margin:0;padding:0;">
@@ -53,14 +61,14 @@ export default function Map({
                     var center = L.latLng(-10.5, -50.5);
                     var map = L.map('map', {
                         zoom: 12,
-                        zoomControl: ${accessible},
+                        zoomControl: false,
                         zoomSnap: 0.1,
                         dragging: ${accessible},
                         touchZoom: ${accessible},
                         scrollWheelZoom: ${accessible},
-                        doubleClickZoom: ${accessible},
+                        doubleClickZoom: false,
                         boxZoom: ${accessible},
-                        keyboard: ${accessible}
+                        keyboard: ${accessible},
                     }).fitBounds([
                         [${
                             initialRegion.latitude - initialRegion.latitudeDelta
@@ -137,8 +145,8 @@ export default function Map({
                 ref={mapRef}
                 source={{ html: htmlContent }}
                 style={{ flex: 1, width: "100%" }}
-                scrollEnabled={accessible}
-                bounces={accessible}
+                bounces={false}
+                scrollEnabled={false}
                 onMessage={onMessage}
             />
         </Pressable>
