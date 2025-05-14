@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Modal, StyleSheet, Text, Pressable } from "react-native";
 
 import * as style from "../../styles";
@@ -12,16 +12,17 @@ import Animated, {
     useAnimatedStyle,
     withDelay,
 } from "react-native-reanimated";
-import { Path, Polygon, Rect, Svg } from "react-native-svg";
-import { Video, ResizeMode } from "expo-av";
+import { Path, Rect, Svg } from "react-native-svg";
+import { useVideoPlayer, VideoView } from "expo-video";
 import { getLangs } from "../../constants/langs";
 
 export default function TutorialView({ visible, onClose, data }) {
-    const videoRef = useRef(null);
+    const playButtonOpacity = useSharedValue(1);
 
     const [playing, setPlaying] = useState(false);
-
-    const playButtonOpacity = useSharedValue(1);
+    const player = useVideoPlayer(data.uri, player => {
+        player.loop = true;
+    });
 
     const onToggle = () => {
         if (playing) {
@@ -31,7 +32,7 @@ export default function TutorialView({ visible, onClose, data }) {
             });
 
             setPlaying(false);
-            videoRef.current.pauseAsync();
+            player.pause();
         } else {
             playButtonOpacity.value = withDelay(
                 1000,
@@ -41,7 +42,7 @@ export default function TutorialView({ visible, onClose, data }) {
                 })
             );
             setPlaying(true);
-            videoRef.current.playAsync();
+            player.play();
         }
     };
 
@@ -83,12 +84,9 @@ export default function TutorialView({ visible, onClose, data }) {
                         style.oHidden,
                     ]}
                     onPress={onToggle}>
-                    <Video
-                        source={{ uri: data.uri }}
-                        ref={videoRef}
-                        useNativeControls={false}
-                        isLooping
-                        resizeMode={ResizeMode.CONTAIN}
+                    <VideoView
+                        nativeControls={false}
+                        player={player}
                         style={style.allMax}
                     />
                     <Animated.View
