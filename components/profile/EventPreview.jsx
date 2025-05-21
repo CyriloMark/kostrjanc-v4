@@ -19,7 +19,7 @@ export default function EventPreview({ style, onPress, data }) {
                 style={[styles.container, s.oHidden, s.allCenter]}
                 onPress={onPress}>
                 <Map
-                    style={s.allMax}
+                    style={styles.map}
                     accessible={false}
                     onPress={onPress}
                     initialRegion={data.geoCords}
@@ -49,5 +49,9 @@ const styles = StyleSheet.create({
         height: 32,
         width: 32,
         ...s.boxShadow,
+    },
+    map: {
+        width: "100%",
+        aspectRatio: 1,
     },
 });

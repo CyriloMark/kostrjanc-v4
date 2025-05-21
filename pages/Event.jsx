@@ -473,17 +473,7 @@ export default function Event({ navigation, route, onTut }) {
                                 accessible={true}
                                 initialRegion={event.geoCords}
                                 marker={true}
-                                // onPress={() => {
-                                //     mapRef.current.animateToRegion(
-                                //         event.geoCords,
-                                //         1000
-                                //     );
-                                // }}
                                 title={getUnsignedTranslationText(event.title)}
-                                //showsUserLocation
-                                //userInterfaceStyle="dark"
-                                //showsScale
-                                //focusable={false}
                                 onLongPress={() => {
                                     mapRef.current.postMessage(
                                         JSON.stringify({
@@ -493,6 +483,17 @@ export default function Event({ navigation, route, onTut }) {
                                         })
                                     );
                                 }}
+                                onMessage={() => {}}
+                                // onPress={() => {
+                                //     mapRef.current.animateToRegion(
+                                //         event.geoCords,
+                                //         1000
+                                //     );
+                                // }}
+                                // showsUserLocation
+                                //userInterfaceStyle="dark"
+                                //showsScale
+                                //focusable={false}
                             />
                         </View>
 

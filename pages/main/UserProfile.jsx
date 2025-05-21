@@ -386,7 +386,7 @@ export default function UserProfile({ navigation, onTut }) {
 
                 {/* Content */}
                 <View style={styles.sectionContainer}>
-                    {arraySplitter(postEventList, 2).map((list, listKey) => (
+                    {arraySplitter(postEventList, 4).map((list, listKey) => (
                         <View
                             key={listKey}
                             style={styles.contentItemListContainer}>

@@ -11,7 +11,7 @@ export const langs = [
     {
         id: 1,
         name: "Dolnoserbšćina",
-        enabled: false,
+        enabled: true,
         flag: <SVG_Hsb />,
     },
     {

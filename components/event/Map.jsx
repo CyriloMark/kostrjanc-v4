@@ -14,7 +14,9 @@ import { getUnsignedTranslationText } from "../../constants/content/translation"
 */
 
 const PIN_URL =
-    "https://cdn.discordapp.com/attachments/939493377861382215/1330545513006895214/pin.png?ex=678e5e92&is=678d0d12&hm=190db5e648e6456763427890c58d6289b4e1f089a13771b752366f238eb7c7bb&";
+    "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/pin.png?alt=media&token=6f3538eb-2808-434b-9650-60b400de9637";
+const PIN_SHADOW_URL =
+    "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/pin-shadow.png?alt=media&token=1185c69a-fefa-48a3-ae33-4c18152b0064";
 
 export default function Map({
     style,
@@ -53,9 +55,12 @@ export default function Map({
                 <script>
                     var icon = L.icon({
                         iconUrl: '${PIN_URL}',
+                        shadowUrl: '${PIN_SHADOW_URL}',
                         iconSize: [250/4, 425/4],
                         iconAnchor: [125/4, 425/4],
-                        // popupAnchor: [-3, -76]
+                        // popupAnchor: [-3, -76],
+                        shadowSize:   [250/4*1.2, 425/4*1.2],
+                        shadowAnchor: [125/4+5, 425/4+7]
                     });
 
                     var center = L.latLng(-10.5, -50.5);
@@ -91,7 +96,7 @@ export default function Map({
                             duration: duration // Animation duration in seconds
                         });
                     }
-
+                
                     // Event listener for messages from React Native
                     window.addEventListener('message', function(event) {
                         const data = JSON.parse(event.data);

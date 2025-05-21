@@ -601,8 +601,8 @@ export default function EventCreate({ navigation, route }) {
         if (data.action === "boundsChanged") {
             let latiduteDelta = (data.bounds.north - data.bounds.south) / 2;
             let longitudeDelta = (data.bounds.east - data.bounds.west) / 2;
-            let latidute = data.bounds.north + latiduteDelta;
-            let longitude = data.bounds.east + longitudeDelta;
+            let latidute = data.bounds.south + latiduteDelta;
+            let longitude = data.bounds.west + longitudeDelta;
 
             setPin({
                 latitude: latidute,
@@ -675,10 +675,10 @@ export default function EventCreate({ navigation, route }) {
                             <Map
                                 mapRef={mapRef}
                                 style={style.allMax}
+                                accessible={true}
                                 initialRegion={event.geoCords}
                                 marker={false}
                                 title={""}
-                                accessible={true}
                                 onMessage={overridePin}
                             />
                             {false ? (
