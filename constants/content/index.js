@@ -311,7 +311,7 @@ function handleHSB(years, month, days, hours, mins, sec) {
     output += " wozjewjene.";
     return output;
 }
-function handleDE() {
+function handleDE(years, month, days, hours, mins, sec) {
     let output = "";
     output += "Vor ";
 

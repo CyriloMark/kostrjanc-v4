@@ -37,6 +37,7 @@ const TRANSLATE_X_THRESHOLD = Dimensions.get("window").width * 0.3;
 export default function Comment({
     style,
     commentData,
+    showDate,
     onRemove,
     onPress,
     onCommentUserPress,
@@ -138,6 +139,110 @@ export default function Comment({
             <Animated.View
                 style={[{ width: "100%", position: "relative" }, panStyle]}>
                 <Pressable onLongPress={onRem}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            width: "100%",
+                        }}>
+                        {/* Profile Picture */}
+                        <Pressable
+                            style={styles.userPbContainer}
+                            onPress={onCommentUserPress}>
+                            <Image
+                                source={{ uri: user.pbUri }}
+                                style={styles.userPb}
+                                resizeMode="cover"
+                                resizeMethod="auto"
+                            />
+                        </Pressable>
+
+                        {/* Text Area */}
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: "column",
+                                marginLeft: s.defaultMmd,
+                            }}>
+                            {/* First Line */}
+                            <View
+                                style={{
+                                    // flex: 1,
+                                    flexDirection: "row",
+                                    alignItems: "baseline",
+                                }}>
+                                {/* Username */}
+                                <Text style={[s.Tmd, s.tWhite]}>
+                                    {user.name}
+                                </Text>
+                                {/* Timestamp */}
+                                {showDate ? (
+                                    <Text
+                                        style={[
+                                            s.TsmRg,
+                                            s.tBlue,
+                                            {
+                                                marginLeft: s.defaultMmd,
+                                            },
+                                        ]}>
+                                        {convertTimestampToString(
+                                            commentData.created
+                                        )}
+                                    </Text>
+                                ) : null}
+                            </View>
+
+                            {/* Second Line */}
+                            <View style={styles.textContainer}>
+                                <Text
+                                    style={[
+                                        s.tWhite,
+                                        s.Tmd,
+                                        { fontFamily: "Barlow_Bold" },
+                                    ]}>
+                                    {checkLinkedUser(
+                                        checkForUnnecessaryNewLine(
+                                            commentData.content
+                                        )
+                                    ).map((el, key) =>
+                                        !el.isLinked ? (
+                                            <Text
+                                                onPress={onPress}
+                                                style={s.readableText}
+                                                key={key}>
+                                                {el.text}
+                                            </Text>
+                                        ) : (
+                                            <Text
+                                                key={key}
+                                                style={s.tBlue}
+                                                onPress={() =>
+                                                    onCommentUserPress(el.id)
+                                                }>
+                                                {el.text}
+                                            </Text>
+                                        )
+                                    )}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    {/* ICON */}
+                    <View style={[styles.iconContainer, s.bgRed]}>
+                        <Animated.View style={[styles.icon, iconStyle]}>
+                            <SVG_Basket fill={s.colors.white} />
+                        </Animated.View>
+                    </View>
+                </Pressable>
+            </Animated.View>
+        </View>
+    );
+
+    return (
+        <View style={style}>
+            <Animated.View
+                style={[{ width: "100%", position: "relative" }, panStyle]}>
+                <Pressable onLongPress={onRem}>
                     {/* Header */}
                     <Pressable
                         style={[styles.userContainer]}
@@ -163,16 +268,18 @@ export default function Comment({
                             {user.name}
                         </Text>
                         {/* Timestamp */}
-                        <Text
-                            style={[
-                                s.TsmLt,
-                                s.tBlue,
-                                {
-                                    marginLeft: s.defaultMmd,
-                                },
-                            ]}>
-                            {convertTimestampToString(commentData.created)}
-                        </Text>
+                        {showDate ? (
+                            <Text
+                                style={[
+                                    s.TsmLt,
+                                    s.tBlue,
+                                    {
+                                        marginLeft: s.defaultMmd,
+                                    },
+                                ]}>
+                                {convertTimestampToString(commentData.created)}
+                            </Text>
+                        ) : null}
                     </Pressable>
 
                     <View style={styles.textContainer}>
@@ -210,6 +317,9 @@ export default function Comment({
 }
 
 const styles = StyleSheet.create({
+    _container: {
+        width: "100%",
+    },
     userContainer: {
         width: "100%",
         flexDirection: "row",
@@ -231,7 +341,7 @@ const styles = StyleSheet.create({
     },
 
     textContainer: {
-        marginTop: s.defaultMsm,
+        marginTop: 5,
         width: "100%",
     },
 

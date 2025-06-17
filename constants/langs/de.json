@@ -520,6 +520,9 @@
         "testview_missing_title": "Fehler, die schon gemeldet wurden:",
         "testview_thx": "Danke für deine Hilfe!",
 
+        "tts_title": "Vorlesefunktion",
+        "tts_generate": "TTS generieren",
+
         "tutorial_mainnav": "Hauptnavigation durch kostrjanc.",
         "tutorial_contentpage": "Was ist kostrjanc STUDIJO? Selbst aktiv werden.",
         "tutorial_profile": "Das bin ich. Profile auf kostrjanc.",

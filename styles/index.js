@@ -105,6 +105,12 @@ export const tRed = {
     color: colors.red,
 };
 
+export const readableText = {
+    textDecorationStyle: "dashed",
+    textDecorationColor: colors.sec,
+    textDecorationLine: "underline",
+};
+
 export const boxShadow = {
     shadowColor: colors.black,
     shadowOffset: {

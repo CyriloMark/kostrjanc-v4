@@ -26,7 +26,7 @@ import ViewGroupButton from "../../components/groups/ViewGroupButton";
 const STATIC_GROUPS = [0, 2];
 
 let CLIENT_GROUPS = null;
-export default function GroupSelect({ navigation, route }) {
+export default function GroupSelect({ navigation, route, openTTS }) {
     const scrollRef = useRef();
 
     const [refreshing, setRefreshing] = useState(false);

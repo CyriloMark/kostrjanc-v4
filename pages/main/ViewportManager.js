@@ -59,7 +59,7 @@ import UpdateVersion from "../static/UpdateVersion";
 
 const MainNavStack = createStackNavigator();
 
-export default function ViewportManager({ onTut, hasRecentVersion }) {
+export default function ViewportManager({ onTut, openTTS, hasRecentVersion }) {
     const insets = useSafeAreaInsets();
 
     return (
@@ -95,13 +95,29 @@ export default function ViewportManager({ onTut, hasRecentVersion }) {
                 </MainNavStack.Screen>
 
                 <MainNavStack.Screen name="postView">
-                    {props => <Post {...props} onTut={onTut} />}
+                    {props => (
+                        <Post
+                            {...props}
+                            onTut={onTut}
+                            openTTS={t => openTTS(t)}
+                        />
+                    )}
                 </MainNavStack.Screen>
                 <MainNavStack.Screen name="eventView">
-                    {props => <Event {...props} onTut={onTut} />}
+                    {props => (
+                        <Event
+                            {...props}
+                            onTut={onTut}
+                            openTTS={t => openTTS(t)}
+                        />
+                    )}
                 </MainNavStack.Screen>
-                <MainNavStack.Screen name="profileView" component={Profile} />
-                <MainNavStack.Screen name="groupView" component={Group} />
+                <MainNavStack.Screen name="profileView">
+                    {props => <Profile {...props} openTTS={t => openTTS(t)} />}
+                </MainNavStack.Screen>
+                <MainNavStack.Screen name="groupView">
+                    {props => <Group {...props} openTTS={t => openTTS(t)} />}
+                </MainNavStack.Screen>
 
                 <MainNavStack.Screen name="settings" component={Settings} />
 

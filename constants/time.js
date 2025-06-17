@@ -6,7 +6,7 @@ export const convertTimestampToString = id => {
         (date.getMonth() + 1) +
         "." +
         date.getFullYear() +
-        " " +
+        ", " +
         date.getHours() +
         ":" +
         (date.getMinutes().toString().length === 1

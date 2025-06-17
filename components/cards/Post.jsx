@@ -20,6 +20,9 @@ import { getData } from "../../constants/storage";
 
 // import Components
 import LikeButton from "../content/LikeButton";
+import Comment from "../comments/Comment";
+
+const COMMENTS_BELOW_ENABLED = false;
 
 export default function Post(props) {
     let LIKING = false;
@@ -28,6 +31,7 @@ export default function Post(props) {
     const [user, setUser] = useState(User_Placeholder);
     const [post, setPost] = useState(Post_Placeholder);
     const [liked, setLiked] = useState(false);
+    const [commentsList, setCommentsList] = useState([]);
 
     const loadData = () => {
         const db = getDatabase();
@@ -55,6 +59,7 @@ export default function Post(props) {
 
                 if (props.likeable && postSnap.hasChild("likes"))
                     loadLikes(postData.likes);
+                if (postData.comments) setCommentsList(postData.comments);
 
                 get(child(ref(db), "users/" + postData["creator"]))
                     .then(userSnap => {
@@ -215,6 +220,23 @@ export default function Post(props) {
                         ))}
                     </View>
                 )}
+
+                {props.group && COMMENTS_BELOW_ENABLED ? (
+                    <View style={styles.commentsContainer}>
+                        {commentsList.map(comment => (
+                            <Comment
+                                key={comment.created}
+                                style={{ marginTop: style.defaultMmd }}
+                                commentData={comment}
+                                onRemove={() => null}
+                                onPress={id => props.onCommentPress(id)}
+                                onCommentUserPress={id =>
+                                    props.onCommentUserPress(id)
+                                }
+                            />
+                        ))}
+                    </View>
+                ) : null}
             </Pressable>
         </View>
     );
@@ -271,5 +293,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: style.defaultMmd,
         marginLeft: style.defaultMsm,
+    },
+
+    commentsContainer: {
+        width: "100%",
+        flexDirection: "column",
+        marginTop: style.defaultMmd,
     },
 });

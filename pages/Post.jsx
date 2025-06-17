@@ -45,6 +45,8 @@ import {
     getTimePassed,
     insertCharacterOnCursor,
 } from "../constants/content";
+import { openLink } from "../constants";
+import { getPlainText } from "../constants/content/tts";
 
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
@@ -58,12 +60,12 @@ import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 import TextField from "../components/TextField";
 
 import SVG_Translate from "../assets/svg/Translate";
-import { openLink } from "../constants";
+import SVG_Speaker from "../assets/svg/Mic1";
 
 const KEYBOARDBUTTON_ENABLED = false;
 
 let cursorPos = -1;
-export default function Post({ navigation, route, onTut }) {
+export default function Post({ navigation, route, onTut, openTTS }) {
     const scrollRef = useRef();
     const commentInputRef = useRef();
 
@@ -333,7 +335,16 @@ export default function Post({ navigation, route, onTut }) {
                                     !el.isLinked ? (
                                         checkForURLs(el.text).map((el2, key2) =>
                                             !el2.hasUrl ? (
-                                                <Text key={key2}>
+                                                <Text
+                                                    onPress={() =>
+                                                        openTTS(
+                                                            getPlainText(
+                                                                post.title
+                                                            )
+                                                        )
+                                                    }
+                                                    style={style.readableText}
+                                                    key={key2}>
                                                     {el2.text}
                                                 </Text>
                                             ) : (
@@ -435,7 +446,16 @@ export default function Post({ navigation, route, onTut }) {
                                     !el.isLinked ? (
                                         checkForURLs(el.text).map((el2, key2) =>
                                             !el2.hasUrl ? (
-                                                <Text key={key2}>
+                                                <Text
+                                                    onPress={() =>
+                                                        openTTS(
+                                                            getPlainText(
+                                                                post.description
+                                                            )
+                                                        )
+                                                    }
+                                                    style={style.readableText}
+                                                    key={key2}>
                                                     {el2.text}
                                                 </Text>
                                             ) : (
@@ -475,7 +495,7 @@ export default function Post({ navigation, route, onTut }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getTimePassed(post.created)}
@@ -750,15 +770,14 @@ export default function Post({ navigation, route, onTut }) {
                                     key={comment.created}
                                     style={{ marginTop: style.defaultMmd }}
                                     commentData={comment}
+                                    showDate
                                     onRemove={() => removeComment(comment)}
-                                    onPress={id =>
-                                        navigation.navigate("profileView", {
-                                            id: id,
-                                        })
+                                    onPress={() =>
+                                        openTTS(getPlainText(comment.content))
                                     }
-                                    onCommentUserPress={id =>
+                                    onCommentUserPress={() =>
                                         navigation.navigate("profileView", {
-                                            id: id,
+                                            id: comment.creator,
                                         })
                                     }
                                 />

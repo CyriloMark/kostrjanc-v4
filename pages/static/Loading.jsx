@@ -72,7 +72,7 @@ export default function Loading() {
                 </Animated.View>
 
                 <View style={[styles.layer, { flex: 1 }]}>
-                    <Text style={[style.tWhite, style.TsmLt, style.tCenter]}>
+                    <Text style={[style.tBlue, style.TsmLt, style.tCenter]}>
                         Version {require("../../app.json").expo.version}
                         {"\n"}
                         Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2025

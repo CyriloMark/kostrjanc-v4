@@ -22,6 +22,7 @@ import { wait } from "../constants/wait";
 import { arraySplitter, sortArrayByDate } from "../constants";
 import { getLangs } from "../constants/langs";
 import makeRequest from "../constants/request";
+import { getPlainText } from "../constants/content/tts";
 
 import BackHeader from "../components/BackHeader";
 import InteractionBar from "../components/InteractionBar";
@@ -35,7 +36,7 @@ import SVG_Admin from "../assets/svg/Admin";
 import SVG_Verify from "../assets/svg/Moderator";
 
 let UID = null;
-export default function Profile({ navigation, route }) {
+export default function Profile({ navigation, route, openTTS }) {
     const scrollRef = useRef();
 
     let followPressed = false;
@@ -379,14 +380,28 @@ export default function Profile({ navigation, route }) {
                             />
                         ) : null}
 
-                        <Text style={[style.tWhite, style.Ttitle2]}>
+                        <Text
+                            style={[
+                                style.tWhite,
+                                style.Ttitle2,
+                                style.readableText,
+                            ]}
+                            onPress={() => openTTS(getPlainText(user.name))}>
                             {user.name}
                         </Text>
                     </View>
 
                     {/* Description */}
                     <View style={styles.textContainer}>
-                        <Text style={[style.Tmd, style.tWhite]}>
+                        <Text
+                            style={[
+                                style.Tmd,
+                                style.tWhite,
+                                style.readableText,
+                            ]}
+                            onPress={() =>
+                                openTTS(getPlainText(user.description))
+                            }>
                             {user.description}
                         </Text>
                     </View>

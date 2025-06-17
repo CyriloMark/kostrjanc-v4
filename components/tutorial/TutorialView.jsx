@@ -16,6 +16,9 @@ import { Path, Rect, Svg } from "react-native-svg";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { getLangs } from "../../constants/langs";
 
+import SVG_Play from "../../assets/svg/Play";
+import SVG_Pause from "../../assets/svg/Pause";
+
 export default function TutorialView({ visible, onClose, data }) {
     const playButtonOpacity = useSharedValue(1);
 
@@ -93,35 +96,16 @@ export default function TutorialView({ visible, onClose, data }) {
                         style={[styles.playButtonContainer, playButtonStyle]}>
                         {playing ? (
                             // Pause
-                            <Svg
-                                viewBox="0 0 500 450"
+                            <SVG_Pause
                                 style={styles.playButton}
-                                fill={style.colors.white}>
-                                <Rect
-                                    width={175}
-                                    height={400}
-                                    x={25}
-                                    y={25}
-                                    rx={23.57}
-                                    ry={23.57}
-                                />
-                                <Rect
-                                    width={175}
-                                    height={400}
-                                    x={300}
-                                    y={25}
-                                    rx={23.57}
-                                    ry={23.57}
-                                />
-                            </Svg>
+                                fill={style.colors.white}
+                            />
                         ) : (
                             // Play
-                            <Svg
-                                viewBox="0 0 450 450"
+                            <SVG_Play
                                 style={styles.playButton}
-                                fill={style.colors.white}>
-                                <Path d="m411.97,204.11L59.07,27.52c-15.65-7.83-34.07,3.55-34.07,21.05v353.18c0,17.5,18.42,28.88,34.07,21.05l352.9-176.59c17.34-8.68,17.34-33.42,0-42.1Z" />
-                            </Svg>
+                                fill={style.colors.white}
+                            />
                         )}
                     </Animated.View>
                 </Pressable>

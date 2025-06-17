@@ -154,7 +154,7 @@ export default function Event(props) {
                         ))}
                         <Text
                             style={[
-                                style.TsmLt,
+                                style.TsmRg,
                                 style.tWhite,
                                 { marginTop: style.defaultMsm },
                             ]}>

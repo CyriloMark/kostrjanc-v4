@@ -19,13 +19,14 @@ import { Group_Placeholder } from "../constants/content/PlaceholderData";
 import { wait } from "../constants/wait";
 import { getLangs } from "../constants/langs";
 import { getData } from "../constants/storage";
+import { getPlainText } from "../constants/content/tts";
 
 import BackHeader from "../components/BackHeader";
 import Refresh from "../components/RefreshControl";
 import LeaveButton from "../components/groups/LeaveButton";
 import EditProfileButton from "../components/profile/EditProfileButton";
 
-export default function Group({ navigation, route }) {
+export default function Group({ navigation, route, openTTS }) {
     const scrollRef = useRef();
 
     let joining = false;
@@ -272,14 +273,28 @@ export default function Group({ navigation, route }) {
 
                     {/* Name */}
                     <View style={styles.nameContainer}>
-                        <Text style={[style.tWhite, style.Ttitle2]}>
+                        <Text
+                            style={[
+                                style.tWhite,
+                                style.Ttitle2,
+                                style.readableText,
+                            ]}
+                            onPress={() => openTTS(getPlainText(group.name))}>
                             {group.name}
                         </Text>
                     </View>
 
                     {/* Description */}
                     <View style={styles.textContainer}>
-                        <Text style={[style.Tmd, style.tWhite]}>
+                        <Text
+                            style={[
+                                style.Tmd,
+                                style.tWhite,
+                                style.readableText,
+                            ]}
+                            onPress={() =>
+                                openTTS(getPlainText(group.description))
+                            }>
                             {group.description}
                         </Text>
                     </View>

@@ -202,7 +202,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                         </View>
                         {/* Time Container */}
                         <View style={[styles_big.timeContainer, s.allCenter]}>
-                            <Text style={[s.TsmLt, s.tWhite]}>
+                            <Text style={[s.TsmRg, s.tWhite]}>
                                 {convertTimestampToString(event.starting)}
                             </Text>
                             <View style={s.pH}>
@@ -212,10 +212,10 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                                         style={styles.liveIcon}
                                     />
                                 ) : (
-                                    <Text style={[s.TsmLt, s.tWhite]}>-</Text>
+                                    <Text style={[s.TsmRg, s.tWhite]}>-</Text>
                                 )}
                             </View>
-                            <Text style={[s.TsmLt, s.tWhite]}>
+                            <Text style={[s.TsmRg, s.tWhite]}>
                                 {convertTimestampToString(event.ending)}
                             </Text>
                         </View>
@@ -377,7 +377,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
 
                             <Text
                                 style={[
-                                    s.TsmLt,
+                                    s.TsmRg,
                                     s.tWhite,
                                     { marginTop: s.defaultMsm },
                                 ]}>
@@ -544,7 +544,7 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             />
                             <Text
                                 style={[
-                                    s.TsmLt,
+                                    s.TsmRg,
                                     s.tWhite,
                                     { marginLeft: s.defaultMmd },
                                 ]}>

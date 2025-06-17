@@ -62,6 +62,8 @@ import Ban from "./pages/static/Ban";
 import LanguageSelect from "./pages/static/LanguageSelect";
 import TestView from "./pages/static/TestView";
 
+import TTS from "./components/content/TTS";
+
 import TutorialView from "./components/tutorial/TutorialView";
 import {
     TUTORIAL_DATA,
@@ -95,6 +97,10 @@ export default function App() {
 
     const [expoPushToken, setExpoPushToken] = useState("");
 
+    const [tts, setTTS] = useState({
+        visible: false,
+        text: null,
+    });
     const [tutorial, setTutorial] = useState({
         visible: false,
         id: 0,
@@ -212,6 +218,13 @@ export default function App() {
         }
     }, [loggedIn]);
 
+    const openTTS = text => {
+        setTTS({
+            visible: true,
+            text: text,
+        });
+    };
+
     // return null;
     if (!fontsLoaded) return <View style={style.bgBlack} />;
     if (!(loaded && isRecentVersion !== null && serverStatus !== null))
@@ -293,8 +306,14 @@ export default function App() {
                     ...style.bgBlack,
                 }}>
                 <ViewportManager
+                    openTTS={t => openTTS(t)}
                     onTut={showTutorial}
                     hasRecentVersion={isRecentVersion.equal}
+                />
+                <TTS
+                    visible={tts.visible}
+                    text={tts.text}
+                    onClose={() => setTTS({ visible: false, text: null })}
                 />
                 <TutorialView
                     visible={tutorial.visible}

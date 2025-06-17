@@ -473,6 +473,16 @@ export default function Landing({ navigation, onTut }) {
                                     id: item.id,
                                 })
                             }
+                            onCommentPress={id =>
+                                navigation.navigate("profileView", {
+                                    id: id,
+                                })
+                            }
+                            onCommentUserPress={id =>
+                                navigation.navigate("profileView", {
+                                    id: id,
+                                })
+                            }
                         />
                     ) : (
                         <Event
@@ -496,7 +506,7 @@ export default function Landing({ navigation, onTut }) {
                 <Text
                     style={[
                         style.tWhite,
-                        style.TsmLt,
+                        style.TsmRg,
                         style.tCenter,
                         { marginVertical: style.defaultMmd },
                     ]}>

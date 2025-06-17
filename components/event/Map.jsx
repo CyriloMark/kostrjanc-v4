@@ -2,6 +2,7 @@ import React from "react";
 
 import { Pressable, View } from "react-native";
 
+import MapView, { Marker } from "react-native-maps";
 import WebView from "react-native-webview";
 
 import { getUnsignedTranslationText } from "../../constants/content/translation";
@@ -12,6 +13,8 @@ import { getUnsignedTranslationText } from "../../constants/content/translation"
     [51.2425, 14.2525],
 ];
 */
+
+const MAP_TYPE = 1;
 
 const PIN_URL =
     "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/pin.png?alt=media&token=6f3538eb-2808-434b-9650-60b400de9637";
@@ -144,17 +147,50 @@ export default function Map({
             </html>
         `;
 
-    return (
-        <Pressable style={style} onPress={onPress} onLongPress={onLongPress}>
-            <WebView
-                ref={mapRef}
-                source={{ html: htmlContent }}
-                style={{ flex: 1, width: "100%" }}
-                bounces={false}
-                scrollEnabled={false}
-                onMessage={onMessage}
-            />
-        </Pressable>
-    );
+    if (MAP_TYPE == 1)
+        return (
+            <Pressable
+                style={style}
+                onPress={onPress}
+                onLongPress={onLongPress}>
+                <WebView
+                    ref={mapRef}
+                    source={{ html: htmlContent }}
+                    style={{ flex: 1, width: "100%" }}
+                    bounces={false}
+                    scrollEnabled={false}
+                    onMessage={onMessage}
+                />
+            </Pressable>
+        );
+    else if (MAP_TYPE == 0)
+        return (
+            <Pressable
+                style={style}
+                onPress={onPress}
+                onLongPress={onLongPress}>
+                <MapView
+                    ref={mapRef}
+                    style={{ flex: 1, width: "100%" }}
+                    userInterfaceStyle="dark"
+                    accessible={accessible}
+                    focusable={accessible}
+                    rotateEnabled={accessible}
+                    zoomEnabled={accessible}
+                    scrollEnabled={accessible}
+                    pitchEnabled={accessible}
+                    initialRegion={initialRegion}>
+                    {marker ? (
+                        <Marker
+                            draggable={false}
+                            tappable={false}
+                            accessible={accessible}
+                            focusable={accessible}
+                            coordinate={initialRegion}
+                        />
+                    ) : null}
+                </MapView>
+            </Pressable>
+        );
     // return null;
 }

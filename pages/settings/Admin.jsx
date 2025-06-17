@@ -304,7 +304,7 @@ export default function Admin({ navigation }) {
                                                 </Text>
                                                 <Text
                                                     style={[
-                                                        style.TsmLt,
+                                                        style.TsmRg,
                                                         style.tBlue,
                                                         styles.likesText,
                                                         styles.second,
@@ -350,7 +350,7 @@ export default function Admin({ navigation }) {
                                                 </Text>
                                                 <Text
                                                     style={[
-                                                        style.TsmLt,
+                                                        style.TsmRg,
                                                         style.tBlue,
                                                         styles.likesText,
                                                     ]}>
@@ -393,7 +393,7 @@ export default function Admin({ navigation }) {
                                                 </Text>
                                                 <Text
                                                     style={[
-                                                        style.TsmLt,
+                                                        style.TsmRg,
                                                         style.tBlue,
                                                         styles.likesText,
                                                     ]}>
@@ -436,7 +436,7 @@ export default function Admin({ navigation }) {
                                                 </Text>
                                                 <Text
                                                     style={[
-                                                        style.TsmLt,
+                                                        style.TsmRg,
                                                         style.tBlue,
                                                         styles.likesText,
                                                     ]}>
@@ -515,7 +515,7 @@ export default function Admin({ navigation }) {
                                             : null,
                                     ]}
                                     key={key}>
-                                    <Text style={[style.tWhite, style.TsmLt]}>
+                                    <Text style={[style.tWhite, style.TsmRg]}>
                                         Aktion: {log.action}
                                         {"\n"}
                                         Moderator: {log.mod}
@@ -525,7 +525,7 @@ export default function Admin({ navigation }) {
                                         {log.action !== "user_banned" ? (
                                             <Text
                                                 style={[
-                                                    style.TsmLt,
+                                                    style.TsmRg,
                                                     style.tWhite,
                                                 ]}>
                                                 {log.target}
@@ -538,7 +538,7 @@ export default function Admin({ navigation }) {
                                                 {log.target.map((t, k) => (
                                                     <Text
                                                         style={[
-                                                            style.TsmLt,
+                                                            style.TsmRg,
                                                             style.tWhite,
                                                         ]}
                                                         key={k}>

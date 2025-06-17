@@ -70,6 +70,7 @@ import {
     getTimePassed,
     insertCharacterOnCursor,
 } from "../constants/content";
+import { getPlainText } from "../constants/content/tts";
 
 import MapView, {
     Marker,
@@ -80,7 +81,7 @@ import MapView, {
 const KEYBOARDBUTTON_ENABLED = false;
 
 let cursorPos = -1;
-export default function Event({ navigation, route, onTut }) {
+export default function Event({ navigation, route, onTut, openTTS }) {
     const mapRef = useRef();
     const commentInputRef = useRef();
 
@@ -160,6 +161,7 @@ export default function Event({ navigation, route, onTut }) {
                         duration: 1,
                     })
                 );
+                // mapRef.current.animateToRegion(event.geoCords, 1000);
 
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
@@ -423,7 +425,18 @@ export default function Event({ navigation, route, onTut }) {
                                 !el.isLinked ? (
                                     checkForURLs(el.text).map((el2, key2) =>
                                         !el2.hasUrl ? (
-                                            <Text key={key2}>{el2.text}</Text>
+                                            <Text
+                                                onPress={() =>
+                                                    openTTS(
+                                                        getPlainText(
+                                                            event.title
+                                                        )
+                                                    )
+                                                }
+                                                style={style.readableText}
+                                                key={key2}>
+                                                {el2.text}
+                                            </Text>
                                         ) : (
                                             <Text
                                                 key={key2}
@@ -482,6 +495,10 @@ export default function Event({ navigation, route, onTut }) {
                                             duration: 1,
                                         })
                                     );
+                                    // mapRef.current.animateToRegion(
+                                    //     event.geoCords,
+                                    //     1000
+                                    // );
                                 }}
                                 onMessage={() => {}}
                                 // onPress={() => {
@@ -529,7 +546,16 @@ export default function Event({ navigation, route, onTut }) {
                                     !el.isLinked ? (
                                         checkForURLs(el.text).map((el2, key2) =>
                                             !el2.hasUrl ? (
-                                                <Text key={key2}>
+                                                <Text
+                                                    onPress={() =>
+                                                        openTTS(
+                                                            getPlainText(
+                                                                event.description
+                                                            )
+                                                        )
+                                                    }
+                                                    style={style.readableText}
+                                                    key={key2}>
                                                     {el2.text}
                                                 </Text>
                                             ) : (
@@ -569,7 +595,7 @@ export default function Event({ navigation, route, onTut }) {
                             <Text
                                 style={[
                                     style.tBlue,
-                                    style.TsmLt,
+                                    style.TsmRg,
                                     { marginTop: style.defaultMsm },
                                 ]}>
                                 {getTimePassed(event.created)}
@@ -1054,15 +1080,14 @@ export default function Event({ navigation, route, onTut }) {
                                     key={comment.created}
                                     style={{ marginTop: style.defaultMmd }}
                                     commentData={comment}
+                                    showDate
                                     onRemove={() => removeComment(comment)}
-                                    onPress={id =>
-                                        navigation.navigate("profileView", {
-                                            id: id,
-                                        })
+                                    onPress={() =>
+                                        openTTS(getPlainText(comment.content))
                                     }
-                                    onCommentUserPress={id =>
+                                    onCommentUserPress={() =>
                                         navigation.navigate("profileView", {
-                                            id: id,
+                                            id: comment.creator,
                                         })
                                     }
                                 />

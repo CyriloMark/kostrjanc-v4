@@ -18,11 +18,19 @@ export default function Challenge(props) {
     });
 
     const loadChallengeTitle = () => {
-        get(child(ref(getDatabase()), "challenge")).then(rsp => {
-            if (!rsp.exists()) setChallengeTitle(null);
+        get(child(ref(getDatabase()), "challenge"))
+            .then(rsp => {
+                if (!rsp.exists()) setChallengeTitle(null);
 
-            setChallengeTitle(rsp.val());
-        });
+                setChallengeTitle(rsp.val());
+            })
+            .catch(error =>
+                console.log(
+                    "error",
+                    "Challenge get challenge title",
+                    error.code
+                )
+            );
     };
 
     if (challengeTitle === null) return null;
