@@ -26,8 +26,8 @@ export function getPlainText(text) {
  */
 export default async function generate(text) {
     // Lokalen Pfad festlegen
-    const fileUri = FileSystem.cacheDirectory + "tts_current.mp3";
-    let generated = false;
+    const fileUri = FileSystem.cacheDirectory + "tts.mp3";
+    let generated = true;
     await getAuth()
         .currentUser.getIdToken()
         .then(async token => {
@@ -43,37 +43,33 @@ export default async function generate(text) {
                         token: token,
                     }),
                 }
-            ).then(rsp => {
-                rsp.blob().then(blob => {
-                    console.log(blob);
+            )
+                .then(async rsp => {
+                    // ArrayBuffer aus der Response holen
+                    const arrayBuffer = await rsp
+                        .arrayBuffer()
+                        .catch(error =>
+                            console.log(
+                                "error",
+                                "tts.js rsp.arrayBuffer()",
+                                error
+                            )
+                        );
+                    // In Base64 umwandeln
+                    const base64Audio =
+                        Buffer.from(arrayBuffer).toString("base64");
+                    // Datei speichern
+                    await FileSystem.writeAsStringAsync(fileUri, base64Audio, {
+                        encoding: FileSystem.EncodingType.Base64,
+                    })
+                        .then(() => (generated = true))
+                        .catch(error =>
+                            console.log("error", "tts.js write", error)
+                        );
+                })
+                .catch(error => {
+                    console.log("error", "tts.js generate fetch", error);
                 });
-            });
-            // .then(async rsp => {
-            //     // ArrayBuffer aus der Response holen
-            //     const arrayBuffer = await rsp
-            //         .arrayBuffer()
-            //         .catch(error =>
-            //             console.log(
-            //                 "error",
-            //                 "tts.js rsp.arrayBuffer()",
-            //                 error
-            //             )
-            //         );
-            //     // In Base64 umwandeln
-            //     const base64Audio =
-            //         Buffer.from(arrayBuffer).toString("base64");
-            //     // Datei speichern
-            //     await FileSystem.writeAsStringAsync(fileUri, base64Audio, {
-            //         encoding: FileSystem.EncodingType.Base64,
-            //     })
-            //         .then(() => (generated = true))
-            //         .catch(error =>
-            //             console.log("error", "tts.js write", error)
-            //         );
-            // })
-            // .catch(error => {
-            //     console.log("error", "tts.js generate fetch", error);
-            // });
         });
 
     return generated ? fileUri : null;

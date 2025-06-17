@@ -94,7 +94,8 @@ export default function TTS({ visible, onClose, text }) {
         await generate(text)
             .then(fileUrl => {
                 console.log("uri", fileUrl);
-                player.replace({ uri: fileUrl });
+                // player.replace({ uri: fileUrl });
+                player.replace(fileUrl);
 
                 console.log("dur", player.duration);
                 setGenerated(true);
