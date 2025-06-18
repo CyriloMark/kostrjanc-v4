@@ -94,6 +94,7 @@ export default function Profile({ navigation, route, openTTS }) {
                             const postData = postSnap.val();
                             if (!postData.isBanned && !postData.group)
                                 postEventDatas.push(postData);
+
                             // if (!postData.isBanned) {
                             //     setUser(user => {
                             //         return {
@@ -131,6 +132,7 @@ export default function Profile({ navigation, route, openTTS }) {
                             const eventData = eventSnap.val();
                             if (!eventData.isBanned && !eventData.group)
                                 postEventDatas.push(eventData);
+                            console.log(postEventDatas);
                             if (i === e.length - 1)
                                 setPostEventList(
                                     sortArrayByDate(postEventDatas).reverse()

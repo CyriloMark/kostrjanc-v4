@@ -21,6 +21,16 @@ export function getPlainText(text) {
 }
 
 /**
+ * Calculates estimated generation time for given text
+ * @param {string} text Input Text
+ * @returns {number} Time in seconds
+ */
+export function calculateEstimatedGenerationTime(text) {
+    if (text == null) return 0;
+    return Math.ceil(text.length * 0.15);
+}
+
+/**
  * Fetches the API to generate a TTS from the given text
  * @param {string} text Text to generate the TTS
  */

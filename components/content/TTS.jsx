@@ -21,7 +21,9 @@ import Animated, {
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 
 import { getLangs } from "../../constants/langs";
-import generate from "../../constants/content/tts";
+import generate, {
+    calculateEstimatedGenerationTime,
+} from "../../constants/content/tts";
 
 import CloseFilled from "../../assets/svg/CloseFilled";
 import SVG_Play from "../../assets/svg/Play";
@@ -84,22 +86,23 @@ export default function TTS({ visible, onClose, text }) {
     const [generating, setGenerating] = useState(false);
     const [playing, setPlaying] = useState(false);
 
+    const [estimatedTime, setEstimatedTime] = useState(0);
+
     const player = useAudioPlayer({
         uri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/bamborak-2.mp3?alt=media&token=dfb64013-f25a-4452-a9f6-5a2195099a01",
     });
     const status = useAudioPlayerStatus(player);
 
     const _generate = async () => {
+        if (generating || generated) return;
         setGenerating(true);
+
+        setEstimatedTime(calculateEstimatedGenerationTime(text));
+
         await generate(text)
             .then(fileUrl => {
-                console.log("uri", fileUrl);
-                // player.replace({ uri: fileUrl });
                 player.replace(fileUrl);
-
-                console.log("dur", player.duration);
                 setGenerated(true);
-
                 togglePlay();
             })
             .catch(error => console.log("error", "_generate TTS.jsx", error))
@@ -111,6 +114,8 @@ export default function TTS({ visible, onClose, text }) {
             player.pause();
             return;
         }
+        setEstimatedTime(0);
+
         setGenerated(false);
         setGenerating(false);
         setPlaying(false);
@@ -191,6 +196,11 @@ export default function TTS({ visible, onClose, text }) {
                                             { fontFamily: "Barlow_Bold" },
                                         ]}>
                                         {getLangs("tts_generate")}
+                                        {estimatedTime ? (
+                                            <Text style={style.Tmd}>
+                                                {` (~${estimatedTime} sek)`}
+                                            </Text>
+                                        ) : null}
                                     </Text>
                                 }
                             />
