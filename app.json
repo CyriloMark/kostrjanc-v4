@@ -20,6 +20,7 @@
         },
         "assetBundlePatterns": ["**/*"],
         "ios": {
+            "googleServicesFile": "./GoogleService-Info.plist",
             "supportsTablet": true,
             "bundleIdentifier": "de.kostrjanc.kostrjanc",
             "buildNumber": "4.0.2",

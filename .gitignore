@@ -19,3 +19,7 @@ eas.json
 
 # macOS
 .DS_Store
+
+#ignore Google & PLIST files
+GoogleService-Info.plist
+google-services.json

@@ -71,6 +71,10 @@ import {
     resetTutorials,
 } from "./constants/tutorial";
 import { changeLanguage } from "./constants/langs";
+import {
+    registerForPushNotificationsAsync,
+    sendPushNotification,
+} from "./constants/notifications";
 //#endregion
 
 const RESET_TUTORIALS_ENABELD = false;
@@ -201,9 +205,15 @@ export default function App() {
         if (loggedIn) {
             const db = getDatabase();
 
-            registerForPushNotifications().then(token =>
-                setExpoPushToken(token)
-            );
+            registerForPushNotificationsAsync()
+                .then(token => setExpoPushToken(token))
+                .catch(error =>
+                    console.log(
+                        "error",
+                        "App.js registerForPushNotAsync",
+                        error
+                    )
+                );
 
             // Ban Check
             onValue(
@@ -333,54 +343,11 @@ export default function App() {
     );
 }
 
-//#region Notifications
-async function registerForPushNotifications() {
-    let token;
-    if (isDevice) {
-        const { status: existingStatus } =
-            await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== "granted") {
-            const { status } = await Notifications.requestPermissionsAsync();
-            finalStatus = status;
-        }
-        if (finalStatus !== "granted") {
-            console.log("Failed to get push token for push notification");
-            return;
-        }
-        token = (
-            await Notifications.getExpoPushTokenAsync({
-                projectId: require("./app.json").expo.extra.eas.projectId,
-            })
-        ).data;
-
-        const expoPushToken = (
-            await get(
-                child(
-                    ref(getDatabase()),
-                    "users/" + getAuth().currentUser.uid + "/expoPushToken"
-                )
-            )
-        ).val();
-        if (expoPushToken != token)
-            set(
-                ref(
-                    getDatabase(),
-                    "users/" + getAuth().currentUser.uid + "/expoPushToken"
-                ),
-                token
-            );
-    } else console.log("no ph. Device");
-
-    if (Platform.OS === "android") {
-        await Notifications.setNotificationChannelAsync("default", {
-            name: "default",
-            importance: Notifications.AndroidImportance.MAX,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: "#FF231F7C",
-        });
-    }
-
-    return token;
-}
-//#endregion
+//  if (Platform.OS === "android") {
+//         await Notifications.setNotificationChannelAsync("default", {
+//             name: "default",
+//             importance: Notifications.AndroidImportance.MAX,
+//             vibrationPattern: [0, 250, 250, 250],
+//             lightColor: "#FF231F7C",
+//         });
+//     }
