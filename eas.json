@@ -1,5 +1,6 @@
 {
     "cli": {
+        "appVersionSource": "local",
         "version": ">= 3.9.1"
     },
     "build": {
