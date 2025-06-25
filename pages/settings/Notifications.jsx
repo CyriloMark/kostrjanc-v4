@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Pressable, StyleSheet, ScrollView, Text } from "react-native";
 
+import { getAuth } from "firebase/auth";
+
 import * as style from "../../styles";
 
 import { getLangs } from "../../constants/langs";
@@ -12,21 +14,29 @@ import EditProfileButton from "../../components/profile/EditProfileButton";
 
 export default function Notifications({ navigation }) {
     const [actives, setActives] = useState({
+        lang: 0,
         follower: false,
         contents: false,
         comments: false,
         eventStart: false,
     });
 
+    const loadNotificationSettings = async () => {
+        const d = await notifications.getNotificationSettings(
+            getAuth().currentUser.uid
+        );
+        setActives(d);
+    };
+
     const overrideNotificationSettings = async () => {
-        notifications.setNotificationSettings(actives).then(res => {
+        notifications.setNotificationSettings(actives).then(() => {
             // Alert
             navigation.goBack();
         });
     };
 
     useEffect(() => {
-        setActives(notifications.getNotificationSettings());
+        loadNotificationSettings();
     }, []);
 
     return (

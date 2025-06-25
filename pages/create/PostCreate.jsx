@@ -32,6 +32,7 @@ import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
 import { getImageData, insertCharacterOnCursor } from "../../constants/content";
+import { sendContentUploadPushNotification } from "../../constants/notifications/content";
 import getStatusCodeText from "../../components/content/status";
 
 // import SVGs
@@ -42,7 +43,6 @@ import SVG_Kamera from "../../assets/svg/Kamera";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
     launchImageLibraryAsync,
-    MediaTypeOptions,
     launchCameraAsync,
     requestCameraPermissionsAsync,
     requestMediaLibraryPermissionsAsync,
@@ -110,7 +110,7 @@ export default function PostCreate({ navigation, route }) {
         }
 
         let pickerResult = await launchImageLibraryAsync({
-            mediaTypes: MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsEditing: true,
             quality: 0.5,
             aspect: [1, 1],
@@ -169,7 +169,7 @@ export default function PostCreate({ navigation, route }) {
             return;
         }
         let camResult = await launchCameraAsync({
-            mediaTypes: MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsMultipleSelection: false,
             allowsEditing: true,
             quality: 0.5,
@@ -361,7 +361,7 @@ export default function PostCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
-        console.log("1", fromEdit);
+        console.log("fromEdit", fromEdit);
         if (!fromEdit) publishPostNew();
         else publishPostEdit();
     };
@@ -385,6 +385,7 @@ export default function PostCreate({ navigation, route }) {
         if (response.code < 400) {
             if (post.group === 2) storeData("hasUploadForChallenge", true);
             addToLocalStorage(response.id);
+            sendContentUploadPushNotification(0);
 
             Alert.alert(
                 getLangs("postcreate_publishsuccessful_title"),

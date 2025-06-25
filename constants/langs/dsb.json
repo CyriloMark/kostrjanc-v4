@@ -554,6 +554,16 @@
         "grouppage_events": "ewenty",
         "grouppage_editbutton": "Kupku wobźěłaś",
         "grouppage_leavealert_sub": "Sy wěsty, až coš kupku spušćiś?",
-        "grouppage_leavealert_success": "Kupka su spušćili."
+        "grouppage_leavealert_success": "Kupka su spušćili.",
+
+        "notification_follower_title": "Nowy slědowaŕ!",
+        "notification_follower_body": " śi wótněnta na kostrjancu slědujo.",
+        "notification_follower_alt_newuser": "Wowy wužywaŕ",
+        "notification_contents_title": "Nowe wopśimjeśe wózjawjone!",
+        "notification_contents_body_post": " jo nowy post wózjawił.",
+        "notification_contents_body_event": " jo nowy ewent wózjawił.",
+        "notification_comments_title": "Nowy komentar.",
+        "notification_comments_body_post": "Maš nowy komentar pód postom",
+        "notification_comments_body_event": "Maš nowy komentar pód ewentom"
     }
 }

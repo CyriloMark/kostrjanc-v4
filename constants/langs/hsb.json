@@ -587,6 +587,16 @@
         "grouppage_events": "Ewenty",
         "grouppage_editbutton": "Skupinu wobdźěłać",
         "grouppage_leavealert_sub": "Sy wěsty, zo chceš skupinu wopušćić?",
-        "grouppage_leavealert_success": "Skupina bu wopušćena."
+        "grouppage_leavealert_success": "Skupina bu wopušćena.",
+
+        "notification_follower_title": "Nowy sćěhowar!",
+        "notification_follower_body": " tebi wotnětka na kostrjancu sćěhuje",
+        "notification_follower_alt_newuser": "Nowy wužiwar",
+        "notification_contents_title": "Nowy wobsah wozjewjeny!",
+        "notification_contents_body_post": " je nowy post wozjewił.",
+        "notification_contents_body_event": " je nowy ewent wozjewił.",
+        "notification_comments_title": "Nowy komentar.",
+        "notification_comments_body_post": "Maš nowy komentar pod postom",
+        "notification_comments_body_event": "Maš nowy komentar pod ewentom"
     }
 }

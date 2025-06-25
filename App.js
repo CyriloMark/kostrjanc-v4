@@ -9,7 +9,8 @@ import * as Notifications from "expo-notifications";
 import { isDevice } from "expo-device";
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
-        shouldShowAlert: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
         shouldPlaySound: false,
         shouldSetBadge: false,
     }),
@@ -206,7 +207,9 @@ export default function App() {
             const db = getDatabase();
 
             registerForPushNotificationsAsync()
-                .then(token => setExpoPushToken(token))
+                .then(token => {
+                    setExpoPushToken(token);
+                })
                 .catch(error =>
                     console.log(
                         "error",

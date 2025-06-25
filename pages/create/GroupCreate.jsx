@@ -153,7 +153,7 @@ export default function GroupCreate({ navigation, route }) {
         }
 
         let pickerResult = await launchImageLibraryAsync({
-            mediaTypes: MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsEditing: true,
             quality: 0.5,
             aspect: [1, 1],
@@ -224,7 +224,7 @@ export default function GroupCreate({ navigation, route }) {
             return;
         }
         let camResult = await launchCameraAsync({
-            mediaTypes: MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsMultipleSelection: false,
             allowsEditing: true,
             quality: 0.5,

@@ -25,6 +25,7 @@ export const getData = async key => {
         return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
         console.log("error storage/index.js getData", e);
+        return null;
     }
 };
 

@@ -47,6 +47,7 @@ import {
 } from "../constants/content";
 import { openLink } from "../constants";
 import { getPlainText } from "../constants/content/tts";
+import { sendCommentPushNotification } from "../constants/notifications/comments";
 
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
@@ -208,6 +209,7 @@ export default function Post({ navigation, route, onTut, openTTS }) {
                     ].concat(prev);
 
                     set(ref(getDatabase(), `posts/${id}/comments`), newList);
+                    sendCommentPushNotification(post.creator, 0, post.title);
                     return newList;
                 });
             });

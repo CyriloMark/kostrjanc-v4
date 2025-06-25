@@ -23,6 +23,7 @@ import { arraySplitter, sortArrayByDate } from "../constants";
 import { getLangs } from "../constants/langs";
 import makeRequest from "../constants/request";
 import { getPlainText } from "../constants/content/tts";
+import { sendFollowerPushNotification } from "../constants/notifications/follower";
 
 import BackHeader from "../components/BackHeader";
 import InteractionBar from "../components/InteractionBar";
@@ -232,7 +233,8 @@ export default function Profile({ navigation, route, openTTS }) {
                                 };
                             });
                         // Add to Follower List
-                        else
+                        else {
+                            // Update user state
                             setUser(userPrev => {
                                 let newFollowerList = userPrev.follower.concat([
                                     UID,
@@ -242,7 +244,9 @@ export default function Profile({ navigation, route, openTTS }) {
                                     follower: newFollowerList,
                                 };
                             });
-
+                            // Send notification
+                            sendFollowerPushNotification(id);
+                        }
                         return !prev;
                     });
                     followPressed = false;

@@ -46,6 +46,7 @@ import checkForAutoCorrectInside, {
 } from "../../constants/content/autoCorrect";
 import getStatusCodeText from "../../components/content/status";
 import { getImageData, insertCharacterOnCursor } from "../../constants/content";
+import { sendContentUploadPushNotification } from "../../constants/notifications/content";
 
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
@@ -219,7 +220,7 @@ export default function EventCreate({ navigation, route }) {
         }
 
         let pickerResult = await launchImageLibraryAsync({
-            mediaTypes: MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsEditing: true,
             quality: 0.5,
             allowsMultipleSelection: false,
@@ -292,7 +293,7 @@ export default function EventCreate({ navigation, route }) {
             return;
         }
         let camResult = await launchCameraAsync({
-            mediaTypes: MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsMultipleSelection: false,
             allowsEditing: true,
             quality: 0.5,
@@ -505,6 +506,8 @@ export default function EventCreate({ navigation, route }) {
 
         if (response.code < 400) {
             addToLocalStorage(response.id);
+            sendContentUploadPushNotification(1);
+
             Alert.alert(
                 getLangs("eventcreate_publishsuccessful_title"),
                 getLangs(getStatusCodeText(response.code)),

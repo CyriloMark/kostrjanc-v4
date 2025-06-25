@@ -4,6 +4,8 @@ import { getAuth } from "firebase/auth";
 import { isDevice } from "expo-device";
 import * as Notifications from "expo-notifications";
 
+export const NOTIFICATIONS_ENABLED = true;
+
 export async function registerForPushNotificationsAsync() {
     if (!isDevice) {
         console.log("Push Notifications benötigen ein physisches Gerät!");
@@ -50,11 +52,11 @@ export async function registerForPushNotificationsAsync() {
 }
 
 /**
- *
- * @param {string} expoPushToken
- * @param {string} title
- * @param {string} body
- * @param {object} data
+ * Sends Push Notification
+ * @param {string} expoPushToken ExpoPushToken
+ * @param {string} title Push Notification Title
+ * @param {string} body Push Notification Body
+ * @param {object} data Notification Data
  */
 export async function sendPushNotification(
     expoPushToken,
@@ -62,6 +64,8 @@ export async function sendPushNotification(
     body,
     data = {}
 ) {
+    if (!NOTIFICATIONS_ENABLED) return;
+
     const message = {
         to: expoPushToken,
         sound: "default",

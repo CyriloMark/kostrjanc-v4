@@ -587,6 +587,16 @@
         "grouppage_events": "Events",
         "grouppage_editbutton": "Gruppe bearbeiten",
         "grouppage_leavealert_sub": "Bist du sicher, dass du die Gruppe verlassen möchtest?",
-        "grouppage_leavealert_success": "Gruppe wurde verlassen."
+        "grouppage_leavealert_success": "Gruppe wurde verlassen.",
+
+        "notification_follower_title": "Neuer Follower!",
+        "notification_follower_body": " folgt dir ab jetzt auf kostrjanc.",
+        "notification_follower_alt_newuser": "Neuer Benutzer",
+        "notification_contents_title": "Neuer Inhalt veröffentlicht!",
+        "notification_contents_body_post": " hat ein neuen Post veröffentlicht.",
+        "notification_contents_body_event": " hat ein neues Event veröffentlicht.",
+        "notification_comments_title": "Neuer Kommentar.",
+        "notification_comments_body_post": "Du hast einen neunen Kommentar unter deinem Post",
+        "notification_comments_body_event": "Du hast einen neuen Kommentar unter deinem Event"
     }
 }

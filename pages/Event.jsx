@@ -71,6 +71,7 @@ import {
     insertCharacterOnCursor,
 } from "../constants/content";
 import { getPlainText } from "../constants/content/tts";
+import { sendCommentPushNotification } from "../constants/notifications/comments";
 
 import MapView, {
     Marker,
@@ -344,6 +345,7 @@ export default function Event({ navigation, route, onTut, openTTS }) {
                     ].concat(prev);
 
                     set(ref(getDatabase(), `events/${id}/comments`), newList);
+                    sendCommentPushNotification(event.creator, 1, event.title);
                     return newList;
                 });
             });
