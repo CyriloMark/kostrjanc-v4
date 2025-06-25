@@ -3,13 +3,9 @@
 <plist version="1.0">
 <dict>
 <key>CLIENT_ID</key>
-<string>
-919686819174-d3lrmbnang1oqqh3t52k78i1770bqm5m.apps.googleusercontent.com
-</string>
+<string>919686819174-d3lrmbnang1oqqh3t52k78i1770bqm5m.apps.googleusercontent.com</string>
 <key>REVERSED_CLIENT_ID</key>
-<string>
-com.googleusercontent.apps.919686819174-d3lrmbnang1oqqh3t52k78i1770bqm5m
-</string>
+<string>com.googleusercontent.apps.919686819174-d3lrmbnang1oqqh3t52k78i1770bqm5m</string>
 <key>API_KEY</key>
 <string>AIzaSyCMn8UNxdrveua2TUaPczfuXo0qpB28u6s</string>
 <key>GCM_SENDER_ID</key>
@@ -35,9 +31,7 @@ com.googleusercontent.apps.919686819174-d3lrmbnang1oqqh3t52k78i1770bqm5m
 <key>GOOGLE_APP_ID</key>
 <string>1:919686819174:ios:f4504cbab296f86ac6aca7</string>
 <key>DATABASE_URL</key>
-<string>
-https://kostrjanc-default-rtdb.europe-west1.firebasedatabase.app
-</string>
+<string>https://kostrjanc-default-rtdb.europe-west1.firebasedatabase.app</string>
 <key>NSLocationAlwaysUsageDescription</key>
 <string>Berechtigung, dass dein Standort auf der Karte von Events nur für dich angezeigt wird. Dein Standort wird nicht geteilt.</string>
 <key>ITSAppUsesNonExemptEncryption</key>

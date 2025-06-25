@@ -1,85 +1,83 @@
 {
-  "expo": {
-    "name": "kostrjanc",
-    "slug": "kostrjanc",
-    "owner": "lauske",
-    "version": "4.5.0",
-    "orientation": "portrait",
-    "icon": "./assets/icons/icon.png",
-    "splash": {
-      "image": "./assets/icons/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#060A0D"
-    },
-    "notification": {
-      "icon": "./assets/icons/icon.png",
-      "color": "#060A0D"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "googleServicesFile": "./GoogleService-Info.plist",
-      "supportsTablet": true,
-      "bundleIdentifier": "de.kostrjanc.kostrjanc",
-      "buildNumber": "4.0.2",
-      "config": {
-        "googleMapsApiKey": "AIzaSyCMn8UNxdrveua2TUaPczfuXo0qpB28u6s"
-      },
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
-    },
-    "android": {
-      "googleServicesFile": "./google-services.json",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/adaptive-icon.png",
-        "backgroundColor": "#060A0D"
-      },
-      "softwareKeyboardLayoutMode": "pan",
-      "package": "de.kostrjanc.kostrjanc",
-      "versionCode": 22,
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCIoPcZR2nHZ2qsNb5b-n1JvFCeZGPOb5k"
+    "expo": {
+        "name": "kostrjanc",
+        "slug": "kostrjanc",
+        "owner": "lauske",
+        "version": "4.5.0",
+        "orientation": "portrait",
+        "icon": "./assets/icons/icon.png",
+        "splash": {
+            "image": "./assets/icons/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#060A0D"
+        },
+        "notification": {
+            "icon": "./assets/icons/icon.png",
+            "color": "#060A0D"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "googleServicesFile": "./GoogleService-Info.plist",
+            "supportsTablet": true,
+            "bundleIdentifier": "de.kostrjanc.kostrjanc",
+            "buildNumber": "4.5.0",
+            "config": {
+                "googleMapsApiKey": "AIzaSyCMn8UNxdrveua2TUaPczfuXo0qpB28u6s"
+            },
+            "infoPlist": {
+                "ITSAppUsesNonExemptEncryption": false
+            }
+        },
+        "android": {
+            "googleServicesFile": "./google-services.json",
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/icons/adaptive-icon.png",
+                "backgroundColor": "#060A0D"
+            },
+            "softwareKeyboardLayoutMode": "pan",
+            "package": "de.kostrjanc.kostrjanc",
+            "versionCode": 22,
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyCIoPcZR2nHZ2qsNb5b-n1JvFCeZGPOb5k"
+                }
+            },
+            "permissions": [
+                "android.permission.RECORD_AUDIO",
+                "android.permission.MODIFY_AUDIO_SETTINGS"
+            ]
+        },
+        "web": {
+            "favicon": "./assets/icons/favicon.png"
+        },
+        "description": "",
+        "githubUrl": "https://github.com/CyriloMark/kostrjanc",
+        "plugins": [
+            [
+                "expo-image-picker",
+                {
+                    "photosPermission": "Berechtigung, damit Fotos hochgeladen und geteilt werden dürfen."
+                }
+            ],
+            [
+                "@stripe/stripe-react-native",
+                {
+                    "merchantIdentifier": "merchant.de.kostrjanc.kostrjanc",
+                    "enableGooglePay": true
+                }
+            ],
+            "expo-font",
+            "expo-secure-store",
+            "expo-audio",
+            "expo-video"
+        ],
+        "extra": {
+            "eas": {
+                "projectId": "4ee68e59-b2ec-411a-ae50-8664781a1a67"
+            }
         }
-      },
-      "permissions": [
-        "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
-      ]
-    },
-    "web": {
-      "favicon": "./assets/icons/favicon.png"
-    },
-    "description": "",
-    "githubUrl": "https://github.com/CyriloMark/kostrjanc",
-    "plugins": [
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Berechtigung, damit Fotos hochgeladen und geteilt werden dürfen."
-        }
-      ],
-      [
-        "@stripe/stripe-react-native",
-        {
-          "merchantIdentifier": "merchant.de.kostrjanc.kostrjanc",
-          "enableGooglePay": true
-        }
-      ],
-      "expo-font",
-      "expo-secure-store",
-      "expo-audio",
-      "expo-video"
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "4ee68e59-b2ec-411a-ae50-8664781a1a67"
-      }
     }
-  }
 }
