@@ -151,11 +151,11 @@ export default function App() {
             error => console.log("error App.js", "onAuthChange", error.code)
         );
 
-        // Android Bottom Nav Bar - Color
-        if (Platform.OS === "android") {
-            setBackgroundColorAsync(style.colors.black);
-            setButtonStyleAsync("light");
-        }
+        // // Android Bottom Nav Bar - Color
+        // if (Platform.OS === "android") {
+        //     setBackgroundColorAsync(style.colors.black);
+        //     setButtonStyleAsync("light");
+        // }
 
         checkIfLangIsSet().then(state => {
             if (!state) {
@@ -277,7 +277,7 @@ export default function App() {
                     animated
                     networkActivityIndicatorVisible
                     translucent
-                    backgroundColor={style.colors.black}
+                    // backgroundColor={style.colors.black}
                     style="light"
                 />
                 <SafeAreaProvider
@@ -309,7 +309,7 @@ export default function App() {
                 animated
                 networkActivityIndicatorVisible
                 translucent
-                backgroundColor={style.colors.black}
+                // backgroundColor={style.colors.black}
                 style={"light"}
             />
             <SafeAreaProvider

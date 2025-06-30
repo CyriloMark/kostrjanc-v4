@@ -56,11 +56,6 @@ export default function Login({ navigation }) {
         ]);
     };
 
-    useEffect(() => {
-        if (loginData.email.match(emailRegex)) setDataFull(true);
-        else setDataFull(false);
-    }, [loginData]);
-
     const setUnfullfilledAlert = () => {
         let missing = "";
         if (!loginData.email.match(emailRegex))
@@ -127,9 +122,14 @@ export default function Login({ navigation }) {
                                         <SVG_Email fill={style.colors.blue} />
                                     }
                                     onChangeText={val => {
-                                        setLoginData({
-                                            ...loginData,
-                                            email: val,
+                                        setLoginData(d => {
+                                            if (d.email.match(emailRegex))
+                                                setDataFull(true);
+                                            else setDataFull(false);
+                                            return {
+                                                ...d,
+                                                email: val,
+                                            };
                                         });
                                     }}
                                 />
@@ -158,9 +158,14 @@ export default function Login({ navigation }) {
                                         <SVG_Pencil fill={style.colors.blue} />
                                     }
                                     onChangeText={val => {
-                                        setLoginData({
-                                            ...loginData,
-                                            password: val,
+                                        setLoginData(d => {
+                                            if (d.email.match(emailRegex))
+                                                setDataFull(true);
+                                            else setDataFull(false);
+                                            return {
+                                                ...d,
+                                                password: val,
+                                            };
                                         });
                                     }}
                                 />
