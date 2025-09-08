@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
     View,
     StyleSheet,
@@ -35,6 +35,8 @@ import ActionButton from "./ActionButton";
 const testAudioSource = require("../../assets/test-bamborak.mp3");
 
 export default function ContextMenu({ visible, onClose, text }) {
+    const visibleRef = useRef(visible);
+
     //#region Opening/Closing Anim
     const bgOpacity = useSharedValue(0);
 
@@ -101,15 +103,21 @@ export default function ContextMenu({ visible, onClose, text }) {
 
         await generate(text)
             .then(fileUrl => {
-                player.replace(fileUrl);
-                setGenerated(true);
-                togglePlay();
+                if (visibleRef.current) {
+                    player.replace(fileUrl);
+                    setGenerated(true);
+                    togglePlay();
+                }
             })
-            .catch(error => console.log("error", "_generate TTS.jsx", error))
+            .catch(error =>
+                console.log("error", "_generate ContextMenu.jsx", error)
+            )
             .finally(() => setGenerating(false));
     };
 
     useEffect(() => {
+        visibleRef.current = visible;
+
         if (!visible) {
             player.pause();
             return;
