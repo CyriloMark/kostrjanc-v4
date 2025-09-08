@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Pressable, View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 
 import MapView, { Marker } from "react-native-maps";
 import WebView from "react-native-webview";
@@ -45,15 +45,15 @@ export default function Map({
                     }
 
                     .leaflet-container {
-  touch-action: none;
-  -webkit-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
+                        touch-action: pan-x pan-y;
+                        -webkit-user-select: none;
+                        -webkit-user-drag: none;
+                        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+                    }
                 </style>
             </head>
             <body style="margin:0;padding:0;">
-                <div id="map" style="width:100%;height:100%;"></div>
+                <div id="map" class="leaflet-container" style="width:100%;height:100%;"></div>
 
                 <script>
                     var icon = L.icon({
@@ -78,17 +78,26 @@ export default function Map({
                         boxZoom: ${accessible},
                         keyboard: ${accessible},
                     }).fitBounds([
-                        [${
-                            initialRegion.latitude - initialRegion.latitudeDelta
-                        }, ${
-        initialRegion.longitude - initialRegion.longitudeDelta
-    }],
-                        [${
-                            initialRegion.latitude + initialRegion.latitudeDelta
-                        }, ${
-        initialRegion.longitude + initialRegion.longitudeDelta
-    }]
+                        [
+                            ${
+                                initialRegion.latitude -
+                                initialRegion.latitudeDelta
+                            },
+                            ${
+                                initialRegion.longitude -
+                                initialRegion.longitudeDelta
+                            }],
+                        [
+                            ${
+                                initialRegion.latitude +
+                                initialRegion.latitudeDelta
+                            },
+                            ${
+                                initialRegion.longitude +
+                                initialRegion.longitudeDelta
+                            }]
                     ]);
+
                     L.tileLayer('https://tile.openstreetmap.de/tiles/osmhrb/{z}/{x}/{y}.png', {
                         attribution: '© OpenStreetMap contributors 2025'
                     }).addTo(map);
@@ -142,27 +151,57 @@ export default function Map({
                         }
                         }));
                     });
+
+                    window.addEventListener('touchmove', function(e) {
+                        e.preventDefault();
+                    }, { passive: false });
                 </script>
             </body>
             </html>
         `;
 
     if (MAP_TYPE == 1)
-        return (
-            <Pressable
-                style={style}
-                onPress={onPress}
-                onLongPress={onLongPress}>
-                <WebView
-                    ref={mapRef}
-                    source={{ html: htmlContent }}
-                    style={{ flex: 1, width: "100%" }}
-                    bounces={false}
-                    scrollEnabled={false}
-                    onMessage={onMessage}
-                />
-            </Pressable>
-        );
+        if (Platform.OS == "android" && onPress == null)
+            return (
+                <View style={style}>
+                    <WebView
+                        ref={mapRef}
+                        source={{ html: htmlContent }}
+                        style={{ flex: 1, width: "100%" }}
+                        javaScriptEnabled
+                        originWhitelist={["*"]}
+                        domStorageEnabled
+                        allowFileAccess
+                        mixedContentMode="always"
+                        allowUniversalAccessFromFileURLs
+                        bounces={false}
+                        scrollEnabled={false}
+                        onMessage={onMessage}
+                    />
+                </View>
+            );
+        else
+            return (
+                <Pressable
+                    style={style}
+                    onPress={onPress}
+                    onLongPress={onLongPress}>
+                    <WebView
+                        ref={mapRef}
+                        source={{ html: htmlContent }}
+                        style={{ flex: 1, width: "100%" }}
+                        javaScriptEnabled
+                        originWhitelist={["*"]}
+                        domStorageEnabled
+                        allowFileAccess
+                        mixedContentMode="always"
+                        allowUniversalAccessFromFileURLs
+                        bounces={false}
+                        scrollEnabled={false}
+                        onMessage={onMessage}
+                    />
+                </Pressable>
+            );
     else if (MAP_TYPE == 0)
         return (
             <Pressable

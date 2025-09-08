@@ -59,7 +59,11 @@ import UpdateVersion from "../static/UpdateVersion";
 
 const MainNavStack = createStackNavigator();
 
-export default function ViewportManager({ onTut, openTTS, hasRecentVersion }) {
+export default function ViewportManager({
+    onTut,
+    openContextMenu,
+    hasRecentVersion,
+}) {
     const insets = useSafeAreaInsets();
 
     return (
@@ -99,7 +103,7 @@ export default function ViewportManager({ onTut, openTTS, hasRecentVersion }) {
                         <Post
                             {...props}
                             onTut={onTut}
-                            openTTS={t => openTTS(t)}
+                            openContextMenu={t => openContextMenu(t)}
                         />
                     )}
                 </MainNavStack.Screen>
@@ -108,15 +112,25 @@ export default function ViewportManager({ onTut, openTTS, hasRecentVersion }) {
                         <Event
                             {...props}
                             onTut={onTut}
-                            openTTS={t => openTTS(t)}
+                            openContextMenu={t => openContextMenu(t)}
                         />
                     )}
                 </MainNavStack.Screen>
                 <MainNavStack.Screen name="profileView">
-                    {props => <Profile {...props} openTTS={t => openTTS(t)} />}
+                    {props => (
+                        <Profile
+                            {...props}
+                            openContextMenu={t => openContextMenu(t)}
+                        />
+                    )}
                 </MainNavStack.Screen>
                 <MainNavStack.Screen name="groupView">
-                    {props => <Group {...props} openTTS={t => openTTS(t)} />}
+                    {props => (
+                        <Group
+                            {...props}
+                            openContextMenu={t => openContextMenu(t)}
+                        />
+                    )}
                 </MainNavStack.Screen>
 
                 <MainNavStack.Screen name="settings" component={Settings} />

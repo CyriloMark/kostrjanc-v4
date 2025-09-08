@@ -24,6 +24,7 @@ export async function getNotificationSettings(uid) {
             error.code
         )
     );
+
     if (snap.exists()) data = snap.val();
     return data;
 }

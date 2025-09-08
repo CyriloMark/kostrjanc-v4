@@ -34,7 +34,7 @@ import ActionButton from "./ActionButton";
 
 const testAudioSource = require("../../assets/test-bamborak.mp3");
 
-export default function TTS({ visible, onClose, text }) {
+export default function ContextMenu({ visible, onClose, text }) {
     //#region Opening/Closing Anim
     const bgOpacity = useSharedValue(0);
 

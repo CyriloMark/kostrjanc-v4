@@ -26,7 +26,7 @@ import Refresh from "../components/RefreshControl";
 import LeaveButton from "../components/groups/LeaveButton";
 import EditProfileButton from "../components/profile/EditProfileButton";
 
-export default function Group({ navigation, route, openTTS }) {
+export default function Group({ navigation, route, openContextMenu }) {
     const scrollRef = useRef();
 
     let joining = false;
@@ -279,7 +279,9 @@ export default function Group({ navigation, route, openTTS }) {
                                 style.Ttitle2,
                                 style.readableText,
                             ]}
-                            onPress={() => openTTS(getPlainText(group.name))}>
+                            onPress={() =>
+                                openContextMenu(getPlainText(group.name))
+                            }>
                             {group.name}
                         </Text>
                     </View>
@@ -293,7 +295,7 @@ export default function Group({ navigation, route, openTTS }) {
                                 style.readableText,
                             ]}
                             onPress={() =>
-                                openTTS(getPlainText(group.description))
+                                openContextMenu(getPlainText(group.description))
                             }>
                             {group.description}
                         </Text>

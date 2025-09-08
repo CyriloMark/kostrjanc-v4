@@ -37,7 +37,7 @@ import SVG_Admin from "../assets/svg/Admin";
 import SVG_Verify from "../assets/svg/Moderator";
 
 let UID = null;
-export default function Profile({ navigation, route, openTTS }) {
+export default function Profile({ navigation, route, openContextMenu }) {
     const scrollRef = useRef();
 
     let followPressed = false;
@@ -392,7 +392,9 @@ export default function Profile({ navigation, route, openTTS }) {
                                 style.Ttitle2,
                                 style.readableText,
                             ]}
-                            onPress={() => openTTS(getPlainText(user.name))}>
+                            onPress={() =>
+                                openContextMenu(getPlainText(user.name))
+                            }>
                             {user.name}
                         </Text>
                     </View>
@@ -406,7 +408,7 @@ export default function Profile({ navigation, route, openTTS }) {
                                 style.readableText,
                             ]}
                             onPress={() =>
-                                openTTS(getPlainText(user.description))
+                                openContextMenu(getPlainText(user.description))
                             }>
                             {user.description}
                         </Text>

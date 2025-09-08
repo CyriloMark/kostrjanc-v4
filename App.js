@@ -63,7 +63,7 @@ import Ban from "./pages/static/Ban";
 import LanguageSelect from "./pages/static/LanguageSelect";
 import TestView from "./pages/static/TestView";
 
-import TTS from "./components/content/TTS";
+import ContextMenu from "./components/content/ContextMenu";
 
 import TutorialView from "./components/tutorial/TutorialView";
 import {
@@ -102,7 +102,7 @@ export default function App() {
 
     const [expoPushToken, setExpoPushToken] = useState("");
 
-    const [tts, setTTS] = useState({
+    const [contextMenu, setContextMenu] = useState({
         visible: false,
         text: null,
     });
@@ -231,8 +231,8 @@ export default function App() {
         }
     }, [loggedIn]);
 
-    const openTTS = text => {
-        setTTS({
+    const openContextMenu = text => {
+        setContextMenu({
             visible: true,
             text: text,
         });
@@ -319,14 +319,16 @@ export default function App() {
                     ...style.bgBlack,
                 }}>
                 <ViewportManager
-                    openTTS={t => openTTS(t)}
+                    openContextMenu={t => openContextMenu(t)}
                     onTut={showTutorial}
                     hasRecentVersion={isRecentVersion.equal}
                 />
-                <TTS
-                    visible={tts.visible}
-                    text={tts.text}
-                    onClose={() => setTTS({ visible: false, text: null })}
+                <ContextMenu
+                    visible={contextMenu.visible}
+                    text={contextMenu.text}
+                    onClose={() =>
+                        setContextMenu({ visible: false, text: null })
+                    }
                 />
                 <TutorialView
                     visible={tutorial.visible}

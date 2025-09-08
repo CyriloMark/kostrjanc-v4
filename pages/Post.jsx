@@ -66,7 +66,7 @@ import SVG_Speaker from "../assets/svg/Mic1";
 const KEYBOARDBUTTON_ENABLED = false;
 
 let cursorPos = -1;
-export default function Post({ navigation, route, onTut, openTTS }) {
+export default function Post({ navigation, route, onTut, openContextMenu }) {
     const scrollRef = useRef();
     const commentInputRef = useRef();
 
@@ -339,7 +339,7 @@ export default function Post({ navigation, route, onTut, openTTS }) {
                                             !el2.hasUrl ? (
                                                 <Text
                                                     onPress={() =>
-                                                        openTTS(
+                                                        openContextMenu(
                                                             getPlainText(
                                                                 post.title
                                                             )
@@ -450,7 +450,7 @@ export default function Post({ navigation, route, onTut, openTTS }) {
                                             !el2.hasUrl ? (
                                                 <Text
                                                     onPress={() =>
-                                                        openTTS(
+                                                        openContextMenu(
                                                             getPlainText(
                                                                 post.description
                                                             )
@@ -775,7 +775,9 @@ export default function Post({ navigation, route, onTut, openTTS }) {
                                     showDate
                                     onRemove={() => removeComment(comment)}
                                     onPress={() =>
-                                        openTTS(getPlainText(comment.content))
+                                        openContextMenu(
+                                            getPlainText(comment.content)
+                                        )
                                     }
                                     onCommentUserPress={() =>
                                         navigation.navigate("profileView", {

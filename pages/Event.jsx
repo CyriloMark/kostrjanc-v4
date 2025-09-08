@@ -82,7 +82,7 @@ import MapView, {
 const KEYBOARDBUTTON_ENABLED = false;
 
 let cursorPos = -1;
-export default function Event({ navigation, route, onTut, openTTS }) {
+export default function Event({ navigation, route, onTut, openContextMenu }) {
     const mapRef = useRef();
     const commentInputRef = useRef();
 
@@ -429,7 +429,7 @@ export default function Event({ navigation, route, onTut, openTTS }) {
                                         !el2.hasUrl ? (
                                             <Text
                                                 onPress={() =>
-                                                    openTTS(
+                                                    openContextMenu(
                                                         getPlainText(
                                                             event.title
                                                         )
@@ -550,7 +550,7 @@ export default function Event({ navigation, route, onTut, openTTS }) {
                                             !el2.hasUrl ? (
                                                 <Text
                                                     onPress={() =>
-                                                        openTTS(
+                                                        openContextMenu(
                                                             getPlainText(
                                                                 event.description
                                                             )
@@ -1085,7 +1085,9 @@ export default function Event({ navigation, route, onTut, openTTS }) {
                                     showDate
                                     onRemove={() => removeComment(comment)}
                                     onPress={() =>
-                                        openTTS(getPlainText(comment.content))
+                                        openContextMenu(
+                                            getPlainText(comment.content)
+                                        )
                                     }
                                     onCommentUserPress={() =>
                                         navigation.navigate("profileView", {
