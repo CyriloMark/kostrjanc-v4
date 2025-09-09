@@ -6,10 +6,25 @@ import { StyleSheet, View } from "react-native";
 
 import Svg, { LinearGradient, Rect, Defs, Stop } from "react-native-svg";
 
-export default function BottomTransitionBar({ style }) {
+export default function BottomTransitionBar({ style, inverted }) {
     // return <View />;
     return (
-        <Svg viewBox="0 0 10 10" style={[style, styles.container]}>
+        <Svg
+            viewBox="0 0 10 10"
+            style={[
+                style,
+                styles.container,
+                {
+                    transform: [
+                        {
+                            scaleX: 100,
+                        },
+                        {
+                            scaleY: inverted ? -1 : 1,
+                        },
+                    ],
+                },
+            ]}>
             <Defs>
                 <LinearGradient id="gradient" gradientTransform="rotate(90)">
                     <Stop
@@ -41,11 +56,6 @@ const styles = StyleSheet.create({
         zIndex: 10,
         opacity: 1,
         position: "absolute",
-        transform: [
-            {
-                scaleX: 100,
-            },
-        ],
         // backgroundColor: "red",
     },
 });

@@ -491,8 +491,11 @@
         "testview_missing_title": "Zmólki, kótarež su se južo pśizjawili:",
         "testview_thx": "Źěkujom se za twóju procu!",
 
-        "tts_title": "Pśecytańska funkcija",
-        "tts_generate": "TTS generěrowaś",
+        "contextmenu_title": "Pśecytańska funkcija a pśełožk",
+        "contextmenu_tts_generate": "TTS generěrowaś",
+        "contextmenu_sotra_generate": "Pśełožk z sotra.app generěrowaś",
+        "contextmenu_original": "Originalny tekst",
+        "contextmenu_translation": "Pśełožony tekst",
 
         "tutorial_mainnav": "Głowna nawigacija pśez kostrjanc.",
         "tutorial_contentpage": "Co jo kóstwine mlac STUDIJO? Sam aktiwny na krjau byś.",

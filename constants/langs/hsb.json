@@ -520,8 +520,11 @@
         "testview_missing_title": "Zmylki, kotrež buchu hižo přizjewjene:",
         "testview_thx": "Dźakuju za twoju prócu!",
 
-        "tts_title": "Přečitanska funkcija",
-        "tts_generate": "TTS generěrować",
+        "contextmenu_title": "Přečitanska funkcija a přełožk",
+        "contextmenu_tts_generate": "TTS generěrować",
+        "contextmenu_sotra_generate": "Přełožk z sotra.app generěrować",
+        "contextmenu_original": "Originalny tekst",
+        "contextmenu_translation": "Přełoženy tekst",
 
         "tutorial_mainnav": "Hłowna nawigacija přez kostrjanc.",
         "tutorial_contentpage": "Što je kostrjanc STUDIJO? Sam aktiwny na kostrjanc być.",
