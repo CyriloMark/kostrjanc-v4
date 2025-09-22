@@ -14,10 +14,6 @@ function interpolationSearch(L, x, l, r) {
     console.log("piv", piv);
 
     return 0;
-
-    if (L[piv] === x) return piv;
-    if (x > L[piv]) return interpolationSearch(L, x, piv + 1, r);
-    else return interpolationSearch(L, x, l, piv - 1);
 }
 
 /**

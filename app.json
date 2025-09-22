@@ -62,13 +62,6 @@
                     "photosPermission": "Berechtigung, damit Fotos hochgeladen und geteilt werden dürfen."
                 }
             ],
-            [
-                "@stripe/stripe-react-native",
-                {
-                    "merchantIdentifier": "merchant.de.kostrjanc.kostrjanc",
-                    "enableGooglePay": true
-                }
-            ],
             "expo-font",
             "expo-secure-store",
             "expo-audio",

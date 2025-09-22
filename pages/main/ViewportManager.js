@@ -36,7 +36,6 @@ import Settings_Verify from "../settings/Verify";
 import Settings_DataSecurityImpresum from "../settings/DataSecurityImpresum";
 import Settings_Admin from "../settings/Admin";
 import Settings_Profile from "../settings/Profile";
-import Settings_BuyMeACoffee from "../settings/BuyMeACoffee";
 
 import LandingCreate from "../create/LandingCreate";
 import PostCreate from "../create/PostCreate";
@@ -158,10 +157,6 @@ export default function ViewportManager({
                 <MainNavStack.Screen
                     name="settings-admin"
                     component={Settings_Admin}
-                />
-                <MainNavStack.Screen
-                    name="settings-buymeacoffee"
-                    component={Settings_BuyMeACoffee}
                 />
 
                 <MainNavStack.Screen

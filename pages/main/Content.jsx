@@ -44,7 +44,6 @@ import SVG_Dice from "../../assets/svg/Dice";
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import axios from "axios";
 import makeRequest from "../../constants/request";
 
 const RANDOM_CONTENT_ENABLED = false;
@@ -53,8 +52,6 @@ const EVENT_RECOMMENDATION_ENABLED = true;
 const EVENT_FOLLOWING_FACTOR = 2;
 const EVENT_AMOUNT_OF_RECOMMENDATION = 5;
 //#endregion
-
-let UsersData = null;
 
 // const client = new MeiliSearch({
 //     host: HOST_URL,
@@ -92,62 +89,6 @@ export default function Content({ navigation, onTut }) {
     let shownRandomUsersList = [];
     let currentRandomUsersList = [];
 
-    /* #region Old Search Engine
-    let getSearchResult = text => {
-        let output = [];
-        let searchQuery = text.toLowerCase();
-
-        for (const key in UsersData) {
-            let user = UsersData[key].name.toLowerCase();
-
-            if (user.slice(0, searchQuery.length).indexOf(searchQuery) !== -1) {
-                if (searchResult.length <= 5) {
-                    if (!UsersData[key].isBanned) {
-                        output.push({
-                            name: UsersData[key].name,
-                            pbUri: UsersData[key].pbUri,
-                            id: key,
-                        });
-                    }
-                }
-            }
-        }
-
-        setSearchResult(output);
-    };
-    
-
-    const fetchUsers = text => {
-        if (text.length <= 0 || text.length > 64) {
-            setSearchResult([]);
-            return;
-        }
-
-        if (!UsersData) {
-            const db = getDatabase();
-            get(child(ref(db), "users"))
-                .then(usersSnap => {
-                    if (!usersSnap.exists()) {
-                        setSearchResult([]);
-                        return;
-                    }
-
-                    const usersData = usersSnap.val();
-                    UsersData = usersData;
-
-                    getSearchResult(text);
-                })
-                .catch(error =>
-                    console.log(
-                        "error main/Content.jsx",
-                        "fetchUsers get users",
-                        error.code
-                    )
-                );
-        } else getSearchResult(text);
-    };
-    // #endregion */
-
     //#region Get Random User
     let loadingUsers = false;
     const getRandomUser = () => {
@@ -165,44 +106,6 @@ export default function Content({ navigation, onTut }) {
                 loadRandomUser();
             });
         } else loadRandomUser();
-
-        // if (!UsersData) {
-        //     const db = getDatabase();
-        //     get(child(ref(db), "users"))
-        //         .then(usersSnap => {
-        //             if (!usersSnap.exists()) return;
-
-        //             const usersData = usersSnap.val();
-        //             UsersData = usersData;
-
-        //             const data = Object.entries(UsersData);
-        //             const random = Math.round(
-        //                 lerp(0, data.length, Math.random())
-        //             );
-        //             const randomUser = {
-        //                 id: data[random][0],
-        //                 name: data[random][1]["name"],
-        //                 pbUri: data[random][1]["pbUri"],
-        //             };
-        //             setRandomUser(randomUser);
-        //         })
-        //         .catch(error =>
-        //             console.log(
-        //                 "error main/Content.jsx",
-        //                 "getRandomUser get users",
-        //                 error.code
-        //             )
-        //         );
-        // } else {
-        //     const data = Object.entries(UsersData);
-        //     const random = Math.round(lerp(0, data.length, Math.random()));
-        //     const randomUser = {
-        //         id: data[random][0],
-        //         name: data[random][1]["name"],
-        //         pbUri: data[random][1]["pbUri"],
-        //     };
-        //     setRandomUser(randomUser);
-        // }
     };
     const loadRandomUser = () => {
         if (
@@ -360,49 +263,7 @@ export default function Content({ navigation, onTut }) {
                                         error
                                     )
                                 );
-
-                            // )
-                            // .then(rsp => {
-                            //     console.log(rsp.ok);
-                            // })
-                            // axios
-                            //     .post(
-                            //         `${process.env.EXPO_PUBLIC_HOST_URL}/indexes/kostrjanc/search`,
-                            //         {
-                            //             q: val,
-                            //         },
-                            //         {
-                            //             headers: {
-                            //                 "Content-Type": "application/json",
-                            //             },
-                            //         }
-                            //     )
-                            // .then(rsp => {
-                            //     let results = [];
-                            //     rsp.data.hits.map(hit => {
-                            //         results.push({
-                            //             name: hit.primary,
-                            //             pbUri: hit.img,
-                            //             id: hit.id.substring(2),
-                            //         });
-                            //     });
-                            //     setSearchResult(results);
-                            // })
                         }
-                        // client
-                        //     .index("kostrjanc")
-                        //     .search(val)
-                        //     .then(res => {
-                        //         let results = [];
-                        //         res.hits.map(hit => {
-                        //             results.push({
-                        //                 name: hit.primary,
-                        //                 pbUri: hit.img,
-                        //                 id: hit.id.substring(2),
-                        //             });
-                        //         });
-                        //         setSearchResult(results);
-                        //     });
                     }}
                     maxLength={32}
                     bg={`rgba(${style.colorsRGB.black},.25)`}
