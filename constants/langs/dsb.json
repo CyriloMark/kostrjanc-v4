@@ -207,9 +207,10 @@
         "profile_role_sub_1": "na kostrjancu.",
         "profile_role_admin": "admin",
         "profile_role_mod": "moderator",
-        "profile_score_title": "Wuběźowanje-Score",
+
+        "profile_score_title": "kostrjanc-Score",
         "profile_score_sub_1": "jo",
-        "profile_score_sub_2": "dypkow w tyźeńskich wuběźowanjach zgromaźił.",
+        "profile_score_sub_2": "kostrjancow zgromaźił.",
 
         "conent_translation_title": "Wopśimjeśe pśełožone",
         "conent_translation_sub": "Toś to wopśimjeśe jo se z sotra.app pśełožyło.",

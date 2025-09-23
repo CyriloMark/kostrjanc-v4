@@ -7,6 +7,8 @@ import { getLangs } from "../../constants/langs";
 
 import { LinearGradient } from "expo-linear-gradient";
 
+import SVG_kostrjanc from "../../assets/svg/kostrjanc";
+
 export default function ScoreCounter({ style, count, userName }) {
     const onAlert = () => {
         Alert.alert(
@@ -32,7 +34,10 @@ export default function ScoreCounter({ style, count, userName }) {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 locations={[0, 0.66]}>
-                <Pressable onPress={onAlert}>
+                <Pressable
+                    onPress={onAlert}
+                    style={[styles.innerContainer, s.allCenter]}>
+                    <SVG_kostrjanc style={styles.icon} />
                     <Text style={[s.tBlack, s.Tmd, styles.text]}>{count}</Text>
                 </Pressable>
             </LinearGradient>
@@ -44,7 +49,16 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 10,
     },
+    innerContainer: {
+        flexDirection: "row",
+    },
+    icon: {
+        width: 18,
+        height: 16,
+        marginTop: 1,
+    },
     text: {
+        marginLeft: s.defaultMsm,
         fontFamily: "Barlow_Bold",
     },
 });
