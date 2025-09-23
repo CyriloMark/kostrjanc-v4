@@ -5,22 +5,18 @@ import * as style from "../styles";
 
 import BackHeader from "../components/BackHeader";
 
-export const clamp = (value, min, max) => {
-    "worklet";
-
-    return Math.min(Math.max(min, value), max);
-};
-
-import {
-    PanGestureHandler,
-    PinchGestureHandler,
-} from "react-native-gesture-handler";
+import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
     useAnimatedGestureHandler,
     useAnimatedStyle,
     useSharedValue,
     withTiming,
 } from "react-native-reanimated";
+
+export const clamp = (value, min, max) => {
+    "worklet";
+    return Math.min(Math.max(min, value), max);
+};
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
@@ -46,24 +42,24 @@ export default function ImageFullscreen({ navigation, route }) {
         centerY: 0,
     });
 
-    const panHandler = useAnimatedGestureHandler({
-        onActive: event => {
+    // Pan Gesture
+    const panGesture = Gesture.Pan()
+        .onUpdate(event => {
             translateX.value = event.translationX;
             translateY.value = event.translationY;
-        },
-        onFinish: () => {
+        })
+        .onEnd(() => {
             translateX.value = withTiming(0);
             translateY.value = withTiming(0);
-        },
-    });
+        });
 
-    const pinchHandler = useAnimatedGestureHandler({
-        onStart: event => {
+    // Pinch Gesture
+    const pinchGesture = Gesture.Pinch()
+        .onBegin(event => {
             initialFocalX.value = event.focalX;
             initialFocalY.value = event.focalY;
-        },
-        onActive: event => {
-            // onStart: focalX & focalY result both to 0 on Android
+        })
+        .onUpdate(event => {
             if (initialFocalX.value === 0 && initialFocalY.value === 0) {
                 initialFocalX.value = event.focalX;
                 initialFocalY.value = event.focalY;
@@ -73,15 +69,17 @@ export default function ImageFullscreen({ navigation, route }) {
                 (state.centerX - initialFocalX.value) * (scale.value - 1);
             focalY.value =
                 (state.centerY - initialFocalY.value) * (scale.value - 1);
-        },
-        onFinish: () => {
+        })
+        .onEnd(() => {
             scale.value = withTiming(1);
             focalX.value = withTiming(0);
             focalY.value = withTiming(0);
             initialFocalX.value = 0;
             initialFocalY.value = 0;
-        },
-    });
+        });
+
+    // Combine Gestures so sie können gleichzeitig erkannt werden
+    const composedGesture = Gesture.Simultaneous(panGesture, pinchGesture);
 
     const onLayout = ({
         nativeEvent: {
@@ -114,27 +112,19 @@ export default function ImageFullscreen({ navigation, route }) {
             />
 
             <View style={styles.imageContainer}>
-                <PinchGestureHandler
-                    ref={pinchRef}
-                    simultaneousHandlers={[panRef]}
-                    onGestureEvent={pinchHandler}>
+                <GestureDetector gesture={composedGesture}>
                     <Animated.View style={style.container}>
-                        <PanGestureHandler
-                            ref={panRef}
-                            simultaneousHandlers={[pinchRef]}
-                            onGestureEvent={panHandler}>
-                            <Animated.View
-                                style={[style.oHidden, styles.content]}
-                                onLayout={onLayout}>
-                                <AnimatedImage
-                                    style={[style.allMax, animatedStyle]}
-                                    source={{ uri }}
-                                    resizeMode="contain"
-                                />
-                            </Animated.View>
-                        </PanGestureHandler>
+                        <Animated.View
+                            style={[style.oHidden, styles.content]}
+                            onLayout={onLayout}>
+                            <AnimatedImage
+                                style={[style.allMax, animatedStyle]}
+                                source={{ uri }}
+                                resizeMode="contain"
+                            />
+                        </Animated.View>
                     </Animated.View>
-                </PinchGestureHandler>
+                </GestureDetector>
             </View>
         </View>
     );

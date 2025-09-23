@@ -34,7 +34,6 @@ import SVG_Stop from "../../assets/svg/Stop";
 
 import ActionButton from "./ActionButton";
 import BottomTransitionBar from "../BottomTransitionBar";
-import { overlay } from "react-native-paper";
 
 const testAudioSource = require("../../assets/test-bamborak.mp3");
 
@@ -172,6 +171,15 @@ export default function ContextMenu({ visible, onClose, text }) {
     return (
         <Animated.View style={[style.allMax, styles.container, bgStyle]}>
             <View style={[style.allMax, { justifyContent: "flex-end" }]}>
+                {visible ? (
+                    <Pressable
+                        onPress={onClose}
+                        style={[
+                            style.allMax,
+                            { backgroundColor: "transparent" },
+                        ]}
+                    />
+                ) : null}
                 <Animated.View
                     style={[
                         styles.contentContainer,
