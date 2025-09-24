@@ -260,6 +260,15 @@
         "landingcreate_error_sub_p": "Wózjawjenje posta njejo móžne.",
         "landingcreate_error_sub_e": "Wózjawjenje ewenta njejo móžne.",
 
+        "destselect_title": "Cel za post wuzwóliś",
+        "destselect_hint": "Wuzwól kupku abo event, źož coš wózjawiś post.",
+        "destselect_generalbutton_title": "Powšykny post wózjawiś",
+        "destselect_generalbutton_sub": "Njewótwisna posta za wšykne wužywarje",
+        "destselect_challengebutton_title": "Na wuběźowanju se wobźěliś",
+        "destselect_group_title": "Do kupki źěliś",
+        "destselect_event_title": "Za jaden event źěliś",
+        "destselect_event_sub": "Maš wobraz, kótaryž sy pśi aktualnem eventje nagrała? Pón źěl ten how do kostrjancu a zezběraj kostrjancy.",
+
         "postcreate_headertitle": "Nowy post wózjawiś.",
         "postcreate_posttitle": "titel",
         "postcreate_imghint": "Tłoc, až móžoš wobraze pśepytaś",

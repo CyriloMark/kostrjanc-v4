@@ -62,7 +62,7 @@ export default function DestSelect({ navigation }) {
                 snapToEnd>
                 <View style={styles.titleContainer}>
                     <Text style={[style.Ttitle2, style.tWhite]}>
-                        Cil posta wuzwolić
+                        {getLangs("destselect_title")}
                     </Text>
 
                     <Text
@@ -71,8 +71,7 @@ export default function DestSelect({ navigation }) {
                             style.tWhite,
                             { marginTop: style.defaultMsm },
                         ]}>
-                        Wuzwol sej prawu skupinu abo ewent, hdźeš chceš nowy
-                        post wozjewić.
+                        {getLangs("destselect_hint")}
                     </Text>
                 </View>
 
@@ -97,7 +96,7 @@ export default function DestSelect({ navigation }) {
                 {groupsData.length !== 0 ? (
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Do skupiny dźělić
+                            {getLangs("destselect_group_title")}
                         </Text>
 
                         <ScrollView
@@ -127,7 +126,7 @@ export default function DestSelect({ navigation }) {
                             { marginBottom: style.defaultMlg },
                         ]}>
                         <Text style={[style.tWhite, style.TlgBd]}>
-                            Za ewent dźělić
+                            {getLangs("destselect_event_title")}
                         </Text>
                         <Text
                             style={[
@@ -135,8 +134,7 @@ export default function DestSelect({ navigation }) {
                                 style.tWhite,
                                 { marginVertical: style.defaultMsm },
                             ]}>
-                            Maš wobraz, kiž sy na aktualnym ewenće nahrałał? Tak
-                            postuj tutón na kostrjancu a zhromadźuj kostrjancy.
+                            {getLangs("destselect_event_sub")}
                         </Text>
 
                         {eventData.map((e, k) => (

@@ -70,7 +70,7 @@ export default function ChallengeSubmitButton({ style, onPress, active }) {
                                     textAlign: "center",
                                 },
                             ]}>
-                            Na wubědźowanju wobdźělić
+                            {getLangs("destselect_challengebutton_title")}
                         </Text>
                         <Text
                             style={[

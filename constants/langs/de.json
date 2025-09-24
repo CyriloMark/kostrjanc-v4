@@ -288,6 +288,15 @@
         "landingcreate_error_sub_p": "Veröffentlichen von Posts ist nicht möglich.",
         "landingcreate_error_sub_e": "Veröffentlichen von Events ist nicht möglich.",
 
+        "destselect_title": "Ziel für Post auswählen",
+        "destselect_hint": "Wähle die Gruppe oder das Event, in dem du einen Post veröffentlichen möchtest.",
+        "destselect_generalbutton_title": "Allgemeinen Post veröffentlichen",
+        "destselect_generalbutton_sub": "Unabhängiger Post für alle Benutzer",
+        "destselect_challengebutton_title": "Am Wettbewerb teilnehmen",
+        "destselect_group_title": "In eine Gruppe teilen",
+        "destselect_event_title": "Für ein Event teilen",
+        "destselect_event_sub": "Hast du ein Bild, das du bei einem aktuellen Event aufgenommen hast? Dann teile dieses hier auf kostrjanc und sammle kostrjanc-Blumen.",
+
         "postcreate_headertitle": "Neuen Post veröffentlichen",
         "postcreate_posttitle": "Titel",
         "postcreate_imghint": "Drücken, dass man Bilder durchsuchen kann",

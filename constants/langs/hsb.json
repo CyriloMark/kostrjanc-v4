@@ -288,6 +288,15 @@
         "landingcreate_error_sub_p": "Wozjewjenje posta njeje móžne.",
         "landingcreate_error_sub_e": "Wozjewjenje ewenta njeje móžne.",
 
+        "destselect_title": "Cil posta wuzwolić",
+        "destselect_hint": "Wuzwol sej prawu skupinu abo ewent, hdźeš chceš nowy post wozjewić.",
+        "destselect_generalbutton_title": "Powšitkowny post wozjewić",
+        "destselect_generalbutton_sub": "Njewotwisny post za wšitkich wužiwarjow",
+        "destselect_challengebutton_title": "Na wubědźowanju wobdźělić",
+        "destselect_group_title": "Do skupiny dźělić",
+        "destselect_event_title": "Za ewent dźělić",
+        "destselect_event_sub": "Maš wobraz, kiž sy na aktualnym ewenće nahrałał? Tak postuj tutón na kostrjancu a zhromadźuj kostrjancy.",
+
         "postcreate_headertitle": "Nowy post wozjewić",
         "postcreate_posttitle": "Titul",
         "postcreate_imghint": "Tłoč, zo wobrazy přepytać móžeš",

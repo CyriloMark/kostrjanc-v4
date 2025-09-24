@@ -31,7 +31,7 @@ export default function GeneralSubmitButton({ style, onPress }) {
                                     textAlign: "center",
                                 },
                             ]}>
-                            Powšitkowny post wozjewić
+                            {getLangs("destselect_generalbutton_title")}
                         </Text>
                         <Text
                             style={[
@@ -42,12 +42,7 @@ export default function GeneralSubmitButton({ style, onPress }) {
                                     textAlign: "center",
                                 },
                             ]}>
-                            {
-                                // getLangs(
-                                //       "postcreate_generalselect_button_select"
-                                //   )
-                                "Njewotwisny post za wšitkich wužiwarjow"
-                            }
+                            {getLangs("destselect_generalbutton_sub")}
                         </Text>
                     </LinearGradient>
                 </View>
