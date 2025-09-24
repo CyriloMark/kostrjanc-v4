@@ -12,6 +12,18 @@ export function checkIfLive(st, end) {
     else return false;
 }
 
+import { getAuth } from "firebase/auth";
+
+/**
+ *
+ * @param {String[]} checkedList
+ * @param {String} uid
+ * @returns {boolean}
+ */
+export function checkIfClientIsInEvent(checkedList) {
+    return checkedList.includes(getAuth().currentUser.uid);
+}
+
 export const Event_Types = [
     "event_types_0",
     "event_types_1",

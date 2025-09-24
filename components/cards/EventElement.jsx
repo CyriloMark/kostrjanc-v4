@@ -10,11 +10,17 @@ import {
 
 import * as s from "../../styles";
 
-import { ref, child, getDatabase, get } from "firebase/database";
-
+//#region Constants
 import { convertTimestampToString } from "../../constants/time";
 import { checkIfLive } from "../../constants/event";
 import { create } from "../../constants/content/create";
+import { checkLinkedUser } from "../../constants/content/linking";
+import { getUnsignedTranslationText } from "../../constants/content/translation";
+import {
+    checkForUnnecessaryNewLine,
+    checkForURLs,
+} from "../../constants/content";
+//#endregion
 
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -82,7 +88,39 @@ export default function EventElement({ event, style, onPress, k }) {
                                     s.TlgBd,
                                     { marginTop: s.defaultMsm },
                                 ]}>
-                                {event.title}
+                                {checkLinkedUser(
+                                    getUnsignedTranslationText(
+                                        checkForUnnecessaryNewLine(event.title)
+                                    )
+                                ).map((el, key) =>
+                                    !el.isLinked ? (
+                                        checkForURLs(el.text).map((el2, key2) =>
+                                            !el2.hasUrl ? (
+                                                <Text key={key2}>
+                                                    {el2.text}
+                                                </Text>
+                                            ) : (
+                                                <Text
+                                                    key={key2}
+                                                    style={[
+                                                        s.tBlue,
+                                                        {
+                                                            textDecorationLine:
+                                                                "underline",
+                                                            textDecorationColor:
+                                                                s.colors.blue,
+                                                        },
+                                                    ]}>
+                                                    {el2.text}
+                                                </Text>
+                                            )
+                                        )
+                                    ) : (
+                                        <Text key={key} style={s.tBlue}>
+                                            {el.text}
+                                        </Text>
+                                    )
+                                )}
                             </Text>
 
                             {/* Event Time Starting */}

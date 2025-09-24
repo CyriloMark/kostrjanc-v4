@@ -695,10 +695,7 @@ export default function EventCreate({ navigation, route }) {
                                 marker={false}
                                 title={""}
                                 onMessage={overridePin}
-                                onRegionChange={res => {
-                                    console.log(res);
-                                    setPin(res);
-                                }}
+                                onRegionChange={res => setPin(res)}
                             />
                             {false ? (
                                 <MapView

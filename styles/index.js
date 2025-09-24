@@ -83,6 +83,7 @@ export const TlgBd = {
 export const Ttitle2 = {
     fontFamily: "Barlow_Bold",
     fontSize: 36,
+    lineHeight: 36,
 };
 export const Ttitle = {
     fontFamily: "Barlow_Bold",

@@ -10,7 +10,7 @@ import {
     Platform,
 } from "react-native";
 
-// import Components
+//#region import Components
 import AddButton from "../../components/content/AddButton";
 import ContentHeader from "../../components/content/ContentHeader";
 import InputField from "../../components/InputField";
@@ -21,10 +21,11 @@ import Post from "../../components/content/Post";
 import Event from "../../components/content/Event";
 import Event_Card from "../../components/cards/Event";
 import VariableEventCard from "../../components/content/VariableEventCard";
+//#endregion
 
 import { getDatabase, get, ref, child } from "firebase/database";
 
-// import Constants
+//#region import Constants
 import { wait } from "../../constants/wait";
 import {
     arraySplitter,
@@ -37,14 +38,17 @@ import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import { getData, hasData, storeData } from "../../constants/storage";
 import { convertTimestampToString } from "../../constants/time";
 
+import makeRequest from "../../constants/request";
+//#endregion
+
 import * as style from "../../styles";
 
+//#region imort SVGs
 import SVG_Search from "../../assets/svg/Search";
 import SVG_Dice from "../../assets/svg/Dice";
+//#endregion
 
 import { LinearGradient } from "expo-linear-gradient";
-
-import makeRequest from "../../constants/request";
 
 const RANDOM_CONTENT_ENABLED = false;
 //#region Event Recommendation

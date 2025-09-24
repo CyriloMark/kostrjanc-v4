@@ -473,7 +473,8 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             ]}
                             onTouchStart={() => setScrollable(false)}
                             onTouchEnd={() => setScrollable(true)}>
-                            {event.geoCords.latitude !== 51.253 ? (
+                            {event.geoCords.latitude !==
+                            Event_Placeholder.geoCords.latitude ? (
                                 <Map
                                     mapRef={mapRef}
                                     style={style.allMax}

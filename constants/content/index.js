@@ -540,7 +540,8 @@ export function transformMapByAlignment(initialRegion, alignment) {
         latitude: initialRegion.latitude,
         latitudeDelta: initialRegion.latitudeDelta,
         longitude:
-            initialRegion.longitude - (initialRegion.longitudeDelta * 2) / 3,
+            initialRegion.longitude -
+            alignment * (initialRegion.longitudeDelta * (2 / 3)),
         longitudeDelta: initialRegion.longitudeDelta,
     };
 }
