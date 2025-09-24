@@ -72,13 +72,19 @@ export default function VariableEventCard({ style, size, data, onPress }) {
                             },
                         });
 
-                        mapRef.current.postMessage(
-                            JSON.stringify({
-                                action: "animate",
-                                ...eventData["geoCords"],
-                                duration: 0,
-                            })
-                        );
+                        if (process.env.EXPO_PUBLIC_MAP_TYPE === 1)
+                            mapRef.current.postMessage(
+                                JSON.stringify({
+                                    action: "animate",
+                                    ...eventData["geoCords"],
+                                    duration: 0,
+                                })
+                            );
+                        else
+                            mapRef.current.animateToRegion(
+                                eventData["geoCords"],
+                                1000
+                            );
                     })
                     .catch(error =>
                         console.log(
@@ -599,8 +605,8 @@ const styles = StyleSheet.create({
         ...s.boxShadow,
     },
     liveIcon: {
-        height: 32,
-        width: 32,
+        height: 26,
+        width: 26,
     },
 
     userContainer: {

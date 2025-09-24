@@ -1,51 +1,19 @@
-import React, { useEffect } from "react";
-
 import { View, StyleSheet, Pressable, Text, Image } from "react-native";
 
 import * as s from "../../styles";
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
-    Easing,
-} from "react-native-reanimated";
+import { General_Group } from "../../constants/content/GroupData";
 import { getLangs } from "../../constants/langs";
 
-export default function ChallengeSubmitButton({ style, onPress, active }) {
-    const activeVal = useSharedValue(0);
-
-    const shadowStyles = useAnimatedStyle(() => {
-        return {
-            marginTop:
-                s.defaultMmd * (1 - activeVal.value) +
-                s.defaultMlg * activeVal.value,
-            transform: [
-                {
-                    scale: 0.9 + activeVal.value / 10,
-                },
-            ],
-            shadowRadius: 10 * (1 - activeVal.value) + 20 * activeVal.value,
-            shadowOpacity: 0.5 * (1 - activeVal.value) + 0.75 * activeVal.value,
-            borderWidth: activeVal.value,
-        };
-    });
-
-    useEffect(() => {
-        activeVal.value = withTiming(active ? 1 : 0, {
-            duration: 333,
-            easing: Easing.bezier(0.23, 0.57, 0.7, 0.93),
-        });
-    }, [active]);
-
+export default function GeneralSubmitButton({ style, onPress }) {
     return (
-        <Animated.View style={[style, styles.shadow, shadowStyles, s.oVisible]}>
+        <View style={[style, styles.shadow, s.oVisible]}>
             <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
                 <Image
                     style={styles.image}
-                    source={require("../../assets/img/group_img_challenge.png")}
+                    source={{ uri: General_Group.imgUri }}
                     resizeMode="cover"
                     resizeMethod="resize"
                 />
@@ -57,34 +25,46 @@ export default function ChallengeSubmitButton({ style, onPress, active }) {
                         <Text
                             style={[
                                 s.tWhite,
+                                s.Tmd,
+                                {
+                                    fontFamily: "Barlow_Bold",
+                                    textAlign: "center",
+                                },
+                            ]}>
+                            Powšitkowny post wozjewić
+                        </Text>
+                        <Text
+                            style={[
+                                s.tWhite,
                                 s.TsmRg,
                                 {
                                     marginVertical: s.defaultMsm,
                                     textAlign: "center",
                                 },
                             ]}>
-                            {active
-                                ? getLangs(
-                                      "postcreate_challengeselect_button_unselect"
-                                  )
-                                : getLangs(
-                                      "postcreate_challengeselect_button_select"
-                                  )}
+                            {
+                                // getLangs(
+                                //       "postcreate_generalselect_button_select"
+                                //   )
+                                "Njewotwisny post za wšitkich wužiwarjow"
+                            }
                         </Text>
                     </LinearGradient>
                 </View>
             </Pressable>
-        </Animated.View>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     shadow: {
         alignSelf: "center",
-        width: "60%",
+        width: "75%",
 
         // Shadow
-        shadowColor: "#8829ac",
+        shadowRadius: 25,
+        shadowOpacity: 0.66,
+        shadowColor: s.colors.blue,
         shadowOffset: {
             width: 0,
             height: -2,
@@ -92,14 +72,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: s.colors.black,
 
-        borderColor: s.colors.red,
+        borderColor: s.colors.blue,
+        borderWidth: 1,
     },
     container: {
         width: "100%",
         zIndex: 3,
         borderRadius: 10,
         flexDirection: "column",
-        aspectRatio: 5 / 3,
+        aspectRatio: 2,
     },
     innerContainer: {
         ...s.allMax,

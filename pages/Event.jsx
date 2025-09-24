@@ -155,15 +155,6 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
 
                 getIfCreatorIsClient(eventData.creator);
 
-                mapRef.current.postMessage(
-                    JSON.stringify({
-                        action: "animate",
-                        ...event.geoCords,
-                        duration: 1,
-                    })
-                );
-                // mapRef.current.animateToRegion(event.geoCords, 1000);
-
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
                 );
@@ -482,38 +473,39 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             ]}
                             onTouchStart={() => setScrollable(false)}
                             onTouchEnd={() => setScrollable(true)}>
-                            <Map
-                                mapRef={mapRef}
-                                style={style.allMax}
-                                accessible={true}
-                                initialRegion={event.geoCords}
-                                marker={true}
-                                title={getUnsignedTranslationText(event.title)}
-                                onLongPress={() => {
-                                    mapRef.current.postMessage(
-                                        JSON.stringify({
-                                            action: "animate",
-                                            ...event.geoCords,
-                                            duration: 1,
-                                        })
-                                    );
-                                    // mapRef.current.animateToRegion(
-                                    //     event.geoCords,
-                                    //     1000
-                                    // );
-                                }}
-                                onMessage={() => {}}
-                                // onPress={() => {
-                                //     mapRef.current.animateToRegion(
-                                //         event.geoCords,
-                                //         1000
-                                //     );
-                                // }}
-                                // showsUserLocation
-                                //userInterfaceStyle="dark"
-                                //showsScale
-                                //focusable={false}
-                            />
+                            {event.geoCords.latitude !== 51.253 ? (
+                                <Map
+                                    mapRef={mapRef}
+                                    style={style.allMax}
+                                    accessible={true}
+                                    initialRegion={event.geoCords}
+                                    marker={true}
+                                    title={getUnsignedTranslationText(
+                                        event.title
+                                    )}
+                                    onLongPress={() => {
+                                        if (
+                                            process.env.EXPO_PUBLIC_MAP_TYPE ===
+                                            1
+                                        )
+                                            mapRef.current.postMessage(
+                                                JSON.stringify({
+                                                    action: "animate",
+                                                    ...event.geoCords,
+                                                    duration: 1,
+                                                })
+                                            );
+                                        else
+                                            mapRef.current.animateToRegion(
+                                                event.geoCords,
+                                                1000
+                                            );
+                                    }}
+                                    onMessage={() => {}}
+                                />
+                            ) : (
+                                <View style={[style.allMax, style.bgSec]} />
+                            )}
                         </View>
 
                         <View style={styles.textContainer}>

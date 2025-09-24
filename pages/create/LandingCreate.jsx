@@ -74,12 +74,15 @@ export default function LandingCreate({ navigation }) {
                         style={[styles.elementContainer, style.oHidden]}
                         onPress={() => {
                             if (POST_ENABLED)
-                                navigation.navigate("postCreate", {
+                                navigation.navigate(
+                                    "createEventSelect" /*, {
                                     fromLinking: false,
                                     linkingData: null,
                                     fromEdit: false,
                                     editData: null,
-                                });
+                                    group: null
+                                }*/
+                                );
                             else setErrorAlert(0);
                         }}>
                         <LinearGradient

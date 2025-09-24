@@ -683,6 +683,10 @@ export default function EventCreate({ navigation, route }) {
                                 marker={false}
                                 title={""}
                                 onMessage={overridePin}
+                                onRegionChange={res => {
+                                    console.log(res);
+                                    setPin(res);
+                                }}
                             />
                             {false ? (
                                 <MapView
@@ -2118,6 +2122,7 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
+                    {/* Group Select */}
                     {groups.length !== 0 && !fromEdit ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -2213,6 +2218,7 @@ export default function EventCreate({ navigation, route }) {
                             </Text>
                         </View>
                     ) : null}
+                    {/* #endregion */}
 
                     {/* Button */}
                     <View style={[style.allCenter, styles.button]}>

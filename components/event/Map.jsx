@@ -6,6 +6,7 @@ import MapView, { Marker } from "react-native-maps";
 import WebView from "react-native-webview";
 
 import { getUnsignedTranslationText } from "../../constants/content/translation";
+import { transformMapByAlignment } from "../../constants/content";
 
 /* Crostwitz Center coods:
 [
@@ -14,7 +15,7 @@ import { getUnsignedTranslationText } from "../../constants/content/translation"
 ];
 */
 
-const MAP_TYPE = 1;
+const MAP_TYPE = process.env.EXPO_PUBLIC_MAP_TYPE;
 
 const PIN_URL =
     "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/pin.png?alt=media&token=6f3538eb-2808-434b-9650-60b400de9637";
@@ -31,7 +32,14 @@ export default function Map({
     mapRef,
     marker,
     onMessage,
+    onRegionChange,
+    align,
 }) {
+    let transformedInitialRegion = transformMapByAlignment(
+        initialRegion,
+        align
+    );
+
     const htmlContent = `
             <html>
             <head>
@@ -80,21 +88,21 @@ export default function Map({
                     }).fitBounds([
                         [
                             ${
-                                initialRegion.latitude -
-                                initialRegion.latitudeDelta
+                                transformedInitialRegion.latitude -
+                                transformedInitialRegion.latitudeDelta
                             },
                             ${
-                                initialRegion.longitude -
-                                initialRegion.longitudeDelta
+                                transformedInitialRegion.longitude -
+                                transformedInitialRegion.longitudeDelta
                             }],
                         [
                             ${
-                                initialRegion.latitude +
-                                initialRegion.latitudeDelta
+                                transformedInitialRegion.latitude +
+                                transformedInitialRegion.latitudeDelta
                             },
                             ${
-                                initialRegion.longitude +
-                                initialRegion.longitudeDelta
+                                transformedInitialRegion.longitude +
+                                transformedInitialRegion.longitudeDelta
                             }]
                     ]);
 
@@ -119,8 +127,8 @@ export default function Map({
                     
                     // Marker
                     if (${marker} == true)
-                        L.marker([${initialRegion.latitude}, ${
-        initialRegion.longitude
+                        L.marker([${transformedInitialRegion.latitude}, ${
+        transformedInitialRegion.longitude
     }], {
                         icon: icon,
                         draggable: false
@@ -218,7 +226,8 @@ export default function Map({
                     zoomEnabled={accessible}
                     scrollEnabled={accessible}
                     pitchEnabled={accessible}
-                    initialRegion={initialRegion}>
+                    initialRegion={transformedInitialRegion}
+                    onRegionChange={onRegionChange}>
                     {marker ? (
                         <Marker
                             draggable={false}

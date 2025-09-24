@@ -531,3 +531,17 @@ export async function checkForChallengable(postsList) {
         }
     );
 }
+
+//#region Event Map Functions
+export function transformMapByAlignment(initialRegion, alignment) {
+    if (!alignment || alignment === 0) return initialRegion;
+
+    return {
+        latitude: initialRegion.latitude,
+        latitudeDelta: initialRegion.latitudeDelta,
+        longitude:
+            initialRegion.longitude - (initialRegion.longitudeDelta * 2) / 3,
+        longitudeDelta: initialRegion.longitudeDelta,
+    };
+}
+//#endregion

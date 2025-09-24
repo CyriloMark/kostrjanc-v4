@@ -14,10 +14,6 @@ import {
 
 import * as style from "../../styles";
 
-import { getAuth } from "firebase/auth";
-import { child, get, getDatabase, ref, set } from "firebase/database";
-import * as Storage from "firebase/storage";
-
 // import Constants
 import { Post_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData, storeData } from "../../constants/storage";
@@ -55,7 +51,6 @@ import EnterButton from "../../components/auth/EnterButton";
 import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
-import ChallengeSubmitButton from "../../components/groups/ChallengeSubmitButton";
 
 let cursorPos = -1;
 export default function PostCreate({ navigation, route }) {
@@ -65,8 +60,6 @@ export default function PostCreate({ navigation, route }) {
     const [post, setPost] = useState(Post_Placeholder);
     const [imageUri, setImageUri] = useState(null);
     const [buttonChecked, setButtonChecked] = useState(false);
-    const [groups, setGroups] = useState([]);
-    const [canUploadForChallenge, setCanUploadForChallenge] = useState(false);
 
     const [autoCorrect, setAutoCorrect] = useState({
         status: 100,
@@ -78,8 +71,6 @@ export default function PostCreate({ navigation, route }) {
 
     useEffect(() => {
         cursorPos = -1;
-        getGroups();
-        checkForChallengeable();
 
         if (fromEdit) {
             setPost({
@@ -261,36 +252,6 @@ export default function PostCreate({ navigation, route }) {
         );
     };
 
-    const checkForChallengeable = async () => {
-        const hasUploadForChallenge = await getData("hasUploadForChallenge");
-        if (hasUploadForChallenge != null)
-            return setCanUploadForChallenge(!hasUploadForChallenge);
-
-        const data = await getData("userData");
-        if (!data.posts) return setCanUploadForChallenge(true);
-
-        let postsList = data.posts;
-
-        let count = 0;
-        for (let i = postsList.length; i > 0; i--)
-            get(
-                child(ref(getDatabase()), `posts/${postsList[i - 1]}/group`)
-            ).then(groupSnap => {
-                if (groupSnap.exists())
-                    if (groupSnap.val() == 2) {
-                        console.log("3");
-                        setCanUploadForChallenge(false);
-                        storeData("hasUploadForChallenge", true);
-                        i = 0;
-                    } else count++;
-                else count++;
-                if (i === 1 && count === postsList.length) {
-                    setCanUploadForChallenge(true);
-                    storeData("hasUploadForChallenge", false);
-                }
-            });
-    };
-
     useEffect(() => {
         if (!fromLinking) checkButton();
         else {
@@ -298,41 +259,6 @@ export default function PostCreate({ navigation, route }) {
             publishPost();
         }
     }, [post]);
-
-    //#region get Groups of Client
-    const getGroupsData = g => {
-        if (!Array.isArray(g)) return;
-
-        const db = ref(getDatabase());
-        let output = [];
-
-        for (let i = 0; i < g.length; i++) {
-            get(child(db, `groups/${g[i]}`)).then(gSnap => {
-                if (gSnap.exists()) {
-                    const gData = gSnap.val();
-                    output.push({
-                        name: gData.name,
-                        imgUri: gData.imgUri,
-                        id: g[i],
-                    });
-                }
-                if (i === g.length - 1) setGroups(output);
-            });
-        }
-    };
-    const getGroups = async () => {
-        const userData = await getData("userData");
-
-        const db = ref(getDatabase());
-        if (!userData)
-            get(child(db, `users/${getAuth().currentUser.uid}/groups`)).then(
-                groupsSnap => {
-                    if (groupsSnap.exists()) getGroupsData(groupsSnap.val());
-                }
-            );
-        else if (userData.groups) getGroupsData(userData.groups);
-    };
-    //#endregion
 
     const publishPost = async () => {
         if (!buttonChecked) {
@@ -824,156 +750,6 @@ export default function PostCreate({ navigation, route }) {
                             </View>
                         </View>
                     </View>
-
-                    {/* Challenge Group Select */}
-                    {!fromEdit ? (
-                        <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                {getLangs("postcreate_challengeselect_title")}
-                            </Text>
-
-                            {canUploadForChallenge ? (
-                                <View style={{ marginTop: style.defaultMsm }}>
-                                    <Text style={[style.tWhite, style.Tmd]}>
-                                        {getLangs(
-                                            "postcreate_challengeselect_description"
-                                        )}
-                                    </Text>
-
-                                    <ChallengeSubmitButton
-                                        active={post.group === 2}
-                                        onPress={() =>
-                                            setPost(prev => {
-                                                if (!prev.group)
-                                                    return {
-                                                        ...prev,
-                                                        group: 2,
-                                                    };
-                                                else if (prev.group === 2)
-                                                    return {
-                                                        ...prev,
-                                                        group: null,
-                                                    };
-                                                else
-                                                    return {
-                                                        ...prev,
-                                                        group: 2,
-                                                    };
-                                            })
-                                        }
-                                    />
-                                </View>
-                            ) : (
-                                <Text
-                                    style={[
-                                        style.tWhite,
-                                        style.Tmd,
-                                        { marginTop: style.defaultMsm },
-                                    ]}>
-                                    {getLangs(
-                                        "postcreate_challengeselect_alreadysent"
-                                    )}
-                                </Text>
-                            )}
-                        </View>
-                    ) : null}
-
-                    {/* Group Select */}
-                    {groups.length !== 0 && !fromEdit ? (
-                        <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                {getLangs("contentcreate_groupselect_title")}
-                            </Text>
-                            <Text
-                                style={[
-                                    style.tWhite,
-                                    style.Tmd,
-                                    { marginTop: style.defaultMsm },
-                                ]}>
-                                {getLangs("contentcreate_groupselect_hint")}
-                            </Text>
-
-                            <View style={[styles.groupSelectContainer]}>
-                                {groups.map((group, key) => (
-                                    <Pressable
-                                        key={key}
-                                        style={[
-                                            styles.groupSelectElement,
-                                            style.oHidden,
-                                            style.Psm,
-                                        ]}
-                                        onPress={() => {
-                                            setPost(prev => {
-                                                if (!prev.group)
-                                                    return {
-                                                        ...prev,
-                                                        group: group.id,
-                                                    };
-                                                else if (
-                                                    prev.group === group.id
-                                                )
-                                                    return {
-                                                        ...prev,
-                                                        group: null,
-                                                    };
-                                                else
-                                                    return {
-                                                        ...prev,
-                                                        group: group.id,
-                                                    };
-                                            });
-                                        }}>
-                                        <View
-                                            style={[
-                                                styles.groupSelectElementImgContainer,
-                                                style.oHidden,
-                                                post.group == group.id
-                                                    ? {
-                                                          borderColor:
-                                                              style.colors.red,
-                                                          ...style.border,
-                                                      }
-                                                    : null,
-                                            ]}>
-                                            <Image
-                                                style={style.allMax}
-                                                source={{ uri: group.imgUri }}
-                                            />
-                                        </View>
-                                        <Text
-                                            style={[
-                                                post.group == group.id
-                                                    ? style.tRed
-                                                    : style.tWhite,
-                                                style.TsmRg,
-                                                {
-                                                    marginTop: style.defaultMsm,
-                                                    textAlign: "center",
-                                                },
-                                            ]}>
-                                            {group.name}
-                                        </Text>
-                                    </Pressable>
-                                ))}
-                            </View>
-                        </View>
-                    ) : fromEdit ? (
-                        <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                {getLangs("contentcreate_groupselect_title")}
-                            </Text>
-                            <Text
-                                style={[
-                                    style.tWhite,
-                                    style.Tmd,
-                                    { marginTop: style.defaultMsm },
-                                ]}>
-                                {getLangs(
-                                    "contentcreate_groupselect_fromedit_hint"
-                                )}
-                            </Text>
-                        </View>
-                    ) : null}
 
                     {/* Button */}
                     <View style={[style.allCenter, styles.button]}>
