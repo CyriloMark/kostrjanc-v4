@@ -38,7 +38,7 @@ import Settings_Admin from "../settings/Admin";
 import Settings_Profile from "../settings/Profile";
 
 import LandingCreate from "../create/LandingCreate";
-import EventSelect from "../create/EventSelect";
+import DestSelect from "../create/DestSelect";
 import PostCreate from "../create/PostCreate";
 import EventCreate from "../create/EventCreate";
 import GroupCreate from "../create/GroupCreate";
@@ -170,8 +170,8 @@ export default function ViewportManager({
                     component={LandingCreate}
                 />
                 <MainNavStack.Screen
-                    name="createEventSelect"
-                    component={EventSelect}
+                    name="createDestSelect"
+                    component={DestSelect}
                 />
                 <MainNavStack.Screen name="postCreate" component={PostCreate} />
                 <MainNavStack.Screen

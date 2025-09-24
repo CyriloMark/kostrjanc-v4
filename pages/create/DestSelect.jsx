@@ -13,7 +13,7 @@ import GeneralSubmitButton from "../../components/content/GeneralSubmitButton";
 import GroupElement from "../../components/content/GroupElement";
 import EventElement from "../../components/cards/EventElement";
 
-export default function EventSelect({ navigation }) {
+export default function DestSelect({ navigation }) {
     const [groupsData, setGroupsData] = useState([]);
     const [eventData, setEventData] = useState([]);
 
@@ -62,7 +62,6 @@ export default function EventSelect({ navigation }) {
                 snapToEnd>
                 <View style={styles.titleContainer}>
                     <Text style={[style.Ttitle2, style.tWhite]}>
-                        {/* {getLangs("createEventSelect_title")} */}
                         Cil posta wuzwolić
                     </Text>
 
@@ -72,7 +71,6 @@ export default function EventSelect({ navigation }) {
                             style.tWhite,
                             { marginTop: style.defaultMsm },
                         ]}>
-                        {/* {getLangs("createEventSelect_hint")} */}
                         Wuzwol sej prawu skupinu abo ewent, hdźeš chceš nowy
                         post wozjewić.
                     </Text>
@@ -137,7 +135,6 @@ export default function EventSelect({ navigation }) {
                                 style.tWhite,
                                 { marginVertical: style.defaultMsm },
                             ]}>
-                            {/* {getLangs("createEventSelect_hint")} */}
                             Maš wobraz, kiž sy na aktualnym ewenće nahrałał? Tak
                             postuj tutón na kostrjancu a zhromadźuj kostrjancy.
                         </Text>

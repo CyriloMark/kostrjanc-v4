@@ -75,7 +75,7 @@ export default function LandingCreate({ navigation }) {
                         onPress={() => {
                             if (POST_ENABLED)
                                 navigation.navigate(
-                                    "createEventSelect" /*, {
+                                    "createDestSelect" /*, {
                                     fromLinking: false,
                                     linkingData: null,
                                     fromEdit: false,
