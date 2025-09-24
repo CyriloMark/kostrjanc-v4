@@ -21,7 +21,12 @@ import { getAuth } from "firebase/auth";
  * @returns {boolean}
  */
 export function checkIfClientIsInEvent(checkedList) {
+    if (!checkedList) return false;
     return checkedList.includes(getAuth().currentUser.uid);
+}
+
+export function checkIfEventHasBanner(eventData) {
+    return eventData.eventOptions.adBanner !== undefined;
 }
 
 export const Event_Types = [

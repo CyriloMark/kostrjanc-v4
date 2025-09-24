@@ -83,6 +83,7 @@ export default function EventElement({ event, style, onPress, k }) {
 
                             {/* Event Title */}
                             <Text
+                                numberOfLines={2}
                                 style={[
                                     s.tWhite,
                                     s.TlgBd,

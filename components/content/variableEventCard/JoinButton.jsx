@@ -52,12 +52,7 @@ export default function JoinButton({ style, onPress, checked }) {
         <View style={[style, styles.shadow, s.oVisible]}>
             <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
                 <LinearGradient
-                    style={[
-                        s.Pmd,
-                        s.allCenter,
-                        styles.innerContainer,
-                        s.allCenter,
-                    ]}
+                    style={[s.Pmd, s.allCenter, styles.innerContainer]}
                     colors={[s.colors.red, s.colors.white]}
                     end={{ x: 0.5, y: 2.5 }}
                     locations={[0, 0.75]}>
@@ -70,7 +65,7 @@ export default function JoinButton({ style, onPress, checked }) {
                         {getLangs("checkbtn_check")}
                     </Text>
 
-                    {checked ? (
+                    {!checked ? (
                         <Animated.View
                             style={[styles.arrowContainer, arrowStyles]}>
                             <SVG_Return

@@ -502,7 +502,7 @@ export default function EventCreate({ navigation, route }) {
 
             let img_url = event.eventOptions.adBanner.base64;
             const base64 = img_url;
-            if (base64) {
+            if (!base64) {
                 Alert.alert(
                     "Fehler",
                     "Kein Bild ausgewählt oder Base64-Daten fehlen."

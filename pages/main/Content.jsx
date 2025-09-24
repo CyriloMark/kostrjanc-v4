@@ -551,15 +551,7 @@ export default function Content({ navigation, onTut }) {
                                 {eventRanking.events.map((e, key) => (
                                     <VariableEventCard
                                         key={key}
-                                        size={
-                                            key === 0
-                                                ? 0
-                                                : key <= 2
-                                                ? 1
-                                                : Platform.OS === "ios"
-                                                ? 2
-                                                : 1
-                                        }
+                                        size={getSize(key)}
                                         data={e}
                                         onPress={() =>
                                             navigation.navigate("eventView", {
@@ -667,6 +659,12 @@ export default function Content({ navigation, onTut }) {
         </View>
     );
 }
+
+const getSize = size => {
+    if (size === 0) return 0;
+    else if (size <= 2) return 1;
+    return 2;
+};
 
 const styles = StyleSheet.create({
     addBtnContainer: {
