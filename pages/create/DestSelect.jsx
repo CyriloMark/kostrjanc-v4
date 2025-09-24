@@ -8,6 +8,11 @@ import BackHeader from "../../components/BackHeader";
 import { getLangs } from "../../constants/langs";
 import { create } from "../../constants/content/create";
 
+import {
+    Challenge_Group,
+    General_Group,
+} from "../../constants/content/GroupData";
+
 import ChallengeSubmitButton from "../../components/content/ChallengeSubmitButton";
 import GeneralSubmitButton from "../../components/content/GeneralSubmitButton";
 import GroupElement from "../../components/content/GroupElement";
@@ -32,13 +37,17 @@ export default function DestSelect({ navigation }) {
         });
     }, []);
 
-    function handlePress(opt) {
+    function handlePress(_type, _id, _data) {
         navigation.navigate("postCreate", {
             fromLinking: false,
             linkingData: null,
             fromEdit: false,
             editData: null,
-            group: opt,
+            dest: {
+                type: _type,
+                id: _id,
+                data: _data,
+            },
         });
     }
 
@@ -79,7 +88,8 @@ export default function DestSelect({ navigation }) {
                 <GeneralSubmitButton
                     style={styles.sectionContainer}
                     onPress={() => {
-                        if (canUploadForChallenge) handlePress(0);
+                        if (canUploadForChallenge)
+                            handlePress("g", 0, General_Group);
                     }}
                 />
 
@@ -88,7 +98,8 @@ export default function DestSelect({ navigation }) {
                     style={styles.sectionContainer}
                     active={canUploadForChallenge}
                     onPress={() => {
-                        if (canUploadForChallenge) handlePress(2);
+                        if (canUploadForChallenge)
+                            handlePress("g", 2, Challenge_Group);
                     }}
                 />
 
@@ -111,7 +122,7 @@ export default function DestSelect({ navigation }) {
                                     style={{ margin: style.defaultMsm }}
                                     group={g}
                                     key={k}
-                                    onPress={() => handlePress(g.id)}
+                                    onPress={() => handlePress("g", g.id, g)}
                                 />
                             ))}
                         </ScrollView>
@@ -142,7 +153,7 @@ export default function DestSelect({ navigation }) {
                                 style={{ marginTop: style.defaultMmd }}
                                 event={e}
                                 key={k}
-                                onPress={() => handlePress()}
+                                onPress={() => handlePress("e", e.id, e)}
                             />
                         ))}
                     </View>

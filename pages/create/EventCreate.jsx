@@ -225,6 +225,7 @@ export default function EventCreate({ navigation, route }) {
             quality: 0.5,
             allowsMultipleSelection: false,
             presentationStyle: UIImagePickerPresentationStyle.PAGE_SHEET,
+            base64: true,
         });
         if (pickerResult.canceled) return;
 
@@ -245,6 +246,7 @@ export default function EventCreate({ navigation, route }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
 
@@ -256,6 +258,7 @@ export default function EventCreate({ navigation, route }) {
                         adBanner: {
                             uri: croppedPicker.uri,
                             aspect: aspect,
+                            base64: croppedPicker.base64,
                         },
                     },
                 };
@@ -269,6 +272,7 @@ export default function EventCreate({ navigation, route }) {
                         adBanner: {
                             uri: pickerResult.assets[0].uri,
                             aspect: aspect,
+                            base64: pickerResult.assets[0].uri,
                         },
                     },
                 };
@@ -297,6 +301,7 @@ export default function EventCreate({ navigation, route }) {
             allowsMultipleSelection: false,
             allowsEditing: true,
             quality: 0.5,
+            base64: true,
         });
 
         if (camResult.canceled) return;
@@ -317,6 +322,7 @@ export default function EventCreate({ navigation, route }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
             setEvent(prev => {
@@ -327,6 +333,7 @@ export default function EventCreate({ navigation, route }) {
                         adBanner: {
                             uri: croppedPicker.uri,
                             aspect: aspect,
+                            base64: croppedPicker.base64,
                         },
                     },
                 };
@@ -339,6 +346,7 @@ export default function EventCreate({ navigation, route }) {
                         ...prev.eventOptions,
                         adBanner: {
                             uri: camResult.assets[0].uri,
+                            base64: camResult.assets[0].base64,
                             aspect: aspect,
                         },
                     },
@@ -492,14 +500,18 @@ export default function EventCreate({ navigation, route }) {
         ) {
             console.log("detected image");
 
-            let img_url = event.eventOptions.adBanner.uri;
-            const base64 = await FileSystem.readAsStringAsync(img_url, {
-                encoding: FileSystem.EncodingType.Base64,
-            });
-            params = {
-                ...params,
-                img: base64,
-            };
+            let img_url = event.eventOptions.adBanner.base64;
+            const base64 = img_url;
+            if (base64) {
+                Alert.alert(
+                    "Fehler",
+                    "Kein Bild ausgewählt oder Base64-Daten fehlen."
+                );
+                params = {
+                    ...params,
+                    img: base64,
+                };
+            }
         }
 
         const response = await makeRequest("/post_event/publish", params);

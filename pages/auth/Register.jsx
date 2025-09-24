@@ -264,6 +264,7 @@ export default function Register({ navigation }) {
             quality: 0.5,
             aspect: [1, 1],
             allowsMultipleSelection: false,
+            base64: true,
         });
         if (pickerResult.canceled) return;
 
@@ -281,12 +282,14 @@ export default function Register({ navigation }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
 
             setRegisterData({
                 ...registerData,
                 pbUri: croppedPicker.uri,
+                pbBase64: croppedPicker.base64,
             });
             setPbImageUri(pickerResult.assets[0].uri);
         } catch (e) {
@@ -294,6 +297,7 @@ export default function Register({ navigation }) {
             setRegisterData({
                 ...registerData,
                 pbUri: pickerResult.assets[0].uri,
+                pbBase64: pickerResult.assets[0].base64,
             });
             setPbImageUri(pickerResult.assets[0].uri);
         }
@@ -321,6 +325,7 @@ export default function Register({ navigation }) {
             allowsEditing: true,
             quality: 0.5,
             aspect: [1, 1],
+            base64: true,
         });
 
         if (camResult.canceled) return;
@@ -339,18 +344,21 @@ export default function Register({ navigation }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
 
             setRegisterData({
                 ...registerData,
                 pbUri: croppedPicker.uri,
+                pbBase64: croppedPicker.base64,
             });
             setPbImageUri(camResult.assets[0].uri);
         } catch (e) {
             setRegisterData({
                 ...registerData,
                 pbUri: camResult.assets[0].uri,
+                pbBase64: camResult.assets[0].base64,
             });
             setPbImageUri(camResult.assets[0].uri);
         }

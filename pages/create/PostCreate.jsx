@@ -67,7 +67,9 @@ export default function PostCreate({ navigation, route }) {
     });
 
     // From linking → when comes back fromLinking = true || = false
-    const { fromLinking, /*linkingData,*/ fromEdit, editData } = route.params;
+    // dest = { type, id }
+    const { fromLinking, /*linkingData,*/ fromEdit, editData, dest } =
+        route.params;
 
     useEffect(() => {
         cursorPos = -1;
@@ -79,7 +81,15 @@ export default function PostCreate({ navigation, route }) {
                 description: getClearedLinkedText(editData.description),
             });
             setImageUri(editData.imgUri);
-        }
+
+            console.log("jefo");
+        } else if (dest.id !== 0)
+            setPost(p => {
+                return {
+                    ...p,
+                    group: dest.group === "g" ? dest.id : `e_${dest.id}`,
+                };
+            });
     }, []);
 
     //#region IMG Load + Compress
@@ -106,7 +116,9 @@ export default function PostCreate({ navigation, route }) {
             quality: 0.5,
             aspect: [1, 1],
             allowsMultipleSelection: false,
+            base64: true,
         });
+
         if (pickerResult.canceled) return;
 
         try {
@@ -123,13 +135,16 @@ export default function PostCreate({ navigation, route }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
+
             setImageUri(pickerResult.assets[0].uri);
             setPost(prev => {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
+                    imgBase64: croppedPicker.base64,
                 };
             });
         } catch (e) {
@@ -138,6 +153,7 @@ export default function PostCreate({ navigation, route }) {
                 return {
                     ...prev,
                     imgUri: pickerResult.assets[0].uri,
+                    imgBase64: pickerResult.assets[0].base64,
                 };
             });
         }
@@ -165,6 +181,7 @@ export default function PostCreate({ navigation, route }) {
             allowsEditing: true,
             quality: 0.5,
             aspect: [1, 1],
+            base64: true,
         });
 
         if (camResult.canceled) return;
@@ -183,6 +200,7 @@ export default function PostCreate({ navigation, route }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
             setImageUri(camResult.assets[0].uri);
@@ -190,6 +208,7 @@ export default function PostCreate({ navigation, route }) {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
+                    imgBase64: croppedPicker.base64,
                 };
             });
         } catch (e) {
@@ -198,6 +217,7 @@ export default function PostCreate({ navigation, route }) {
                 return {
                     ...prev,
                     imgUri: camResult.assets[0].uri,
+                    imgBase64: camResult.assets[0].base64,
                 };
             });
         }
@@ -253,6 +273,7 @@ export default function PostCreate({ navigation, route }) {
     };
 
     useEffect(() => {
+        console.log("useEffect [] line 276");
         if (!fromLinking) checkButton();
         else {
             setButtonChecked(true);
@@ -278,6 +299,7 @@ export default function PostCreate({ navigation, route }) {
                 type: LINKING_TYPES.Post,
                 origin: "postCreate",
                 fromEdit: fromEdit,
+                dest: dest,
             });
             return;
         }
@@ -293,9 +315,14 @@ export default function PostCreate({ navigation, route }) {
     };
 
     const publishPostNew = async () => {
-        const base64 = await FileSystem.readAsStringAsync(post.imgUri, {
-            encoding: FileSystem.EncodingType.Base64,
-        });
+        const base64 = post.imgBase64;
+        if (!base64) {
+            Alert.alert(
+                "Fehler",
+                "Kein Bild ausgewählt oder Base64-Daten fehlen."
+            );
+            return;
+        }
 
         const body = {
             type: "post",
@@ -306,7 +333,6 @@ export default function PostCreate({ navigation, route }) {
         };
 
         const response = await makeRequest("/post_event/publish", body);
-        console.log(response);
 
         if (response.code < 400) {
             if (post.group === 2) storeData("hasUploadForChallenge", true);
@@ -557,6 +583,43 @@ export default function PostCreate({ navigation, route }) {
                                     : post.description}
                             </Text>
                         </View>
+
+                        {/* Group / Event */}
+                        {dest.type === "g" ? (
+                            <View style={styles.sectionContainer}>
+                                <Text style={[style.tWhite, style.TlgBd]}>
+                                    {getLangs("content_group_title")}
+                                </Text>
+
+                                <View
+                                    style={[styles.groupContainer, style.Psm]}>
+                                    <View
+                                        style={[
+                                            styles.groupImgContainer,
+                                            { borderRadius: 10 },
+                                        ]}>
+                                        <Image
+                                            source={{
+                                                uri: dest.data.imgUri,
+                                            }}
+                                            style={style.allMax}
+                                            resizeMode="cover"
+                                            resizeMethod="auto"
+                                        />
+                                    </View>
+                                    <Text
+                                        style={[
+                                            style.Tmd,
+                                            style.tWhite,
+                                            {
+                                                marginLeft: style.defaultMmd,
+                                            },
+                                        ]}>
+                                        {dest.data.name}
+                                    </Text>
+                                </View>
+                            </View>
+                        ) : null}
                     </View>
 
                     {/* Info Edit */}
@@ -853,6 +916,23 @@ const styles = StyleSheet.create({
     imageHintOptSelectionImg: {
         width: 48,
         height: 48,
+    },
+
+    groupContainer: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: style.defaultMsm,
+    },
+    groupImgContainer: {
+        aspectRatio: 1,
+        flex: 1,
+        width: "100%",
+        maxWidth: 32,
+        maxHeight: 32,
+        borderRadius: 100,
+        overflow: "hidden",
+        justifyContent: "center",
     },
 
     linkingsContainer: {
