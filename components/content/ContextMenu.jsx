@@ -8,11 +8,13 @@ import {
     Dimensions,
     ActivityIndicator,
     Image,
+    Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import * as style from "../../styles";
 
+//#region import Reanimated
 import Animated, {
     Easing,
     useSharedValue,
@@ -20,20 +22,29 @@ import Animated, {
     useAnimatedStyle,
     withDelay,
 } from "react-native-reanimated";
+//#endregion
+
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 
+//#region import Constants
 import { getLangs } from "../../constants/langs";
 import generate, {
     calculateEstimatedGenerationTime,
 } from "../../constants/content/tts";
+import generateSotra from "../../constants/content/sotra";
+//#endregion
 
+//#region import Components
+import ActionButton from "./ActionButton";
+import BottomTransitionBar from "../BottomTransitionBar";
+//#endregion
+
+//#region import SVGs
 import CloseFilled from "../../assets/svg/CloseFilled";
 import SVG_Play from "../../assets/svg/Play";
 import SVG_Pause from "../../assets/svg/Pause";
 import SVG_Stop from "../../assets/svg/Stop";
-
-import ActionButton from "./ActionButton";
-import BottomTransitionBar from "../BottomTransitionBar";
+//#endregion
 
 const testAudioSource = require("../../assets/test-bamborak.mp3");
 
@@ -87,6 +98,7 @@ export default function ContextMenu({ visible, onClose, text }) {
     }, [visible]);
     //#endregion
 
+    //#region States
     const [generatedTTS, setGeneratedTTS] = useState(false);
     const [generatingTTS, setGeneratingTTS] = useState(false);
     const [playing, setPlaying] = useState(false);
@@ -96,7 +108,9 @@ export default function ContextMenu({ visible, onClose, text }) {
     const [sotraText, setSotraText] = useState(null);
 
     const [estimatedTime, setEstimatedTime] = useState(0);
+    //#endregion
 
+    //#region Audio Player TTS
     const player = useAudioPlayer({
         uri: "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/bamborak-2.mp3?alt=media&token=dfb64013-f25a-4452-a9f6-5a2195099a01",
     });
@@ -126,11 +140,26 @@ export default function ContextMenu({ visible, onClose, text }) {
         if (generatingSotra || generatedSotra) return;
         setGeneratingSotra(true);
 
-        // Testwise Text
-        // setSotraText(
-        //     "Letzte Augustwoche habe ich an der Slawistik-Schule teilgenommen, welche die philologische Fakultät MSU für Schüler organisiert. Dort gibt es Vorträge über alles das Slawentum zu tun hat, und auch winzige Kurse recht aller slawischen Sprachen. Schon letztes Jahr habe ich dort einen Obersorbischkurs geleitet, aber es war online und ich hatte nur eine Schülerin. In diesem Jahr war alles offline, und Sorbisch war sogar eine der populärsten Sprachen: ich hatte schon etwa 7 Lernende."
-        // );
+        const sotraRsp = await generateSotra(text);
+
+        if (sotraRsp.code !== 200) {
+            Alert.alert(
+                "Übersetzung fehlerhaft",
+                "Das Übersetzen mit sotra.app hat nicht geklappt. Versuche es später erneut",
+                [
+                    {
+                        text: "Ok",
+                        style: "default",
+                        isPreferred: true,
+                    },
+                ]
+            );
+            return;
+        }
+
+        setSotraText(sotraRsp.translation);
         setGeneratedSotra(true);
+        setGeneratingSotra(false);
     };
 
     useEffect(() => {
