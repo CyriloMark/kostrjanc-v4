@@ -1,19 +1,67 @@
 import React from "react";
 
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    Pressable,
+    Image,
+    Dimensions,
+} from "react-native";
 
-import * as style from "../../styles";
+import * as s from "../../styles";
+import { LinearGradient } from "expo-linear-gradient";
 
-export default function User(props) {
+export default function User({ style, user, onPress }) {
     return (
-        <View style={props.style}>
-            <Pressable
-                style={[styles.userContainer, style.Psm]}
-                onPress={props.onPress}>
+        <View style={[style, styles.shadow, s.oVisible]}>
+            <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
+                <View style={[styles.imgContainer, s.allCenter, s.allMax]}>
+                    <View style={{ flex: 1 }} />
+                    <Image
+                        source={{
+                            uri: user.pbUri,
+                        }}
+                        resizeMode="cover"
+                        resizeMethod="auto"
+                        style={{ aspectRatio: 1, flex: 2 }}
+                    />
+                </View>
+                <View style={[styles.gradContainer, s.allMax]}>
+                    <View style={{ flex: 1 }} />
+                    <LinearGradient
+                        colors={[s.colors.black, "transparent"]}
+                        start={{
+                            x: 0,
+                            y: 0,
+                        }}
+                        end={{
+                            x: 1,
+                            y: 0,
+                        }}
+                        style={{ flex: 2 }}
+                    />
+                </View>
+
+                <View style={[styles.textContainer, s.Plg]}>
+                    <Text style={[s.tWhite, s.TlgBd]}>{user.name}</Text>
+                    <Text
+                        style={[s.tWhite, s.Tmd, { marginTop: s.defaultMsm }]}
+                        numberOfLines={1}>
+                        {user.description}
+                    </Text>
+                </View>
+            </Pressable>
+        </View>
+    );
+
+    return (
+        <View style={[style]}>
+            <Pressable style={[styles.userContainer, s.Psm]} onPress={onPress}>
                 <View style={styles.userPbContainer}>
                     <Image
                         source={{
-                            uri: props.user.pbUri,
+                            uri: user.pbUri,
                         }}
                         style={styles.userPb}
                         resizeMode="cover"
@@ -22,14 +70,14 @@ export default function User(props) {
                 </View>
                 <Text
                     style={[
-                        style.Tmd,
-                        style.tWhite,
+                        s.Tmd,
+                        s.tWhite,
                         {
-                            marginLeft: style.defaultMmd,
+                            marginLeft: s.defaultMmd,
                             fontFamily: "Barlow_Bold",
                         },
                     ]}>
-                    {props.user.name}
+                    {user.name}
                 </Text>
             </Pressable>
         </View>
@@ -37,6 +85,56 @@ export default function User(props) {
 }
 
 const styles = StyleSheet.create({
+    shadow: {
+        alignSelf: "center",
+        width: "80%",
+
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: s.colors.sec,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        borderRadius: 10,
+        backgroundColor: s.colors.black,
+
+        borderColor: s.colors.sec,
+        borderWidth: 1,
+    },
+    container: {
+        width: "100%",
+        height: Math.min(Dimensions.get("screen").height / 8, 206),
+        backgroundColor: s.colors.black,
+
+        borderRadius: 10,
+        flexDirection: "row",
+        zIndex: 3,
+        position: "relative",
+    },
+
+    imgContainer: {
+        width: "100%",
+        flexDirection: "row",
+    },
+
+    gradContainer: {
+        position: "absolute",
+        flexDirection: "row",
+    },
+
+    textContainer: {
+        width: "80%",
+        height: "100%",
+        position: "absolute",
+
+        flexDirection: "column",
+        justifyContent: "center",
+    },
+});
+
+const styles2 = StyleSheet.create({
     userContainer: {
         width: "100%",
         flexDirection: "row",
@@ -51,7 +149,7 @@ const styles = StyleSheet.create({
         overflow: "visible",
         justifyContent: "center",
 
-        shadowColor: style.colors.black,
+        shadowColor: s.colors.black,
         shadowOffset: {
             width: 0,
             height: 0,

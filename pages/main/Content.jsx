@@ -27,12 +27,7 @@ import { getDatabase, get, ref, child } from "firebase/database";
 
 //#region import Constants
 import { wait } from "../../constants/wait";
-import {
-    arraySplitter,
-    lerp,
-    sortByParameter,
-    splitterForContent,
-} from "../../constants";
+import { sortByParameter, splitterForContent } from "../../constants";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import { getData, hasData, storeData } from "../../constants/storage";
@@ -45,7 +40,6 @@ import * as style from "../../styles";
 
 //#region imort SVGs
 import SVG_Search from "../../assets/svg/Search";
-import SVG_Dice from "../../assets/svg/Dice";
 //#endregion
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -56,10 +50,6 @@ const EVENT_RECOMMENDATION_ENABLED = true;
 const EVENT_FOLLOWING_FACTOR = 2;
 const EVENT_AMOUNT_OF_RECOMMENDATION = 5;
 //#endregion
-
-// const client = new MeiliSearch({
-//     host: HOST_URL,
-// });
 
 export default function Content({ navigation, onTut }) {
     const contentScrollRef = useRef();
@@ -135,6 +125,7 @@ export default function Content({ navigation, onTut }) {
                         id: currentRandomUsersList[i],
                         name: userData["name"],
                         pbUri: userData["pbUri"],
+                        description: userData["description"],
                         isBanned: userData["isBanned"],
                     };
                     outputUsersList.push(user);
@@ -172,6 +163,7 @@ export default function Content({ navigation, onTut }) {
         checkForTopEvents();
     }, []);
 
+    //#region TopEvents
     const checkForTopEvents = async () => {
         get(child(ref(getDatabase()), "top_events"))
             .then(topEventsSnap => {
@@ -227,6 +219,7 @@ export default function Content({ navigation, onTut }) {
             });
         });
     };
+    //#endregion
 
     return (
         <View style={[style.container, style.bgBlack]}>
@@ -308,7 +301,7 @@ export default function Content({ navigation, onTut }) {
                                 width: "100%",
                                 alignItems: "center",
                             }}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
+                            <Text style={[style.tWhite, style.Tmd]}>
                                 {getLangs("contentpage_contenthint")}
                             </Text>
                             <View
@@ -316,104 +309,24 @@ export default function Content({ navigation, onTut }) {
                                     {
                                         flexDirection: "row",
                                         flexWrap: "wrap",
-                                        marginTop: style.defaultMsm,
+                                        marginTop: style.defaultMmd,
                                     },
                                     style.allCenter,
                                 ]}>
-                                {arraySplitter(randomUser, 2).map(
-                                    (userRow, line) => (
-                                        <View
-                                            style={{
-                                                width: "100%",
-                                                flexDirection: "row",
-                                                ...style.allCenter,
-                                            }}
-                                            key={line}>
-                                            {userRow.map((user, key) =>
-                                                user && !user.isBanned ? (
-                                                    <User
-                                                        key={key}
-                                                        style={{
-                                                            // flex: 1,
-                                                            margin: style.defaultMsm,
-                                                        }}
-                                                        onPress={() => {
-                                                            navigation.navigate(
-                                                                "profileView",
-                                                                {
-                                                                    id: user.id,
-                                                                }
-                                                            );
-                                                        }}
-                                                        user={user}
-                                                    />
-                                                ) : null
-                                            )}
-                                        </View>
-                                    )
-                                )}
+                                <User
+                                    style={{
+                                        margin: style.defaultMsm,
+                                    }}
+                                    onPress={() => {
+                                        navigation.navigate("profileView", {
+                                            id: randomUser[0].id,
+                                        });
+                                    }}
+                                    user={randomUser[0]}
+                                />
                             </View>
                         </View>
                     ) : (
-                        // <View
-                        //     style={{
-                        //         marginTop: style.defaultMmd,
-                        //         width: "90%",
-                        //     }}>
-                        //     <View
-                        //         style={[
-                        //             styles.randomUserContainer,
-                        //             style.shadowSec,
-                        //         ]}>
-                        //         <LinearGradient
-                        //             style={[styles.randomUserInner, style.Plg]}
-                        //             colors={[
-                        //                 style.colors.blue,
-                        //                 style.colors.sec,
-                        //             ]}
-                        //             end={{ x: -0.5, y: 0.5 }}
-                        //             locations={[0, 0.75]}>
-                        //             <View
-                        //                 style={[
-                        //                     styles.randomUserIconContainer,
-                        //                     style.allCenter,
-                        //                 ]}>
-                        //                 <SVG_Dice
-                        //                     number={3}
-                        //                     style={{ width: 32, height: 32 }}
-                        //                     randomUserSpinning={refreshing}
-                        //                 />
-                        //             </View>
-                        //             <View
-                        //                 style={[
-                        //                     styles.randomUserUserContainer,
-                        //                     style.pV,
-                        //                     { height: 500 },
-                        //                 ]}>
-                        //                 {randomUser.map((user, key) =>
-                        //                     user && !user.isBanned ? (
-                        //                         <User
-                        //                             key={key}
-                        //                             style={{
-                        //                                 // flex: 1,
-                        //                                 margin: style.defaultMsm,
-                        //                             }}
-                        //                             onPress={() => {
-                        //                                 navigation.navigate(
-                        //                                     "profileView",
-                        //                                     {
-                        //                                         id: user.id,
-                        //                                     }
-                        //                                 );
-                        //                             }}
-                        //                             user={user}
-                        //                         />
-                        //                     ) : null
-                        //                 )}
-                        //             </View>
-                        //         </LinearGradient>
-                        //     </View>
-                        // </View>
                         <Text
                             style={[
                                 style.tWhite,
@@ -425,219 +338,188 @@ export default function Content({ navigation, onTut }) {
                         </Text>
                     )}
 
-                    {searchResult.length !== 0 ? (
-                        <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                {getLangs("contentpage_searchresulttext")}
-                            </Text>
-                            {searchResult.map(user => (
-                                <Pressable
-                                    key={user.id}
-                                    style={[styles.userContainer, style.Psm]}
-                                    onPress={() =>
-                                        navigation.navigate("profileView", {
-                                            id: user.id,
-                                        })
-                                    }>
-                                    <View style={styles.userPbContainer}>
-                                        <Image
-                                            source={{
-                                                uri: user.pbUri,
-                                            }}
-                                            style={styles.userPb}
-                                            resizeMode="cover"
-                                            resizeMethod="auto"
-                                        />
-                                    </View>
-                                    <Text
+                    {
+                        //#region Search Result
+                        searchResult.length !== 0 ? (
+                            <View style={styles.sectionContainer}>
+                                <Text style={[style.tWhite, style.TlgBd]}>
+                                    {getLangs("contentpage_searchresulttext")}
+                                </Text>
+                                {searchResult.map(user => (
+                                    <Pressable
+                                        key={user.id}
                                         style={[
-                                            style.Tmd,
-                                            style.tWhite,
-                                            {
-                                                marginLeft: style.defaultMmd,
-                                            },
-                                        ]}>
-                                        {user.name}
-                                    </Text>
-                                </Pressable>
-                            ))}
-                        </View>
-                    ) : null}
-
-                    {/* Random Content */}
-                    {randomContent.length !== 0 && RANDOM_CONTENT_ENABLED ? (
-                        <View style={styles.sectionContainer}>
-                            <Text style={[style.tWhite, style.TlgBd]}>
-                                {getLangs("contentpage_randomresulttext")}
-                            </Text>
-                            <View style={{ marginTop: style.defaultMsm }}>
-                                {splitterForContent(randomContent, 3).map(
-                                    (line, lineKey) => (
-                                        <View
-                                            key={lineKey}
-                                            style={
-                                                styles.randomContentLineContainer
-                                            }>
-                                            {line.map((item, key) =>
-                                                item.type === 0 ? (
-                                                    <Post
-                                                        key={key}
-                                                        id={item.id}
-                                                        style={
-                                                            styles.randomContentElement
-                                                        }
-                                                        onPress={() =>
-                                                            navigation.navigate(
-                                                                "postView",
-                                                                {
-                                                                    id: item.id,
-                                                                }
-                                                            )
-                                                        }
-                                                    />
-                                                ) : line.length === 1 ? (
-                                                    <Event_Card
-                                                        key={key}
-                                                        style={
-                                                            styles.randomContentElement
-                                                        }
-                                                        id={item.id}
-                                                        onPress={() =>
-                                                            navigation.navigate(
-                                                                "eventView",
-                                                                {
-                                                                    id: item.id,
-                                                                }
-                                                            )
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <Event
-                                                        style={
-                                                            styles.randomContentElement
-                                                        }
-                                                        key={key}
-                                                        id={item.id}
-                                                        onPress={() =>
-                                                            navigation.navigate(
-                                                                "eventView",
-                                                                {
-                                                                    id: item.id,
-                                                                }
-                                                            )
-                                                        }
-                                                    />
-                                                )
-                                            )}
-                                        </View>
-                                    )
-                                )}
-                            </View>
-                        </View>
-                    ) : null}
-
-                    {EVENT_RECOMMENDATION_ENABLED ? (
-                        <View style={styles.sectionContainer}>
-                            <Text
-                                style={[
-                                    style.tWhite,
-                                    style.Tmd,
-                                    { textAlign: "center" },
-                                ]}>
-                                {getLangs("contentpage_eventlisttitle")}
-                            </Text>
-
-                            <View>
-                                {eventRanking.events.map((e, key) => (
-                                    <VariableEventCard
-                                        key={key}
-                                        size={getSize(key)}
-                                        data={e}
+                                            styles.userContainer,
+                                            style.Psm,
+                                        ]}
                                         onPress={() =>
-                                            navigation.navigate("eventView", {
-                                                id: e.id,
+                                            navigation.navigate("profileView", {
+                                                id: user.id,
                                             })
-                                        }
-                                        style={{
-                                            marginTop: style.defaultMlg,
-                                        }}
-                                    />
+                                        }>
+                                        <View style={styles.userPbContainer}>
+                                            <Image
+                                                source={{
+                                                    uri: user.pbUri,
+                                                }}
+                                                style={styles.userPb}
+                                                resizeMode="cover"
+                                                resizeMethod="auto"
+                                            />
+                                        </View>
+                                        <Text
+                                            style={[
+                                                style.Tmd,
+                                                style.tWhite,
+                                                {
+                                                    marginLeft:
+                                                        style.defaultMmd,
+                                                },
+                                            ]}>
+                                            {user.name}
+                                        </Text>
+                                    </Pressable>
                                 ))}
                             </View>
+                        ) : null
+                        //#endregion
+                    }
 
-                            <Text
-                                style={[
-                                    style.TsmRg,
-                                    style.tWhite,
-                                    {
-                                        marginTop: style.defaultMlg,
-                                        textAlign: "center",
-                                    },
-                                ]}>
-                                {eventRanking.events.length !== 0
-                                    ? `${getLangs(
-                                          "contentpage_lastupdatetext"
-                                      )} ${convertTimestampToString(
-                                          eventRanking.lastUpdated
-                                      )}`
-                                    : getLangs("contentpage_noevents")}
-                            </Text>
-                        </View>
-                    ) : null}
+                    {/* Random Content */}
+                    {
+                        //#region Random Content
+                        randomContent.length !== 0 && RANDOM_CONTENT_ENABLED ? (
+                            <View style={styles.sectionContainer}>
+                                <Text style={[style.tWhite, style.TlgBd]}>
+                                    {getLangs("contentpage_randomresulttext")}
+                                </Text>
+                                <View style={{ marginTop: style.defaultMsm }}>
+                                    {splitterForContent(randomContent, 3).map(
+                                        (line, lineKey) => (
+                                            <View
+                                                key={lineKey}
+                                                style={
+                                                    styles.randomContentLineContainer
+                                                }>
+                                                {line.map((item, key) =>
+                                                    item.type === 0 ? (
+                                                        <Post
+                                                            key={key}
+                                                            id={item.id}
+                                                            style={
+                                                                styles.randomContentElement
+                                                            }
+                                                            onPress={() =>
+                                                                navigation.navigate(
+                                                                    "postView",
+                                                                    {
+                                                                        id: item.id,
+                                                                    }
+                                                                )
+                                                            }
+                                                        />
+                                                    ) : line.length === 1 ? (
+                                                        <Event_Card
+                                                            key={key}
+                                                            style={
+                                                                styles.randomContentElement
+                                                            }
+                                                            id={item.id}
+                                                            onPress={() =>
+                                                                navigation.navigate(
+                                                                    "eventView",
+                                                                    {
+                                                                        id: item.id,
+                                                                    }
+                                                                )
+                                                            }
+                                                        />
+                                                    ) : (
+                                                        <Event
+                                                            style={
+                                                                styles.randomContentElement
+                                                            }
+                                                            key={key}
+                                                            id={item.id}
+                                                            onPress={() =>
+                                                                navigation.navigate(
+                                                                    "eventView",
+                                                                    {
+                                                                        id: item.id,
+                                                                    }
+                                                                )
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                            </View>
+                                        )
+                                    )}
+                                </View>
+                            </View>
+                        ) : null
+                        //#endregion
+                    }
+
+                    {
+                        //#region Event Recommendation
+                        EVENT_RECOMMENDATION_ENABLED ? (
+                            <View style={styles.sectionContainer}>
+                                <Text
+                                    style={[
+                                        style.tWhite,
+                                        style.Tmd,
+                                        { textAlign: "center" },
+                                    ]}>
+                                    {getLangs("contentpage_eventlisttitle")}
+                                </Text>
+
+                                <View style={{ marginTop: style.defaultMmd }}>
+                                    {eventRanking.events.map((e, key) => (
+                                        <VariableEventCard
+                                            key={key}
+                                            size={getSize(key)}
+                                            data={e}
+                                            onPress={() =>
+                                                navigation.navigate(
+                                                    "eventView",
+                                                    {
+                                                        id: e.id,
+                                                    }
+                                                )
+                                            }
+                                            style={{
+                                                marginTop: style.defaultMmd,
+                                            }}
+                                        />
+                                    ))}
+                                </View>
+
+                                <Text
+                                    style={[
+                                        style.TsmRg,
+                                        style.tWhite,
+                                        {
+                                            marginTop: style.defaultMlg,
+                                            textAlign: "center",
+                                        },
+                                    ]}>
+                                    {eventRanking.events.length !== 0
+                                        ? `${getLangs(
+                                              "contentpage_lastupdatetext"
+                                          )} ${convertTimestampToString(
+                                              eventRanking.lastUpdated
+                                          )}`
+                                        : getLangs("contentpage_noevents")}
+                                </Text>
+                            </View>
+                        ) : null
+                        //#endregion
+                    }
                 </Pressable>
 
                 <View style={{ marginTop: style.defaultMlg * 4 }} />
             </ScrollView>
-
-            {/* Box */}
-            {/* <View
-                style={[
-                    styles.addBtnContainer,
-                    style.allCenter,
-                    style.boxShadow,
-                ]}>
-                <View style={{ position: "relative" }}>
-                    // Left Box / Post
-                    <Animated.View style={[styles.sideBox, leftBoxStyles]}>
-                        <Pressable
-                            onPress={() => navigation.navigate("postCreate")}
-                            style={[
-                                styles.sideBoxInner,
-                                style.Pmd,
-                                style.border,
-                                style.allCenter,
-                                style.allMax,
-                            ]}>
-                            <SVG_Post
-                                style={[style.boxShadow, style.oVisible]}
-                                fill={style.colors.white}
-                            />
-                        </Pressable>
-                    </Animated.View>
-                    // Right Box / Event
-                    <Animated.View style={[styles.sideBox, rightBoxStyles]}>
-                        <Pressable
-                            onPress={() => navigation.navigate("eventCreate")}
-                            style={[
-                                styles.sideBoxInner,
-                                style.Pmd,
-                                style.border,
-                                style.allCenter,
-                                style.allMax,
-                            ]}>
-                            <SVG_Event
-                                style={[style.boxShadow, style.oVisible]}
-                                fill={style.colors.white}
-                            />
-                        </Pressable>
-                    </Animated.View>
-                    <AddButton
-                        checked={createViewVisible}
-                        onPress={toggleAccountView}
-                        style={{ zIndex: 2 }}
-                    />
-                </View>
-            </View> */}
 
             <View style={[styles.addBtnContainer, style.allCenter]}>
                 <AddButton
