@@ -31,6 +31,7 @@ import Refresh from "../components/RefreshControl";
 import TextField from "../components/TextField";
 import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 import Map from "../components/event/Map";
+import NewPostCommentButton from "../components/comments/NewPostCommentButton";
 //#endregion
 
 //#region import SVGs
@@ -335,6 +336,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             creator: uid,
                             created: Date.now(),
                             content: input,
+                            type: "t",
                         },
                     ].concat(prev);
 
@@ -358,6 +360,24 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
             commentInputRef.current.focus();
             setCommentVisible(true);
         }
+    };
+
+    /**
+     * on New Post to Comment Button press
+     * Navigation goes to PostCreate Page with current Event data
+     */
+    const handleCommentPost = () => {
+        navigation.navigate("postCreate", {
+            fromLinking: false,
+            linkingData: null,
+            fromEdit: false,
+            editData: null,
+            dest: {
+                type: "e",
+                id: id,
+                data: event,
+            },
+        });
     };
     //#endregion
 
@@ -774,7 +794,16 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                         ]}>
                                         <Text style={[style.Tmd, style.tWhite]}>
                                             {getLangs("event_about_entranefee")}{" "}
-                                            {event.eventOptions.entrance_fee}€
+                                            <Text
+                                                style={{
+                                                    fontFamily: "Barlow_Bold",
+                                                }}>
+                                                {
+                                                    event.eventOptions
+                                                        .entrance_fee
+                                                }{" "}
+                                                €
+                                            </Text>
                                         </Text>
                                     </View>
                                 ) : null}
@@ -997,6 +1026,10 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                 flexDirection: "row",
                             }}>
                             <NewCommentButton onPress={openCommentInput} />
+                            <NewPostCommentButton
+                                style={{ marginLeft: style.defaultMsm }}
+                                onPress={handleCommentPost}
+                            />
                         </View>
 
                         {
@@ -1010,7 +1043,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     : 0,
                             }}>
                             {
-                                //#region Title
+                                //#region New Comment: Title
                             }
                             {commentVisible ? (
                                 <Text style={[style.tWhite, style.TlgBd]}>

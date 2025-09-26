@@ -26,14 +26,17 @@ export default function CheckButton({ style, onPress, checked }) {
                         <View>
                             <SVG_Basket
                                 style={[s.boxShadow, s.oVisible, styles.icon]}
-                                fill={s.colors.white}
+                                fill={s.colors.black}
                             />
                         </View>
                         <Text
                             style={[
-                                s.tWhite,
+                                s.tBlack,
                                 s.Tmd,
-                                { marginLeft: s.defaultMmd },
+                                {
+                                    marginLeft: s.defaultMmd,
+                                    fontFamily: "Barlow_Bold",
+                                },
                             ]}>
                             {getLangs("checkbtn_uncheck")}
                         </Text>
@@ -63,7 +66,10 @@ export default function CheckButton({ style, onPress, checked }) {
                             style={[
                                 s.tWhite,
                                 s.Tmd,
-                                { marginLeft: s.defaultMmd },
+                                {
+                                    marginLeft: s.defaultMmd,
+                                    fontFamily: "Barlow_Bold",
+                                },
                             ]}>
                             {getLangs("checkbtn_check")}
                         </Text>

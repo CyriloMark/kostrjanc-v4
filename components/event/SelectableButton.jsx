@@ -9,7 +9,7 @@ export default function SelectableButton({ checked, style, onPress, title }) {
     if (checked) {
         //Checked
         return (
-            <View style={style}>
+            <View style={[style, s.oVisible, styles.shadow]}>
                 <Pressable
                     style={[styles.container, s.oHidden]}
                     onPress={onPress}>
@@ -38,8 +38,23 @@ export default function SelectableButton({ checked, style, onPress, title }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    shadow: {
+        // Shadow
+        shadowRadius: 5,
+        shadowOpacity: 0.4,
+        shadowColor: s.colors.red,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
         borderRadius: 10,
+        backgroundColor: s.colors.black,
+
+        borderColor: s.colors.red,
+        borderWidth: 1,
+    },
+    container: {
+        borderRadius: 9,
         width: "100%",
         borderColor: s.colors.blue,
     },

@@ -796,7 +796,7 @@ export default function EventCreate({ navigation, route }) {
                         </View>
 
                         {
-                            //#region Type
+                            //#region Preview: Type
                         }
                         {event.eventOptions.type !== undefined &&
                         checkedCategories.type ? (
@@ -815,7 +815,7 @@ export default function EventCreate({ navigation, route }) {
                         ) : null}
 
                         {
-                            //#region Entrance Fee
+                            //#region Preview: Entrance Fee
                         }
                         {event.eventOptions.entrance_fee !== undefined &&
                         checkedCategories.entrance_fee ? (
@@ -826,13 +826,15 @@ export default function EventCreate({ navigation, route }) {
                                 ]}>
                                 <Text style={[style.Tmd, style.tWhite]}>
                                     {getLangs("event_about_entranefee")}{" "}
-                                    {event.eventOptions.entrance_fee}€
+                                    <Text style={{ fontFamily: "Barlow_Bold" }}>
+                                        {event.eventOptions.entrance_fee} €
+                                    </Text>
                                 </Text>
                             </View>
                         ) : null}
 
                         {
-                            //#region Website
+                            //#region Preview: Website
                         }
                         {event.eventOptions.website &&
                         checkedCategories.website ? (
@@ -856,7 +858,7 @@ export default function EventCreate({ navigation, route }) {
                         ) : null}
 
                         {
-                            //#region Ad Banner
+                            //#region Preview: Ad Banner
                         }
                         {event.eventOptions.adBanner &&
                         checkedCategories.adBanner ? (
@@ -888,7 +890,7 @@ export default function EventCreate({ navigation, route }) {
                         ) : null}
 
                         {
-                            //#region Tags
+                            //#region Preview: Tags
                         }
                         {event.eventOptions.tags && checkedCategories.tags ? (
                             <View

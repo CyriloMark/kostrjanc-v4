@@ -14,7 +14,14 @@ export default function ListButton({ style, onPress, title }) {
                     colors={[s.colors.blue, s.colors.sec]}
                     end={{ x: -0.5, y: 0.5 }}
                     locations={[0, 0.75]}>
-                    <Text style={[s.tWhite, s.Tmd]}>{title}</Text>
+                    <Text
+                        style={[
+                            s.tWhite,
+                            s.Tmd,
+                            { fontFamily: "Barlow_Bold" },
+                        ]}>
+                        {title}
+                    </Text>
                 </LinearGradient>
             </Pressable>
         </View>

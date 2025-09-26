@@ -17,6 +17,7 @@ import { getDatabase, ref, get, child, set } from "firebase/database";
 
 //#region import Contants
 import {
+    Event_Placeholder,
     Group_Placeholder,
     Post_Placeholder,
     User_Placeholder,
@@ -62,6 +63,7 @@ import DeleteButton from "../components/comments/DeleteButton";
 import Refresh from "../components/RefreshControl";
 import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 import TextField from "../components/TextField";
+import SmallCard from "../components/content/variableEventCard/SmallCard";
 //#endregion
 
 //#region import SVGs
@@ -91,6 +93,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
     const [user, setUser] = useState(User_Placeholder);
     const [post, setPost] = useState(Post_Placeholder);
     const [group, setGroup] = useState(Group_Placeholder);
+    const [event, setEvent] = useState(Event_Placeholder);
 
     const [autoCorrect, setAutoCorrect] = useState({
         status: 100,
@@ -124,6 +127,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                     }
                 }
 
+                if (postData.event) getEventData(postData.event);
                 if (postData.group) getGroupData(postData.group);
                 if (postData.comments) setCommentsList(postData.comments);
 
@@ -161,6 +165,16 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
             })
             .catch(error =>
                 console.log("error getGroupData", "pages/Post.jsx", error.code)
+            );
+    };
+
+    const getEventData = eventId => {
+        get(child(ref(getDatabase()), `events/${eventId}`))
+            .then(eventSnap => {
+                if (eventSnap.exists()) setEvent(eventSnap.val());
+            })
+            .catch(error =>
+                console.log("error getEventData", "pages/Post.jsx", error.code)
             );
     };
     //#endregion
@@ -209,6 +223,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             creator: uid,
                             created: Date.now(),
                             content: input,
+                            type: "t",
                         },
                     ].concat(prev);
 
@@ -559,9 +574,10 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                     </View>
 
                     {
-                        //#region Group
+                        //#region Group / Event
                     }
                     {post.group ? (
+                        //#region Group Info
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("content_group_title")}
@@ -607,6 +623,27 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                                 ]}>
                                 {getLangs("content_group_sub")}
                             </Text>
+                        </View>
+                    ) : post.event ? (
+                        //#region Event Info
+                        <View style={styles.sectionContainer}>
+                            <Text style={[style.tWhite, style.TlgBd]}>
+                                {getLangs("content_event_title")}
+                            </Text>
+                            <View style={styles.eventContainer}>
+                                {event.geoCords.latitude !==
+                                Event_Placeholder.geoCords.latitude ? (
+                                    <SmallCard
+                                        creator={user}
+                                        event={event}
+                                        onPress={() =>
+                                            navigation.navigate("eventView", {
+                                                id: event.id,
+                                            })
+                                        }
+                                    />
+                                ) : null}
+                            </View>
                         </View>
                     ) : null}
 
@@ -921,6 +958,29 @@ const styles = StyleSheet.create({
     userPb: {
         width: "100%",
         height: "100%",
+    },
+
+    eventContainer: {
+        marginTop: style.defaultMmd,
+
+        overflow: "visible",
+
+        alignSelf: "center",
+        width: "100%",
+
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: style.colors.sec,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+
+        backgroundColor: style.colors.black,
+        borderRadius: 10,
+        borderColor: style.colors.sec,
+        borderWidth: 1,
     },
 
     commentsButtonContainer: {
