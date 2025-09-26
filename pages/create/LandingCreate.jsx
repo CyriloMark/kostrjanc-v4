@@ -16,11 +16,13 @@ import { getLangs } from "../../constants/langs";
 
 import { LinearGradient } from "expo-linear-gradient";
 
+//#region import SVGs
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Event from "../../assets/svg/Event";
 import SVG_Return from "../../assets/svg/Return";
 import SVG_Group from "../../assets/svg/Group";
 
+//#region Active Buttons
 const POST_ENABLED = true;
 const EVENT_ENABLED = true;
 const GROUP_ENABLED = true;
@@ -53,6 +55,7 @@ export default function LandingCreate({ navigation }) {
 
             <ScrollView
                 style={[style.container, style.pH, style.oVisible]}
+                contentContainerStyle={style.pH}
                 scrollEnabled
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
@@ -68,8 +71,16 @@ export default function LandingCreate({ navigation }) {
                     </Text>
                 </View>
 
-                {/* Post */}
-                <View style={[style.pH, styles.sectionContainer]}>
+                {
+                    //#region Post Button
+                }
+                <View
+                    style={[
+                        // style.pH,
+                        styles.sectionContainer,
+                        style.oVisible,
+                        styles.shadowPost,
+                    ]}>
                     <Pressable
                         style={[styles.elementContainer, style.oHidden]}
                         onPress={() => {
@@ -131,8 +142,15 @@ export default function LandingCreate({ navigation }) {
                     </Pressable>
                 </View>
 
-                {/* Event */}
-                <View style={[style.pH, styles.sectionContainer]}>
+                {
+                    //#region Event Button
+                }
+                <View
+                    style={[
+                        styles.sectionContainer,
+                        styles.shadowEvent,
+                        style.oVisible,
+                    ]}>
                     <Pressable
                         style={[styles.elementContainer, style.oHidden]}
                         onPress={() => {
@@ -189,8 +207,15 @@ export default function LandingCreate({ navigation }) {
                     </Pressable>
                 </View>
 
-                {/* Post */}
-                <View style={[style.pH, styles.sectionContainer]}>
+                {
+                    //#region Group Button
+                }
+                <View
+                    style={[
+                        styles.sectionContainer,
+                        style.oVisible,
+                        styles.shadowGroup,
+                    ]}>
                     <Pressable
                         style={[styles.elementContainer, style.oHidden]}
                         onPress={() => {
@@ -285,5 +310,53 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         ...style.boxShadow,
+    },
+
+    //#region Shadow Styles
+    shadowPost: {
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.66,
+        shadowColor: style.colors.sec,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        borderRadius: 10,
+        backgroundColor: style.colors.black,
+
+        borderColor: style.colors.sec,
+        borderWidth: 1,
+    },
+
+    shadowEvent: {
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: style.colors.red,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        borderRadius: 10,
+        backgroundColor: style.colors.black,
+
+        borderColor: style.colors.red,
+        borderWidth: 1,
+    },
+    shadowGroup: {
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: "#1AA382",
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        borderRadius: 10,
+        backgroundColor: style.colors.black,
+
+        borderColor: "#146314",
+        borderWidth: 1,
     },
 });

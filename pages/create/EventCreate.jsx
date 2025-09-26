@@ -94,7 +94,7 @@ const userUploadMetadata = {
     contentType: "image/jpeg",
 };
 
-const tagLineAmt = 5;
+const tagLineAmt = 4;
 
 let cursorPos = -1;
 export default function EventCreate({ navigation, route }) {
@@ -647,7 +647,9 @@ export default function EventCreate({ navigation, route }) {
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
-                {/* Header */}
+                {
+                    //#region Header
+                }
                 <Pressable
                     style={{ zIndex: 10 }}
                     onPress={openDatePickerAndroid}>
@@ -670,16 +672,22 @@ export default function EventCreate({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    {/* Map Container */}
+                    {
+                        //#region Map Container
+                    }
                     <View>
-                        {/* Title */}
+                        {
+                            //#region Preview Title
+                        }
                         <Text style={[style.tWhite, style.Ttitle2]}>
                             {event.title.length === 0
                                 ? getLangs("eventcreate_eventtitle")
                                 : event.title}
                         </Text>
 
-                        {/* Map */}
+                        {
+                            //#region Main Map
+                        }
                         <View
                             onTouchStart={() => setScrollable(false)}
                             onTouchEnd={() => setScrollable(true)}
@@ -740,6 +748,9 @@ export default function EventCreate({ navigation, route }) {
                             />
                         </View>
 
+                        {
+                            //#region Preview Description
+                        }
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
                                 {event.description.length === 0
@@ -765,7 +776,9 @@ export default function EventCreate({ navigation, route }) {
                             {getLangs("event_about_title")}
                         </Text>
 
-                        {/* Time Start-End */}
+                        {
+                            //#region Time Start-End
+                        }
                         <View
                             style={[
                                 styles.underSectionContainer,
@@ -782,7 +795,9 @@ export default function EventCreate({ navigation, route }) {
                             </Text>
                         </View>
 
-                        {/* Type */}
+                        {
+                            //#region Type
+                        }
                         {event.eventOptions.type !== undefined &&
                         checkedCategories.type ? (
                             <View
@@ -799,7 +814,9 @@ export default function EventCreate({ navigation, route }) {
                             </View>
                         ) : null}
 
-                        {/* Entrance Fee */}
+                        {
+                            //#region Entrance Fee
+                        }
                         {event.eventOptions.entrance_fee !== undefined &&
                         checkedCategories.entrance_fee ? (
                             <View
@@ -814,7 +831,9 @@ export default function EventCreate({ navigation, route }) {
                             </View>
                         ) : null}
 
-                        {/* Website */}
+                        {
+                            //#region Website
+                        }
                         {event.eventOptions.website &&
                         checkedCategories.website ? (
                             <Pressable style={styles.underSectionContainer}>
@@ -836,7 +855,9 @@ export default function EventCreate({ navigation, route }) {
                             </Pressable>
                         ) : null}
 
-                        {/* Ad Banner */}
+                        {
+                            //#region Ad Banner
+                        }
                         {event.eventOptions.adBanner &&
                         checkedCategories.adBanner ? (
                             <Pressable
@@ -866,7 +887,9 @@ export default function EventCreate({ navigation, route }) {
                             </Pressable>
                         ) : null}
 
-                        {/* Tags */}
+                        {
+                            //#region Tags
+                        }
                         {event.eventOptions.tags && checkedCategories.tags ? (
                             <View
                                 style={[
@@ -885,7 +908,9 @@ export default function EventCreate({ navigation, route }) {
                         ) : null}
                     </View>
 
-                    {/* Info Edit */}
+                    {
+                        //#region Info Edit
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("eventcreate_addinformation")}
@@ -893,7 +918,9 @@ export default function EventCreate({ navigation, route }) {
 
                         <View
                             style={[style.pH, { marginTop: style.defaultMmd }]}>
-                            {/* Mjeno */}
+                            {
+                                //#region Title
+                            }
                             <View>
                                 <Text
                                     style={[
@@ -986,7 +1013,9 @@ export default function EventCreate({ navigation, route }) {
                                     }}
                                 />
                             </View>
-                            {/* Description */}
+                            {
+                                //#region Description
+                            }
                             <View style={{ marginTop: style.defaultMmd }}>
                                 <Text
                                     style={[
@@ -1077,7 +1106,9 @@ export default function EventCreate({ navigation, route }) {
                                 />
                             </View>
 
-                            {/* Times */}
+                            {
+                                //#region Times
+                            }
                             <View style={{ marginTop: style.defaultMmd }}>
                                 <Text
                                     style={[
@@ -1487,7 +1518,9 @@ export default function EventCreate({ navigation, route }) {
                                 </View>
                             </View>
 
-                            {/* Times Manual */}
+                            {
+                                //#region Times Manual
+                            }
                             {/* <View style={{ marginTop: style.defaultMmd }}>
                                 <Text
                                     style={[
@@ -1537,18 +1570,24 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     </View>
 
-                    {/* Add Data */}
+                    {
+                        //#region Add Data
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("eventcreate_eventdata_title")}
                             <Text style={style.tBlue}>*</Text>
                         </Text>
-                        {/* Checkable Items */}
+                        {
+                            //#region Checkable Items
+                        }
                         <View style={styles.underSectionContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
                                 {getLangs("eventcreate_eventdata_sub")}
                             </Text>
-                            {/* Type */}
+                            {
+                                //#region Checkable: Type
+                            }
                             <View
                                 style={[
                                     styles.underSectionContainer,
@@ -1571,7 +1610,9 @@ export default function EventCreate({ navigation, route }) {
                                     {getLangs("eventcreate_eventdata_type")}
                                 </Text>
                             </View>
-                            {/* Entrance fee */}
+                            {
+                                //#region Checkable: Entrance fee
+                            }
                             <View
                                 style={[
                                     styles.underSectionContainer,
@@ -1597,7 +1638,9 @@ export default function EventCreate({ navigation, route }) {
                                     )}
                                 </Text>
                             </View>
-                            {/* Website */}
+                            {
+                                //#region Checkable: Website
+                            }
                             <View
                                 style={[
                                     styles.underSectionContainer,
@@ -1620,7 +1663,9 @@ export default function EventCreate({ navigation, route }) {
                                     {getLangs("eventcreate_eventdata_website")}
                                 </Text>
                             </View>
-                            {/* Type */}
+                            {
+                                //#region Checkable: Type
+                            }
                             <View
                                 style={[
                                     styles.underSectionContainer,
@@ -1643,7 +1688,9 @@ export default function EventCreate({ navigation, route }) {
                                     {getLangs("eventcreate_eventdata_adbanner")}
                                 </Text>
                             </View>
-                            {/* Tags */}
+                            {
+                                //#region Checkable: Tags
+                            }
                             <View
                                 style={[
                                     styles.underSectionContainer,
@@ -1678,7 +1725,9 @@ export default function EventCreate({ navigation, route }) {
                         </Text>
                     </View>
 
-                    {/* Type */}
+                    {
+                        //#region Edit: Type
+                    }
                     {checkedCategories.type ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -1745,7 +1794,9 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
-                    {/* Entrance fee */}
+                    {
+                        //#region Edit: Entrance fee
+                    }
                     {checkedCategories.entrance_fee ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -1789,7 +1840,9 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
-                    {/* Website */}
+                    {
+                        //#region Edit: Website
+                    }
                     {checkedCategories.website ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -1833,7 +1886,9 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
-                    {/* Ad Banner */}
+                    {
+                        //#region Edit: Ad Banner
+                    }
                     {fromEdit ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -1974,15 +2029,21 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
-                    {/* Tags */}
+                    {
+                        //#region Edit: Tags
+                    }
                     {checkedCategories.tags ? (
-                        <View style={styles.sectionContainer}>
+                        <View style={[styles.sectionContainer]}>
                             <Text style={[style.tWhite, style.TlgBd]}>
                                 {getLangs("eventcreate_tags_title")}
                             </Text>
 
                             {Platform.OS === "ios" ? (
-                                <View style={{ marginTop: style.defaultMmd }}>
+                                <View
+                                    style={{
+                                        marginTop: style.defaultMmd,
+                                        overflow: "visible",
+                                    }}>
                                     <ScrollView
                                         showsHorizontalScrollIndicator={false}
                                         showsVerticalScrollIndicator={false}
@@ -1994,7 +2055,10 @@ export default function EventCreate({ navigation, route }) {
                                         bounces
                                         nestedScrollEnabled
                                         keyboardDismissMode="interactive"
-                                        style={{ width: "100%" }}
+                                        style={{
+                                            width: "100%",
+                                            overflow: "visible",
+                                        }}
                                         contentContainerStyle={{
                                             flexDirection: "column",
                                         }}>
@@ -2022,7 +2086,6 @@ export default function EventCreate({ navigation, route }) {
                                                         title={getLangs(tag)}
                                                         style={[
                                                             styles.typeItem,
-                                                            { flex: 1 },
                                                         ]}
                                                         onPress={() => {
                                                             let t = [].concat(
@@ -2132,7 +2195,9 @@ export default function EventCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
-                    {/* Group Select */}
+                    {
+                        //#region Group Select
+                    }
                     {groups.length !== 0 && !fromEdit ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -2230,7 +2295,9 @@ export default function EventCreate({ navigation, route }) {
                     ) : null}
                     {/* #endregion */}
 
-                    {/* Button */}
+                    {
+                        //#region Submit Button
+                    }
                     <View style={[style.allCenter, styles.button]}>
                         <EnterButton
                             onPress={publishEvent}
@@ -2413,6 +2480,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         marginTop: style.defaultMmd,
+        overflow: "visible",
     },
 
     timesInputContainer: {
