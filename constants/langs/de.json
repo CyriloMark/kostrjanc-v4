@@ -382,6 +382,7 @@
         "contentcreate_groupselect_title": "Gruppe wählen:",
         "contentcreate_groupselect_hint": "Wenn du keine Gruppe auswählst, dann wird standardmäßig dieser Inhalt für jeden veröffentlich. Dieser Beitrag kann in der Allgemein-Gruppe zu Sehen sein.",
         "contentcreate_groupselect_fromedit_hint": "Nach dem Veröffentlichen kannst du die Gruppe nicht mehr ändern.",
+        "contentcreate_eventinfo_title": "Über das Event:",
 
         "settings_landing_title": "Einstellungen",
         "settings_landing_bugbutton_title": "Teile uns dein Feedback!",

@@ -16,12 +16,7 @@ import * as style from "../styles";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
-import {
-    Event_Placeholder,
-    Group_Placeholder,
-    User_Placeholder,
-} from "../constants/content/PlaceholderData";
-
+//#region import Components
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
 import InteractionBar from "../components/InteractionBar";
@@ -36,11 +31,20 @@ import Refresh from "../components/RefreshControl";
 import TextField from "../components/TextField";
 import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 import Map from "../components/event/Map";
+//#endregion
 
+//#region import SVGs
 import SVG_Live from "../assets/svg/Live";
 import SVG_Pin from "../assets/svg/Pin3.0";
 import SVG_Translate from "../assets/svg/Translate";
+//#endregion
 
+//#region import Constants
+import {
+    Event_Placeholder,
+    Group_Placeholder,
+    User_Placeholder,
+} from "../constants/content/PlaceholderData";
 import { convertTimestampToString } from "../constants/time";
 import { wait } from "../constants/wait";
 import {
@@ -72,6 +76,7 @@ import {
 } from "../constants/content";
 import { getPlainText } from "../constants/content/tts";
 import { sendCommentPushNotification } from "../constants/notifications/comments";
+//#endregion
 
 import MapView, {
     Marker,
@@ -120,6 +125,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
         cursorPos = -1;
     }, []);
 
+    //#region loadData()
     const loadData = () => {
         const db = getDatabase();
         get(child(ref(db), "events/" + id))
@@ -208,6 +214,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
             );
     };
 
+    //#region gGroupData()
     const getGroupData = groupId => {
         get(child(ref(getDatabase()), `groups/${groupId}`))
             .then(groupSnap => {
@@ -218,6 +225,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
             );
     };
 
+    //#region check()
     const check = () => {
         let a = event.checks;
 
@@ -271,19 +279,13 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
             });
     };
 
-    const openCommentInput = () => {
-        if (!commentVisible) {
-            commentInputRef.current.focus();
-            setCommentVisible(true);
-        }
-    };
-
     useEffect(() => {
         loadData();
         getIfAdmin();
         checkForTutorial();
     }, []);
 
+    //#region Admin & Tutorial & Creator
     const checkForTutorial = async () => {
         const needTutorial = await checkIfTutorialNeeded(4);
         if (needTutorial) onTut(4);
@@ -305,6 +307,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
         });
     };
 
+    //#region Comment
     const publishComment = () => {
         if (event.isBanned) return;
         if (
@@ -350,6 +353,14 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
         });
     };
 
+    const openCommentInput = () => {
+        if (!commentVisible) {
+            commentInputRef.current.focus();
+            setCommentVisible(true);
+        }
+    };
+    //#endregion
+
     return (
         <View style={[style.container, style.bgBlack]}>
             <KeyboardAvoidingView
@@ -386,9 +397,13 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             />
                         ) : null
                     }>
-                    {/* Map Container */}
+                    {
+                        //#region Map Container
+                    }
                     <View>
-                        {/* Title */}
+                        {
+                            //#region Title
+                        }
                         <Text style={[style.tWhite, style.Ttitle2]}>
                             {checkIsTranslated(event.title) ? (
                                 <Pressable
@@ -464,7 +479,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             )}
                         </Text>
 
-                        {/* Map */}
+                        {
+                            //#region Map
+                        }
                         <View
                             style={[
                                 styles.mapContainer,
@@ -587,6 +604,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     )
                                 )}
                             </Text>
+                            {
+                                //#region Time passed
+                            }
                             <Text
                                 style={[
                                     style.tBlue,
@@ -598,7 +618,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                         </View>
                     </View>
 
-                    {/* User Container */}
+                    {
+                        //#region User Container
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("content_aboutcreator")}
@@ -633,7 +655,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             </Text>
                         </Pressable>
                     </View>
-                    {/* Group */}
+                    {
+                        //#region  Group
+                    }
                     {event.group ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -683,14 +707,18 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                         </View>
                     ) : null}
 
-                    {/* Event Data Container */}
+                    {
+                        //#region  Event Data Container
+                    }
 
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("event_about_title")}
                         </Text>
 
-                        {/* Time Start-End */}
+                        {
+                            //#region  Time Start-End
+                        }
                         <View
                             style={[
                                 styles.underSectionContainer,
@@ -714,7 +742,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                         </View>
                         {event.eventOptions ? (
                             <View>
-                                {/* Type */}
+                                {
+                                    //#region Type
+                                }
                                 {event.eventOptions.type !== undefined ? (
                                     <View
                                         style={[
@@ -732,7 +762,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     </View>
                                 ) : null}
 
-                                {/* Entrance Fee */}
+                                {
+                                    //#region Entrance Fee
+                                }
                                 {event.eventOptions.entrance_fee !==
                                 undefined ? (
                                     <View
@@ -747,7 +779,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     </View>
                                 ) : null}
 
-                                {/* Website */}
+                                {
+                                    //#region Website
+                                }
                                 {event.eventOptions.website ? (
                                     <Pressable
                                         style={styles.underSectionContainer}
@@ -774,7 +808,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     </Pressable>
                                 ) : null}
 
-                                {/* Ad Banner */}
+                                {
+                                    //#region Ad Banner
+                                }
                                 {event.eventOptions.adBanner ? (
                                     <View
                                         style={[
@@ -813,7 +849,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     </View>
                                 ) : null}
 
-                                {/* Tags */}
+                                {
+                                    //#region Tags
+                                }
                                 {event.eventOptions.tags ? (
                                     <View
                                         style={[
@@ -840,7 +878,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                         ) : null}
                     </View>
 
-                    {/* Checks */}
+                    {
+                        //#region Checks
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("event_checkstitle")}
@@ -899,7 +939,54 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                         </View>
                     </View>
 
-                    {/* Comments Container */}
+                    {
+                        //#region Interaction Container
+                    }
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            {getLangs("interactionbar_title")}
+                        </Text>
+                        <InteractionBar
+                            style={{ marginTop: style.defaultMsm }}
+                            ban={clientIsAdmin}
+                            share
+                            warn
+                            edit={clientIsCreator}
+                            del={clientIsCreator}
+                            onEdit={() =>
+                                navigation.navigate("eventCreate", {
+                                    fromLinking: false,
+                                    linkingData: null,
+                                    fromEdit: true,
+                                    editData: event,
+                                })
+                            }
+                            onShare={() => share(1, id, event.title)}
+                            onWarn={() =>
+                                navigation.navigate("report", {
+                                    item: event,
+                                    type: 1,
+                                })
+                            }
+                            onBan={() =>
+                                navigation.navigate("ban", {
+                                    item: event,
+                                    type: 1,
+                                    id: event.id,
+                                })
+                            }
+                            onDelete={() =>
+                                navigation.navigate("delete", {
+                                    type: 1,
+                                    id: event.id,
+                                })
+                            }
+                        />
+                    </View>
+
+                    {
+                        //#region Comments Container
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("content_comments_title")}
@@ -912,7 +999,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             <NewCommentButton onPress={openCommentInput} />
                         </View>
 
-                        {/* New comment */}
+                        {
+                            //#region New comment
+                        }
                         <Pressable
                             onPress={() => commentInputRef.current.focus()}
                             style={{
@@ -920,7 +1009,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     ? style.defaultMlg
                                     : 0,
                             }}>
-                            {/* Title */}
+                            {
+                                //#region Title
+                            }
                             {commentVisible ? (
                                 <Text style={[style.tWhite, style.TlgBd]}>
                                     {getLangs(
@@ -1065,7 +1156,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             ) : null}
                         </Pressable>
 
-                        {/* Comments List */}
+                        {
+                            //#region Comments List
+                        }
                         <View
                             style={{
                                 marginTop: 0,
@@ -1073,6 +1166,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             {commentsList.map(comment => (
                                 <Comment
                                     key={comment.created}
+                                    navigation={navigation}
                                     style={{ marginTop: style.defaultMmd }}
                                     commentData={comment}
                                     showDate
@@ -1090,49 +1184,6 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                 />
                             ))}
                         </View>
-                    </View>
-
-                    {/* Interaction Container */}
-                    <View style={styles.sectionContainer}>
-                        <Text style={[style.tWhite, style.TlgBd]}>
-                            {getLangs("interactionbar_title")}
-                        </Text>
-                        <InteractionBar
-                            style={{ marginTop: style.defaultMsm }}
-                            ban={clientIsAdmin}
-                            share
-                            warn
-                            edit={clientIsCreator}
-                            del={clientIsCreator}
-                            onEdit={() =>
-                                navigation.navigate("eventCreate", {
-                                    fromLinking: false,
-                                    linkingData: null,
-                                    fromEdit: true,
-                                    editData: event,
-                                })
-                            }
-                            onShare={() => share(1, id, event.title)}
-                            onWarn={() =>
-                                navigation.navigate("report", {
-                                    item: event,
-                                    type: 1,
-                                })
-                            }
-                            onBan={() =>
-                                navigation.navigate("ban", {
-                                    item: event,
-                                    type: 1,
-                                    id: event.id,
-                                })
-                            }
-                            onDelete={() =>
-                                navigation.navigate("delete", {
-                                    type: 1,
-                                    id: event.id,
-                                })
-                            }
-                        />
                     </View>
 
                     <View style={styles.sectionContainer} />

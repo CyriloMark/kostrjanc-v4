@@ -158,6 +158,7 @@ export default function GroupCreate({ navigation, route }) {
             quality: 0.5,
             aspect: [1, 1],
             allowsMultipleSelection: false,
+            base64: true,
         });
         if (pickerResult.canceled) return;
 
@@ -175,6 +176,7 @@ export default function GroupCreate({ navigation, route }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
 
@@ -189,6 +191,7 @@ export default function GroupCreate({ navigation, route }) {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
+                    imgBase64: croppedPicker.base64,
                 };
             });
         } catch (e) {
@@ -197,6 +200,7 @@ export default function GroupCreate({ navigation, route }) {
                 return {
                     ...prev,
                     imgUri: pickerResult.assets[0].uri,
+                    imgBase64: pickerResult.assets[0].base64,
                 };
             });
         }
@@ -229,6 +233,7 @@ export default function GroupCreate({ navigation, route }) {
             allowsEditing: true,
             quality: 0.5,
             aspect: [1, 1],
+            base64: true,
         });
 
         if (camResult.canceled) return;
@@ -247,6 +252,7 @@ export default function GroupCreate({ navigation, route }) {
                 {
                     compress: 0.5,
                     format: SaveFormat.JPEG,
+                    base64: true,
                 }
             );
 
@@ -261,6 +267,7 @@ export default function GroupCreate({ navigation, route }) {
                 return {
                     ...prev,
                     imgUri: croppedPicker.uri,
+                    imgBase64: croppedPicker.base64,
                 };
             });
         } catch (e) {
@@ -269,6 +276,7 @@ export default function GroupCreate({ navigation, route }) {
                 return {
                     ...prev,
                     imgUri: camResult.assets[0].uri,
+                    imgBase64: camResult.assets[0].base64,
                 };
             });
         }
@@ -339,9 +347,8 @@ export default function GroupCreate({ navigation, route }) {
     const publishGroupNew = async () => {
         console.log("publishGroupNew");
 
-        const base64 = await FileSystem.readAsStringAsync(group.imgUri, {
-            encoding: FileSystem.EncodingType.Base64,
-        });
+        const base64 = group.imgBase64;
+        if (!base64) return;
 
         const response = await makeRequest("/groups/create", {
             id: group.name,
@@ -525,7 +532,8 @@ export default function GroupCreate({ navigation, route }) {
     return (
         <View style={[style.container, style.bgBlack]}>
             {uploading ? (
-                <View
+                <Pressable
+                    onPress={() => {}}
                     style={[
                         styles.loadingContainer,
                         style.allCenter,
@@ -535,7 +543,7 @@ export default function GroupCreate({ navigation, route }) {
                         size={"large"}
                         color={style.colors.blue}
                     />
-                </View>
+                </Pressable>
             ) : null}
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}

@@ -40,20 +40,24 @@ export default function ContentHeader(props) {
                 <Text style={[style.TlgBd, style.tWhite, style.boxShadow]}>
                     kostrjanc
                 </Text>
-                <LinearGradient
-                    style={[
-                        style.allCenter,
-                        styles.shBox,
-                        // style.bgBlue,
-                        style.Psm,
-                    ]}
-                    colors={[style.colors.blue, style.colors.sec]}
-                    end={{ x: -0.5, y: 0.5 }}
-                    locations={[0, 0.75]}>
-                    <Text style={[style.TsmRg, style.tWhite, styles.shText]}>
-                        studijo
-                    </Text>
-                </LinearGradient>
+                <View style={[styles.studioContainer, style.oVisible]}>
+                    <LinearGradient
+                        style={[
+                            style.allCenter,
+                            styles.shBox,
+                            // style.bgBlue,
+                            style.Psm,
+                            style.oHidden,
+                        ]}
+                        colors={[style.colors.blue, style.colors.sec]}
+                        end={{ x: -0.5, y: 0.5 }}
+                        locations={[0, 0.75]}>
+                        <Text
+                            style={[style.TsmRg, style.tWhite, styles.shText]}>
+                            studijo
+                        </Text>
+                    </LinearGradient>
+                </View>
             </View>
 
             <Pressable
@@ -86,9 +90,29 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flex: 0.8,
     },
-    shBox: {
+
+    studioContainer: {
         borderRadius: 10,
         marginLeft: style.defaultMmd,
+        minHeight: 32,
+        alignSelf: "center",
+
+        // Shadow
+        shadowRadius: 5,
+        shadowOpacity: 0.5,
+        shadowColor: style.colors.sec,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        backgroundColor: style.colors.black,
+
+        borderRadius: 10,
+        borderColor: style.colors.sec,
+        borderWidth: 1,
+    },
+    shBox: {
+        borderRadius: 9,
         minHeight: 32,
     },
     shText: {

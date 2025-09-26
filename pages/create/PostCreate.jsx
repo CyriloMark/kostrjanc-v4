@@ -14,7 +14,7 @@ import {
 
 import * as style from "../../styles";
 
-// import Constants
+//#region import Constants
 import { Post_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData, storeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
@@ -30,12 +30,15 @@ import checkForAutoCorrectInside, {
 import { getImageData, insertCharacterOnCursor } from "../../constants/content";
 import { sendContentUploadPushNotification } from "../../constants/notifications/content";
 import getStatusCodeText from "../../components/content/status";
+//#endregion
 
-// import SVGs
+//#region import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Kamera from "../../assets/svg/Kamera";
+//#endregion
 
+//#region import Camer & Gallery
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
     launchImageLibraryAsync,
@@ -44,13 +47,16 @@ import {
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+//#endregion
 
-// import Components
+//#region import Components
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
+import SmallCard from "../../components/content/variableEventCard/SmallCard";
+//#endregion
 
 let cursorPos = -1;
 export default function PostCreate({ navigation, route }) {
@@ -71,6 +77,7 @@ export default function PostCreate({ navigation, route }) {
     const { fromLinking, /*linkingData,*/ fromEdit, editData, dest } =
         route.params;
 
+    //#region useEffect Start
     useEffect(() => {
         cursorPos = -1;
 
@@ -81,16 +88,15 @@ export default function PostCreate({ navigation, route }) {
                 description: getClearedLinkedText(editData.description),
             });
             setImageUri(editData.imgUri);
-
-            console.log("jefo");
-        } else if (dest.id !== 0)
+        } else if (dest.type === "g")
             setPost(p => {
                 return {
                     ...p,
-                    group: dest.group === "g" ? dest.id : `e_${dest.id}`,
+                    group: dest.id,
                 };
             });
     }, []);
+    //#endregion
 
     //#region IMG Load + Compress
     const openImagePickerAsync = async () => {
@@ -224,6 +230,7 @@ export default function PostCreate({ navigation, route }) {
     };
     //#endregion
 
+    //#region checkButton
     const checkButton = () => {
         let inputValid = true;
         if (
@@ -243,6 +250,7 @@ export default function PostCreate({ navigation, route }) {
         setButtonChecked(inputValid);
     };
 
+    //#region setUnfullfilledAlert
     const setUnfullfilledAlert = () => {
         let missing = "";
         if (post.title.length === 0)
@@ -272,8 +280,9 @@ export default function PostCreate({ navigation, route }) {
         );
     };
 
+    //#region useEffect fromLinking?
     useEffect(() => {
-        console.log("useEffect [] line 276");
+        // console.log("useEffect [] line 276");
         if (!fromLinking) checkButton();
         else {
             setButtonChecked(true);
@@ -281,6 +290,7 @@ export default function PostCreate({ navigation, route }) {
         }
     }, [post]);
 
+    //#region publish
     const publishPost = async () => {
         if (!buttonChecked) {
             setUnfullfilledAlert();
@@ -413,6 +423,7 @@ export default function PostCreate({ navigation, route }) {
             );
     };
 
+    //#region addToLocalStorage
     const addToLocalStorage = id => {
         getData("userData").then(userData => {
             let posts = [];
@@ -429,7 +440,8 @@ export default function PostCreate({ navigation, route }) {
     return (
         <View style={[style.container, style.bgBlack]}>
             {uploading ? (
-                <View
+                <Pressable
+                    onPress={() => {}}
                     style={[
                         styles.loadingContainer,
                         style.allCenter,
@@ -439,7 +451,7 @@ export default function PostCreate({ navigation, route }) {
                         size={"large"}
                         color={style.colors.blue}
                     />
-                </View>
+                </Pressable>
             ) : null}
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
@@ -465,9 +477,10 @@ export default function PostCreate({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    {/* Image Container */}
                     <View>
-                        {/* Title */}
+                        {
+                            //#region Title
+                        }
                         <Text style={[style.tWhite, style.Ttitle2]}>
                             {post.title.length === 0
                                 ? getLangs("postcreate_posttitle")
@@ -475,6 +488,9 @@ export default function PostCreate({ navigation, route }) {
                         </Text>
 
                         {/* Img */}
+                        {
+                            //#region Image
+                        }
                         <Pressable
                             onPress={!fromEdit ? openImagePickerAsync : null}
                             style={[
@@ -576,6 +592,9 @@ export default function PostCreate({ navigation, route }) {
                             </View>
                         </Pressable>
 
+                        {
+                            //#region Description
+                        }
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
                                 {post.description.length === 0
@@ -584,7 +603,9 @@ export default function PostCreate({ navigation, route }) {
                             </Text>
                         </View>
 
-                        {/* Group / Event */}
+                        {
+                            //#region Group / Event
+                        }
                         {dest.type === "g" ? (
                             <View style={styles.sectionContainer}>
                                 <Text style={[style.tWhite, style.TlgBd]}>
@@ -619,17 +640,33 @@ export default function PostCreate({ navigation, route }) {
                                     </Text>
                                 </View>
                             </View>
+                        ) : dest.type === "e" ? (
+                            <View style={styles.sectionContainer}>
+                                <Text style={[style.tWhite, style.TlgBd]}>
+                                    {getLangs("contentcreate_eventinfo_title")}
+                                </Text>
+                                <View style={styles.eventContainer}>
+                                    <SmallCard
+                                        event={dest.data}
+                                        onPress={() => {}}
+                                    />
+                                </View>
+                            </View>
                         ) : null}
                     </View>
 
-                    {/* Info Edit */}
+                    {
+                        //#region Info Edit
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("postcreate_addinformation")}
                         </Text>
                         <View
                             style={[style.pH, { marginTop: style.defaultMmd }]}>
-                            {/* Titel */}
+                            {
+                                //#region Titel Edit
+                            }
                             <View>
                                 <Text
                                     style={[
@@ -722,7 +759,9 @@ export default function PostCreate({ navigation, route }) {
                                     }}
                                 />
                             </View>
-                            {/* Description */}
+                            {
+                                //#region Description Edit
+                            }
                             <View style={{ marginTop: style.defaultMmd }}>
                                 <Text
                                     style={[
@@ -814,7 +853,9 @@ export default function PostCreate({ navigation, route }) {
                         </View>
                     </View>
 
-                    {/* Button */}
+                    {
+                        //#region Button
+                    }
                     <View style={[style.allCenter, styles.button]}>
                         <EnterButton
                             onPress={publishPost}
@@ -824,6 +865,9 @@ export default function PostCreate({ navigation, route }) {
                 </ScrollView>
             </KeyboardAvoidingView>
 
+            {
+                //#region AccessoryViews
+            }
             {/* Title */}
             <AccessoryView
                 onElementPress={l => {
@@ -861,6 +905,7 @@ export default function PostCreate({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    //#region Image Styles
     imageOutlineContainer: {
         width: "100%",
         borderRadius: 10,
@@ -917,7 +962,9 @@ const styles = StyleSheet.create({
         width: 48,
         height: 48,
     },
+    //#endregion
 
+    //#region Group Styles
     groupContainer: {
         width: "100%",
         flexDirection: "row",
@@ -935,6 +982,31 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 
+    eventContainer: {
+        marginTop: style.defaultMmd,
+
+        overflow: "visible",
+
+        alignSelf: "center",
+        width: "100%",
+
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: style.colors.sec,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+
+        backgroundColor: style.colors.black,
+        borderRadius: 10,
+        borderColor: style.colors.sec,
+        borderWidth: 1,
+    },
+    //#endregion
+
+    //#region Linking Styles
     linkingsContainer: {
         width: "100%",
         minHeight: 12,
@@ -969,6 +1041,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     },
+    //#endregion
 
     sectionContainer: {
         width: "100%",
@@ -979,6 +1052,7 @@ const styles = StyleSheet.create({
         marginVertical: style.defaultMlg,
     },
 
+    //#region SelectUser Styles
     selectUserContainer: {
         marginTop: style.defaultMsm,
         maxHeight: 32,
@@ -995,7 +1069,9 @@ const styles = StyleSheet.create({
         maxWidth: 12,
         maxHeight: 12,
     },
+    //#endregion
 
+    //#region Group Select Styles
     groupSelectContainer: {
         marginTop: style.defaultMmd,
         width: "100%",
@@ -1014,6 +1090,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         maxHeight: 72,
     },
+    //#endregion
 
     loadingContainer: {
         position: "absolute",

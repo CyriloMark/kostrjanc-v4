@@ -15,6 +15,7 @@ import * as style from "../styles";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 
+//#region import Contants
 import {
     Group_Placeholder,
     Post_Placeholder,
@@ -48,7 +49,9 @@ import {
 import { openLink } from "../constants";
 import { getPlainText } from "../constants/content/tts";
 import { sendCommentPushNotification } from "../constants/notifications/comments";
+//#endregion
 
+//#region import Components
 import BackHeader from "../components/BackHeader";
 import Comment from "../components/comments/Comment";
 import InteractionBar from "../components/InteractionBar";
@@ -59,9 +62,12 @@ import DeleteButton from "../components/comments/DeleteButton";
 import Refresh from "../components/RefreshControl";
 import OpenKeyboardButton from "../components/comments/OpenKeyboardButton";
 import TextField from "../components/TextField";
+//#endregion
 
+//#region import SVGs
 import SVG_Translate from "../assets/svg/Translate";
 import SVG_Speaker from "../assets/svg/Mic1";
+//#endregion
 
 const KEYBOARDBUTTON_ENABLED = false;
 
@@ -95,6 +101,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
     const [currentCommentInput, setCurrentCommentInput] = useState("");
     const [commentsList, setCommentsList] = useState([]);
 
+    //#region Load Data
     const loadData = () => {
         const db = getDatabase();
         get(child(ref(db), "posts/" + id))
@@ -156,18 +163,15 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                 console.log("error getGroupData", "pages/Post.jsx", error.code)
             );
     };
+    //#endregion
 
+    //#region Comment Functions
     const openCommentInput = () => {
         if (!commentVisible) {
             commentInputRef.current.focus();
             setCommentVisible(true);
         }
     };
-
-    // useEffect(() => {
-    //     setCurrentCommentInput(linkingData);
-    //     publishComment();
-    // }, [linkingData]);
 
     const publishComment = () => {
         if (post.isBanned) return;
@@ -222,6 +226,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
             return newList;
         });
     };
+    //#endregion
 
     useEffect(() => {
         cursorPos = -1;
@@ -230,6 +235,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
         checkForTutorial();
     }, []);
 
+    //#region Tutorial & Admin & Client
     const checkForTutorial = async () => {
         const needTutorial = await checkIfTutorialNeeded(3);
         if (needTutorial) onTut(3);
@@ -254,6 +260,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
             setClientIsCreator(false);
         }
     };
+    //#endregion
 
     return (
         <View style={[style.container, style.bgBlack]}>
@@ -299,14 +306,18 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             />
                         ) : null
                     }>
-                    {/* Image Container */}
+                    {
+                        //#region Image Container
+                    }
                     <View>
                         <View
                             style={{
                                 flexDirection: "row",
                                 alignItems: "center",
                             }}>
-                            {/* Title */}
+                            {
+                                //#region Title
+                            }
                             <Text style={[style.tWhite, style.Ttitle2]}>
                                 {checkIsTranslated(post.title) ? (
                                     <Pressable
@@ -385,7 +396,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             </Text>
                         </View>
 
-                        {/* Img */}
+                        {
+                            //#region Image
+                        }
                         <View
                             style={[
                                 style.shadowSecSmall,
@@ -415,7 +428,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             </Pressable>
                         </View>
 
-                        {/* Bottom Text Container */}
+                        {
+                            //#region Bottom Text Container
+                        }
                         <View style={styles.textContainer}>
                             <Text style={[style.Tmd, style.tWhite]}>
                                 {checkIsTranslated(post.description) ? (
@@ -505,7 +520,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                         </View>
                     </View>
 
-                    {/* User Container */}
+                    {
+                        //#region User Container
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("content_aboutcreator")}
@@ -541,7 +558,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                         </Pressable>
                     </View>
 
-                    {/* Group */}
+                    {
+                        //#region Group
+                    }
                     {post.group ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -591,7 +610,54 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                         </View>
                     ) : null}
 
-                    {/* Comments Container */}
+                    {
+                        //#region Interaction Container
+                    }
+                    <View style={styles.sectionContainer}>
+                        <Text style={[style.tWhite, style.TlgBd]}>
+                            {getLangs("interactionbar_title")}
+                        </Text>
+                        <InteractionBar
+                            style={{ marginTop: style.defaultMsm }}
+                            ban={clientIsAdmin}
+                            share
+                            warn
+                            edit={clientIsCreator}
+                            del={clientIsCreator}
+                            onEdit={() =>
+                                navigation.navigate("postCreate", {
+                                    fromLinking: false,
+                                    linkingData: null,
+                                    fromEdit: true,
+                                    editData: post,
+                                })
+                            }
+                            onShare={() => share(0, id, post.title)}
+                            onWarn={() =>
+                                navigation.navigate("report", {
+                                    item: post,
+                                    type: 0,
+                                })
+                            }
+                            onBan={() =>
+                                navigation.navigate("ban", {
+                                    item: post,
+                                    type: 0,
+                                    id: post.id,
+                                })
+                            }
+                            onDelete={() =>
+                                navigation.navigate("delete", {
+                                    type: 0,
+                                    id: post.id,
+                                })
+                            }
+                        />
+                    </View>
+
+                    {
+                        //#region Comments Container
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("content_comments_title")}
@@ -604,7 +670,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             <NewCommentButton onPress={openCommentInput} />
                         </View>
 
-                        {/* New comment */}
+                        {
+                            //#region New comment
+                        }
                         <Pressable
                             onPress={() => commentInputRef.current.focus()}
                             style={{
@@ -612,7 +680,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                                     ? style.defaultMlg
                                     : 0,
                             }}>
-                            {/* Title */}
+                            {
+                                //#region Title
+                            }
                             {commentVisible ? (
                                 <Text style={[style.tWhite, style.TlgBd]}>
                                     {getLangs(
@@ -762,7 +832,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             ) : null}
                         </Pressable>
 
-                        {/* Comments List */}
+                        {
+                            //#region Comments List
+                        }
                         <View
                             style={{
                                 marginTop: 0,
@@ -770,6 +842,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             {commentsList.map(comment => (
                                 <Comment
                                     key={comment.created}
+                                    navigation={navigation}
                                     style={{ marginTop: style.defaultMmd }}
                                     commentData={comment}
                                     showDate
@@ -787,49 +860,6 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                                 />
                             ))}
                         </View>
-                    </View>
-
-                    {/* Interaction Container */}
-                    <View style={styles.sectionContainer}>
-                        <Text style={[style.tWhite, style.TlgBd]}>
-                            {getLangs("interactionbar_title")}
-                        </Text>
-                        <InteractionBar
-                            style={{ marginTop: style.defaultMsm }}
-                            ban={clientIsAdmin}
-                            share
-                            warn
-                            edit={clientIsCreator}
-                            del={clientIsCreator}
-                            onEdit={() =>
-                                navigation.navigate("postCreate", {
-                                    fromLinking: false,
-                                    linkingData: null,
-                                    fromEdit: true,
-                                    editData: post,
-                                })
-                            }
-                            onShare={() => share(0, id, post.title)}
-                            onWarn={() =>
-                                navigation.navigate("report", {
-                                    item: post,
-                                    type: 0,
-                                })
-                            }
-                            onBan={() =>
-                                navigation.navigate("ban", {
-                                    item: post,
-                                    type: 0,
-                                    id: post.id,
-                                })
-                            }
-                            onDelete={() =>
-                                navigation.navigate("delete", {
-                                    type: 0,
-                                    id: post.id,
-                                })
-                            }
-                        />
                     </View>
 
                     <View style={styles.sectionContainer} />

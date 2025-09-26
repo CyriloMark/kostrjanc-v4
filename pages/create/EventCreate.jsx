@@ -631,7 +631,8 @@ export default function EventCreate({ navigation, route }) {
     return (
         <View style={[style.container, style.bgBlack]}>
             {uploading ? (
-                <View
+                <Pressable
+                    onPress={() => {}}
                     style={[
                         { position: "absolute" },
                         style.allCenter,
@@ -641,7 +642,7 @@ export default function EventCreate({ navigation, route }) {
                         size={"large"}
                         color={style.colors.blue}
                     />
-                </View>
+                </Pressable>
             ) : null}
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
