@@ -16,6 +16,7 @@ import * as style from "../styles";
 
 import { LinearGradient } from "expo-linear-gradient";
 
+//#region import Reanimated
 import Animated, {
     Easing,
     useAnimatedStyle,
@@ -23,20 +24,21 @@ import Animated, {
     withTiming,
 } from "react-native-reanimated";
 
+//#region import Constants
 import {
-    LINKING_TYPES,
-    LINK_SIGN,
-    LINK_SPLIT,
-    checkForLinkings,
-    getLinkingsFromPlainText,
+    checkLinkingSubmitButton,
+    confirmLinkings,
+    fetchUsers,
+    readLinkings,
 } from "../constants/content/linking";
 import { getLangs } from "../constants/langs";
-import makeRequest from "../constants/request";
 
+//#region import Components
 import BackHeader from "../components/BackHeader";
 import EnterButton from "../components/auth/EnterButton";
 import InputField from "../components/InputField";
 
+//#region import SVGs
 import SVG_Add from "../assets/svg/Add";
 import SVG_Pencil from "../assets/svg/Pencil";
 import SVG_Basket from "../assets/svg/Basket";
@@ -53,6 +55,7 @@ export default function LinkingPage({ navigation, route }) {
     const [currentUsernameInput, setCurrentUsernameInput] = useState("");
     const [currentUserSearchResult, setCurrentUserResult] = useState([]);
 
+    //#region Form of Linking Data
     /*
         usersList = [
             [
@@ -69,58 +72,8 @@ export default function LinkingPage({ navigation, route }) {
     const [usersList, setUsersList] = useState(false);
 
     useEffect(() => {
-        getLinkings();
+        setUsersList(readLinkings(type, content));
     }, []);
-
-    const getLinkings = () => {
-        let output = [];
-        switch (type) {
-            case LINKING_TYPES.Post:
-                if (checkForLinkings(content.title))
-                    output.push(
-                        getLinkingsFromPlainText(content.title, {
-                            section: getLangs("postcreate_info_title"),
-                        })
-                    );
-                else output.push([]);
-                if (checkForLinkings(content.description))
-                    output.push(
-                        getLinkingsFromPlainText(content.description, {
-                            section: getLangs("postcreate_info_description"),
-                        })
-                    );
-                else output.push([]);
-                setUsersList(output);
-                break;
-            case LINKING_TYPES.Event:
-                if (checkForLinkings(content.title))
-                    output.push(
-                        getLinkingsFromPlainText(content.title, {
-                            section: getLangs("eventcreate_info_title"),
-                        })
-                    );
-                else output.push([]);
-                if (checkForLinkings(content.description))
-                    output.push(
-                        getLinkingsFromPlainText(content.description, {
-                            section: getLangs("eventcreate_info_description"),
-                        })
-                    );
-                else output.push([]);
-                setUsersList(output);
-                break;
-            case LINKING_TYPES.Comment:
-                output.push(
-                    getLinkingsFromPlainText(content, {
-                        section: getLangs("content_comments_title"),
-                    })
-                );
-                setUsersList(output);
-                break;
-            default:
-                break;
-        }
-    };
 
     //#region Animation Opacity
     const userCardOpacity = useSharedValue(1);
@@ -145,306 +98,20 @@ export default function LinkingPage({ navigation, route }) {
     //#endregion
 
     useEffect(() => {
-        let confirm = true;
-        if (usersList === null) confirm = false;
-        else
-            for (let i = 0; i < usersList.length; i++)
-                for (let j = 1; j < usersList[i].length; j++)
-                    if (usersList[i][j].user === null) confirm = false;
-
-        setButtonVisible(confirm);
+        setButtonVisible(checkLinkingSubmitButton(usersList));
     }, [usersList]);
 
-    let removeUnnoetigEmpties = input => {
-        let output = input
-            .split(" ")
-            .filter(el => el.length !== 0)
-            .join(" ");
-        return output;
-    };
-
-    let confirmLinkings = () => {
+    //#region Fkt: Submit
+    const handleSubmit = () => {
         if (!buttonVisible) {
             setUnfullfilledAlert();
             return;
         }
 
-        let updatedContent = content;
-        // console.log("usersList", usersList);
-        switch (type) {
-            //#region POST
-            case LINKING_TYPES.Post:
-                // POST Title
-                if (usersList[0].length !== 0) {
-                    let post_outputElementsTitle = [];
-                    for (let i = 0; i < usersList[0].length; i++) {
-                        let start = i === 0 ? 0 : usersList[0][i].start;
-                        let end =
-                            i !== usersList[0].length - 1
-                                ? usersList[0][i + 1].start
-                                : content.title.length;
-
-                        let a = content.title.substring(start, end);
-                        post_outputElementsTitle.push(a);
-                    }
-
-                    let finalTextParts = [];
-
-                    let sortedLinkings = 0;
-                    for (let i = 0; i < post_outputElementsTitle.length; i++)
-                        if (post_outputElementsTitle[i].includes("@")) {
-                            let splittedElements =
-                                post_outputElementsTitle[i].split(" ");
-                            for (let j = 0; j < splittedElements.length; j++)
-                                if (splittedElements[j].includes("@")) {
-                                    const currentLink =
-                                        usersList[0][sortedLinkings + 1];
-                                    sortedLinkings++;
-                                    const replacingElement = `${LINK_SIGN}${currentLink.user.id}${LINK_SPLIT}${currentLink.text}${LINK_SPLIT}`;
-                                    finalTextParts.push(replacingElement);
-                                } else
-                                    finalTextParts.push(
-                                        removeUnnoetigEmpties(
-                                            splittedElements[j]
-                                        )
-                                    );
-                        } else
-                            finalTextParts.push(
-                                removeUnnoetigEmpties(
-                                    post_outputElementsTitle[i]
-                                )
-                            );
-
-                    const reducedTextParts = finalTextParts.filter(
-                        el => el[0] != [""][0].length
-                    );
-                    const finalText = reducedTextParts.join(" ");
-                    updatedContent.title = finalText;
-                }
-
-                // POST Description
-                if (usersList[1].length !== 0) {
-                    let post_outputElementsDescription = [];
-                    for (let i = 0; i < usersList[1].length; i++) {
-                        let start = i === 0 ? 0 : usersList[1][i].start;
-                        let end =
-                            i !== usersList[1].length - 1
-                                ? usersList[1][i + 1].start
-                                : content.description.length;
-
-                        let a = content.description.substring(start, end);
-                        post_outputElementsDescription.push(a);
-                    }
-
-                    let finalTextParts = [];
-
-                    let sortedLinkings = 0;
-                    for (
-                        let i = 0;
-                        i < post_outputElementsDescription.length;
-                        i++
-                    )
-                        if (post_outputElementsDescription[i].includes("@")) {
-                            let splittedElements =
-                                post_outputElementsDescription[i].split(" ");
-                            for (let j = 0; j < splittedElements.length; j++)
-                                if (splittedElements[j].includes("@")) {
-                                    const currentLink =
-                                        usersList[1][sortedLinkings + 1];
-                                    sortedLinkings++;
-                                    const replacingElement = `${LINK_SIGN}${currentLink.user.id}${LINK_SPLIT}${currentLink.text}${LINK_SPLIT}`;
-                                    finalTextParts.push(replacingElement);
-                                } else
-                                    finalTextParts.push(
-                                        removeUnnoetigEmpties(
-                                            splittedElements[j]
-                                        )
-                                    );
-                        } else
-                            finalTextParts.push(
-                                removeUnnoetigEmpties(
-                                    post_outputElementsDescription[i]
-                                )
-                            );
-
-                    const reducedTextParts = finalTextParts.filter(
-                        el => el[0] != [""][0].length
-                    );
-                    const finalText = reducedTextParts.join(" ");
-                    updatedContent.description = finalText;
-                }
-                break;
-            //#endregion
-            //#region EVENT
-            case LINKING_TYPES.Event:
-                // EVENT Title
-                if (usersList[0].length !== 0) {
-                    let event_outputElementsTitle = [];
-                    for (let i = 0; i < usersList[0].length; i++) {
-                        let start = i === 0 ? 0 : usersList[0][i].start;
-                        let end =
-                            i !== usersList[0].length - 1
-                                ? usersList[0][i + 1].start
-                                : content.title.length;
-
-                        let a = content.title.substring(start, end);
-                        event_outputElementsTitle.push(a);
-                    }
-
-                    let finalTextParts = [];
-
-                    let sortedLinkings = 0;
-                    for (let i = 0; i < event_outputElementsTitle.length; i++)
-                        if (event_outputElementsTitle[i].includes("@")) {
-                            let splittedElements =
-                                event_outputElementsTitle[i].split(" ");
-                            for (let j = 0; j < splittedElements.length; j++)
-                                if (splittedElements[j].includes("@")) {
-                                    const currentLink =
-                                        usersList[0][sortedLinkings + 1];
-                                    sortedLinkings++;
-                                    const replacingElement = `${LINK_SIGN}${currentLink.user.id}${LINK_SPLIT}${currentLink.text}${LINK_SPLIT}`;
-                                    finalTextParts.push(replacingElement);
-                                } else
-                                    finalTextParts.push(
-                                        removeUnnoetigEmpties(
-                                            splittedElements[j]
-                                        )
-                                    );
-                        } else
-                            finalTextParts.push(
-                                removeUnnoetigEmpties(
-                                    event_outputElementsTitle[i]
-                                )
-                            );
-
-                    const reducedTextParts = finalTextParts.filter(
-                        el => el[0] != [""][0].length
-                    );
-                    const finalText = reducedTextParts.join(" ");
-                    updatedContent.title = finalText;
-                }
-
-                // EVENT Description
-                if (usersList[1].length !== 0) {
-                    let event_outputElementsDescription = [];
-                    for (let i = 0; i < usersList[1].length; i++) {
-                        let start = i === 0 ? 0 : usersList[1][i].start;
-                        let end =
-                            i !== usersList[1].length - 1
-                                ? usersList[1][i + 1].start
-                                : content.description.length;
-
-                        let a = content.description.substring(start, end);
-                        event_outputElementsDescription.push(a);
-                    }
-
-                    let finalTextParts = [];
-
-                    let sortedLinkings = 0;
-                    for (
-                        let i = 0;
-                        i < event_outputElementsDescription.length;
-                        i++
-                    )
-                        if (event_outputElementsDescription[i].includes("@")) {
-                            let splittedElements =
-                                event_outputElementsDescription[i].split(" ");
-                            for (let j = 0; j < splittedElements.length; j++)
-                                if (splittedElements[j].includes("@")) {
-                                    const currentLink =
-                                        usersList[1][sortedLinkings + 1];
-                                    sortedLinkings++;
-                                    const replacingElement = `${LINK_SIGN}${currentLink.user.id}${LINK_SPLIT}${currentLink.text}${LINK_SPLIT}`;
-                                    finalTextParts.push(replacingElement);
-                                } else
-                                    finalTextParts.push(
-                                        removeUnnoetigEmpties(
-                                            splittedElements[j]
-                                        )
-                                    );
-                        } else
-                            finalTextParts.push(
-                                removeUnnoetigEmpties(
-                                    event_outputElementsDescription[i]
-                                )
-                            );
-
-                    const reducedTextParts = finalTextParts.filter(
-                        el => el[0] != [""][0].length
-                    );
-                    const finalText = reducedTextParts.join(" ");
-                    updatedContent.description = finalText;
-                }
-                break;
-            //#endregion
-            //#region COMMENT
-            case LINKING_TYPES.Comment:
-                // POST Title
-                if (usersList[0].length !== 0) {
-                    let comment_outputElementsTitle = [];
-                    for (let i = 0; i < usersList[0].length; i++) {
-                        let start = i === 0 ? 0 : usersList[0][i].start;
-                        let end =
-                            i !== usersList[0].length - 1
-                                ? usersList[0][i + 1].start
-                                : content.length;
-
-                        let a = content.substring(start, end);
-                        comment_outputElementsTitle.push(a);
-                    }
-
-                    let finalTextParts = [];
-
-                    let sortedLinkings = 0;
-                    for (let i = 0; i < comment_outputElementsTitle.length; i++)
-                        if (comment_outputElementsTitle[i].includes("@")) {
-                            let splittedElements =
-                                comment_outputElementsTitle[i].split(" ");
-                            for (let j = 0; j < splittedElements.length; j++)
-                                if (splittedElements[j].includes("@")) {
-                                    const currentLink =
-                                        usersList[0][sortedLinkings + 1];
-                                    sortedLinkings++;
-                                    const replacingElement = `${LINK_SIGN}${currentLink.user.id}${LINK_SPLIT}${currentLink.text}${LINK_SPLIT}`;
-                                    finalTextParts.push(replacingElement);
-                                } else
-                                    finalTextParts.push(
-                                        removeUnnoetigEmpties(
-                                            splittedElements[j]
-                                        )
-                                    );
-                        } else
-                            finalTextParts.push(
-                                removeUnnoetigEmpties(
-                                    comment_outputElementsTitle[i]
-                                )
-                            );
-
-                    const reducedTextParts = finalTextParts.filter(
-                        el => el[0] != [""][0].length
-                    );
-                    const finalText = reducedTextParts.join(" ");
-                    updatedContent = finalText;
-                }
-                break;
-            //#endregion
-        }
-
-        // Navigate Back
-        navigation.navigate({
-            name: origin,
-            params: {
-                fromLinking: true,
-                // linkingData: updatedContent,
-                fromEdit: fromEdit,
-                editData: null,
-            },
-            merge: true,
-        });
+        const updatedContent = confirmLinkings(type, usersList, content);
     };
 
-    let setUnfullfilledAlert = () => {
+    const setUnfullfilledAlert = () => {
         Alert.alert(
             "Wuzwol wužiwarjow!",
             "Njejsy hišće za wšitke zapřijenja přisłušaceho wužiwarja wuzwolił.",
@@ -464,33 +131,13 @@ export default function LinkingPage({ navigation, route }) {
             setCurrentUserResult([]);
             return;
         }
-        fetchUsers(input);
-    };
 
-    const fetchUsers = text => {
-        if (text.length <= 0 || text.length > 64) {
-            setCurrentUserResult([]);
-            return;
-        }
-
-        makeRequest("/user/search", {
-            query: text,
-        })
-            .then(rsp => {
-                let results = [];
-                rsp.hits.map(hit =>
-                    results.push({
-                        name: hit.primary,
-                        pbUri: hit.img,
-                        id: hit.id.substring(2),
-                    })
-                );
-                setCurrentUserResult(results);
-            })
+        fetchUsers(input)
+            .then(rsp => setCurrentUserResult(rsp))
             .catch(error =>
                 console.log(
-                    "error getMeiliSearch request",
-                    "fetchUsers pages/Linkings.jsx",
+                    "error onChange rsp",
+                    "pages/LinkingPage.jsx",
                     error
                 )
             );
@@ -521,14 +168,15 @@ export default function LinkingPage({ navigation, route }) {
         userCardOpacity.value = 1;
         searchViewOpacity.value = 0;
     };
-    //#endregion
 
     return (
         <View style={[style.allMax, style.bgBlack]}>
             <KeyboardAvoidingView
                 style={style.allMax}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
-                {/* Header */}
+                {
+                    //#region Header
+                }
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
                         onBack={() => navigation.goBack()}
@@ -551,7 +199,9 @@ export default function LinkingPage({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
-                    {/* Name */}
+                    {
+                        //#region Page Title
+                    }
                     <View>
                         <Text style={[style.tWhite, style.Ttitle2]}>
                             Linking wot wužiwarjow:
@@ -575,7 +225,9 @@ export default function LinkingPage({ navigation, route }) {
                                                       style.pH,
                                                   ]}
                                                   key={key}>
-                                                  {/* No. */}
+                                                  {
+                                                      //#region List: No.
+                                                  }
                                                   <Text
                                                       style={[
                                                           style.TsmLt,
@@ -584,7 +236,9 @@ export default function LinkingPage({ navigation, route }) {
                                                       {key}.
                                                   </Text>
 
-                                                  {/* Link Content */}
+                                                  {
+                                                      //#region List: Link Content
+                                                  }
                                                   <Text
                                                       style={[
                                                           style.Tmd,
@@ -597,9 +251,11 @@ export default function LinkingPage({ navigation, route }) {
                                                       {user.text}
                                                   </Text>
 
-                                                  {/* User */}
+                                                  {
+                                                      //#region List: Add User
+                                                  }
                                                   {user.user === null ? (
-                                                      // No User
+                                                      //#region List: No User
                                                       <Animated.View
                                                           style={[
                                                               styles.selectUserContainer,
@@ -678,7 +334,7 @@ export default function LinkingPage({ navigation, route }) {
                                                           </Pressable>
                                                       </Animated.View>
                                                   ) : (
-                                                      // User Card
+                                                      //#region List: User Card
                                                       <Animated.View
                                                           style={[
                                                               styles.userContainer,
@@ -748,7 +404,9 @@ export default function LinkingPage({ navigation, route }) {
                           )
                         : null}
 
-                    {/* User Selection */}
+                    {
+                        //#region User Selection
+                    }
                     {userSelection.visible ? (
                         <Animated.View
                             style={[styles.sectionContainer, searchViewStyle]}>
@@ -763,7 +421,9 @@ export default function LinkingPage({ navigation, route }) {
                                 </Text>
                             </Text>
 
-                            {/* Mjeno */}
+                            {
+                                //#region Username Entry
+                            }
                             <View style={{ marginTop: style.defaultMmd }}>
                                 <Text
                                     style={[
@@ -810,6 +470,9 @@ export default function LinkingPage({ navigation, route }) {
                                 </View>
                             </View>
 
+                            {
+                                //#region User Cards
+                            }
                             <View style={{ marginTop: style.defaultMmd }}>
                                 {currentUserSearchResult.length !== 0 ? (
                                     currentUserSearchResult.map((user, key) => (
@@ -865,10 +528,12 @@ export default function LinkingPage({ navigation, route }) {
                         </Animated.View>
                     ) : null}
 
-                    {/* Button */}
+                    {
+                        //#region Submit
+                    }
                     <View style={[style.allCenter, styles.button]}>
                         <EnterButton
-                            onPress={confirmLinkings}
+                            onPress={handleSubmit}
                             checked={buttonVisible}
                         />
                     </View>

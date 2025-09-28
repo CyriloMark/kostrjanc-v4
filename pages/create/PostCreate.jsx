@@ -95,6 +95,13 @@ export default function PostCreate({ navigation, route }) {
                     group: dest.id,
                 };
             });
+        else if (dest.type === "e")
+            setPost(p => {
+                return {
+                    ...p,
+                    event: dest.id,
+                };
+            });
     }, []);
     //#endregion
 

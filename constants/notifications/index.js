@@ -4,7 +4,8 @@ import { getAuth } from "firebase/auth";
 import { isDevice } from "expo-device";
 import * as Notifications from "expo-notifications";
 
-export const NOTIFICATIONS_ENABLED = true;
+export const NOTIFICATIONS_ENABLED =
+    process.env.EXPO_PUBLIC_ENVIROMENT === "PRODUCTION";
 
 export async function registerForPushNotificationsAsync() {
     if (!isDevice) {
