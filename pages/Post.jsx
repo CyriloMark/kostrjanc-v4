@@ -50,6 +50,7 @@ import {
 import { openLink } from "../constants";
 import { getPlainText } from "../constants/content/tts";
 import { sendCommentPushNotification } from "../constants/notifications/comments";
+import { General_Group } from "../constants/content/GroupData";
 //#endregion
 
 //#region import Components
@@ -68,7 +69,6 @@ import SmallCard from "../components/content/variableEventCard/SmallCard";
 
 //#region import SVGs
 import SVG_Translate from "../assets/svg/Translate";
-import SVG_Speaker from "../assets/svg/Mic1";
 //#endregion
 
 const KEYBOARDBUTTON_ENABLED = false;
@@ -663,10 +663,15 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             del={clientIsCreator}
                             onEdit={() =>
                                 navigation.navigate("postCreate", {
-                                    fromLinking: false,
-                                    linkingData: null,
                                     fromEdit: true,
                                     editData: post,
+                                    dest: {
+                                        type: post.event ? "e" : "g",
+                                        id: post.group ? post.group : 0,
+                                        data: post.group
+                                            ? post.group
+                                            : General_Group,
+                                    },
                                 })
                             }
                             onShare={() => share(0, id, post.title)}

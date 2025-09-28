@@ -39,8 +39,6 @@ export default function DestSelect({ navigation }) {
 
     function handlePress(_type, _id, _data) {
         navigation.navigate("postCreate", {
-            fromLinking: false,
-            linkingData: null,
             fromEdit: false,
             editData: null,
             dest: {
