@@ -51,7 +51,9 @@ export default function DestSelect({ navigation }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
+            {
+                //#region Page Header
+            }
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader title={""} onBack={() => navigation.goBack()} />
             </Pressable>
@@ -82,7 +84,9 @@ export default function DestSelect({ navigation }) {
                     </Text>
                 </View>
 
-                {/* General Select */}
+                {
+                    //#region General Select Button
+                }
                 <GeneralSubmitButton
                     style={styles.sectionContainer}
                     onPress={() => {
@@ -91,7 +95,9 @@ export default function DestSelect({ navigation }) {
                     }}
                 />
 
-                {/* Challenge Select */}
+                {
+                    //#region Challenge Select Button
+                }
                 <ChallengeSubmitButton
                     style={styles.sectionContainer}
                     active={canUploadForChallenge}
@@ -101,7 +107,9 @@ export default function DestSelect({ navigation }) {
                     }}
                 />
 
-                {/* Group Select */}
+                {
+                    //#region Group Select Section
+                }
                 {groupsData.length !== 0 ? (
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
@@ -116,6 +124,7 @@ export default function DestSelect({ navigation }) {
                             showsVerticalScrollIndicator={false}
                             bounces>
                             {groupsData.map((g, k) => (
+                                //#region Group Element Button
                                 <GroupElement
                                     style={{ margin: style.defaultMsm }}
                                     group={g}
@@ -127,7 +136,9 @@ export default function DestSelect({ navigation }) {
                     </View>
                 ) : null}
 
-                {/* Event Select */}
+                {
+                    //#region Event Select Section
+                }
                 {eventData.length !== 0 ? (
                     <View
                         style={[

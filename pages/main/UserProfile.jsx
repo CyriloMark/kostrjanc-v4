@@ -15,6 +15,7 @@ import * as style from "../../styles";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
+//#region import Constants
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 
 import { wait } from "../../constants/wait";
@@ -23,17 +24,18 @@ import { storeData, getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
 
+//#region import Components
 import BackHeader from "../../components/BackHeader";
 import PostPreview from "../../components/profile/PostPreview";
 import EventPreview from "../../components/profile/EventPreview";
 import EditProfileButton from "../../components/profile/EditProfileButton";
 import Refresh from "../../components/RefreshControl";
 import ScoreCounter from "../../components/profile/ScoreCounter";
+import AnimatedPaidBatch from "../../components/content/AnimatedPaidBatch";
 
+//#region import SVGs
 import SVG_Admin from "../../assets/svg/Admin";
 import SVG_Verify from "../../assets/svg/Moderator";
-
-import AnimatedPaidBatch from "../../components/content/AnimatedPaidBatch";
 
 const DAYS_TO_DELETE_EVENTS = 31;
 
@@ -52,6 +54,7 @@ export default function UserProfile({ navigation, onTut }) {
     const [user, setUser] = useState(User_Placeholder);
     const [postEventList, setPostEventList] = useState([]);
 
+    //#region Load Data
     const setUserData = data => {
         if (data["isBanned"]) {
             if (data.isBanned) {
@@ -169,12 +172,14 @@ export default function UserProfile({ navigation, onTut }) {
         });
         checkForTutorial();
     }, []);
+    //#endregion
 
     const checkForTutorial = async () => {
         const needTutorial = await checkIfTutorialNeeded(2);
         if (needTutorial) onTut(2);
     };
 
+    //#region Fkt: alertForRoles
     const alertForRoles = () => {
         Alert.alert(
             user.name,
@@ -190,7 +195,9 @@ export default function UserProfile({ navigation, onTut }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
+            {
+                //#region Page Header
+            }
             <Pressable
                 style={{ zIndex: 10 }}
                 onPress={() =>
@@ -227,9 +234,13 @@ export default function UserProfile({ navigation, onTut }) {
                         />
                     ) : null
                 }>
-                {/* Header Container */}
+                {
+                    //#region Header Container
+                }
                 <View style={{ alignItems: "center" }}>
-                    {/* Pb */}
+                    {
+                        //#region Profile: Picture
+                    }
                     <View
                         style={[
                             style.shadowSec,
@@ -260,7 +271,9 @@ export default function UserProfile({ navigation, onTut }) {
                         </Pressable>
                     </View>
 
-                    {/* Name */}
+                    {
+                        //#region Profile: Name
+                    }
                     <View style={styles.nameContainer}>
                         {user.isAdmin ? (
                             <Pressable
@@ -289,18 +302,15 @@ export default function UserProfile({ navigation, onTut }) {
                                 userName={user.name}
                             />
                         ) : null}
-                        {/* <Pressable
-                            style={{ marginRight: style.defaultMmd }}
-                            onPress={() => console.log("test")}>
-                            <AnimatedPaidBatch />
-                        </Pressable> */}
 
                         <Text style={[style.tWhite, style.Ttitle2]}>
                             {user.name}
                         </Text>
                     </View>
 
-                    {/* Description */}
+                    {
+                        //#region Profile: Description
+                    }
                     <View style={styles.textContainer}>
                         <Text style={[style.Tmd, style.tWhite]}>
                             {user.description}
@@ -308,10 +318,14 @@ export default function UserProfile({ navigation, onTut }) {
                     </View>
                 </View>
 
-                {/* Stats Container */}
+                {
+                    //#region Stats Container
+                }
                 <View style={styles.sectionContainer}>
                     <View style={styles.statsContainer}>
-                        {/* Follower */}
+                        {
+                            //#region Stats: Follower
+                        }
                         <Pressable
                             onPress={() =>
                                 navigation.push("userList", {
@@ -337,7 +351,9 @@ export default function UserProfile({ navigation, onTut }) {
                             </Text>
                         </Pressable>
 
-                        {/* Following */}
+                        {
+                            //#region Stats: Following
+                        }
                         <Pressable
                             onPress={() =>
                                 navigation.push("userList", {
@@ -363,7 +379,9 @@ export default function UserProfile({ navigation, onTut }) {
                             </Text>
                         </Pressable>
 
-                        {/* Content */}
+                        {
+                            //#region Stats: Content
+                        }
                         <View
                             style={[
                                 style.allCenter,
@@ -384,7 +402,9 @@ export default function UserProfile({ navigation, onTut }) {
                     </View>
                 </View>
 
-                {/* Content */}
+                {
+                    //#region Content Mapping
+                }
                 <View style={styles.sectionContainer}>
                     {arraySplitter(postEventList, 4).map((list, listKey) => (
                         <View
@@ -393,6 +413,7 @@ export default function UserProfile({ navigation, onTut }) {
                             {list.map((item, itemKey) =>
                                 item !== null ? (
                                     item.type === 0 ? (
+                                        //#region Post Preview Card
                                         <PostPreview
                                             key={itemKey}
                                             data={item}
@@ -407,6 +428,7 @@ export default function UserProfile({ navigation, onTut }) {
                                             }
                                         />
                                     ) : (
+                                        //#region Event Preview Card
                                         <EventPreview
                                             key={itemKey}
                                             data={item}
@@ -432,6 +454,9 @@ export default function UserProfile({ navigation, onTut }) {
                     ))}
                 </View>
 
+                {
+                    //#region Edit Button
+                }
                 <View style={styles.editButton}>
                     <EditProfileButton
                         title={getLangs("profile_editbuttontext")}

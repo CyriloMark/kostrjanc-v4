@@ -15,12 +15,14 @@ import * as style from "../styles";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 
+//#region import Constants
 import { Group_Placeholder } from "../constants/content/PlaceholderData";
 import { wait } from "../constants/wait";
 import { getLangs } from "../constants/langs";
 import { getData } from "../constants/storage";
 import { getPlainText } from "../constants/content/tts";
 
+//#region import Components
 import BackHeader from "../components/BackHeader";
 import Refresh from "../components/RefreshControl";
 import LeaveButton from "../components/groups/LeaveButton";
@@ -45,6 +47,7 @@ export default function Group({ navigation, route, openContextMenu }) {
 
     const [group, setGroup] = useState(Group_Placeholder);
 
+    //#region Load Data
     const loadData = () => {
         get(child(ref(getDatabase()), `groups/${groupId}`))
             .then(groupSnap => {
@@ -62,7 +65,9 @@ export default function Group({ navigation, route, openContextMenu }) {
     useEffect(() => {
         loadData();
     }, []);
+    //#endregion
 
+    //#region Fkt: Leave
     const leave = () => {
         if (joining || group.isBanned) return;
         joining = true;
@@ -200,7 +205,9 @@ export default function Group({ navigation, route, openContextMenu }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
+            {
+                //#region Page Header
+            }
             <Pressable
                 style={{ zIndex: 10 }}
                 onPress={() =>
@@ -237,9 +244,13 @@ export default function Group({ navigation, route, openContextMenu }) {
                         />
                     ) : null
                 }>
-                {/* Header Container */}
+                {
+                    //#region Header Container
+                }
                 <View style={{ alignItems: "center" }}>
-                    {/* Pb */}
+                    {
+                        //#region Group: Picture
+                    }
                     <View
                         style={[
                             style.shadowSec,
@@ -271,7 +282,9 @@ export default function Group({ navigation, route, openContextMenu }) {
                         </Pressable>
                     </View>
 
-                    {/* Name */}
+                    {
+                        //#region Group: Name
+                    }
                     <View style={styles.nameContainer}>
                         <Text
                             style={[
@@ -286,7 +299,9 @@ export default function Group({ navigation, route, openContextMenu }) {
                         </Text>
                     </View>
 
-                    {/* Description */}
+                    {
+                        //#region Group: Description
+                    }
                     <View style={styles.textContainer}>
                         <Text
                             style={[
@@ -302,15 +317,21 @@ export default function Group({ navigation, route, openContextMenu }) {
                     </View>
                 </View>
 
-                {/* Leave Btn */}
+                {
+                    //#region Leave Button
+                }
                 <View style={styles.followButton}>
                     <LeaveButton onPress={leave} />
                 </View>
 
-                {/* Stats Container */}
+                {
+                    //#region Stats Container
+                }
                 <View style={styles.sectionContainer}>
                     <View style={styles.statsContainer}>
-                        {/* Members */}
+                        {
+                            //#region Stats: Members
+                        }
                         <Pressable
                             onPress={() =>
                                 navigation.push("userList", {
@@ -336,7 +357,9 @@ export default function Group({ navigation, route, openContextMenu }) {
                             </Text>
                         </Pressable>
 
-                        {/* Posts */}
+                        {
+                            //#region Stats: Posts
+                        }
                         <View
                             style={[
                                 style.allCenter,
@@ -355,7 +378,9 @@ export default function Group({ navigation, route, openContextMenu }) {
                             </Text>
                         </View>
 
-                        {/* Events */}
+                        {
+                            //#region Stats: Events
+                        }
                         <View
                             style={[
                                 style.allCenter,
@@ -376,6 +401,9 @@ export default function Group({ navigation, route, openContextMenu }) {
                     </View>
                 </View>
 
+                {
+                    //#region Edit Group Button
+                }
                 <View style={styles.editButton}>
                     <EditProfileButton
                         title={getLangs("grouppage_editbutton")}

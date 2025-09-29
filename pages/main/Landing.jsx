@@ -5,7 +5,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import * as style from "../../styles";
 
-// import Constants
+//#region import Constants
 import { wait } from "../../constants/wait";
 import { getData, storeData } from "../../constants/storage";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
@@ -16,11 +16,11 @@ import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import fetchCachedContentData from "../../constants/content/contentCacheLoader";
 import { checkForChallengable } from "../../constants/content";
 
-// import Firebase
+//#region import Firebase
 import { getAuth } from "firebase/auth";
 import { get, ref, getDatabase, child } from "firebase/database";
 
-// import Components
+//#region import Components
 import AppHeader from "../../components/landing/AppHeader";
 import Post from "../../components/cards/Post";
 import Event from "../../components/cards/Event";
@@ -32,7 +32,7 @@ import ShowNewButton from "../../components/content/ShowNewButton";
 
 import Loading from "../static/Loading";
 
-// import Content Algorithms
+//#region import Content Algorithms
 import handleBannerContent from "../../constants/content/bannerContent";
 import handleGeneralContent from "../../constants/content/generalContent";
 import handleGroupContent from "../../constants/content/groupContent";
@@ -341,6 +341,9 @@ export default function Landing({ navigation, onTut }) {
                 />
             </Pressable>
 
+            {
+                //#region Group Select Area
+            }
             <GroupSelect
                 activeGroup={SELECTED_GROUP}
                 openGroupSelect={() => {
@@ -376,12 +379,6 @@ export default function Landing({ navigation, onTut }) {
                 }
                 onScroll={({ nativeEvent }) => {
                     if (!isFocused) return;
-                    // if (
-                    //     Platform.OS === "android" &&
-                    //     isOnTop(nativeEvent) &&
-                    //     !refreshing
-                    // )
-                    //     onRefresh();
                     if (isCloseToBottom(nativeEvent) && !refreshing)
                         getGroupSpecificContent(
                             null,
@@ -390,30 +387,9 @@ export default function Landing({ navigation, onTut }) {
                             SELECTED_GROUP.id
                         );
                 }}>
-                {/* {Platform.OS === "android" ? (
-                    <View
-                        style={[
-                            style.allCenter,
-                            {
-                                width: "100%",
-                                height: 72,
-                                position: "relative",
-                            },
-                        ]}>
-                        <View
-                            style={[
-                                style.allMax,
-                                {
-                                    justifyContent: "flex-start",
-                                    alignItems: "center",
-                                    position: "absolute",
-                                },
-                            ]}>
-                            <ActivityIndicator color={style.colors.blue} />
-                        </View>
-                    </View>
-                ) : null} */}
-
+                {
+                    //#region Challenge Box
+                }
                 <Challenge
                     style={{
                         marginTop: style.defaultMmd,
@@ -433,6 +409,9 @@ export default function Landing({ navigation, onTut }) {
                     }}
                 />
 
+                {
+                    //#region Banner Mapping
+                }
                 {bannerData.map((banner, key) => (
                     <Banner
                         key={key}
@@ -456,6 +435,9 @@ export default function Landing({ navigation, onTut }) {
                     />
                 ))}
 
+                {
+                    //#region Content Mapping
+                }
                 {contentData.map((item, key) =>
                     item.type === 0 ? (
                         <Post
@@ -503,6 +485,9 @@ export default function Landing({ navigation, onTut }) {
                     )
                 )}
 
+                {
+                    //#region End-Of-Page Text Hint
+                }
                 <Text
                     style={[
                         style.tWhite,

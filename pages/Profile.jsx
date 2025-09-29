@@ -15,6 +15,7 @@ import * as style from "../styles";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 
+//#region import Constants
 import { User_Placeholder } from "../constants/content/PlaceholderData";
 import { getData, storeData } from "../constants/storage";
 
@@ -25,6 +26,7 @@ import makeRequest from "../constants/request";
 import { getPlainText } from "../constants/content/tts";
 import { sendFollowerPushNotification } from "../constants/notifications/follower";
 
+//#region import Components
 import BackHeader from "../components/BackHeader";
 import InteractionBar from "../components/InteractionBar";
 import FollowButton from "../components/profile/FollowButton";
@@ -33,6 +35,7 @@ import EventPreview from "../components/profile/EventPreview";
 import Refresh from "../components/RefreshControl";
 import ScoreCounter from "../components/profile/ScoreCounter";
 
+//#region import SVGs
 import SVG_Admin from "../assets/svg/Admin";
 import SVG_Verify from "../assets/svg/Moderator";
 
@@ -58,6 +61,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
     const [canFollow, setCanFollow] = useState(false);
     const [postEventList, setPostEventList] = useState([]);
 
+    //#region Load Data
     const setUserData = data => {
         if (data["isBanned"]) {
             if (data.isBanned) {
@@ -182,7 +186,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
         });
         getIfAdmin();
     }, []);
+    //#endregion
 
+    //#region Fkt: alertForRoles
     const alertForRoles = () => {
         Alert.alert(
             user.name,
@@ -204,6 +210,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
         });
     };
 
+    //#region Fkt: Follow/Unfollow
     const follow = () => {
         if (user.isBanned || followPressed) return;
         followPressed = true;
@@ -285,7 +292,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
+            {
+                //#region Page Header
+            }
             <Pressable
                 style={{ zIndex: 10 }}
                 onPress={() =>
@@ -323,9 +332,13 @@ export default function Profile({ navigation, route, openContextMenu }) {
                         />
                     ) : null
                 }>
-                {/* Header Container */}
+                {
+                    //#region Profile: Header Container
+                }
                 <View style={{ alignItems: "center" }}>
-                    {/* Pb */}
+                    {
+                        //#region Profile: Picture
+                    }
                     <View
                         style={[
                             style.shadowSec,
@@ -356,7 +369,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
                         </Pressable>
                     </View>
 
-                    {/* Name */}
+                    {
+                        //#region Profile: Name
+                    }
                     <View style={styles.nameContainer}>
                         {user.isAdmin ? (
                             <Pressable
@@ -399,7 +414,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
                         </Text>
                     </View>
 
-                    {/* Description */}
+                    {
+                        //#region Profile: Description
+                    }
                     <View style={styles.textContainer}>
                         <Text
                             style={[
@@ -415,16 +432,23 @@ export default function Profile({ navigation, route, openContextMenu }) {
                     </View>
                 </View>
 
+                {
+                    //#region Follow/Unfollow Button
+                }
                 {canFollow ? (
                     <View style={styles.followButton}>
                         <FollowButton checked={following} onPress={follow} />
                     </View>
                 ) : null}
 
-                {/* Stats Container */}
+                {
+                    //#region Stats Container
+                }
                 <View style={styles.sectionContainer}>
                     <View style={styles.statsContainer}>
-                        {/* Follower */}
+                        {
+                            //#region Stats: Follower
+                        }
                         <Pressable
                             onPress={() =>
                                 navigation.push("userList", {
@@ -450,7 +474,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
                             </Text>
                         </Pressable>
 
-                        {/* Following */}
+                        {
+                            //#region Stats: Following
+                        }
                         <Pressable
                             onPress={() =>
                                 navigation.push("userList", {
@@ -476,7 +502,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
                             </Text>
                         </Pressable>
 
-                        {/* Content */}
+                        {
+                            //#region Stats: Content
+                        }
                         <View
                             style={[
                                 style.allCenter,
@@ -497,7 +525,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
                     </View>
                 </View>
 
-                {/* Content */}
+                {
+                    //#region Content Mapping
+                }
                 <View style={styles.sectionContainer}>
                     {arraySplitter(postEventList, 4).map((list, listKey) => (
                         <View
@@ -506,6 +536,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
                             {list.map((item, itemKey) =>
                                 item !== null ? (
                                     item.type === 0 ? (
+                                        //#region Post Preview Card
                                         <PostPreview
                                             key={itemKey}
                                             data={item}
@@ -520,6 +551,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
                                             }
                                         />
                                     ) : (
+                                        //#region Event Preview Card
                                         <EventPreview
                                             key={itemKey}
                                             data={item}
@@ -545,7 +577,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
                     ))}
                 </View>
 
-                {/* Interaction Container */}
+                {
+                    //#region Interaction Container
+                }
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("interactionbar_title")}
