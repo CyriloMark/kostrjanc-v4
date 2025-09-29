@@ -84,6 +84,37 @@ export async function publishEvent(event, fromEdit, checkedCategories, pin) {
     return await publishContent(body, 1, fromEdit);
 }
 
+//#region publishGroup
+export async function publishGroup(group, fromEdit) {
+    const base64 = group.imgBase64;
+    if (!base64) {
+        Alert.alert("Fehler", "Kein Bild ausgewählt oder Base64-Daten fehlen.");
+        return;
+    }
+
+    let body = {
+        id: group.name,
+        name: group.name,
+        description: group.description,
+        members: group.members,
+        img: base64,
+    };
+
+    try {
+        let url = "/groups/create";
+        const response = await makeRequest(url, body);
+
+        if (response.code < 400) {
+            if (!fromEdit) {
+                handleNewGroupSuccess(response);
+            } else handleEditGroupSuccess(response);
+        } else handleGroupReject(response);
+    } catch (error) {
+        handleGroupReject(null);
+        return false;
+    }
+}
+
 async function publishContent(body, type, fromEdit) {
     try {
         let url = `/post_event/${!fromEdit ? "publish" : "edit"}`;
@@ -178,6 +209,50 @@ function handleContentReject(response, type) {
 }
 //#endregion
 
+//#region Alert Helpers for Group publishing
+function handleNewGroupSuccess(response) {
+    Alert.alert(
+        getLangs("groupcreate_publishsuccessful_title"),
+        getLangs(getStatusCodeText(response.code)),
+        [
+            {
+                text: "Ok",
+                isPreferred: true,
+                style: "cancel",
+            },
+        ]
+    );
+}
+
+function handleEditGroupSuccess(response) {
+    Alert.alert(
+        getLangs("groupcreate_editsuccessful_title"),
+        getLangs(getStatusCodeText(response.code)),
+        [
+            {
+                text: "Ok",
+                isPreferred: true,
+                style: "cancel",
+            },
+        ]
+    );
+}
+
+function handleGroupReject(response) {
+    Alert.alert(
+        getLangs("groupcreate_publishrejected_title"),
+        getLangs(getStatusCodeText(response ? response.code : 404)),
+        [
+            {
+                text: "Ok",
+                isPreferred: true,
+                style: "cancel",
+            },
+        ]
+    );
+}
+//#endregion
+
 //#region Helpers for Event publishing
 /**
  * Filters `eventOptions` based on `checkedCategories`,
@@ -237,5 +312,3 @@ async function addToLocalStorage(id, type) {
         console.error("Failed to add post to localStorage:", error);
     }
 }
-
-async function reward() {}

@@ -15,25 +15,23 @@ import {
 import * as style from "../../styles";
 
 import { getAuth } from "firebase/auth";
-import { child, get, getDatabase, ref } from "firebase/database";
 
-// import SVGs
+//#region import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Kamera from "../../assets/svg/Kamera";
 import SVG_Search from "../../assets/svg/Search";
 
+//#region import Camera
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
     launchImageLibraryAsync,
-    MediaTypeOptions,
     launchCameraAsync,
     requestCameraPermissionsAsync,
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 
-// Constants
+//#region import Constants
 import { Group_Placeholder } from "../../constants/content/PlaceholderData";
 import { getLangs } from "../../constants/langs";
 import { insertCharacterOnCursor } from "../../constants/content";
@@ -41,23 +39,28 @@ import getStatusCodeText from "../../components/content/status";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
-import { getData, storeData } from "../../constants/storage";
 import { arrayEquals } from "../../constants";
+import makeRequest from "../../constants/request";
+import {
+    checkIfGroupNameIsAvailable,
+    searchUsers,
+} from "../../constants/content/group";
+import { publishGroup } from "../../constants/content/publish";
 
-// import Components
+//#region import Components
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
+import MemberElement from "../../components/groups/MemberElement";
 
+//#region import Reanimated
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
     withSpring,
 } from "react-native-reanimated";
-import MemberElement from "../../components/groups/MemberElement";
-import makeRequest from "../../constants/request";
 
 const IMAGE_DEFAULT_WIDTH = 152;
 
@@ -83,6 +86,7 @@ export default function GroupCreate({ navigation, route }) {
 
     const { fromEdit, editData } = route.params;
 
+    //#region useEffect
     useEffect(() => {
         cursorPos = -1;
 
@@ -106,6 +110,7 @@ export default function GroupCreate({ navigation, route }) {
         checkButton();
     }, [group]);
 
+    //#region Fkt: checkButton
     const checkButton = () => {
         let inputValid = true;
 
@@ -329,7 +334,8 @@ export default function GroupCreate({ navigation, route }) {
         );
     };
 
-    const publishGroup = () => {
+    //#region Fkt: Submit
+    const submit = () => {
         if (!buttonChecked) {
             setUnfullfilledAlert();
             return;
@@ -340,182 +346,7 @@ export default function GroupCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
-        if (!fromEdit) publishGroupNew();
-        else publishGroupEdit();
-    };
-
-    const publishGroupNew = async () => {
-        console.log("publishGroupNew");
-
-        const base64 = group.imgBase64;
-        if (!base64) return;
-
-        const response = await makeRequest("/groups/create", {
-            id: group.name,
-            name: group.name,
-            description: group.description,
-            members: group.members,
-            img: base64,
-        });
-
-        if (response.code < 400)
-            Alert.alert(
-                getLangs("groupcreate_publishsuccessful_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => navigation.goBack(),
-                    },
-                ]
-            );
-        else
-            Alert.alert(
-                getLangs("groupcreate_publishrejected_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => {
-                            btnPressed = false;
-                            setUploading(false);
-                            checkButton();
-                        },
-                    },
-                ]
-            );
-    };
-
-    const publishGroupEdit = async () => {
-        console.log("publishGroupEdit");
-
-        const response = await makeRequest("/groups/edit", {
-            id: group.id,
-            description: group.description,
-            members: group.members,
-        });
-
-        if (response.code < 400)
-            Alert.alert(
-                getLangs("groupcreate_editsuccessful_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => navigation.goBack(),
-                    },
-                ]
-            );
-        else
-            Alert.alert(
-                getLangs("groupcreate_publishrejected_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => {
-                            btnPressed = false;
-                            setUploading(false);
-                            checkButton();
-                        },
-                    },
-                ]
-            );
-    };
-
-    //#region handleMembers
-    const searchUsers = val => {
-        makeRequest("/user/search", {
-            query: val,
-        })
-            .then(rsp => {
-                let results = [];
-                rsp.hits.map(hit =>
-                    results.push({
-                        name: hit.primary,
-                        pbUri: hit.img,
-                        id: hit.id.substring(2),
-                    })
-                );
-                setUserSearchResult(results);
-            })
-            .catch(error =>
-                console.log(
-                    "error getMeiliSearch request",
-                    "InputField pages/create/GroupCreate.jsx",
-                    error
-                )
-            );
-    };
-
-    const onMemberAdd = userId => {
-        if (group.members.includes(userId)) return;
-
-        setGroup(prev => {
-            let newMemberLit = prev.members.concat([userId]);
-            return {
-                ...prev,
-                members: newMemberLit,
-            };
-        });
-
-        setUserSearchInput("");
-        setUserSearchResult([]);
-    };
-
-    const onMemberRemove = userId => {
-        let userPos = group.members.indexOf(userId);
-        if (userPos == -1) return;
-
-        // setGroup(prev => {
-        //     let newMemberList = prev.members.filter(a => a != userId);
-
-        //     return {
-        //         ...prev,
-        //         members: newMemberList,
-        //     };
-        // });
-
-        setGroup({
-            ...group,
-            members: group.members.filter(a => a !== userId),
-        });
-    };
-    //#endregion
-
-    const checkIfGroupNameIsAvailable = () => {
-        get(child(ref(getDatabase()), `groups/${group.name}/name`))
-            .then(groupSnap => {
-                if (!groupSnap.exists()) return;
-
-                groupNameIsNotAvailable = true;
-                Alert.alert(
-                    getLangs("groupcreate_info_name_notavailable_title"),
-                    getLangs("groupcreate_info_name_notavailable_sub"),
-                    [
-                        {
-                            isPreferred: true,
-                            style: "default",
-                            text: "Ok",
-                        },
-                    ]
-                );
-            })
-            .catch(error =>
-                console.log(
-                    "error in pages/create/GroupCreate.jsx",
-                    "checkIfGroupNameIsAvailable",
-                    error.code
-                )
-            );
+        publishGroup(group, fromEdit);
     };
 
     //#region Animation
@@ -548,7 +379,9 @@ export default function GroupCreate({ navigation, route }) {
             <KeyboardAvoidingView
                 style={[style.allMax, { opacity: uploading ? 0.5 : 1 }]}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
-                {/* Header */}
+                {
+                    //#region Page Header
+                }
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
                         title={getLangs("groupcreate_headertitle")}
@@ -574,10 +407,13 @@ export default function GroupCreate({ navigation, route }) {
                         style={{
                             marginTop: style.defaultMmd,
                         }}>
-                        {/* Header Container */}
+                        {
+                            //#region Header Container
+                        }
                         <View style={{ alignItems: "center" }}>
-                            {/* Pb */}
-
+                            {
+                                //#region Picture
+                            }
                             <View
                                 style={[
                                     style.shadowSec,
@@ -699,7 +535,9 @@ export default function GroupCreate({ navigation, route }) {
                                 </Animated.View>
                             </View>
 
-                            {/* Name */}
+                            {
+                                //#region Preview: Name
+                            }
                             <View style={styles.nameContainer}>
                                 <Text style={[style.tWhite, style.Ttitle2]}>
                                     {group.name.length === 0
@@ -708,7 +546,9 @@ export default function GroupCreate({ navigation, route }) {
                                 </Text>
                             </View>
 
-                            {/* Description */}
+                            {
+                                //#region Preview: Description
+                            }
                             <View style={styles.textContainer}>
                                 <Text style={[style.Tmd, style.tWhite]}>
                                     {group.description.length === 0
@@ -720,10 +560,14 @@ export default function GroupCreate({ navigation, route }) {
                             </View>
                         </View>
 
-                        {/* Stats Container */}
+                        {
+                            //#region Stats Container
+                        }
                         <View style={styles.sectionContainer}>
                             <View style={styles.statsContainer}>
-                                {/* Members */}
+                                {
+                                    //#region Preview: Members Count
+                                }
                                 <View
                                     style={[
                                         style.allCenter,
@@ -744,7 +588,9 @@ export default function GroupCreate({ navigation, route }) {
                                     </Text>
                                 </View>
 
-                                {/* Posts */}
+                                {
+                                    //#region Preview: Posts Count
+                                }
                                 <View
                                     style={[
                                         style.allCenter,
@@ -763,7 +609,9 @@ export default function GroupCreate({ navigation, route }) {
                                     </Text>
                                 </View>
 
-                                {/* Events */}
+                                {
+                                    //#region Preview: Events Count
+                                }
                                 <View
                                     style={[
                                         style.allCenter,
@@ -787,14 +635,18 @@ export default function GroupCreate({ navigation, route }) {
                         </View>
                     </View>
 
-                    {/* Info Edit */}
+                    {
+                        //#region Info Edit
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("groupcreate_addinformation")}
                         </Text>
                         <View
                             style={[style.pH, { marginTop: style.defaultMmd }]}>
-                            {/* Name */}
+                            {
+                                //#region Edit: Name
+                            }
                             <View style={{ opacity: fromEdit ? 0.5 : 1 }}>
                                 <Text
                                     style={[
@@ -815,7 +667,12 @@ export default function GroupCreate({ navigation, route }) {
                                     keyboardType="default"
                                     value={group.name}
                                     maxLength={128}
-                                    onBlur={checkIfGroupNameIsAvailable}
+                                    onBlur={async () => {
+                                        groupNameIsNotAvailable =
+                                            await checkIfGroupNameIsAvailable(
+                                                group.name
+                                            );
+                                    }}
                                     inputAccessoryViewID="group_name_InputAccessoryViewID"
                                     icon={
                                         <SVG_Pencil fill={style.colors.blue} />
@@ -895,7 +752,9 @@ export default function GroupCreate({ navigation, route }) {
                                     }}
                                 />
                             </View>
-                            {/* Description */}
+                            {
+                                //#region Edit: Description
+                            }
                             <View style={{ marginTop: style.defaultMmd }}>
                                 <Text
                                     style={[
@@ -987,7 +846,9 @@ export default function GroupCreate({ navigation, route }) {
                         </View>
                     </View>
 
-                    {/* Search Input */}
+                    {
+                        //#region Search Input
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("groupcreate_addmembers_input_title")}
@@ -1025,13 +886,18 @@ export default function GroupCreate({ navigation, route }) {
                                     // Add Input to Post Data -> Changes Title
                                     setUserSearchInput(val);
 
-                                    if (val !== "") searchUsers(val);
+                                    if (val !== "") {
+                                        const res = await searchUsers(val);
+                                        setUserSearchResult(res);
+                                    }
                                 }}
                             />
                         </View>
                     </View>
 
-                    {/* Search Result */}
+                    {
+                        //#region Search Result
+                    }
                     {userSearchResult.length != 0 ? (
                         <View style={styles.sectionContainer}>
                             <Text style={[style.tWhite, style.TlgBd]}>
@@ -1069,7 +935,9 @@ export default function GroupCreate({ navigation, route }) {
                         </View>
                     ) : null}
 
-                    {/* Member List */}
+                    {
+                        //#region Member List
+                    }
                     <View style={styles.sectionContainer}>
                         <Text style={[style.tWhite, style.TlgBd]}>
                             {getLangs("groupcreate_addmembers_list_title")}
@@ -1097,17 +965,18 @@ export default function GroupCreate({ navigation, route }) {
                         </View>
                     </View>
 
-                    {/* Button */}
+                    {
+                        //#region Submit
+                    }
                     <View style={[style.allCenter, styles.button]}>
-                        <EnterButton
-                            onPress={publishGroup}
-                            checked={buttonChecked}
-                        />
+                        <EnterButton onPress={submit} checked={buttonChecked} />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
 
-            {/* Title */}
+            {
+                //#region Accessory: Title
+            }
             <AccessoryView
                 onElementPress={l => {
                     setGroup(prev => {
@@ -1123,7 +992,9 @@ export default function GroupCreate({ navigation, route }) {
                 }}
                 nativeID={"group_name_InputAccessoryViewID"}
             />
-            {/* Description */}
+            {
+                //#region Accessory: Description
+            }
             <AccessoryView
                 onElementPress={l => {
                     setGroup(prev => {
@@ -1139,7 +1010,9 @@ export default function GroupCreate({ navigation, route }) {
                 }}
                 nativeID={"group_description_InputAccessoryViewID"}
             />
-            {/* User Search */}
+            {
+                //#region Accessory: User Search
+            }
             <AccessoryView
                 onElementPress={l => {
                     setUserSearchInput(prev => {
