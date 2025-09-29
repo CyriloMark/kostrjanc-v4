@@ -16,20 +16,16 @@ import * as style from "../../styles";
 
 //#region import Constants
 import { Post_Placeholder } from "../../constants/content/PlaceholderData";
-import { getData, storeData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
 import {
     checkForLinkings,
     getClearedLinkedText,
     LINKING_TYPES,
 } from "../../constants/content/linking";
-import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
-import { getImageData, insertCharacterOnCursor } from "../../constants/content";
-import { sendContentUploadPushNotification } from "../../constants/notifications/content";
-import getStatusCodeText from "../../components/content/status";
+import { insertCharacterOnCursor } from "../../constants/content";
 //#endregion
 
 //#region import SVGs
@@ -46,7 +42,6 @@ import {
     requestCameraPermissionsAsync,
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 //#endregion
 
 //#region import Components
@@ -56,6 +51,7 @@ import InputField from "../../components/InputField";
 import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
 import SmallCard from "../../components/content/variableEventCard/SmallCard";
+import { publishPost } from "../../constants/content/publish";
 //#endregion
 
 let cursorPos = -1;
@@ -74,8 +70,7 @@ export default function PostCreate({ navigation, route }) {
 
     // From linking → when comes back fromLinking = true || = false
     // dest = { type, id }
-    const { fromLinking, /*linkingData,*/ fromEdit, editData, dest } =
-        route.params;
+    const { fromEdit, editData, dest } = route.params;
 
     //#region useEffect Start
     useEffect(() => {
@@ -289,23 +284,18 @@ export default function PostCreate({ navigation, route }) {
 
     //#region useEffect fromLinking?
     useEffect(() => {
-        // console.log("useEffect [] line 276");
-        if (!fromLinking) checkButton();
-        else {
-            setButtonChecked(true);
-            publishPost();
-        }
+        checkButton();
     }, [post]);
 
     //#region publish
-    const publishPost = async () => {
+    const submit = async () => {
         if (!buttonChecked) {
             setUnfullfilledAlert();
             return;
         }
 
+        // Check if there are linkings in text
         if (
-            !fromLinking &&
             !(
                 !checkForLinkings(post.title) &&
                 !checkForLinkings(post.description)
@@ -314,7 +304,6 @@ export default function PostCreate({ navigation, route }) {
             navigation.navigate("linkingScreen", {
                 content: post,
                 type: LINKING_TYPES.Post,
-                origin: "postCreate",
                 fromEdit: fromEdit,
                 dest: dest,
             });
@@ -326,122 +315,14 @@ export default function PostCreate({ navigation, route }) {
         btnPressed = true;
         setUploading(true);
 
-        console.log("fromEdit", fromEdit);
-        if (!fromEdit) publishPostNew();
-        else publishPostEdit();
-    };
+        const rsp = await publishPost(post, fromEdit);
 
-    const publishPostNew = async () => {
-        const base64 = post.imgBase64;
-        if (!base64) {
-            Alert.alert(
-                "Fehler",
-                "Kein Bild ausgewählt oder Base64-Daten fehlen."
-            );
-            return;
+        if (rsp) navigation.goBack();
+        else {
+            btnPressed = false;
+            setUploading(false);
+            checkButton();
         }
-
-        const body = {
-            type: "post",
-            img: base64,
-            title: post.title,
-            description: post.description,
-            group: post.group,
-        };
-
-        const response = await makeRequest("/post_event/publish", body);
-
-        if (response.code < 400) {
-            if (post.group === 2) storeData("hasUploadForChallenge", true);
-            addToLocalStorage(response.id);
-            sendContentUploadPushNotification(0);
-
-            Alert.alert(
-                getLangs("postcreate_publishsuccessful_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => navigation.goBack(),
-                    },
-                ]
-            );
-        } else {
-            Alert.alert(
-                getLangs("postcreate_publishrejected_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => {
-                            btnPressed = false;
-                            setUploading(false);
-                            checkButton();
-                        },
-                    },
-                ]
-            );
-        }
-    };
-
-    const publishPostEdit = async () => {
-        const body = {
-            type: "post",
-            id: post.id,
-            title: post.title,
-            description: post.description,
-        };
-
-        const response = await makeRequest("/post_event/edit", body);
-
-        if (response.code < 400)
-            Alert.alert(
-                getLangs("postcreate_editsuccessful_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => navigation.goBack(),
-                    },
-                ]
-            );
-        else
-            Alert.alert(
-                getLangs("postcreate_publishrejected_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => {
-                            btnPressed = false;
-                            setUploading(false);
-                            checkButton();
-                        },
-                    },
-                ]
-            );
-    };
-
-    //#region addToLocalStorage
-    const addToLocalStorage = id => {
-        getData("userData").then(userData => {
-            let posts = [];
-            if (userData["posts"]) posts = userData["posts"];
-            posts.push(id);
-
-            storeData("userData", {
-                ...userData,
-                posts: posts,
-            }).finally(() => console.log("complete"));
-        });
     };
 
     return (
@@ -864,10 +745,7 @@ export default function PostCreate({ navigation, route }) {
                         //#region Button
                     }
                     <View style={[style.allCenter, styles.button]}>
-                        <EnterButton
-                            onPress={publishPost}
-                            checked={buttonChecked}
-                        />
+                        <EnterButton onPress={submit} checked={buttonChecked} />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

@@ -1,5 +1,6 @@
 import { getLangs } from "../langs";
 import makeRequest from "../request";
+import { publishEvent, publishPost } from "./publish";
 
 //#region LINK Constants
 const LINK_SIGN = "µlink";
@@ -423,4 +424,22 @@ export function confirmLinkings(type, usersList, content) {
     }
 
     return updatedContent;
+}
+
+export async function publishLinkedContent(
+    data,
+    type,
+    fromEdit,
+    furtherEventData
+) {
+    if (type === LINKING_TYPES.Post) {
+        return await publishPost(data, fromEdit);
+    } else if (type === LINKING_TYPES.Event) {
+        const checkedCategories = furtherEventData.checkedCategories;
+        const pin = furtherEventData.pin;
+
+        return await publishEvent(data, fromEdit, checkedCategories, pin);
+    } else {
+        return false;
+    }
 }

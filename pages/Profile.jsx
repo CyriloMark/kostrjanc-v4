@@ -133,7 +133,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
                             const eventData = eventSnap.val();
                             if (!eventData.isBanned && !eventData.group)
                                 postEventDatas.push(eventData);
-                            console.log(postEventDatas);
+
                             if (i === e.length - 1)
                                 setPostEventList(
                                     sortArrayByDate(postEventDatas).reverse()

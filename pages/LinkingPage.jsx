@@ -29,6 +29,7 @@ import {
     checkLinkingSubmitButton,
     confirmLinkings,
     fetchUsers,
+    publishLinkedContent,
     readLinkings,
 } from "../constants/content/linking";
 import { getLangs } from "../constants/langs";
@@ -44,9 +45,11 @@ import SVG_Pencil from "../assets/svg/Pencil";
 import SVG_Basket from "../assets/svg/Basket";
 
 export default function LinkingPage({ navigation, route }) {
-    const { content, type, origin, fromEdit } = route.params;
+    const { content, type, fromEdit, furtherEventData } = route.params;
 
-    const [buttonVisible, setButtonVisible] = useState(false);
+    let btnPressed = false;
+    const [uploading, setUploading] = useState(btnPressed);
+    const [buttonChecked, setButtonChecked] = useState(false);
 
     const [userSelection, setUserSelection] = useState({
         visible: false,
@@ -98,17 +101,37 @@ export default function LinkingPage({ navigation, route }) {
     //#endregion
 
     useEffect(() => {
-        setButtonVisible(checkLinkingSubmitButton(usersList));
+        setButtonChecked(checkLinkingSubmitButton(usersList));
     }, [usersList]);
 
     //#region Fkt: Submit
-    const handleSubmit = () => {
-        if (!buttonVisible) {
+    const handleSubmit = async () => {
+        if (!buttonChecked) {
             setUnfullfilledAlert();
             return;
         }
 
+        if (btnPressed) return;
+        setButtonChecked(false);
+        btnPressed = true;
+        setUploading(true);
+
         const updatedContent = confirmLinkings(type, usersList, content);
+        const rsp = await publishLinkedContent(
+            updatedContent,
+            type,
+            fromEdit,
+            furtherEventData
+        );
+
+        console.log(rsp);
+
+        if (rsp) navigation.navigate("landingCreate");
+        else {
+            btnPressed = false;
+            setUploading(false);
+            checkButton();
+        }
     };
 
     const setUnfullfilledAlert = () => {
@@ -171,6 +194,20 @@ export default function LinkingPage({ navigation, route }) {
 
     return (
         <View style={[style.allMax, style.bgBlack]}>
+            {uploading ? (
+                <Pressable
+                    onPress={() => {}}
+                    style={[
+                        styles.loadingContainer,
+                        style.allCenter,
+                        style.allMax,
+                    ]}>
+                    <ActivityIndicator
+                        size={"large"}
+                        color={style.colors.blue}
+                    />
+                </Pressable>
+            ) : null}
             <KeyboardAvoidingView
                 style={style.allMax}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -534,7 +571,7 @@ export default function LinkingPage({ navigation, route }) {
                     <View style={[style.allCenter, styles.button]}>
                         <EnterButton
                             onPress={handleSubmit}
-                            checked={buttonVisible}
+                            checked={buttonChecked}
                         />
                     </View>
                 </ScrollView>
@@ -611,5 +648,9 @@ const styles = StyleSheet.create({
         maxWidth: 58,
         marginLeft: style.defaultMsm,
         flex: 0.2,
+    },
+
+    loadingContainer: {
+        position: "absolute",
     },
 });

@@ -197,15 +197,6 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
         )
             return;
 
-        // if (!fromLinking && checkForLinkings(currentCommentInput)) {
-        //     navigation.navigate("linkingScreen", {
-        //         content: currentCommentInput,
-        //         type: LINKING_TYPES.Comment,
-        //         origin: "postView",
-        //     });
-        //     return;
-        // }
-
         const input = currentCommentInput;
         setCurrentCommentInput("");
         setCommentVisible(false);

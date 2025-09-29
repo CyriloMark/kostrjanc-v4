@@ -18,6 +18,7 @@ import { getAuth } from "firebase/auth";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 import * as Storage from "firebase/storage";
 
+//#region import Constants
 import { Event_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData, storeData } from "../../constants/storage";
 import { arraySplitter, splitArrayIntoNEqualy } from "../../constants";
@@ -47,7 +48,9 @@ import checkForAutoCorrectInside, {
 import getStatusCodeText from "../../components/content/status";
 import { getImageData, insertCharacterOnCursor } from "../../constants/content";
 import { sendContentUploadPushNotification } from "../../constants/notifications/content";
+import { publishEvent } from "../../constants/content/publish";
 
+//#region import SVGs
 import SVG_Pencil from "../../assets/svg/Pencil";
 import SVG_Post from "../../assets/svg/Post";
 import SVG_Flag from "../../assets/svg/Flag";
@@ -57,23 +60,20 @@ import SVG_Web from "../../assets/svg/Web";
 import SVG_Pin from "../../assets/svg/Pin3.0";
 import SVG_Kamera from "../../assets/svg/Kamera";
 
+//#region import Expo-Image
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import {
     launchImageLibraryAsync,
     requestMediaLibraryPermissionsAsync,
-    MediaTypeOptions,
     UIImagePickerPresentationStyle,
     launchCameraAsync,
     requestCameraPermissionsAsync,
 } from "expo-image-picker";
 
 // import MapView from "../../components/beta/MapView";
-import MapView, {
-    PROVIDER_DEFAULT,
-    PROVIDER_GOOGLE,
-    Marker,
-} from "react-native-maps";
+import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
 
+//#region import Components
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import InputField from "../../components/InputField";
@@ -109,7 +109,6 @@ export default function EventCreate({ navigation, route }) {
     const [pin, setPin] = useState(initialRegion);
     const [groups, setGroups] = useState([]);
 
-    const [currentMapType, setCurrentMapType] = useState(0);
     const [checkedCategories, setCheckedCategories] = useState({
         type: false,
         entrance_fee: false,
@@ -421,7 +420,8 @@ export default function EventCreate({ navigation, route }) {
         );
     };
 
-    const publishEvent = async () => {
+    //#region Fkt: Submit
+    const submit = async () => {
         if (!buttonChecked) {
             setUnfullfilledAlert();
             return;
@@ -437,8 +437,11 @@ export default function EventCreate({ navigation, route }) {
             navigation.navigate("linkingScreen", {
                 content: event,
                 type: LINKING_TYPES.Event,
-                origin: "eventCreate",
                 fromEdit: fromEdit,
+                furtherEventData: {
+                    pin: pin,
+                    checkedCategories: checkedCategories,
+                },
             });
             return;
         }
@@ -448,167 +451,14 @@ export default function EventCreate({ navigation, route }) {
         setUploading(true);
         btnPressed = true;
 
-        let eventOptions = {};
-        if (event.eventOptions !== undefined) {
-            if (event.eventOptions.type !== undefined && checkedCategories.type)
-                eventOptions = {
-                    ...eventOptions,
-                    type: event.eventOptions.type,
-                };
-            if (
-                event.eventOptions.entrance_fee !== undefined &&
-                checkedCategories.entrance_fee
-            )
-                eventOptions = {
-                    ...eventOptions,
-                    entrance_fee: event.eventOptions.entrance_fee,
-                };
-            if (
-                event.eventOptions.website !== undefined &&
-                checkedCategories.website
-            )
-                eventOptions = {
-                    ...eventOptions,
-                    website: event.eventOptions.website,
-                };
-            if (event.eventOptions.tags && checkedCategories.tags)
-                eventOptions = {
-                    ...eventOptions,
-                    tags: event.eventOptions.tags,
-                };
+        const rsp = await publishEvent(event, fromEdit, checkedCategories, pin);
+
+        if (rsp) navigation.goBack();
+        else {
+            btnPressed = false;
+            setUploading(false);
+            checkButton();
         }
-
-        if (!fromEdit) publishEventNew(eventOptions);
-        else publishEventEdit(eventOptions);
-    };
-
-    const publishEventNew = async eventOptions => {
-        let params = {
-            type: "event",
-            title: event.title,
-            description: event.description,
-            starting: event.starting,
-            ending: event.ending,
-            geoCords: pin,
-            eventOptions: eventOptions,
-            group: event.group,
-        };
-
-        if (
-            event.eventOptions.adBanner !== undefined &&
-            checkedCategories.adBanner
-        ) {
-            console.log("detected image");
-
-            let img_url = event.eventOptions.adBanner.base64;
-            const base64 = img_url;
-            if (!base64) {
-                Alert.alert(
-                    "Fehler",
-                    "Kein Bild ausgewählt oder Base64-Daten fehlen."
-                );
-                params = {
-                    ...params,
-                    img: base64,
-                };
-            }
-        }
-
-        const response = await makeRequest("/post_event/publish", params);
-
-        if (response.code < 400) {
-            addToLocalStorage(response.id);
-            sendContentUploadPushNotification(1);
-
-            Alert.alert(
-                getLangs("eventcreate_publishsuccessful_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => navigation.goBack(),
-                    },
-                ]
-            );
-        } else {
-            Alert.alert(
-                getLangs("eventcreate_publishrejected_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => {
-                            btnPressed = false;
-                            setUploading(false);
-                            checkButton();
-                        },
-                    },
-                ]
-            );
-        }
-    };
-
-    const publishEventEdit = async eventOptions => {
-        let params = {
-            id: event.id,
-            type: "event",
-            title: event.title,
-            description: event.description,
-            starting: event.starting,
-            ending: event.ending,
-            geoCords: pin,
-            eventOptions: eventOptions,
-        };
-
-        const response = await makeRequest("/post_event/edit", params);
-
-        if (response.code < 400)
-            Alert.alert(
-                getLangs("eventcreate_editsuccessful_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => navigation.goBack(),
-                    },
-                ]
-            );
-        else
-            Alert.alert(
-                getLangs("eventcreate_publishrejected_title"),
-                getLangs(getStatusCodeText(response.code)),
-                [
-                    {
-                        text: "Ok",
-                        isPreferred: true,
-                        style: "cancel",
-                        onPress: () => {
-                            btnPressed = false;
-                            setUploading(false);
-                            checkButton();
-                        },
-                    },
-                ]
-            );
-    };
-
-    const addToLocalStorage = id => {
-        getData("userData").then(userData => {
-            let events = [];
-            if (userData["events"]) events = userData["events"];
-            events.push(id);
-
-            storeData("userData", {
-                ...userData,
-                events: events,
-            }).finally(() => console.log("complete"));
-        });
     };
 
     const overridePin = event => {
@@ -1666,7 +1516,7 @@ export default function EventCreate({ navigation, route }) {
                                 </Text>
                             </View>
                             {
-                                //#region Checkable: Type
+                                //#region Checkable: Ad Banner
                             }
                             <View
                                 style={[
@@ -2301,10 +2151,7 @@ export default function EventCreate({ navigation, route }) {
                         //#region Submit Button
                     }
                     <View style={[style.allCenter, styles.button]}>
-                        <EnterButton
-                            onPress={publishEvent}
-                            checked={buttonChecked}
-                        />
+                        <EnterButton onPress={submit} checked={buttonChecked} />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
