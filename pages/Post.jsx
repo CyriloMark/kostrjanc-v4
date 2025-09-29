@@ -51,6 +51,9 @@ import { openLink } from "../constants";
 import { getPlainText } from "../constants/content/tts";
 import { sendCommentPushNotification } from "../constants/notifications/comments";
 import { General_Group } from "../constants/content/GroupData";
+import addScore, {
+    PUBLISH_SCORE_DISTRIBUTION,
+} from "../constants/content/scoring";
 //#endregion
 
 //#region import Components
@@ -219,7 +222,15 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                     ].concat(prev);
 
                     set(ref(getDatabase(), `posts/${id}/comments`), newList);
-                    sendCommentPushNotification(post.creator, 0, post.title);
+
+                    if (uid !== post.creator) {
+                        sendCommentPushNotification(
+                            post.creator,
+                            0,
+                            post.title
+                        );
+                        addScore(uid, PUBLISH_SCORE_DISTRIBUTION.COMMENT, true);
+                    }
                     return newList;
                 });
             });

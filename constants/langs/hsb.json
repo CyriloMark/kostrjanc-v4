@@ -233,9 +233,13 @@
         "profile_role_admin": "admin",
         "profile_role_mod": "moderator",
 
-        "profile_score_title": "kostrjanc-Score",
+        "profile_score_title": " kostrjanc-Score",
         "profile_score_sub_1": " je ",
         "profile_score_sub_2": " kostrjancow nahromadźił.",
+
+        "score_update_title": " kostrjancow",
+        "score_update_sub_1": "Něk sy hižo dohromady ",
+        "score_update_sub_2": " kostrjancow nahromadźił.",
 
         "conent_translation_title": "Wobsah přełoženy",
         "conent_translation_sub": "Tutón wobsah bu z sotra.app přełoženy.",

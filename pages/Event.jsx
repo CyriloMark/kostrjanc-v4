@@ -77,13 +77,10 @@ import {
 } from "../constants/content";
 import { getPlainText } from "../constants/content/tts";
 import { sendCommentPushNotification } from "../constants/notifications/comments";
+import addScore, {
+    PUBLISH_SCORE_DISTRIBUTION,
+} from "../constants/content/scoring";
 //#endregion
-
-import MapView, {
-    Marker,
-    PROVIDER_DEFAULT,
-    PROVIDER_GOOGLE,
-} from "react-native-maps";
 
 const KEYBOARDBUTTON_ENABLED = false;
 
@@ -342,6 +339,15 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
 
                     set(ref(getDatabase(), `events/${id}/comments`), newList);
                     sendCommentPushNotification(event.creator, 1, event.title);
+
+                    if (uid !== event.creator) {
+                        sendCommentPushNotification(
+                            event.creator,
+                            1,
+                            event.title
+                        );
+                        addScore(uid, PUBLISH_SCORE_DISTRIBUTION.COMMENT, true);
+                    }
                     return newList;
                 });
             });

@@ -1,5 +1,6 @@
 // import Firebase
 import { getDatabase, ref, get, child, set } from "firebase/database";
+import { handleChallengeScoring } from "../content/scoring";
 
 const Challenge_Post_Result_Placeholder = {
     creator: "",
@@ -11,6 +12,7 @@ const Challenge_Post_Result_Placeholder = {
 
 const WINNING_AMT = 5;
 
+//#region Fkt: generateChallengeResult
 export async function generateChallengeResult() {
     console.log("generateChallengeResult");
 
@@ -28,6 +30,7 @@ export async function generateChallengeResult() {
     return posts;
 }
 
+//#region Fkt: getChallengePostsAndLikes
 /**
  *
  * @param {String} db Reference to Firebase Database
@@ -52,6 +55,7 @@ async function getChallengePostsAndLikes(db) {
     return output;
 }
 
+//#region Fkt: getChallengePosts
 /**
  * Fetches all Posts from Challenge
  * @param {String} db Reference to Firebase Database
@@ -63,17 +67,25 @@ async function getChallengePosts(db) {
     return posts;
 }
 
+//#region Fkt: getWinningPosts
 /**
+ * Returns the top posts based on number of likes.
  *
- * @param {Challenge_Post_Result_Placeholder[]} posts List of Posts with Data
+ * Behavior:
+ * - Sorts posts in descending order by `likes.length`.
+ * - Returns only the first `WINNING_AMT` posts.
+ * - Does not mutate the original array.
+ *
+ * @param {Challenge_Post_Result_Placeholder[]} posts - List of post objects, each with a `likes` array.
+ * @returns {Array} - Top posts limited to `WINNING_AMT`.
  */
 function getWinningPosts(posts) {
-    posts.forEach(p => console.log(p.likes.length));
-    posts.sort((a, b) => b.likes.length - a.likes.length);
-    posts.forEach(p => console.log(p.likes.length));
-    posts.splice(WINNING_AMT);
+    return [...posts] // copy to avoid mutating input
+        .sort((a, b) => b.likes.length - a.likes.length)
+        .slice(0, WINNING_AMT);
 }
 
+//#region Fkt: getWinningUserNames
 /**
  *
  * @param {String} db Reference to Firebase Database
@@ -88,13 +100,13 @@ async function getWinningUserNames(db, posts) {
     }
 }
 
+//#region Fkt: resetChallenge
 export async function resetChallenge(topPosts) {
     // Database Reference
     const db = getDatabase();
 
     const posts = await getChallengePosts(ref(db));
-
-    await handleScoringOnReset(db, topPosts);
+    await handleChallengeScoring(topPosts);
 
     posts.forEach(
         async id =>
@@ -111,44 +123,6 @@ export async function resetChallenge(topPosts) {
         console.log(
             "error in constants/settings/challenge",
             "resetChallenge set group",
-            error.code
-        )
-    );
-}
-
-const SCORE_DISTRIBUTION = [100, 66, 50, 33, 25];
-
-/**
- *
- * @param {String} db Firebase Database
- * @param {Challenge_Post_Result_Placeholder[]} topPosts List of Winning
- */
-async function handleScoringOnReset(db, topPosts) {
-    for (let i = 0; i < topPosts.length; i++)
-        await overrideUserScore(topPosts[i].creator, SCORE_DISTRIBUTION[i], db);
-}
-
-/**
- * Overrides a Score in User's Profile
- * @param {String} userId Id of User
- * @param {number} scoreToAdd Score to Add
- * @param {String} db Firebase Database
- */
-async function overrideUserScore(userId, scoreToAdd, db) {
-    // Get Current Score
-    let currentScore = (
-        await get(child(ref(db), `users/${userId}/score`))
-    ).val();
-    if (currentScore === null) currentScore = 0;
-
-    // Add new Score
-    currentScore += scoreToAdd;
-
-    // Override Score
-    await set(ref(db, `users/${userId}/score`), currentScore).catch(error =>
-        console.log(
-            "error in constants/settings/challenge",
-            "overrideUserScore set score",
             error.code
         )
     );

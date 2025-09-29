@@ -1,11 +1,16 @@
 import { Alert } from "react-native";
 
+//#region import Constants
 import makeRequest from "../request";
 import getStatusCodeText from "../../components/content/status";
 import { getLangs } from "../langs";
 import { getData, storeData } from "../storage";
 import { sendContentUploadPushNotification } from "../notifications/content";
+import addScore, { PUBLISH_SCORE_DISTRIBUTION } from "./scoring";
+import { getAuth } from "firebase/auth";
+//#endregion
 
+//#region publicPost
 export async function publishPost(post, fromEdit) {
     const base64 = post.imgBase64;
     if (!base64) {
@@ -34,6 +39,7 @@ export async function publishPost(post, fromEdit) {
     return await publishContent(body, 0, fromEdit);
 }
 
+//#region publishEvent
 export async function publishEvent(event, fromEdit, checkedCategories, pin) {
     let body = {
         type: "event",
@@ -84,13 +90,20 @@ async function publishContent(body, type, fromEdit) {
         const response = await makeRequest(url, body);
 
         if (response.code < 400) {
-            if (!fromEdit)
+            if (!fromEdit) {
                 handleNewContentSuccess(
                     response,
                     type,
                     type === 0 && body.group === 2
                 );
-            else handleEditContentSuccess(response, type);
+                addScore(
+                    getAuth().currentUser.uid,
+                    type === 0
+                        ? PUBLISH_SCORE_DISTRIBUTION.PUBLISH_POST
+                        : PUBLISH_SCORE_DISTRIBUTION.PUBLISH_EVENT,
+                    true
+                );
+            } else handleEditContentSuccess(response, type);
             return true;
         } else {
             handleContentReject(response, type);
@@ -224,3 +237,5 @@ async function addToLocalStorage(id, type) {
         console.error("Failed to add post to localStorage:", error);
     }
 }
+
+async function reward() {}
