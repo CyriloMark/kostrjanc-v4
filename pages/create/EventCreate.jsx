@@ -15,8 +15,7 @@ import {
 import * as style from "../../styles";
 
 import { getAuth } from "firebase/auth";
-import { child, get, getDatabase, ref, set } from "firebase/database";
-import * as Storage from "firebase/storage";
+import { child, get, getDatabase, ref } from "firebase/database";
 
 //#region import Constants
 import { Event_Placeholder } from "../../constants/content/PlaceholderData";
@@ -29,10 +28,8 @@ import {
 } from "../../constants/time";
 import {
     Event_Types,
-    mapTypes,
     Event_Tags,
     initialRegion,
-    mapStyles,
     mapStylesDefault,
 } from "../../constants/event";
 import { getLangs } from "../../constants/langs";
@@ -41,13 +38,10 @@ import {
     getClearedLinkedText,
     LINKING_TYPES,
 } from "../../constants/content/linking";
-import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
 } from "../../constants/content/autoCorrect";
-import getStatusCodeText from "../../components/content/status";
-import { getImageData, insertCharacterOnCursor } from "../../constants/content";
-import { sendContentUploadPushNotification } from "../../constants/notifications/content";
+import { insertCharacterOnCursor } from "../../constants/content";
 import { publishEvent } from "../../constants/content/publish";
 
 //#region import SVGs
@@ -84,15 +78,9 @@ import TextField from "../../components/TextField";
 import AccessoryView from "../../components/AccessoryView";
 import Map from "../../components/event/Map";
 
-import * as FileSystem from "expo-file-system";
-
 import DateTimePicker, {
     DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
-
-const userUploadMetadata = {
-    contentType: "image/jpeg",
-};
 
 const tagLineAmt = 4;
 

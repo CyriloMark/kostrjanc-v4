@@ -15,6 +15,7 @@ import { getLangs } from "../../constants/langs";
 import { checkIfTutorialNeeded } from "../../constants/tutorial";
 import fetchCachedContentData from "../../constants/content/contentCacheLoader";
 import { checkForChallengable } from "../../constants/content";
+import { addNotificationResponseReceivedListener } from "expo-notifications";
 
 //#region import Firebase
 import { getAuth } from "firebase/auth";
@@ -110,6 +111,7 @@ export default function Landing({ navigation, onTut }) {
         setLoading(true);
         loadUser();
         checkForTutorial();
+        checkForNotificationResponse();
     }, []);
 
     const refreshContent = () => {
@@ -254,6 +256,15 @@ export default function Landing({ navigation, onTut }) {
     const checkForTutorial = async () => {
         const needTutorial = await checkIfTutorialNeeded(0);
         if (needTutorial) onTut(0);
+    };
+
+    const checkForNotificationResponse = () => {
+        addNotificationResponseReceivedListener(rps => {
+            const route = rps.notification.request.content.data.route;
+            const params = rps.notification.request.content.data.params;
+
+            navigation.navigate(route, params);
+        });
     };
 
     //#region FORYOU CONTENT

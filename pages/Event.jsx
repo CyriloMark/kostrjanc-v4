@@ -36,7 +36,6 @@ import NewPostCommentButton from "../components/comments/NewPostCommentButton";
 
 //#region import SVGs
 import SVG_Live from "../assets/svg/Live";
-import SVG_Pin from "../assets/svg/Pin3.0";
 import SVG_Translate from "../assets/svg/Translate";
 //#endregion
 
@@ -48,13 +47,7 @@ import {
 } from "../constants/content/PlaceholderData";
 import { convertTimestampToString } from "../constants/time";
 import { wait } from "../constants/wait";
-import {
-    checkIfLive,
-    Event_Types,
-    mapTypes,
-    Event_Tags,
-    mapStylesDefault,
-} from "../constants/event";
+import { checkIfLive, Event_Types, Event_Tags } from "../constants/event";
 import { openLink } from "../constants";
 import { getData } from "../constants/storage";
 import { share } from "../constants/share";
@@ -338,10 +331,10 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                     ].concat(prev);
 
                     set(ref(getDatabase(), `events/${id}/comments`), newList);
-                    sendCommentPushNotification(event.creator, 1, event.title);
 
                     if (uid !== event.creator) {
                         sendCommentPushNotification(
+                            event.id,
                             event.creator,
                             1,
                             event.title

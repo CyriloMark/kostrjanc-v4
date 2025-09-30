@@ -151,7 +151,7 @@ function handleNewContentSuccess(response, type, isChallenge) {
     // Challenge check and ajust
     if (isChallenge && type === 0) storeData("hasUploadForChallenge", true);
     addToLocalStorage(response.id, type);
-    sendContentUploadPushNotification(type);
+    sendContentUploadPushNotification(response.id, type);
 
     Alert.alert(
         getLangs(

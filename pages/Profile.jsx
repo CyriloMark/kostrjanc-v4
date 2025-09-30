@@ -252,7 +252,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
                                 };
                             });
                             // Send notification
-                            sendFollowerPushNotification(id);
+                            sendFollowerPushNotification(id, UID);
                         }
                         return !prev;
                     });

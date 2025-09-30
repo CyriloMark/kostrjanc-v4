@@ -6,7 +6,6 @@ import { StatusBar } from "expo-status-bar";
 
 //#region Notifications
 import * as Notifications from "expo-notifications";
-import { isDevice } from "expo-device";
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowBanner: true,
@@ -40,13 +39,6 @@ initializeAuth(app, {
 import { NavigationContainer } from "@react-navigation/native";
 //#endregion
 
-// #region navbar
-import {
-    setBackgroundColorAsync,
-    setButtonStyleAsync,
-} from "expo-navigation-bar";
-//#endregion
-
 import * as style from "./styles";
 
 import { storeData, removeData, hasData } from "./constants/storage";
@@ -57,10 +49,8 @@ import ViewportManager from "./pages/main/ViewportManager";
 import AuthManager from "./pages/auth/AuthManager";
 
 import Loading from "./pages/static/Loading";
-import UpdateVersion from "./pages/static/UpdateVersion";
 import ServerStatus from "./pages/static/ServerStatus";
 import Ban from "./pages/static/Ban";
-import LanguageSelect from "./pages/static/LanguageSelect";
 import TestView from "./pages/static/TestView";
 
 import ContextMenu from "./components/content/ContextMenu";
@@ -72,10 +62,7 @@ import {
     resetTutorials,
 } from "./constants/tutorial";
 import { changeLanguage } from "./constants/langs";
-import {
-    registerForPushNotificationsAsync,
-    sendPushNotification,
-} from "./constants/notifications";
+import { registerForPushNotificationsAsync } from "./constants/notifications";
 //#endregion
 
 const RESET_TUTORIALS_ENABELD = false;

@@ -2,6 +2,7 @@ import { get, child, getDatabase, ref, set } from "firebase/database";
 import { Alert } from "react-native";
 import { getLangs } from "../langs";
 
+const SCORING_ENABLED = false;
 const CHALLENGE_SCORE_DISTRIBUTION = [100, 66, 50, 33, 25];
 export const PUBLISH_SCORE_DISTRIBUTION = {
     PUBLISH_POST: 25,
@@ -24,6 +25,8 @@ export const PUBLISH_SCORE_DISTRIBUTION = {
  * @returns {Promise<number>} - The updated score.
  */
 export default async function addScore(userId, scoreToAdd, rewardMsg) {
+    if (!SCORING_ENABLED) return;
+
     const db = getDatabase();
 
     try {

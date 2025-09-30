@@ -4,9 +4,11 @@ import { getAuth } from "firebase/auth";
 import { isDevice } from "expo-device";
 import * as Notifications from "expo-notifications";
 
+//#region Enable/Disable Notifications
 export const NOTIFICATIONS_ENABLED =
     process.env.EXPO_PUBLIC_ENVIROMENT === "PRODUCTION";
 
+//#region Fkt: registerForPushNotifications
 export async function registerForPushNotificationsAsync() {
     if (!isDevice) {
         console.log("Push Notifications benötigen ein physisches Gerät!");
@@ -52,6 +54,7 @@ export async function registerForPushNotificationsAsync() {
     return token;
 }
 
+//#region Fkt: sendPushNofitication
 /**
  * Sends Push Notification
  * @param {string} expoPushToken ExpoPushToken
@@ -74,6 +77,7 @@ export async function sendPushNotification(
         body,
         data,
     };
+
     await fetch("https://exp.host/--/api/v2/push/send", {
         method: "POST",
         headers: {

@@ -7,6 +7,7 @@ import {
 import { getLangsSpecific } from "../langs";
 import { getData } from "../storage";
 import { getAuth } from "firebase/auth";
+import { getClearedLinkedText } from "../content/linking";
 
 /**
  *
@@ -16,6 +17,7 @@ import { getAuth } from "firebase/auth";
  * @returns
  */
 export async function sendCommentPushNotification(
+    contentId,
     creatorId,
     contentType,
     contentTitle
@@ -46,7 +48,12 @@ export async function sendCommentPushNotification(
                       "notification_comments_body_event",
                       settings.lang
                   )
-        } "${contentTitle}"`,
-        {}
+        } "${getClearedLinkedText(contentTitle)}"`,
+        {
+            route: contentType == 0 ? "postView" : "eventView",
+            params: {
+                id: contentId,
+            },
+        }
     );
 }

@@ -9,7 +9,7 @@ import { getData } from "../storage";
 
 let LAST_FOLLOWED_USER_ID = null;
 
-export async function sendFollowerPushNotification(followerId) {
+export async function sendFollowerPushNotification(followerId, senderId) {
     if (LAST_FOLLOWED_USER_ID == followerId) return;
     LAST_FOLLOWED_USER_ID = followerId;
 
@@ -34,6 +34,11 @@ export async function sendFollowerPushNotification(followerId) {
         getLangsSpecific("notification_follower_title", settings.lang),
         username +
             getLangsSpecific("notification_follower_body", settings.lang),
-        {}
+        {
+            route: "profileView",
+            params: {
+                id: senderId,
+            },
+        }
     );
 }

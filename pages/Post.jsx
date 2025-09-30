@@ -225,6 +225,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
 
                     if (uid !== post.creator) {
                         sendCommentPushNotification(
+                            post.id,
                             post.creator,
                             0,
                             post.title

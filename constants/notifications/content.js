@@ -7,14 +7,16 @@ import {
 import { getLangsSpecific } from "../langs";
 import { getData } from "../storage";
 
-export async function sendContentUploadPushNotification(contentType) {
+export async function sendContentUploadPushNotification(
+    contentId,
+    contentType
+) {
     // Get Username and followerList of Client
     const userData = await getData("userData");
     const username = userData
         ? userData.name
         : getLangsSpecific("notification_follower_alt_newuser", settings.lang);
     const followers = userData ? userData.follower : [];
-    console.log(followers);
 
     for (let i = 0; i < followers.length; i++) {
         // Load ExpoPushToken
@@ -36,7 +38,12 @@ export async function sendContentUploadPushNotification(contentType) {
                               "notification_contents_body_event",
                               settings.lang
                           )),
-                {}
+                {
+                    route: contentType == 0 ? "postView" : "eventView",
+                    params: {
+                        id: contentId,
+                    },
+                }
             );
     }
 }
