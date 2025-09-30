@@ -349,6 +349,31 @@ export default function GroupCreate({ navigation, route }) {
         publishGroup(group, fromEdit);
     };
 
+    const onMemberAdd = userId => {
+        if (group.members.includes(userId)) return;
+
+        setGroup(prev => {
+            let newMemberLit = prev.members.concat([userId]);
+            return {
+                ...prev,
+                members: newMemberLit,
+            };
+        });
+
+        setUserSearchInput("");
+        setUserSearchResult([]);
+    };
+
+    const onMemberRemove = userId => {
+        let userPos = group.members.indexOf(userId);
+        if (userPos == -1) return;
+
+        setGroup({
+            ...group,
+            members: group.members.filter(a => a !== userId),
+        });
+    };
+
     //#region Animation
     const imageWidthMultipier = useSharedValue(2);
 

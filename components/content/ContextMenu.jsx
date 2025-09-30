@@ -43,7 +43,6 @@ import BottomTransitionBar from "../BottomTransitionBar";
 import CloseFilled from "../../assets/svg/CloseFilled";
 import SVG_Play from "../../assets/svg/Play";
 import SVG_Pause from "../../assets/svg/Pause";
-import SVG_Stop from "../../assets/svg/Stop";
 //#endregion
 
 const testAudioSource = require("../../assets/test-bamborak.mp3");

@@ -7,10 +7,11 @@ import * as s from "../../styles";
 import { get, child, ref, getDatabase } from "firebase/database";
 
 // import SVGs
-import SVG_Close from "../../assets/svg/Basket";
+import SVG_Close from "../../assets/svg/CloseFilled";
 
 // import Constants
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function MemberElement({ style, id, onPress, selectable }) {
     const [name, setName] = useState(User_Placeholder.name);
@@ -34,34 +35,44 @@ export default function MemberElement({ style, id, onPress, selectable }) {
     }, []);
 
     return (
-        <View style={style}>
+        <View
+            style={[
+                style,
+                s.oVisible,
+                selectable ? styles.shadow : styles.blank,
+            ]}>
             <Pressable
                 style={[
                     s.allCenter,
-                    s.border,
-                    s.Psm,
                     styles.container,
+                    s.oHidden,
                     {
-                        borderColor: s.colors.red,
                         opacity: selectable ? 1 : 0.5,
                     },
                 ]}
                 onPress={selectable ? onPress : null}>
-                {selectable ? (
-                    <View style={styles.iconContainer}>
-                        <SVG_Close style={s.allMax} fill={s.colors.red} />
-                    </View>
-                ) : null}
-                <Text
-                    style={[
-                        s.TsmRg,
-                        {
-                            textAlign: "center",
-                            color: s.colors.red,
-                        },
-                    ]}>
-                    {name}
-                </Text>
+                <LinearGradient
+                    colors={[s.colors.red, s.colors.white]}
+                    end={{ x: 0.5, y: 2.5 }}
+                    locations={[0, 0.75]}
+                    style={[s.allCenter, s.Psm, styles.inner]}>
+                    {selectable ? (
+                        <View style={styles.iconContainer}>
+                            <SVG_Close style={s.allMax} fill={s.colors.black} />
+                        </View>
+                    ) : null}
+                    <Text
+                        style={[
+                            s.TsmRg,
+                            s.colors.black,
+                            {
+                                textAlign: "center",
+                                fontFamily: "Barlow_Bold",
+                            },
+                        ]}>
+                        {name}
+                    </Text>
+                </LinearGradient>
             </Pressable>
         </View>
     );
@@ -69,7 +80,10 @@ export default function MemberElement({ style, id, onPress, selectable }) {
 const styles = StyleSheet.create({
     container: {
         // width: "100%",
-        borderRadius: 10,
+        borderRadius: 9,
+    },
+    inner: {
+        borderRadius: 9,
         flexDirection: "row",
     },
 
@@ -77,5 +91,36 @@ const styles = StyleSheet.create({
         width: 12,
         height: 12,
         marginRight: s.defaultMsm,
+    },
+
+    shadow: {
+        // Shadow
+        shadowRadius: 5,
+        shadowOpacity: 0.5,
+        shadowColor: s.colors.red,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        borderRadius: 10,
+        backgroundColor: s.colors.black,
+
+        borderColor: s.colors.red,
+        borderWidth: 1,
+    },
+    blank: {
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.25,
+        shadowColor: s.colors.red,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        borderRadius: 10,
+        backgroundColor: s.colors.black,
+
+        // borderColor: s.colors.red,
+        // borderWidth: 1,
     },
 });
