@@ -13,6 +13,7 @@ import {
 
 import * as style from "../../styles";
 
+//#region import Constants
 import { Report_Placeholder } from "../../constants/content/PlaceholderData";
 import { Report_Types } from "../../constants/content/report";
 import { getLangs } from "../../constants/langs";
@@ -23,6 +24,7 @@ import checkForAutoCorrectInside, {
 } from "../../constants/content/autoCorrect";
 import { insertCharacterOnCursor } from "../../constants/content";
 
+//#region import Components
 import BackHeader from "../../components/BackHeader";
 import EnterButton from "../../components/auth/EnterButton";
 import TextField from "../../components/TextField";
@@ -50,6 +52,7 @@ export default function Report({ navigation, route }) {
         reporting = false;
     }, []);
 
+    //#region Fkt: Content Type
     const itemType = () => {
         switch (type) {
             case 0:
@@ -63,6 +66,7 @@ export default function Report({ navigation, route }) {
         }
     };
 
+    //#region Fkt: checkButton
     let checkButton = () => {
         let inputValid = false;
         if (
@@ -103,6 +107,7 @@ export default function Report({ navigation, route }) {
         checkButton();
     }, [reportData]);
 
+    //#region report
     const report = async () => {
         if (reporting) return;
         reporting = true;
@@ -162,7 +167,9 @@ export default function Report({ navigation, route }) {
             <KeyboardAvoidingView
                 style={style.allMax}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}>
-                {/* Header */}
+                {
+                    //#region Page Header
+                }
                 <Pressable style={{ zIndex: 10 }}>
                     <BackHeader
                         title={getLangs("report_title")}
@@ -188,12 +195,16 @@ export default function Report({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
+                    {
+                        //#region Content Title
+                    }
                     <Text style={[style.Ttitle2, style.tWhite]}>
-                        {getLangs("report_sub")} "
+                        {getLangs("report_sub")}{" "}
+                        <Text style={style.TquoteTitle}>„</Text>
                         {type === 2
                             ? item.name
                             : getUnsignedTranslationText(item.title)}
-                        " ({itemType()})
+                        <Text style={style.TquoteTitle}>“</Text> ({itemType()})
                     </Text>
                     {/* Type */}
                     <View style={styles.sectionContainer}>

@@ -69,11 +69,11 @@ export default function Challenge(props) {
                 }
                 <Text
                     style={[
-                        style.TlgBd,
+                        style.Tquote,
                         style.tBlack,
                         { marginTop: style.defaultMsm },
                     ]}>
-                    {challengeTitle}
+                    „<Text style={style.TlgBd}>{challengeTitle}</Text>“
                 </Text>
 
                 {/* <Text

@@ -78,7 +78,7 @@ export default function JoinButton({ style, onPress, checked }) {
                         <View style={styles.arrowContainer}>
                             <SVG_Checked
                                 fill={s.colors.black}
-                                style={styles.arrowIcon}
+                                style={[styles.arrowIcon, { marginTop: 2 }]}
                             />
                         </View>
                     )}

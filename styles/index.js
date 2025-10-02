@@ -90,6 +90,16 @@ export const Ttitle = {
     fontSize: 58,
 };
 
+export const Tquote = {
+    fontFamily: "Coiny",
+    fontSize: 24,
+};
+
+export const TquoteTitle = {
+    fontFamily: "Coiny",
+    fontSize: 36,
+};
+
 export const tBlue = {
     color: colors.blue,
 };

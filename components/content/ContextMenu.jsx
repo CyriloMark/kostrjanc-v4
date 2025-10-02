@@ -263,8 +263,9 @@ export default function ContextMenu({ visible, onClose, text }) {
                                     <Text style={[style.TsmRg, style.tBlue]}>
                                         {getLangs("contextmenu_original")}
                                     </Text>
-                                    <Text style={[style.TlgRg, style.tWhite]}>
-                                        "{text}"
+                                    <Text style={[style.Tquote, style.tWhite]}>
+                                        „<Text style={style.TlgRg}>{text}</Text>
+                                        “
                                     </Text>
                                 </View>
 
@@ -294,22 +295,28 @@ export default function ContextMenu({ visible, onClose, text }) {
                                             </Text>
                                         </View>
                                         <Text
-                                            style={[style.TlgRg, style.tWhite]}>
-                                            "
-                                            {!generatingSotra ? (
-                                                sotraText
-                                            ) : (
-                                                <Text>
-                                                    {" "}
-                                                    <ActivityIndicator
-                                                        size={"small"}
-                                                        color={
-                                                            style.colors.white
-                                                        }
-                                                    />{" "}
-                                                </Text>
-                                            )}
-                                            "
+                                            style={[
+                                                style.Tquote,
+                                                style.tWhite,
+                                            ]}>
+                                            „
+                                            <Text style={style.TlgRg}>
+                                                {!generatingSotra ? (
+                                                    sotraText
+                                                ) : (
+                                                    <Text>
+                                                        {" "}
+                                                        <ActivityIndicator
+                                                            size={"small"}
+                                                            color={
+                                                                style.colors
+                                                                    .white
+                                                            }
+                                                        />{" "}
+                                                    </Text>
+                                                )}
+                                            </Text>
+                                            “
                                         </Text>
                                     </View>
                                 ) : null}

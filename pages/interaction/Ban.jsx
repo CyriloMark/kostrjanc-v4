@@ -207,15 +207,21 @@ export default function Ban({ navigation, route }) {
                     automaticallyAdjustContentInsets
                     snapToAlignment="center"
                     snapToEnd>
+                    {
+                        //#region Content Title
+                    }
                     <Text style={[style.Ttitle2, style.tWhite]}>
-                        "
+                        <Text style={style.TquoteTitle}>„</Text>
                         {type === 2
                             ? item.name
                             : getUnsignedTranslationText(item.title)}
-                        " ({itemType()}) {getLangs("banelement_sub_1")}
+                        <Text style={style.TquoteTitle}>“</Text> ({itemType()}){" "}
+                        {getLangs("banelement_sub_1")}
                     </Text>
 
-                    {/* Description */}
+                    {
+                        //#region Description
+                    }
                     <View style={[styles.sectionContainer, style.pH]}>
                         <Text
                             style={[

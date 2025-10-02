@@ -73,6 +73,7 @@ export default function App() {
         RobotoMono_Thin: require("./assets/fonts/RobotoMono-Thin.ttf"),
         Barlow_Regular: require("./assets/fonts/Barlow-Regular.ttf"),
         Barlow_Bold: require("./assets/fonts/Barlow-Bold.ttf"),
+        Coiny: require("./assets/fonts/Coiny.ttf"),
     });
 
     const [loaded, setLoaded] = useState(false);

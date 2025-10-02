@@ -26,6 +26,7 @@ export default function Delete({ navigation, route }) {
         deleting = false;
     }, []);
 
+    //#region Fkt: Delete
     const onDelete = () => {
         if (deleting) {
             console.log("already deleting");
@@ -102,7 +103,9 @@ export default function Delete({ navigation, route }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
+            {
+                //#region Header
+            }
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
                     title={getLangs("delete_title")}

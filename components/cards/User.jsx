@@ -16,6 +16,9 @@ export default function User({ style, user, onPress }) {
     return (
         <View style={[style, styles.shadow, s.oVisible]}>
             <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
+                {
+                    //#region User Profile Img Layer
+                }
                 <View style={[styles.imgContainer, s.allCenter, s.allMax]}>
                     <View style={{ flex: 1 }} />
                     <Image
@@ -27,6 +30,9 @@ export default function User({ style, user, onPress }) {
                         style={{ aspectRatio: 1, flex: 2 }}
                     />
                 </View>
+                {
+                    //#region Background Layer
+                }
                 <View style={[styles.gradContainer, s.allMax]}>
                     <View style={{ flex: 1 }} />
                     <LinearGradient
@@ -43,6 +49,9 @@ export default function User({ style, user, onPress }) {
                     />
                 </View>
 
+                {
+                    //#region User Name & Desc Container
+                }
                 <View style={[styles.textContainer, s.Plg]}>
                     <Text style={[s.tWhite, s.TlgBd]}>{user.name}</Text>
                     <Text
@@ -51,34 +60,6 @@ export default function User({ style, user, onPress }) {
                         {user.description}
                     </Text>
                 </View>
-            </Pressable>
-        </View>
-    );
-
-    return (
-        <View style={[style]}>
-            <Pressable style={[styles.userContainer, s.Psm]} onPress={onPress}>
-                <View style={styles.userPbContainer}>
-                    <Image
-                        source={{
-                            uri: user.pbUri,
-                        }}
-                        style={styles.userPb}
-                        resizeMode="cover"
-                        resizeMethod="auto"
-                    />
-                </View>
-                <Text
-                    style={[
-                        s.Tmd,
-                        s.tWhite,
-                        {
-                            marginLeft: s.defaultMmd,
-                            fontFamily: "Barlow_Bold",
-                        },
-                    ]}>
-                    {user.name}
-                </Text>
             </Pressable>
         </View>
     );
@@ -131,35 +112,5 @@ const styles = StyleSheet.create({
 
         flexDirection: "column",
         justifyContent: "center",
-    },
-});
-
-const styles2 = StyleSheet.create({
-    userContainer: {
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    userPbContainer: {
-        aspectRatio: 1,
-        width: 48,
-        height: 48,
-        borderRadius: 100,
-
-        overflow: "visible",
-        justifyContent: "center",
-
-        shadowColor: s.colors.black,
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.33,
-        shadowRadius: 10,
-    },
-    userPb: {
-        width: "100%",
-        height: "100%",
-        borderRadius: 100,
     },
 });
