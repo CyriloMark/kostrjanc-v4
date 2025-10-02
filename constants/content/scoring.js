@@ -2,7 +2,7 @@ import { get, child, getDatabase, ref, set } from "firebase/database";
 import { Alert } from "react-native";
 import { getLangs } from "../langs";
 
-const SCORING_ENABLED = false;
+const SCORING_ENABLED = true;
 const CHALLENGE_SCORE_DISTRIBUTION = [100, 66, 50, 33, 25];
 export const PUBLISH_SCORE_DISTRIBUTION = {
     PUBLISH_POST: 25,

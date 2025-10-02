@@ -38,40 +38,52 @@ export default function Challenge(props) {
     return (
         <View style={props.style}>
             <LinearGradient
-                style={[style.Pmd, style.allCenter, styles.container]}
+                style={[style.Pmd, styles.container]}
                 colors={["#8829ac", "#ca55e7"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 locations={[0, 0.66]}>
-                {/* Pin Sign: Banner Symbol | Container */}
-                <View style={styles.signContainer}>
+                {
+                    //#region Pin Sign: Banner Symbol | Container
+                }
+                <View style={styles.headerContainer}>
                     <SVG_Pin style={[styles.pin]} fill={style.colors.black} />
-                </View>
-
-                {/* Txt Container */}
-                <View style={styles.textContainer}>
+                    {
+                        //#region Header Hint Text
+                    }
                     <Text
                         style={[
                             style.TsmRg,
                             style.tBlack,
-                            { marginBottom: style.defaultMsm },
+                            {
+                                marginLeft: style.defaultMsm,
+                                fontFamily: "Barlow_Bold",
+                            },
                         ]}>
                         {getLangs("challengecard_subtitle")}
                     </Text>
-                    {/* Title */}
-                    <Text style={[style.TlgBd, style.tBlack]}>
-                        {challengeTitle}
-                    </Text>
+                </View>
 
-                    <Text
+                {
+                    //#region Title
+                }
+                <Text
+                    style={[
+                        style.TlgBd,
+                        style.tBlack,
+                        { marginTop: style.defaultMsm },
+                    ]}>
+                    {challengeTitle}
+                </Text>
+
+                {/* <Text
                         style={[
                             style.TsmRg,
                             style.tBlack,
                             { marginTop: style.defaultMsm },
                         ]}>
                         {getLangs("challengecard_hint")}
-                    </Text>
-                </View>
+                    </Text> */}
             </LinearGradient>
         </View>
     );
@@ -82,8 +94,9 @@ const styles = StyleSheet.create({
         zIndex: 3,
         borderRadius: 10,
         flexDirection: "column",
+        justifyContent: "center",
     },
-    signContainer: {
+    headerContainer: {
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
@@ -92,11 +105,5 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         maxHeight: 12,
         maxWidth: 12,
-    },
-
-    textContainer: {
-        marginTop: style.defaultMsm,
-        width: "100%",
-        flexDirection: "column",
     },
 });
