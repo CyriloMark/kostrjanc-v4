@@ -26,7 +26,7 @@ export function checkIfClientIsInEvent(checkedList) {
 }
 
 export function checkIfEventHasBanner(eventData) {
-    return eventData.eventOptions.adBanner !== undefined;
+    return eventData.eventOptions?.adBanner !== undefined;
 }
 
 export const Event_Types = [

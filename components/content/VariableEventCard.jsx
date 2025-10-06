@@ -64,20 +64,15 @@ export default function VariableEventCard({ style, size, data, onPress }) {
     if (event.geoCords.latitude === Event_Placeholder.geoCords.latitude)
         return null;
 
-    if (checkIfEventHasBanner(event))
-        return (
-            <View style={[style /*styles.shadow*/]}>
+    return (
+        <View style={[style, styles.shadow, styles.border]}>
+            {checkIfEventHasBanner(event) ? (
                 <EventWithAdBannerCard
                     creator={creator}
                     event={event}
                     onPress={onPress}
                 />
-            </View>
-        );
-
-    return (
-        <View style={[style, styles.shadow, styles.border]}>
-            {size === 0 ? (
+            ) : size === 0 ? (
                 <BigCard creator={creator} event={event} onPress={onPress} />
             ) : size === 1 ? (
                 <MediumCard creator={creator} event={event} onPress={onPress} />

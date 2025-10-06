@@ -1,146 +1,177 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
 import {
-    Pressable,
     View,
-    StyleSheet,
+    Pressable,
     Text,
+    StyleSheet,
     Image,
     Dimensions,
 } from "react-native";
 
-// import styles
 import * as style from "../../../styles";
 
-//#region import SVGs
-import SVG_Live from "../../../assets/svg/Live";
-import SVG_Pin from "../../../assets/svg/Pin3.0";
-import SVG_Return from "../../../assets/svg/Return";
-import SVG_Translate from "../../../assets/svg/Translate";
-//#endregion
-
-//#region import Components
-import Map from "../../event/Map";
-import JoinButton from "./JoinButton";
-
-import { LinearGradient } from "expo-linear-gradient";
-//#endregion
-
-//#region import Constants
+//#region Constants
 import { convertTimestampToString } from "../../../constants/time";
-import { checkIfClientIsInEvent, checkIfLive } from "../../../constants/event";
+import { checkIfLive } from "../../../constants/event";
+import { checkLinkedUser } from "../../../constants/content/linking";
 import { getUnsignedTranslationText } from "../../../constants/content/translation";
 import {
     checkForUnnecessaryNewLine,
     checkForURLs,
 } from "../../../constants/content";
-import { checkLinkedUser } from "../../../constants/content/linking";
 //#endregion
 
-export default function EventWithAdBannerCard({ event, creator, onPress }) {
+import { LinearGradient } from "expo-linear-gradient";
+
+import Map from "../../event/Map";
+
+import SVG_Live from "../../../assets/svg/Live";
+
+export default function EventElement({ event, creator, onPress }) {
     const mapRef = useRef();
 
     return (
         <Pressable style={[styles.container, style.oHidden]} onPress={onPress}>
-            {/* Info  */}
-            <View style={[styles.infoBoxContainer, style.oVisible, styles.shadowBlack]}>
+            <Map
+                style={style.allMax}
+                mapRef={mapRef}
+                initialRegion={event.geoCords}
+                marker
+                accessible={false}
+                title={event.title}
+                onPress={onPress}
+                align={1}
+            />
+
+            {
+                //#region Content Container
+            }
+            <View style={[style.allMax, styles.contentContainer]}>
                 <LinearGradient
-                    colors={["#252D33", "#0F0F09"]}
+                    colors={[style.colors.black, "transparent"]}
                     start={{
-                        x: -0.5,
-                        y: -2,
+                        x: 0,
+                        y: 0,
                     }}
                     end={{
-                        x: 1.5,
-                        y: 0.5,
+                        x: 1,
+                        y: 0.75,
                     }}
-                    style={[styles.infoContainer, style.Pmd, style.oHidden]}>
-                    {/* Event Title */}
-                    <Text numberOfLines={2} style={[style.TlgBd, style.tWhite]}>
-                        {checkLinkedUser(
-                            getUnsignedTranslationText(
-                                checkForUnnecessaryNewLine(event.title)
-                            )
-                        ).map((el, key) =>
-                            !el.isLinked ? (
-                                checkForURLs(el.text).map((el2, key2) =>
-                                    !el2.hasUrl ? (
-                                        <Text key={key2}>{el2.text}</Text>
-                                    ) : (
-                                        <Text
-                                            key={key2}
-                                            style={[
-                                                style.tBlue,
-                                                {
-                                                    textDecorationLine:
-                                                        "underline",
-                                                    textDecorationColor:
-                                                        style.colors.blue,
-                                                },
-                                            ]}>
-                                            {el2.text}
-                                        </Text>
-                                    )
+                    style={[style.allMax, styles.contentInnerContainer]}>
+                    {
+                        //#region Event Text Container
+                    }
+                    <View style={[styles.contentTextContainer]}>
+                        {
+                            //#region Event Creator
+                        }
+                        <LinearGradient
+                            colors={["#252D33", "#0F0F09"]}
+                            start={{
+                                x: -0.5,
+                                y: -2,
+                            }}
+                            end={{
+                                x: 1.5,
+                                y: 0.5,
+                            }}
+                            style={[styles.creatorContainer, style.Psm]}>
+                            <Text style={[style.TsmRg, style.tWhite]}>
+                                {creator.name}
+                            </Text>
+                        </LinearGradient>
+
+                        {
+                            //#region Event Title
+                        }
+                        <Text
+                            numberOfLines={2}
+                            style={[
+                                style.tWhite,
+                                style.TlgBd,
+                                { marginTop: style.defaultMsm },
+                            ]}>
+                            {checkLinkedUser(
+                                getUnsignedTranslationText(
+                                    checkForUnnecessaryNewLine(event.title)
                                 )
-                            ) : (
-                                <Text key={key} style={style.tBlue}>
-                                    {el.text}
-                                </Text>
-                            )
-                        )}
-                    </Text>
-                    {/* Event Time Starting */}
-                    <View style={styles.timeContainer}>
-                        {checkIfLive(event.starting, event.ending) ? (
-                            <SVG_Live
-                                fill={style.colors.red}
-                                style={styles.liveIcon}
-                            />
-                        ) : null}
-                        <Text style={[style.tWhite, style.TlgRg]}>
-                            {convertTimestampToString(event.starting)}
+                            ).map((el, key) =>
+                                !el.isLinked ? (
+                                    checkForURLs(el.text).map((el2, key2) =>
+                                        !el2.hasUrl ? (
+                                            <Text key={key2}>{el2.text}</Text>
+                                        ) : (
+                                            <Text
+                                                key={key2}
+                                                style={[
+                                                    style.tBlue,
+                                                    {
+                                                        textDecorationLine:
+                                                            "underline",
+                                                        textDecorationColor:
+                                                            style.colors.blue,
+                                                    },
+                                                ]}>
+                                                {el2.text}
+                                            </Text>
+                                        )
+                                    )
+                                ) : (
+                                    <Text key={key} style={style.tBlue}>
+                                        {el.text}
+                                    </Text>
+                                )
+                            )}
                         </Text>
+
+                        {
+                            //#region Event Time Starting
+                        }
+                        <View style={styles.timeContainer}>
+                            {checkIfLive(event.starting, event.ending) ? (
+                                <SVG_Live
+                                    fill={style.colors.red}
+                                    style={styles.liveIcon}
+                                />
+                            ) : null}
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    // {
+                                    //     fontFamily: "Barlow_Bold",
+                                    // },
+                                ]}>
+                                {convertTimestampToString(event.starting)}
+                            </Text>
+                        </View>
+                    </View>
+
+                    {
+                        //#region Event Ad Banner Container
+                    }
+                    <View
+                        style={[
+                            styles.contentImgContainer,
+                            style.allCenter,
+                            style.oVisible,
+                        ]}>
+                        <Image
+                            style={[
+                                styles.image,
+                                // style.allMax,
+                                {
+                                    aspectRatio:
+                                        event.eventOptions.adBanner.aspect,
+                                },
+                            ]}
+                            resizeMode="contain"
+                            source={{
+                                uri: event.eventOptions.adBanner.uri,
+                            }}
+                        />
                     </View>
                 </LinearGradient>
-            </View>
-            {/* Map */}
-            <View style={[styles.mapBoxContainer, style.oVisible, styles.shadowBlue]}>
-                <View style={[styles.mapInner, style.oHidden]}>
-                <Map
-                    style={style.allMax}
-                    accessible={false}
-                    initialRegion={event.geoCords}
-                    title={event.title}
-                    mapRef={mapRef}
-                    marker
-                    onPress={onPress}
-                    align={0}
-                />
-                </View>
-            </View>
-            {/* Ad Banner */}
-            <View
-                style={[
-                    styles.adBannerBoxContainer,
-                    style.oVisible,
-                    styles.shadowBlack
-                ]}>
-                    <View style={[styles.adBannerInner, style.oHidden, { aspectRatio: event.eventOptions.adBanner.aspect },]}>
-                <Image
-                    style={style.allMax}
-                    resizeMode="cover"
-                    source={{
-                        uri: event.eventOptions.adBanner.uri,
-                    }}
-                />
-            </View>
-            {/* Join Button */}
-            {/* <View style={[styles.joinButtonBoxContainer]}>
-                <JoinButton
-                    onPress={onPress}
-                    checked={checkIfClientIsInEvent(event.checks)}
-                />
-            </View> */}
             </View>
         </Pressable>
     );
@@ -149,25 +180,46 @@ export default function EventWithAdBannerCard({ event, creator, onPress }) {
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        zIndex: 1,
-        position: "relative",
-        aspectRatio: 1,
+        height: Math.min(Dimensions.get("screen").height / 5, 256),
+        borderRadius: 9,
+        flexDirection: "row",
+        zIndex: 3,
     },
 
-    infoBoxContainer: {
+    contentContainer: {
+        flex: 1,
         position: "absolute",
-        width: "75%",
-        top: 0,
-        left: "10%",
-
-        borderRadius: 10,
-        zIndex: 4,
     },
-    infoContainer: {
-        width: "100%",
+    contentInnerContainer: {
+        flexDirection: "row",
+        padding: style.Plg.paddingVertical,
+    },
+    contentTextContainer: {
+        width: "60%",
+        height: "100%",
         flexDirection: "column",
-        borderRadius: 10
+        justifyContent: "center",
+        alignItems: "flex-start",
     },
+    contentImgContainer: {
+        width: "40%",
+        height: "100%",
+
+        shadowColor: style.colors.black,
+        shadowOpacity: 0.5,
+        shadowRadius: 8,
+    },
+    image: {
+        width: "100%",
+        maxWidth: "100%",
+        maxHeight: "100%",
+        borderRadius: 10,
+    },
+
+    creatorContainer: {
+        borderRadius: 5,
+    },
+
     timeContainer: {
         flexDirection: "row",
         marginTop: style.defaultMsm,
@@ -178,67 +230,5 @@ const styles = StyleSheet.create({
         width: 24,
         marginTop: 2,
         marginRight: style.defaultMsm,
-    },
-
-    shadowBlack: {
-        // Shadow
-        shadowRadius: 25,
-        shadowOpacity: 1,
-        shadowColor: style.colors.black,
-        shadowOffset: {
-            width: 0,
-            height: -2,
-        },
-        backgroundColor: style.colors.black,
-    },
-
-    mapBoxContainer: {
-        position: "absolute",
-        width: "60%",
-        aspectRatio: 1,
-        left: 0,
-        top: "15%",
-
-        borderRadius: 10,
-        zIndex: 2,
-    },
-    mapInner: {
-        borderRadius: 10,
-    },
-    shadowBlue: {
-        // Shadow
-        shadowRadius: 10,
-        shadowOpacity: 0.5,
-        shadowColor: style.colors.sec,
-        shadowOffset: {
-            width: 0,
-            height: -2,
-        },
-        backgroundColor: style.colors.black,
-
-        borderRadius: 10,
-        borderColor: style.colors.sec,
-        borderWidth: 1,
-    },
-
-    adBannerBoxContainer: {
-        position: "absolute",
-        zIndex: 3,
-        height: "60%",
-        maxWidth: Dimensions.get("screen").width * 0.5,
-        right: 0,
-        bottom: 0,
-
-        borderRadius: 10,
-    },
-    adBannerInner: {
-        borderRadius: 10
-    },
-
-    joinButtonBoxContainer: {
-        position: "absolute",
-        bottom: 0,
-        right: "10%",
-        zIndex: 5,
     },
 });
