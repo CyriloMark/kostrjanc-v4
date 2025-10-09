@@ -30,6 +30,7 @@ import Challenge from "../../components/cards/Challenge";
 import Refresh from "../../components/RefreshControl";
 import GroupSelect from "../../components/landing/GroupSelect";
 import ShowNewButton from "../../components/content/ShowNewButton";
+import Calendar from "../../components/calendar/Calendar";
 
 import Loading from "../static/Loading";
 
@@ -42,6 +43,8 @@ import handleChallengeContent from "../../constants/content/challengeContent";
 let LOADING = false;
 let LAST_UPDATED = 0;
 let SETTING_NEW_CONTENT = false;
+
+const CALENDAR_ENABLED = true;
 
 let showingContent = [];
 
@@ -404,8 +407,8 @@ export default function Landing({ navigation, onTut }) {
                 <Challenge
                     style={{
                         marginTop: style.defaultMmd,
-                        marginHorizontal: style.defaultMmd * 2,
                         marginBottom: style.defaultMsm,
+                        marginHorizontal: style.defaultMmd * 2,
 
                         // Shadow
                         shadowColor: "#8829ac",
@@ -419,6 +422,20 @@ export default function Landing({ navigation, onTut }) {
                         borderRadius: 10,
                     }}
                 />
+
+                {
+                    //#region Calendar
+                }
+                {CALENDAR_ENABLED ? (
+                    <View
+                        style={{
+                            marginTop: style.defaultMmd,
+                            marginBottom: style.defaultMmd,
+                            marginHorizontal: style.defaultMmd * 2,
+                        }}>
+                        <Calendar />
+                    </View>
+                ) : null}
 
                 {
                     //#region Banner Mapping

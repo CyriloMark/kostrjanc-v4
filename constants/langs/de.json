@@ -615,6 +615,31 @@
         "notification_contents_body_event": " hat ein neues Event veröffentlicht.",
         "notification_comments_title": "Neuer Kommentar.",
         "notification_comments_body_post": "Du hast einen neunen Kommentar unter deinem Post",
-        "notification_comments_body_event": "Du hast einen neuen Kommentar unter deinem Event"
+        "notification_comments_body_event": "Du hast einen neuen Kommentar unter deinem Event",
+
+        "calendar_months_0": "Januar",
+        "calendar_months_1": "Februar",
+        "calendar_months_2": "März",
+        "calendar_months_3": "April",
+        "calendar_months_4": "Mai",
+        "calendar_months_5": "Juni",
+        "calendar_months_6": "Juli",
+        "calendar_months_7": "August",
+        "calendar_months_8": "September",
+        "calendar_months_9": "Oktober",
+        "calendar_months_10": "November",
+        "calendar_months_11": "Dezember",
+        "calendar_months_alt_0": "",
+        "calendar_months_alt_1": "",
+        "calendar_months_alt_2": "",
+        "calendar_months_alt_3": "Aryl",
+        "calendar_months_alt_4": "",
+        "calendar_months_alt_5": "",
+        "calendar_months_alt_6": "",
+        "calendar_months_alt_7": "",
+        "calendar_months_alt_8": "",
+        "calendar_months_alt_9": "",
+        "calendar_months_alt_10": "",
+        "calendar_months_alt_11": ""
     }
 }

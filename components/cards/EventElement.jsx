@@ -36,7 +36,7 @@ export default function EventElement({ event, style, onPress, k }) {
         create.getCreatorName(event.creator).then(un => setCreatorName(un));
     }, []);
 
-    // if (event.isBanned) return null;
+    if (event.isBanned) return null;
     return (
         <View style={[style, styles.shadow, s.oVisible]} key={k}>
             <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
     container: {
         width: "100%",
         height: Math.min(Dimensions.get("screen").height / 5, 256),
-        backgroundColor: "red",
         borderRadius: 10,
         flexDirection: "row",
         zIndex: 3,

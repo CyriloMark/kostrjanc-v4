@@ -615,6 +615,31 @@
         "notification_contents_body_event": " je nowy ewent wozjewił.",
         "notification_comments_title": "Nowy komentar.",
         "notification_comments_body_post": "Maš nowy komentar pod postom",
-        "notification_comments_body_event": "Maš nowy komentar pod ewentom"
+        "notification_comments_body_event": "Maš nowy komentar pod ewentom",
+
+        "calendar_months_0": "Januar",
+        "calendar_months_1": "Februar",
+        "calendar_months_2": "Měrc",
+        "calendar_months_3": "Apryl",
+        "calendar_months_4": "Meja",
+        "calendar_months_5": "Junij",
+        "calendar_months_6": "Julij",
+        "calendar_months_7": "Awgust",
+        "calendar_months_8": "September",
+        "calendar_months_9": "Oktober",
+        "calendar_months_10": "Nowember",
+        "calendar_months_11": "December",
+        "calendar_months_alt_0": "wulki róžk",
+        "calendar_months_alt_1": "mały róžk",
+        "calendar_months_alt_2": "nalětnik",
+        "calendar_months_alt_3": "jutrownik",
+        "calendar_months_alt_4": "róžownik",
+        "calendar_months_alt_5": "smažnik",
+        "calendar_months_alt_6": "pražnik",
+        "calendar_months_alt_7": "žnjenc",
+        "calendar_months_alt_8": "požnjenc",
+        "calendar_months_alt_9": "winowc",
+        "calendar_months_alt_10": "nazymnik",
+        "calendar_months_alt_11": "hodownik"
     }
 }
