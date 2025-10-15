@@ -56,7 +56,9 @@ export default function BigCard({ event, creator, onPress }) {
                     }}
                     style={style.allMax}>
                     <View style={styles.contentInnerContainer}>
-                        {/* Creator */}
+                        {
+                            //#region Creator
+                        }
                         <View
                             style={[
                                 styles.creatorContainer,
@@ -88,7 +90,9 @@ export default function BigCard({ event, creator, onPress }) {
                                 {creator.name}
                             </Text>
                         </View>
-                        {/* Event Title */}
+                        {
+                            //#region Event Title
+                        }
                         <Text
                             numberOfLines={3}
                             style={[
@@ -129,7 +133,9 @@ export default function BigCard({ event, creator, onPress }) {
                             )}
                         </Text>
 
-                        {/* Event Time Starting */}
+                        {
+                            //#region Event Time Starting
+                        }
                         <View style={styles.timeContainer}>
                             {checkIfLive(event.starting, event.ending) ? (
                                 <SVG_Live

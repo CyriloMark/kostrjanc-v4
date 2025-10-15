@@ -471,6 +471,10 @@ export default function Landing({ navigation, onTut }) {
                         <Post
                             key={key}
                             id={item.id}
+                            style={{
+                                marginVertical: style.defaultMmd,
+                                zIndex: 10,
+                            }}
                             likeable={SELECTED_GROUP.id === 2}
                             group={
                                 !(
