@@ -3,7 +3,7 @@ export const DEFAULT_HEIGHT = Math.min(
     512
 );
 export const DEFAULT_DATEBOX_WIDTH = DEFAULT_HEIGHT * (1 / 8.875); //DEFAULT_HEIGHT * 8.875;
-export const DEFAULT_MONTH_TO_SCROLL_COUNT = 5;
+export const DEFAULT_MONTH_TO_SCROLL_COUNT = 3;
 
 /**
  * Gibt das aktuelle Datum als Objekt zurück.

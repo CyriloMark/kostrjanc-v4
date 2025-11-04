@@ -22,14 +22,18 @@ export async function getFutureEventsByMonth() {
 
     events.forEach(event => {
         if (event.isBanned) return;
-        const start = new Date(event.starting);
+
+        const t = today.getFullYear() * 12 + today.getMonth();
+        const start = new Date(
+            event.starting >= Date.now() ? event.starting : Date.now()
+        );
         const end = new Date(event.ending);
 
-        if (start.getMonth() >= today.getMonth()) {
-            const s = start.getFullYear() * 12 + start.getMonth();
-            const e = end.getFullYear() * 12 + end.getMonth();
-            const range = e - s;
+        const s = start.getFullYear() * 12 + start.getMonth();
+        const e = end.getFullYear() * 12 + end.getMonth();
+        const range = e - s;
 
+        if (s >= t) {
             for (let i = 0; i <= range; i++) {
                 out.push({
                     month: (start.getMonth() + i) % 12,
