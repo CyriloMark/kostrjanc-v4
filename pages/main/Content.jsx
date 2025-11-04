@@ -301,7 +301,12 @@ export default function Content({ navigation, onTut }) {
                                 width: "100%",
                                 alignItems: "center",
                             }}>
-                            <Text style={[style.tWhite, style.Tmd]}>
+                            <Text
+                                style={[
+                                    style.tWhite,
+                                    style.Tmd,
+                                    { fontFamily: "Barlow_Bold" },
+                                ]}>
                                 {getLangs("contentpage_contenthint")}
                             </Text>
                             <View
@@ -469,7 +474,10 @@ export default function Content({ navigation, onTut }) {
                                     style={[
                                         style.tWhite,
                                         style.Tmd,
-                                        { textAlign: "center" },
+                                        {
+                                            textAlign: "center",
+                                            fontFamily: "Barlow_Bold",
+                                        },
                                     ]}>
                                     {getLangs("contentpage_eventlisttitle")}
                                 </Text>

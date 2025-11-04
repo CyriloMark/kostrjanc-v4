@@ -28,7 +28,14 @@ export default function LeaveButton({ style, onPress }) {
                         </Svg>
                     </View>
                     <Text
-                        style={[s.tWhite, s.Tmd, { marginLeft: s.defaultMmd }]}>
+                        style={[
+                            s.tWhite,
+                            s.Tmd,
+                            {
+                                marginLeft: s.defaultMmd,
+                                fontFamily: "Barlow_Bold",
+                            },
+                        ]}>
                         {getLangs("grouppage_leave")}
                     </Text>
                 </LinearGradient>

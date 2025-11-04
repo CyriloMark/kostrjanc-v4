@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import * as s from "../../styles";
 
-import SVG_Pencil from "../../assets/svg/Pencil";
+import SVG_Pencil from "../../assets/svg/Pencil_Fill";
 
 import Animated, {
     useSharedValue,
@@ -50,7 +50,10 @@ export default function EditProfileButton({ checked, title, style, onPress }) {
                             style={[
                                 s.tWhite,
                                 s.Tmd,
-                                { marginLeft: s.defaultMmd },
+                                {
+                                    marginLeft: s.defaultMmd,
+                                    fontFamily: "Barlow_Bold",
+                                },
                             ]}>
                             {title}
                         </Text>
@@ -75,6 +78,6 @@ const styles = StyleSheet.create({
     icon: {
         aspectRatio: 1,
         maxWidth: 24,
-        maxHeight: 24,
+        maxHeight: 22,
     },
 });

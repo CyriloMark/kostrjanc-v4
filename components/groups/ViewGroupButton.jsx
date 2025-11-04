@@ -73,7 +73,10 @@ export default function ViewGroupButton({ checked, style, onPress }) {
                                 style={[
                                     s.tWhite,
                                     s.Tmd,
-                                    { marginLeft: s.defaultMmd },
+                                    {
+                                        marginLeft: s.defaultMmd,
+                                        fontFamily: "Barlow_Bold",
+                                    },
                                 ]}>
                                 {getLangs("groupselect_viewbutton")}
                             </Text>
