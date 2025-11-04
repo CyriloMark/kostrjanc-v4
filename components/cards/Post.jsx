@@ -6,7 +6,9 @@ import { Pressable, View, StyleSheet, Image, Text } from "react-native";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 
-import * as style from "../../styles";
+import * as s from "../../styles";
+
+import { LinearGradient } from "expo-linear-gradient";
 
 // import Constants
 import {
@@ -14,7 +16,7 @@ import {
     Post_Placeholder,
 } from "../../constants/content/PlaceholderData";
 import { getUnsignedTranslationText } from "../../constants/content/translation";
-import { checkForUnnecessaryNewLine } from "../../constants/content";
+import { checkForUnnecessaryNewLine, like } from "../../constants/content";
 import { checkLinkedUser } from "../../constants/content/linking";
 import { getData } from "../../constants/storage";
 
@@ -22,9 +24,7 @@ import { getData } from "../../constants/storage";
 import LikeButton from "../content/LikeButton";
 import Comment from "../comments/Comment";
 
-const COMMENTS_BELOW_ENABLED = false;
-
-export default function Post(props) {
+export default function Post({ style, id, group, likeable, onPress }) {
     let LIKING = false;
     let UID = null;
 
@@ -35,7 +35,7 @@ export default function Post(props) {
 
     const loadData = () => {
         const db = getDatabase();
-        get(child(ref(db), "posts/" + props.id))
+        get(child(ref(db), `posts/${id}`))
             .then(postSnap => {
                 if (!postSnap.exists()) {
                     setPost(Post_Placeholder);
@@ -57,7 +57,7 @@ export default function Post(props) {
 
                 setPost(postData);
 
-                if (props.likeable && postSnap.hasChild("likes"))
+                if (likeable && postSnap.hasChild("likes"))
                     loadLikes(postData.likes);
                 if (postData.comments) setCommentsList(postData.comments);
 
@@ -94,210 +94,213 @@ export default function Post(props) {
         loadData();
     }, []);
 
-    const like = async () => {
-        if (!props.likeable || LIKING) return;
+    const _handleLikePress = async () => {
+        if (!likeable || LIKING) return;
         LIKING = true;
 
-        if (UID === null) {
-            UID = await getData("userId");
-            if (UID === null) UID = getAuth().currentUser.uid;
-        }
+        const rsp = await like(id);
+        if (rsp)
+            setLiked(prev => {
+                return !prev;
+            });
 
-        const db = getDatabase();
-
-        get(child(ref(db), `posts/${props.id}/likes`))
-            .then(likesSnap => {
-                let l = [];
-                if (likesSnap.exists()) l = likesSnap.val();
-
-                if (l.includes(UID)) l.splice(l.indexOf(UID), 1);
-                else l.push(UID);
-
-                set(ref(db, `posts/${props.id}/likes`), l)
-                    .finally(() => (LIKING = false))
-                    .then(() => setLiked(!liked))
-                    .catch(error =>
-                        console.log(
-                            "error in components/card/Post.jsx",
-                            "like set DB",
-                            error.code
-                        )
-                    );
-            })
-            .catch(error =>
-                console.log(
-                    "error in components/cards/Post.jsx",
-                    "like get Likes",
-                    error.code
-                )
-            );
+        LIKING = false;
     };
 
-    if (!props.group && post.group) return null;
+    if (!group && post.group) return null;
     if (post.isBanned) return null;
     return (
-        <View
-            style={[
-                props.style,
+        <View style={[style, styles.shadow, s.oVisible]}>
+            <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
                 {
-                    marginVertical: style.defaultMmd,
-                    zIndex: 10,
-                },
-            ]}>
-            <Pressable style={styles.container} onPress={props.onPress}>
-                {/* Header */}
-                <View style={[styles.headerContainer, style.Psm]}>
-                    <View style={styles.headerPbContainer}>
-                        <Image
-                            source={{ uri: user.pbUri }}
-                            style={styles.headerPb}
-                            resizeMode="cover"
-                            resizeMethod="auto"
-                        />
-                    </View>
-                    <Text
-                        style={[
-                            style.Tmd,
-                            style.tWhite,
-                            {
-                                marginLeft: style.defaultMmd,
-                            },
-                        ]}>
-                        {user.name}
-                    </Text>
+                    //#region Image
+                }
+                <Image
+                    source={{ uri: post.imgUri }}
+                    style={[s.allMax]}
+                    resizeMode="cover"
+                />
+
+                {
+                    //#region Upper Area
+                }
+                <View style={[styles.contentContainer, s.allMax]}>
+                    <LinearGradient
+                        colors={[s.colors.black, "transparent"]}
+                        start={{
+                            x: 0,
+                            y: -1,
+                        }}
+                        end={{
+                            x: 0.25,
+                            y: 2,
+                        }}
+                        locations={[0, 0.5]}
+                        style={[s.Pmd]}>
+                        {
+                            //#region Header
+                        }
+                        <View style={[styles.headerContainer, s.oVisible]}>
+                            <View
+                                style={[s.oVisible, styles.headerPbContainer]}>
+                                <View
+                                    style={[
+                                        styles.headerPbInnerContainer,
+                                        s.oHidden,
+                                    ]}>
+                                    <Image
+                                        source={{ uri: user.pbUri }}
+                                        style={s.allMax}
+                                        resizeMode="cover"
+                                        resizeMethod="auto"
+                                    />
+                                </View>
+                            </View>
+                            <Text
+                                style={[
+                                    s.Tmd,
+                                    s.tWhite,
+                                    styles.textShadow,
+                                    {
+                                        marginLeft: s.defaultMmd,
+                                        fontFamily: "Barlow_Bold",
+                                    },
+                                ]}>
+                                {user.name}
+                            </Text>
+                        </View>
+                    </LinearGradient>
                 </View>
 
-                {/* Img */}
+                {
+                    //#region Lower Area
+                }
                 <View
-                    style={{
-                        marginTop: style.defaultMsm,
-                        ...style.shadowSecSmall,
-                        borderRadius: 10,
-                    }}>
-                    <View
-                        style={[
-                            style.allCenter,
-                            styles.imgContainer,
-                            style.oHidden,
-                        ]}>
-                        <Image
-                            source={{ uri: post.imgUri }}
-                            style={[styles.img]}
-                            resizeMode="cover"
-                        />
-                    </View>
-                </View>
-
-                {/* Text */}
-                {!props.likeable ? (
-                    <View style={[styles.textContainer]}>
-                        {checkLinkedUser(
-                            getUnsignedTranslationText(
-                                checkForUnnecessaryNewLine(post.title)
-                            )
-                        ).map((el, key) => (
-                            <Text key={key} style={[style.Tmd, style.tWhite]}>
-                                {el.text}
-                            </Text>
-                        ))}
-                    </View>
-                ) : (
-                    <View style={styles.likeContainer}>
-                        <LikeButton
-                            style={{ marginRight: style.defaultMmd }}
-                            liked={liked}
-                            onPress={like}
-                        />
-
-                        {checkLinkedUser(
-                            getUnsignedTranslationText(
-                                checkForUnnecessaryNewLine(post.title)
-                            )
-                        ).map((el, key) => (
-                            <Text key={key} style={[style.Tmd, style.tWhite]}>
-                                {el.text}
-                            </Text>
-                        ))}
-                    </View>
-                )}
-
-                {props.group && COMMENTS_BELOW_ENABLED ? (
-                    <View style={styles.commentsContainer}>
-                        {commentsList.map(comment => (
-                            <Comment
-                                key={comment.created}
-                                style={{ marginTop: style.defaultMmd }}
-                                commentData={comment}
-                                onRemove={() => null}
-                                onPress={id => props.onCommentPress(id)}
-                                onCommentUserPress={id =>
-                                    props.onCommentUserPress(id)
-                                }
+                    style={[
+                        styles.contentContainer,
+                        s.allMax,
+                        { justifyContent: "flex-end" },
+                    ]}>
+                    <LinearGradient
+                        colors={["transparent", s.colors.black]}
+                        start={{
+                            x: 0.5,
+                            y: 0,
+                        }}
+                        end={{
+                            x: 0.5,
+                            y: 1.5,
+                        }}
+                        locations={[0, 1]}
+                        style={[s.Pmd, styles.textContainer]}>
+                        {likeable ? (
+                            <LikeButton
+                                style={{ marginRight: s.defaultMmd }}
+                                liked={liked}
+                                onPress={_handleLikePress}
                             />
-                        ))}
-                    </View>
-                ) : null}
+                        ) : null}
+                        <View style={styles.titleContainer}>
+                            {checkLinkedUser(
+                                getUnsignedTranslationText(
+                                    checkForUnnecessaryNewLine(post.title)
+                                )
+                            ).map((el, key) => (
+                                <Text
+                                    key={key}
+                                    style={[
+                                        s.Tmd,
+                                        s.tWhite,
+                                        styles.textShadow,
+                                        { fontFamily: "Barlow_Bold" },
+                                    ]}>
+                                    {el.text}
+                                </Text>
+                            ))}
+                        </View>
+                    </LinearGradient>
+                </View>
             </Pressable>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    shadow: {
         width: "100%",
-        flexDirection: "column",
-        justifyContent: "center",
-        zIndex: 10,
+
+        // Shadow
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: s.colors.sec,
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
+        borderRadius: 10,
+        backgroundColor: s.colors.black,
+
+        borderColor: s.colors.sec,
+        borderWidth: 1,
     },
 
+    container: {
+        aspectRatio: 1,
+        width: "100%",
+        borderRadius: 9,
+    },
+
+    contentContainer: {
+        position: "absolute",
+        flexDirection: "column",
+        // justifyContent: "flex-end",
+    },
     headerContainer: {
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
     },
+
     headerPbContainer: {
         aspectRatio: 1,
-        flex: 1,
-        width: "100%",
-        maxWidth: 32,
-        maxHeight: 32,
+        width: 32,
+        height: 32,
+
+        shadowColor: s.colors.black,
+        shadowOpacity: 0.6,
+        shadowRadius: 6,
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+    },
+    headerPbInnerContainer: {
+        aspectRatio: 1,
+        width: 32,
+        height: 32,
         borderRadius: 100,
         overflow: "hidden",
         justifyContent: "center",
     },
-    headerPb: {
-        width: "100%",
-        height: "100%",
-    },
 
-    imgContainer: {
-        // marginTop: style.defaultMsm,
-        width: "100%",
-        borderRadius: 10,
-    },
-    img: {
-        width: "100%",
-        aspectRatio: 1,
+    textShadow: {
+        shadowColor: s.colors.black,
+        shadowOpacity: 1,
+        shadowRadius: 10,
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
     },
 
     textContainer: {
-        // paddingHorizontal: style.Psm.paddingHorizontal,
-        width: "100%",
-        justifyContent: "center",
-        marginTop: style.defaultMsm,
-    },
-
-    likeContainer: {
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
-        marginTop: style.defaultMmd,
-        marginLeft: style.defaultMsm,
     },
-
-    commentsContainer: {
-        width: "100%",
-        flexDirection: "column",
-        marginTop: style.defaultMmd,
+    titleContainer: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
     },
 });

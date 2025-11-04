@@ -1,5 +1,9 @@
+import { get, ref, child, getDatabase, set } from "firebase/database";
+import { getAuth } from "firebase/auth";
+
 import { getCurrentLanguage } from "../langs";
 import { convertTimestampToString } from "../time";
+import { storeData } from "../storage";
 
 /**
  *
@@ -445,6 +449,7 @@ function handleDE(years, month, days, hours, mins, sec) {
     return output;
 }
 
+//#region checkForURLs
 export const URL_REGEX =
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
 
@@ -491,6 +496,7 @@ export function checkForURLs(text) {
     return output;
 }
 
+//#region get Image Data
 import { createDownloadResumable, documentDirectory } from "expo-file-system";
 export async function getImageData(uri, fromEdit, id) {
     if (!fromEdit) return uri;
@@ -508,8 +514,6 @@ export async function getImageData(uri, fromEdit, id) {
     }
 }
 
-import { get, ref, child, getDatabase } from "firebase/database";
-import { storeData } from "../storage";
 /**
  *
  * @param {number[]} postsList List of Post Ids
@@ -546,3 +550,25 @@ export function transformMapByAlignment(initialRegion, alignment) {
     };
 }
 //#endregion
+
+//#region Like
+export async function like(id) {
+    try {
+        const uid = getAuth().currentUser.uid;
+        const db = getDatabase();
+
+        const postLikeSnap = await get(child(ref(db), `posts/${id}/likes`));
+
+        let l = [];
+        if (postLikeSnap.exists()) postLikeSnap.val();
+
+        if (l.includes(uid)) l.splice(l.indexOf(uid), 1);
+        else l.push(uid);
+
+        await set(ref(db, `posts/${id}/likes`), l);
+        return true;
+    } catch (error) {
+        console.log("error", "constants/content/index.js like", error);
+        return false;
+    }
+}
