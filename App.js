@@ -37,38 +37,42 @@ initializeAuth(app, {
 
 //#region Navigation
 import { NavigationContainer } from "@react-navigation/native";
+import { createURL } from "expo-linking";
 //#endregion
 
 import * as style from "./styles";
 
+//#region import Constants
 import { storeData, removeData, hasData } from "./constants/storage";
 import { checkIfLangIsSet, save } from "./constants/storage/language";
+import { changeLanguage } from "./constants/langs";
+import { registerForPushNotificationsAsync } from "./constants/notifications";
+//#endregion
 
 //#region Pages
 import ViewportManager from "./pages/main/ViewportManager";
 import AuthManager from "./pages/auth/AuthManager";
-
 import Loading from "./pages/static/Loading";
 import ServerStatus from "./pages/static/ServerStatus";
 import Ban from "./pages/static/Ban";
 import TestView from "./pages/static/TestView";
+//#endregion
 
+//#region import Components
 import ContextMenu from "./components/content/ContextMenu";
-
 import TutorialView from "./components/tutorial/TutorialView";
 import {
     TUTORIAL_DATA,
     setTutorialAsSeen,
     resetTutorials,
 } from "./constants/tutorial";
-import { changeLanguage } from "./constants/langs";
-import { registerForPushNotificationsAsync } from "./constants/notifications";
 //#endregion
 
 const RESET_TUTORIALS_ENABELD = false;
 
 Appearance.setColorScheme("dark");
 export default function App() {
+    //#region Fonts Loader
     const [fontsLoaded, fontsError] = useFonts({
         RobotoMono_Thin: require("./assets/fonts/RobotoMono-Thin.ttf"),
         Barlow_Regular: require("./assets/fonts/Barlow-Regular.ttf"),
@@ -76,6 +80,7 @@ export default function App() {
         Coiny: require("./assets/fonts/Coiny.ttf"),
     });
 
+    //#region Init States
     const [loaded, setLoaded] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
 
@@ -89,7 +94,9 @@ export default function App() {
     const [serverStatus, setServerStatus] = useState(null);
 
     const [expoPushToken, setExpoPushToken] = useState("");
+    //#endregion
 
+    //#region Context/Tutorial Visibility
     const [contextMenu, setContextMenu] = useState({
         visible: false,
         text: null,
@@ -98,7 +105,9 @@ export default function App() {
         visible: false,
         id: 0,
     });
+    //#endregion
 
+    //#region Fkt: showTutorial()
     function showTutorial(id) {
         setTutorial({
             visible: true,
@@ -106,12 +115,13 @@ export default function App() {
         });
     }
 
+    //#region useEffect onMount
     useEffect(() => {
-        // RESET TUTORIALS
+        //#region RESET TUTORIALS
         if (RESET_TUTORIALS_ENABELD) resetTutorials();
 
         const db = getDatabase();
-        //onAuthChange
+        //#region onAuthChange
         onAuthStateChanged(
             getAuth(),
             user => {
@@ -145,6 +155,7 @@ export default function App() {
         //     setButtonStyleAsync("light");
         // }
 
+        //#region checkIfLangIsSet
         checkIfLangIsSet().then(state => {
             if (!state) {
                 save("currentLanguage", 0);
@@ -152,7 +163,7 @@ export default function App() {
             }
         });
 
-        // Server Status - Firebase
+        //#region Server Status - Firebase
         onValue(ref(db, "status"), statusSnap => {
             if (statusSnap.exists()) {
                 const statusData = statusSnap.val();
@@ -160,7 +171,7 @@ export default function App() {
             }
         });
 
-        // Version Check - Firebase
+        //#region Version Check - Firebase
         onValue(
             ref(
                 db,
@@ -190,6 +201,7 @@ export default function App() {
         );
     }, []);
 
+    //#region on Login
     useEffect(() => {
         if (loggedIn) {
             const db = getDatabase();
@@ -206,7 +218,7 @@ export default function App() {
                     )
                 );
 
-            // Ban Check
+            //#region Ban Check
             onValue(
                 ref(db, `users/${getAuth().currentUser.uid}/isBanned`),
                 bannedSnap => {
@@ -219,6 +231,7 @@ export default function App() {
         }
     }, [loggedIn]);
 
+    //#region Fkt: openContextMenu()
     const openContextMenu = text => {
         setContextMenu({
             visible: true,
@@ -226,7 +239,20 @@ export default function App() {
         });
     };
 
+    const mainContentLinking = {
+        prefixes: [createURL("/"), "https://www.kostrjanc.de"],
+        config: {
+            screens: {
+                landing: "",
+                postView: "p/:id",
+                eventView: "e/:id",
+                profileView: "u/:id",
+            },
+        },
+    };
+
     // return null;
+    //#region Loading Screen
     if (!fontsLoaded) return <View style={style.bgBlack} />;
     if (!(loaded && isRecentVersion !== null && serverStatus !== null))
         return (
@@ -242,7 +268,7 @@ export default function App() {
     //         </SafeAreaProvider>
     //     );
 
-    // Server Status
+    //#region Server Status Screen
     if (serverStatus !== "online")
         return (
             <SafeAreaProvider style={[style.container, style.bgBlack]}>
@@ -258,6 +284,7 @@ export default function App() {
     //         </SafeAreaProvider>
     //     );
 
+    //#region NoAuth Content
     if (!loggedIn) {
         return (
             <NavigationContainer fallback={<Loading />}>
@@ -275,14 +302,15 @@ export default function App() {
                         ...style.bgBlack,
                     }}>
                     <AuthManager />
-                    {/* {isRecentVersion ? <UpdateVersion /> : null} */}
                 </SafeAreaProvider>
             </NavigationContainer>
         );
     }
 
+    //#region Ban Screen
     if (banned) return <Ban />;
 
+    //#region TestView
     if (!testIsChecked) {
         return (
             <SafeAreaProvider style={[style.container, style.bgBlack]}>
@@ -291,13 +319,15 @@ export default function App() {
         );
     }
 
+    //#region Main Content
     return (
-        <NavigationContainer fallback={<Loading />}>
+        <NavigationContainer
+            fallback={<Loading />}
+            linking={mainContentLinking}>
             <StatusBar
                 animated
                 networkActivityIndicatorVisible
                 translucent
-                // backgroundColor={style.colors.black}
                 style={"light"}
             />
             <SafeAreaProvider
@@ -335,12 +365,3 @@ export default function App() {
         </NavigationContainer>
     );
 }
-
-//  if (Platform.OS === "android") {
-//         await Notifications.setNotificationChannelAsync("default", {
-//             name: "default",
-//             importance: Notifications.AndroidImportance.MAX,
-//             vibrationPattern: [0, 250, 250, 250],
-//             lightColor: "#FF231F7C",
-//         });
-//     }

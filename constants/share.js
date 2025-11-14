@@ -2,6 +2,7 @@ import { Alert, Platform, Share } from "react-native";
 import { getLangs } from "./langs";
 
 const staticShareURL = "https://www.kostrjanc.de/pages/share.html";
+// const staticShareURL = "https://www.kostrjanc.de/";
 
 export async function share(type, id, title) {
     if (Platform.OS === "web") return;
@@ -10,6 +11,8 @@ export async function share(type, id, title) {
         Share.share(
             {
                 url: `${staticShareURL}?t=${type === 0 ? "p" : "e"}?id=${id}`,
+                // url: `${staticShareURL}${type === 0 ? "p" : "e"}/${id}`,
+                // url: `kostrjanc://${type === 0 ? "p" : "e"}/${id}`, ,
                 title: title,
                 message: `${getLangs("share_share_0")} ${
                     type === 0
