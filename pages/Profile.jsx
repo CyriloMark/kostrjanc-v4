@@ -25,6 +25,7 @@ import { getLangs } from "../constants/langs";
 import makeRequest from "../constants/request";
 import { getPlainText } from "../constants/content/tts";
 import { sendFollowerPushNotification } from "../constants/notifications/follower";
+import { share } from "../constants/share";
 
 //#region import Components
 import BackHeader from "../components/BackHeader";
@@ -589,6 +590,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
                         ban={clientIsAdmin}
                         share
                         warn
+                        onShare={() => share(2, id, user.name)}
                         onWarn={() =>
                             navigation.navigate("report", {
                                 item: user,

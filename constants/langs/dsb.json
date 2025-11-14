@@ -13,6 +13,7 @@
         "report_reporttypes_10": "pśedań ilegalnych wórow",
         "report_reporttypes_11": "suicid abo samopóranja",
         "report_reporttypes_12": "druge",
+
         "auth_errormsg_0": "Sy južo pśizjawjony! Startuj nałoženje znowego!",
         "auth_errormsg_1": "Twóje daty wužywaju se južo za druge konto!",
         "auth_errormsg_2": "Twója e-mail se južo za druge konto wužywa!",
@@ -25,6 +26,7 @@
         "auth_errormsg_9": "Zapódany wužywaŕ njama pśistup ku kostrjancoju!",
         "auth_errormsg_10": "Apparacija jo južo aktiwna. Startuj nałoženje znowego!",
         "auth_errormsg_11": "Zapódaj email!",
+
         "event_types_0": "wiki / wustajeńca",
         "event_types_1": "schadow. / zgromaź.",
         "event_types_2": "jubilej / swěźeń",
@@ -34,6 +36,7 @@
         "event_types_6": "festiwal",
         "event_types_7": "cerkwiny swěźeń",
         "event_types_8": "drugi",
+
         "event_tags_0": "p16",
         "event_tags_1": "p18",
         "event_tags_2": "'maśenik'",
@@ -78,12 +81,15 @@
         "event_tags_41": "online",
         "event_tags_42": "offline",
         "event_tags_43": "scouty",
+
         "yes": "jo",
         "no": "ně",
+
         "continue": "dalej",
         "link_title": "Link wócyniś?",
         "link_sec": "Coš se na eksterny bok dalej wjasć daś?",
         "hint_title": "Tip:",
+
         "input_entertitle_email": "E-mail zapódaś:",
         "input_entertitle_password": "Šćitne gronidło zapódaś:",
         "input_entertitle_passwordconfirm": "Šćitne gronidło wóspjetowaś:",
@@ -95,31 +101,40 @@
         "input_placeholder_entercomment": "Zapódaj komentar...",
         "input_placeholder_contentname": "titel",
         "input_placeholder_groupname": "mě kupki",
+
         "newcomment_type": "Piš něco...",
         "comment_title": "Komentar wótwónoźeś?",
         "comment_sub_0": "Komentar wót",
         "comment_sub_1": "Napšawdu wótpóraś?",
         "checkbtn_check": "Ja som pśipódla!",
         "checkbtn_uncheck": "Njejsom wěcej pódla.",
+
         "followbtn_follow": "Slědowaś",
         "followbtn_unfollow": "Wótpóraś",
-        "share_share_0": "źělenje wót",
-        "share_share_1": "z titelom",
-        "share_share_2": "Bok se wótcynijo wy seśi. Až dostanjoš wšykne funkcije a lěpšu zwobraznosć instalěruj se kostrjanc App na twójom barceńku!",
+
+        "share_share_0": "Źělenje wót",
+        "share_share_usertitle": "Wužywaŕ",
+        "share_share_pe1": "z titelom",
+        "share_share_u1": "z mjenim",
+        "share_share_hint": "Bok se wótcynijo w seśi. Za połny wuběrk funkcijow instalěruj sebje kostrjanc app.",
         "share_share_post": "post",
         "share_share_event": "ewenta",
+        "share_share_user": "wužywarja",
         "share_error_title": "Zmólka pśi źělenju.",
         "share_error_sub": "Źělenje njejo było wuspěšne. Zmólka:",
+
         "help_links_0": "Woglědaj źe se raz k kostrjanc.de, našomu bokoju w interneśe!",
         "help_links_1": "Maš pšašanja?Pón woglědaj se nas k kostrjanc.de a pšašaj se!",
         "help_links_2": "Sy namakał zmólku, pótom pśizjaw se pšosym pla nas!",
         "help_links_3": "Coš na kóstśělc wabiś?Pśizjaw se pód linkom!",
         "help_links_4": "Sy admin abo moderator?Pón wužywaj dashboard w seśi!",
+
         "verify_criterias_0": "starstwo wót 18 lět",
         "verify_criterias_1": "maš wósebny póśěg ku kostrjancoju abo społnijoš wósebny status w towarišnosći",
         "verify_criterias_2": "wužywaš kostrjanc regularnje a źiwaš na pšawidła za wužywanje",
         "verify_criterias_3": "źaržyš se na moralne normy a akceptěrujoš pšawa a pšawa a pšawidła w a zwenka kostrjanca",
         "verify_criterias_4": "akceptěrujoš w a zwenka kostrjanca kuždego sobucłowjeka",
+
         "auth_logout_0_title": "Wótzjawiś?",
         "auth_logout_0_sub": "Coš se napšawdu z twójogo konta wótzjawiś?",
         "auth_delete_0_title": "Konto wótwónoźeś?",

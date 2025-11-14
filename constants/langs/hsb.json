@@ -116,10 +116,13 @@
         "followbtn_unfollow": "Wotstronić",
 
         "share_share_0": "Dźělenje wot",
-        "share_share_1": "z titulom",
-        "share_share_2": "Strona so wočini wy syći. Zo dóstanješ wšitke funkcije a lěpšu zwobrazliwosć instaluj sej kostrjanc App na twojim šmóratku!",
+        "share_share_usertitle": "Wužiwar",
+        "share_share_pe1": "z titulom",
+        "share_share_u1": "z mjenom",
+        "share_share_hint": "Strona wočini so w syći. Za połny wuběrk funkcijow instaluj sej kostrjanc app.",
         "share_share_post": "posta",
         "share_share_event": "ewenta",
+        "share_share_user": "wužiwarja",
         "share_error_title": "Zmylk při dźělenju.",
         "share_error_sub": "Dźělenje njebě wuspěšnje. Zmylk:",
 

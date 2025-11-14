@@ -116,10 +116,13 @@
         "followbtn_unfollow": "Entfolgen",
 
         "share_share_0": "Teilen vom",
-        "share_share_1": "mit dem Titel",
-        "share_share_2": "Die Seite öffnet sich ihr dem Netz. Damit du alle Funktionen bekommst und eine bessere Darstellung installiere dir die kostrjanc App auf deinem Smartphone!",
+        "share_share_usertitle": "Benutzer",
+        "share_share_pe1": "mit dem Titel",
+        "share_share_u1": "mit dem Benutzernamen",
+        "share_share_hint": "Die Seite öffnet sich ihr dem Netz. Für alle Funktionen installiere dir die kostrjanc-App.",
         "share_share_post": "Post",
         "share_share_event": "Event",
+        "share_share_user": "Benutzer",
         "share_error_title": "Fehler beim Teilen.",
         "share_error_sub": "Das Teilen war nicht erfolgreich. Fehler:",
 

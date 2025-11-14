@@ -7,28 +7,61 @@ const staticShareURL = "https://www.kostrjanc.de/pages/share.html";
 export async function share(type, id, title) {
     if (Platform.OS === "web") return;
 
+    let body = {
+        href: "",
+        title: "",
+        message: "",
+    };
+
+    switch (type) {
+        case 0:
+            body = {
+                href: "p",
+                title: `${getLangs("delete_post")}: ${title}`,
+                message: `${getLangs("share_share_0")} ${getLangs(
+                    "share_share_post"
+                )} ${getLangs("share_share_pe1")} "${title}".\n\n${getLangs(
+                    "share_share_hint"
+                )}`,
+            };
+            break;
+        case 1:
+            body = {
+                href: "e",
+                title: `${getLangs("delete_event")}: ${title}`,
+                message: `${getLangs("share_share_0")} ${getLangs(
+                    "share_share_event"
+                )} ${getLangs("share_share_pe1")} "${title}".\n\n${getLangs(
+                    "share_share_hint"
+                )}`,
+            };
+            break;
+        case 2:
+            body = {
+                href: "u",
+                title: `${getLangs("share_share_usertitle")}: ${title}`,
+                message: `${getLangs("share_share_0")} ${getLangs(
+                    "share_share_user"
+                )} ${getLangs("share_share_u1")} "${title}".\n\n${getLangs(
+                    "share_share_hint"
+                )}`,
+            };
+            break;
+    }
+
     try {
         Share.share(
             {
-                url: `${staticShareURL}?t=${type === 0 ? "p" : "e"}?id=${id}`,
+                url: `${staticShareURL}?t=${body.href}?id=${id}`,
                 // url: `${staticShareURL}${type === 0 ? "p" : "e"}/${id}`,
                 // url: `kostrjanc://${type === 0 ? "p" : "e"}/${id}`, ,
-                title: title,
-                message: `${getLangs("share_share_0")} ${
-                    type === 0
-                        ? getLangs("share_share_post")
-                        : getLangs("share_share_event")
-                } ${getLangs("share_share_1")} "${title}".\n${getLangs(
-                    "share_share_2"
-                )}`,
+                title: body.title,
+                message: body.message,
             },
             {
-                dialogTitle: title,
-                subject: `${getLangs("share_share_0")} ${
-                    type === 0
-                        ? getLangs("share_share_post")
-                        : getLangs("share_share_event")
-                } ${getLangs("share_share_1")} "${title}".`,
+                dialogTitle: body.title,
+                subject: body.title,
+                tintColor: "#ffffff",
             }
         );
     } catch (e) {
