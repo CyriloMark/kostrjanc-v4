@@ -1,6 +1,7 @@
 import React from "react";
-import TComment from "./TComment";
 import { View } from "react-native";
+
+import TComment from "./TComment";
 import PComment from "./PComment";
 
 export default function Comment({

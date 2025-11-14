@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     container: {
         width: "100%",
         aspectRatio: 1,
-        borderRadius: 10,
+        borderRadius: 9,
         position: "relative",
     },
 

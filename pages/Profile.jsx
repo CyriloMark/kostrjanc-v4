@@ -98,20 +98,13 @@ export default function Profile({ navigation, route, openContextMenu }) {
                     .then(postSnap => {
                         if (postSnap.exists()) {
                             const postData = postSnap.val();
-                            if (!postData.isBanned && !postData.group)
+
+                            if (
+                                !postData.isBanned &&
+                                (!postData.group || postData.group === 2)
+                            )
                                 postEventDatas.push(postData);
 
-                            // if (!postData.isBanned) {
-                            //     setUser(user => {
-                            //         return {
-                            //             ...user,
-                            //             posts: user.posts.splice(
-                            //                 user.posts.indexOf(p[i]),
-                            //                 1
-                            //             ),
-                            //         };
-                            //     });
-                            // } else postEventDatas.push(postData);
                             if (i === p.length - 1 && !hasEvents)
                                 setPostEventList(
                                     sortArrayByDate(postEventDatas).reverse()
@@ -543,7 +536,11 @@ export default function Profile({ navigation, route, openContextMenu }) {
                                             data={item}
                                             style={[
                                                 styles.contentItem,
-                                                style.shadowSecSmall,
+                                                !item.group
+                                                    ? style.profileContentShadowPost
+                                                    : item.group === 2
+                                                    ? style.profileContentShadowChallenge
+                                                    : style.profileContentShadowGroup,
                                             ]}
                                             onPress={() =>
                                                 navigation.push("postView", {
@@ -558,7 +555,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
                                             data={item}
                                             style={[
                                                 styles.contentItem,
-                                                style.shadowSecSmall,
+                                                style.profileContentShadowEvent,
                                             ]}
                                             onPress={() =>
                                                 navigation.push("eventView", {

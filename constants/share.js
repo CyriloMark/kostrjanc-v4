@@ -61,7 +61,6 @@ export async function share(type, id, title) {
             {
                 dialogTitle: body.title,
                 subject: body.title,
-                tintColor: "#ffffff",
             }
         );
     } catch (e) {

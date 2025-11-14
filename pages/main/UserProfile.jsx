@@ -419,7 +419,11 @@ export default function UserProfile({ navigation, onTut }) {
                                             data={item}
                                             style={[
                                                 styles.contentItem,
-                                                style.shadowSecSmall,
+                                                !item.group
+                                                    ? style.profileContentShadowPost
+                                                    : item.group === 2
+                                                    ? style.profileContentShadowChallenge
+                                                    : style.profileContentShadowGroup,
                                             ]}
                                             onPress={() =>
                                                 navigation.push("postView", {
@@ -434,7 +438,7 @@ export default function UserProfile({ navigation, onTut }) {
                                             data={item}
                                             style={[
                                                 styles.contentItem,
-                                                style.shadowSecSmall,
+                                                style.profileContentShadowEvent,
                                             ]}
                                             onPress={() =>
                                                 navigation.push("eventView", {

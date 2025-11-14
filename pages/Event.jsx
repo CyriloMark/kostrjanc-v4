@@ -105,7 +105,6 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
     });
 
     const [isLive, setIsLive] = useState(false);
-    const [currentMapType, setCurrentMapType] = useState(0);
     const [checksUserListData, setChecksUserListData] = useState([]);
 
     const [commentVisible, setCommentVisible] = useState(false);

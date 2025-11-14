@@ -215,3 +215,52 @@ export const shadowRed = {
     },
     backgroundColor: colors.black,
 };
+
+export const profileContentShadowPost = {
+    shadowRadius: 8,
+    shadowOpacity: 0.33,
+    shadowColor: colors.blue,
+    shadowOffset: {
+        width: 0,
+        height: -2,
+    },
+
+    borderColor: colors.sec,
+    borderWidth: 1,
+};
+export const profileContentShadowChallenge = {
+    shadowRadius: 8,
+    shadowOpacity: 0.5,
+    shadowColor: "#ca55e7",
+    shadowOffset: {
+        width: 0,
+        height: -2,
+    },
+
+    borderColor: "#8829ac",
+    borderWidth: 1,
+};
+export const profileContentShadowGroup = {
+    shadowRadius: 8,
+    shadowOpacity: 0.5,
+    shadowColor: "#1AA382", //"#26b426ff",
+    shadowOffset: {
+        width: 0,
+        height: -2,
+    },
+
+    borderColor: "#146314",
+    borderWidth: 1,
+};
+export const profileContentShadowEvent = {
+    shadowRadius: 10,
+    shadowOpacity: 0.66,
+    shadowColor: colors.sec,
+    shadowOffset: {
+        width: 0,
+        height: -2,
+    },
+
+    borderColor: colors.sec,
+    borderWidth: 1,
+};

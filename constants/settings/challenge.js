@@ -105,19 +105,19 @@ export async function resetChallenge(topPosts) {
     // Database Reference
     const db = getDatabase();
 
-    const posts = await getChallengePosts(ref(db));
+    // const posts = await getChallengePosts(ref(db));
     await handleChallengeScoring(topPosts);
 
-    posts.forEach(
-        async id =>
-            await set(ref(db, `posts/${id}/group`), null).catch(error =>
-                console.log(
-                    "error in constants/settings/challenge",
-                    "resetChallenge set posts",
-                    error.code
-                )
-            )
-    );
+    // posts.forEach(
+    //     async id =>
+    //         await set(ref(db, `posts/${id}/group`), null).catch(error =>
+    //             console.log(
+    //                 "error in constants/settings/challenge",
+    //                 "resetChallenge set posts",
+    //                 error.code
+    //             )
+    //         )
+    // );
 
     await set(ref(db, `groups/2/posts`), null).catch(error =>
         console.log(
