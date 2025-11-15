@@ -17,15 +17,18 @@ import { getDatabase, ref, get, child, set } from "firebase/database";
 
 //#region import Constants
 import { User_Placeholder } from "../constants/content/PlaceholderData";
-import { getData, storeData } from "../constants/storage";
+import { getData } from "../constants/storage";
 
 import { wait } from "../constants/wait";
 import { arraySplitter, sortArrayByDate } from "../constants";
 import { getLangs } from "../constants/langs";
-import makeRequest from "../constants/request";
-import { getPlainText } from "../constants/content/tts";
-import { sendFollowerPushNotification } from "../constants/notifications/follower";
+import { getPlainText } from "../constants/utils/tts";
 import { share } from "../constants/share";
+import {
+    alertForRoles,
+    followUser,
+    getIfClientIsAdmin,
+} from "../constants/content/profile";
 
 //#region import Components
 import BackHeader from "../components/BackHeader";
@@ -39,6 +42,7 @@ import ScoreCounter from "../components/profile/ScoreCounter";
 //#region import SVGs
 import SVG_Admin from "../assets/svg/Admin";
 import SVG_Verify from "../assets/svg/Moderator";
+import SVG_MK from "../assets/svg/MK";
 
 let UID = null;
 export default function Profile({ navigation, route, openContextMenu }) {
@@ -61,6 +65,8 @@ export default function Profile({ navigation, route, openContextMenu }) {
     const [following, setFollowing] = useState(false);
     const [canFollow, setCanFollow] = useState(false);
     const [postEventList, setPostEventList] = useState([]);
+
+    const [clientIsAdmin, setClintIsAdmin] = useState(false);
 
     //#region Load Data
     const setUserData = data => {
@@ -178,110 +184,49 @@ export default function Profile({ navigation, route, openContextMenu }) {
                 loadUser();
             }
         });
-        getIfAdmin();
+
+        const adm = getIfClientIsAdmin();
+        setClintIsAdmin(adm);
     }, []);
     //#endregion
 
-    //#region Fkt: alertForRoles
-    const alertForRoles = () => {
-        Alert.alert(
-            user.name,
-            `${user.name} ${getLangs("profile_role_sub_0")} ${
-                user.isAdmin === true
-                    ? getLangs("profile_role_admin")
-                    : user.isMod === true
-                    ? getLangs("profile_role_mod")
-                    : ""
-            } ${getLangs("profile_role_sub_1")}`
-        );
-    };
-
-    const [clientIsAdmin, setClintIsAdmin] = useState(false);
-    const getIfAdmin = async () => {
-        await getData("userIsAdmin").then(isAdmin => {
-            if (isAdmin === null) return setClintIsAdmin(false);
-            return setClintIsAdmin(isAdmin);
-        });
-    };
-
     //#region Fkt: Follow/Unfollow
-    const follow = () => {
+    const handleFollowPress = async () => {
         if (user.isBanned || followPressed) return;
         followPressed = true;
 
-        const body = {
-            user: id,
-            follow: false,
-            unfollow: false,
-        };
+        const rsp = await followUser(id, following, UID);
 
-        if (following) body.unfollow = true;
-        else body.follow = true;
+        if (!rsp) {
+            followPressed = false;
+            return;
+        }
 
-        makeRequest("/user/follow", body)
-            .then(rsp => {
-                if (rsp.code === 202) {
-                    setFollowing(prev => {
-                        // Remove from Follower List
-                        if (prev)
-                            setUser(userPrev => {
-                                let newFollowerList = userPrev.follower.filter(
-                                    el => el != UID
-                                );
-                                return {
-                                    ...userPrev,
-                                    follower: newFollowerList,
-                                };
-                            });
-                        // Add to Follower List
-                        else {
-                            // Update user state
-                            setUser(userPrev => {
-                                let newFollowerList = userPrev.follower.concat([
-                                    UID,
-                                ]);
-                                return {
-                                    ...userPrev,
-                                    follower: newFollowerList,
-                                };
-                            });
-                            // Send notification
-                            sendFollowerPushNotification(id, UID);
-                        }
-                        return !prev;
-                    });
-                    followPressed = false;
-                } else
-                    Alert.alert(
-                        getLangs("profile_onfollow_error_title"),
-                        getLangs("profile_onfollow_error_sub") + rsp,
-                        [
-                            {
-                                isPreferred: true,
-                                text: "Ok",
-                                style: "default",
-                            },
-                        ]
+        setFollowing(prev => {
+            // Remove from Follower List
+            if (prev)
+                setUser(userPrev => {
+                    let newFollowerList = userPrev.follower.filter(
+                        el => el != UID
                     );
-            })
-            .catch(error => {
-                console.log(
-                    "error in pages/Profile.jsx",
-                    "makeRequest user/follow",
-                    error
-                );
-                Alert.alert(
-                    getLangs("profile_onfollow_error_title"),
-                    getLangs("profile_onfollow_error_sub") + error,
-                    [
-                        {
-                            isPreferred: true,
-                            text: "Ok",
-                            style: "default",
-                        },
-                    ]
-                );
-            });
+                    return {
+                        ...userPrev,
+                        follower: newFollowerList,
+                    };
+                });
+            // Add to Follower List
+            else {
+                // Update user state
+                setUser(userPrev => {
+                    let newFollowerList = userPrev.follower.concat([UID]);
+                    return {
+                        ...userPrev,
+                        follower: newFollowerList,
+                    };
+                });
+            }
+            return !prev;
+        });
     };
 
     return (
@@ -370,7 +315,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
                         {user.isAdmin ? (
                             <Pressable
                                 style={styles.nameIcon}
-                                onPress={alertForRoles}>
+                                onPress={() => alertForRoles(user)}>
                                 <SVG_Admin
                                     fill={style.colors.red}
                                     style={style.allMax}
@@ -380,10 +325,20 @@ export default function Profile({ navigation, route, openContextMenu }) {
                         {user.isMod ? (
                             <Pressable
                                 style={styles.nameIcon}
-                                onPress={alertForRoles}>
+                                onPress={() => alertForRoles(user)}>
                                 <SVG_Verify
                                     fill={style.colors.red}
                                     style={style.allMax}
+                                />
+                            </Pressable>
+                        ) : null}
+                        {user.isMK ? (
+                            <Pressable
+                                style={styles.nameIcon}
+                                onPress={() => alertForRoles(user)}>
+                                <SVG_MK
+                                    fill={"#146314"}
+                                    style={[style.allMax]}
                                 />
                             </Pressable>
                         ) : null}
@@ -431,7 +386,10 @@ export default function Profile({ navigation, route, openContextMenu }) {
                 }
                 {canFollow ? (
                     <View style={styles.followButton}>
-                        <FollowButton checked={following} onPress={follow} />
+                        <FollowButton
+                            checked={following}
+                            onPress={async () => handleFollowPress()}
+                        />
                     </View>
                 ) : null}
 
@@ -637,11 +595,17 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24,
         marginRight: style.defaultMmd,
-        marginTop: style.defaultMsm,
     },
     nameScore: {
-        marginTop: style.defaultMsm,
         marginRight: style.defaultMmd,
+
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: "#ca55e7",
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
     },
     textContainer: {
         marginTop: style.defaultMmd,

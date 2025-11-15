@@ -7,7 +7,6 @@ import {
     Text,
     Image,
     Platform,
-    Alert,
 } from "react-native";
 
 import * as style from "../../styles";
@@ -22,7 +21,8 @@ import { wait } from "../../constants/wait";
 import { arraySplitter, sortArrayByDate } from "../../constants";
 import { storeData, getData } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
-import { checkIfTutorialNeeded } from "../../constants/tutorial";
+import { alertForRoles } from "../../constants/content/profile";
+import { checkForTutorial } from "../../constants/tutorial";
 
 //#region import Components
 import BackHeader from "../../components/BackHeader";
@@ -36,6 +36,7 @@ import AnimatedPaidBatch from "../../components/content/AnimatedPaidBatch";
 //#region import SVGs
 import SVG_Admin from "../../assets/svg/Admin";
 import SVG_Verify from "../../assets/svg/Moderator";
+import SVG_MK from "../../assets/svg/MK";
 
 const DAYS_TO_DELETE_EVENTS = 31;
 
@@ -170,28 +171,12 @@ export default function UserProfile({ navigation, onTut }) {
             if (userData) setUserData(userData);
             else loadUser();
         });
-        checkForTutorial();
+
+        checkForTutorial(2).then(rsp => {
+            if (rsp) onTut(2);
+        });
     }, []);
     //#endregion
-
-    const checkForTutorial = async () => {
-        const needTutorial = await checkIfTutorialNeeded(2);
-        if (needTutorial) onTut(2);
-    };
-
-    //#region Fkt: alertForRoles
-    const alertForRoles = () => {
-        Alert.alert(
-            user.name,
-            `${user.name} ${getLangs("profile_role_sub_0")} ${
-                user.isAdmin === true
-                    ? getLangs("profile_role_admin")
-                    : user.isMod === true
-                    ? getLangs("profile_role_mod")
-                    : ""
-            } ${getLangs("profile_role_sub_1")}`
-        );
-    };
 
     return (
         <View style={[style.container, style.bgBlack]}>
@@ -278,7 +263,7 @@ export default function UserProfile({ navigation, onTut }) {
                         {user.isAdmin ? (
                             <Pressable
                                 style={styles.nameIcon}
-                                onPress={alertForRoles}>
+                                onPress={() => alertForRoles(user)}>
                                 <SVG_Admin
                                     fill={style.colors.red}
                                     style={style.allMax}
@@ -288,9 +273,19 @@ export default function UserProfile({ navigation, onTut }) {
                         {user.isMod ? (
                             <Pressable
                                 style={styles.nameIcon}
-                                onPress={alertForRoles}>
+                                onPress={() => alertForRoles(user)}>
                                 <SVG_Verify
                                     fill={style.colors.red}
+                                    style={[style.allMax]}
+                                />
+                            </Pressable>
+                        ) : null}
+                        {user.isMK ? (
+                            <Pressable
+                                style={styles.nameIcon}
+                                onPress={() => alertForRoles(user)}>
+                                <SVG_MK
+                                    fill={"#146314"}
                                     style={[style.allMax]}
                                 />
                             </Pressable>
@@ -498,11 +493,17 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24,
         marginRight: style.defaultMmd,
-        marginTop: style.defaultMsm,
     },
     nameScore: {
-        marginTop: style.defaultMsm,
         marginRight: style.defaultMmd,
+
+        shadowRadius: 10,
+        shadowOpacity: 0.5,
+        shadowColor: "#ca55e7",
+        shadowOffset: {
+            width: 0,
+            height: -2,
+        },
     },
     textContainer: {
         marginTop: style.defaultMmd,

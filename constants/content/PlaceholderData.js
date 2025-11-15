@@ -7,6 +7,7 @@ export const User_Placeholder = {
     events: [],
     isAdmin: false,
     isMod: false,
+    isMK: false,
     isBanned: false,
     pbUri: "https://www.colorhexa.com/587db0.png",
 };
