@@ -63,3 +63,23 @@ export const resetTutorials = async () => {
     await storeData("tutorials", [false, false, false, false, false]);
     return;
 };
+
+/**
+ * ```
+ * 0 - Landing
+ * 1 - kostrjanc Studio
+ * 2 - User Profile
+ * 3 - Posts
+ * 4 - Events
+ * ```
+ * @param {number} num
+ * @returns {Promise<boolean>} True wheter tutorial is needed
+ */
+export async function checkForTutorial(num) {
+    try {
+        const needTutorial = await checkIfTutorialNeeded(num);
+        return needTutorial;
+    } catch (e) {
+        return false;
+    }
+}

@@ -53,10 +53,10 @@ import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
-import { checkIfTutorialNeeded } from "../constants/tutorial";
+import { checkForTutorial } from "../constants/tutorial";
 import checkForAutoCorrectInside, {
     getCursorPosition,
-} from "../constants/content/autoCorrect";
+} from "../constants/utils/autoCorrect";
 import {
     alertForTranslation,
     checkIsTranslated,
@@ -68,11 +68,12 @@ import {
     getTimePassed,
     insertCharacterOnCursor,
 } from "../constants/content";
-import { getPlainText } from "../constants/content/tts";
+import { getPlainText } from "../constants/utils/tts";
 import { sendCommentPushNotification } from "../constants/notifications/comments";
 import addScore, {
     PUBLISH_SCORE_DISTRIBUTION,
 } from "../constants/content/scoring";
+import { getIfClientIsAdmin } from "../constants/content/profile";
 //#endregion
 
 const KEYBOARDBUTTON_ENABLED = false;
@@ -110,6 +111,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
     const [commentVisible, setCommentVisible] = useState(false);
     const [currentCommentInput, setCurrentCommentInput] = useState("");
     const [commentsList, setCommentsList] = useState([]);
+
+    const [clientIsAdmin, setClientIsAdmin] = useState(false);
+    const [clientIsCreator, setClientIsCreator] = useState(false);
 
     useEffect(() => {
         cursorPos = -1;
@@ -149,8 +153,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                     isBanned: false,
                 });
 
-                getIfCreatorIsClient(eventData.creator);
-
+                setClientIsCreator(
+                    getAuth().currentUser.uid === eventData.creator
+                );
                 setIsLive(
                     checkIfLive(eventData["starting"], eventData["ending"])
                 );
@@ -269,33 +274,14 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
             });
     };
 
-    useEffect(() => {
+    useEffect(async () => {
         loadData();
-        getIfAdmin();
-        checkForTutorial();
+
+        getIfClientIsAdmin().then(rsp => setClientIsAdmin(rsp));
+        checkForTutorial(4).then(rsp => {
+            if (rsp) onTut(4);
+        });
     }, []);
-
-    //#region Admin & Tutorial & Creator
-    const checkForTutorial = async () => {
-        const needTutorial = await checkIfTutorialNeeded(4);
-        if (needTutorial) onTut(4);
-    };
-
-    const [clientIsAdmin, setClintIsAdmin] = useState(false);
-    const getIfAdmin = async () => {
-        await getData("userIsAdmin").then(isAdmin => {
-            if (isAdmin === null) return setClintIsAdmin(false);
-            return setClintIsAdmin(isAdmin);
-        });
-    };
-
-    const [clientIsCreator, setClientIsCreator] = useState(false);
-    const getIfCreatorIsClient = async creator => {
-        await getData("userId").then(id => {
-            if (id === creator) return setClientIsCreator(true);
-            return setClientIsCreator(false);
-        });
-    };
 
     //#region Comment
     const publishComment = () => {

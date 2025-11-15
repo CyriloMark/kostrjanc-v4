@@ -26,16 +26,11 @@ import { wait } from "../constants/wait";
 import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
-import {
-    LINKING_TYPES,
-    checkForLinkings,
-    checkLinkedUser,
-} from "../constants/content/linking";
-import { checkIfTutorialNeeded } from "../constants/tutorial";
+import { checkLinkedUser } from "../constants/content/linking";
+import { checkForTutorial } from "../constants/tutorial";
 import checkForAutoCorrectInside, {
     getCursorPosition,
-} from "../constants/content/autoCorrect";
-import { convertTimestampToString } from "../constants/time";
+} from "../constants/utils/autoCorrect";
 import {
     alertForTranslation,
     checkIsTranslated,
@@ -48,9 +43,9 @@ import {
     insertCharacterOnCursor,
 } from "../constants/content";
 import { openLink } from "../constants";
-import { getPlainText } from "../constants/content/tts";
+import { getPlainText } from "../constants/utils/tts";
 import { sendCommentPushNotification } from "../constants/notifications/comments";
-import { General_Group } from "../constants/content/GroupData";
+import { General_Group } from "../constants/group/GroupData";
 import addScore, {
     PUBLISH_SCORE_DISTRIBUTION,
 } from "../constants/content/scoring";
@@ -72,6 +67,7 @@ import SmallCard from "../components/content/variableEventCard/SmallCard";
 
 //#region import SVGs
 import SVG_Translate from "../assets/svg/Translate";
+import { getIfClientIsAdmin } from "../constants/content/profile";
 //#endregion
 
 const KEYBOARDBUTTON_ENABLED = false;
@@ -107,6 +103,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
     const [currentCommentInput, setCurrentCommentInput] = useState("");
     const [commentsList, setCommentsList] = useState([]);
 
+    const [clientIsAdmin, setClientIsAdmin] = useState(false);
+    const [clientIsCreator, setClientIsCreator] = useState(false);
+
     //#region Load Data
     const loadData = () => {
         const db = getDatabase();
@@ -139,7 +138,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                     isBanned: false,
                 });
 
-                getIfCreatorIsClient(postData.creator);
+                setClientIsCreator(
+                    getAuth().currentUser.uid === postData.creator
+                );
 
                 get(child(ref(db), "users/" + postData["creator"]))
                     .then(userSnap => {
@@ -249,36 +250,12 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
     useEffect(() => {
         cursorPos = -1;
         loadData();
-        getIfAdmin();
-        checkForTutorial();
-    }, []);
 
-    //#region Tutorial & Admin & Client
-    const checkForTutorial = async () => {
-        const needTutorial = await checkIfTutorialNeeded(3);
-        if (needTutorial) onTut(3);
-    };
-
-    const [clientIsAdmin, setClintIsAdmin] = useState(false);
-    const getIfAdmin = async () => {
-        await getData("userIsAdmin").then(isAdmin => {
-            if (isAdmin === null) return setClintIsAdmin(false);
-            return setClintIsAdmin(isAdmin);
+        getIfClientIsAdmin().then(rsp => setClientIsAdmin(rsp));
+        checkForTutorial(3).then(rsp => {
+            if (rsp) onTut(3);
         });
-    };
-
-    const [clientIsCreator, setClientIsCreator] = useState(false);
-    const getIfCreatorIsClient = async creator => {
-        try {
-            await getData("userId").then(id => {
-                if (id === creator) return setClientIsCreator(true);
-                return setClientIsCreator(false);
-            });
-        } catch (e) {
-            setClientIsCreator(false);
-        }
-    };
-    //#endregion
+    }, []);
 
     return (
         <View style={[style.container, style.bgBlack]}>
@@ -664,19 +641,27 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                             warn
                             edit={clientIsCreator}
                             del={clientIsCreator}
-                            onEdit={() =>
+                            onEdit={() => {
+                                let id = 0;
+                                let data = General_Group;
+                                if (post.group) {
+                                    id = post.group;
+                                    data = group;
+                                } else if (post.event) {
+                                    id = post.event;
+                                    data = event;
+                                }
+
                                 navigation.navigate("postCreate", {
                                     fromEdit: true,
                                     editData: post,
                                     dest: {
                                         type: post.event ? "e" : "g",
-                                        id: post.group ? post.group : 0,
-                                        data: post.group
-                                            ? post.group
-                                            : General_Group,
+                                        id: id,
+                                        data: data,
                                     },
-                                })
-                            }
+                                });
+                            }}
                             onShare={() => share(0, id, post.title)}
                             onWarn={() =>
                                 navigation.navigate("report", {

@@ -4,7 +4,7 @@ import * as s from "../../styles";
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import { General_Group } from "../../constants/content/GroupData";
+import { General_Group } from "../../constants/group/GroupData";
 import { getLangs } from "../../constants/langs";
 
 export default function GeneralSubmitButton({ style, onPress }) {

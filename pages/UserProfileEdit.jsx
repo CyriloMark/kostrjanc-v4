@@ -36,7 +36,7 @@ import { getLangs } from "../constants/langs";
 import makeRequest from "../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
-} from "../constants/content/autoCorrect";
+} from "../constants/utils/autoCorrect";
 import { insertCharacterOnCursor } from "../constants/content";
 
 import SVG_Post from "../assets/svg/Post";

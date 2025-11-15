@@ -35,16 +35,14 @@ import {
 import { Group_Placeholder } from "../../constants/content/PlaceholderData";
 import { getLangs } from "../../constants/langs";
 import { insertCharacterOnCursor } from "../../constants/content";
-import getStatusCodeText from "../../components/content/status";
 import checkForAutoCorrectInside, {
     getCursorPosition,
-} from "../../constants/content/autoCorrect";
+} from "../../constants/utils/autoCorrect";
 import { arrayEquals } from "../../constants";
-import makeRequest from "../../constants/request";
 import {
     checkIfGroupNameIsAvailable,
     searchUsers,
-} from "../../constants/content/group";
+} from "../../constants/group";
 import { publishGroup } from "../../constants/content/publish";
 
 //#region import Components

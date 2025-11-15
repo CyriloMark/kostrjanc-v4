@@ -11,7 +11,7 @@ import { create } from "../../constants/content/create";
 import {
     Challenge_Group,
     General_Group,
-} from "../../constants/content/GroupData";
+} from "../../constants/group/GroupData";
 
 import ChallengeSubmitButton from "../../components/content/ChallengeSubmitButton";
 import GeneralSubmitButton from "../../components/content/GeneralSubmitButton";
@@ -42,9 +42,9 @@ export default function DestSelect({ navigation }) {
             fromEdit: false,
             editData: null,
             dest: {
-                type: _type,
-                id: _id,
-                data: _data,
+                type: _type, // "g" Group / "e" Event
+                id: _id, // 0 General / 2 Challenge / id...Group Id / id...Event Id
+                data: _data, // Group Content / Event Content
             },
         });
     }
@@ -90,8 +90,7 @@ export default function DestSelect({ navigation }) {
                 <GeneralSubmitButton
                     style={styles.sectionContainer}
                     onPress={() => {
-                        if (canUploadForChallenge)
-                            handlePress("g", 0, General_Group);
+                        handlePress("g", 0, General_Group);
                     }}
                 />
 

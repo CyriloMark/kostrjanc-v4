@@ -1,7 +1,8 @@
+import { Alert } from "react-native";
+
 import { child, get, getDatabase, ref } from "firebase/database";
 import makeRequest from "../request";
 import { getLangs } from "../langs";
-import { Alert } from "react-native";
 
 export async function searchUsers(val) {
     try {

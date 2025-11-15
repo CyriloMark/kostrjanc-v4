@@ -29,8 +29,8 @@ import { getDatabase, get, ref, child } from "firebase/database";
 import { wait } from "../../constants/wait";
 import { sortByParameter, splitterForContent } from "../../constants";
 import { getLangs } from "../../constants/langs";
-import { checkIfTutorialNeeded } from "../../constants/tutorial";
-import { getData, hasData, storeData } from "../../constants/storage";
+import { checkForTutorial } from "../../constants/tutorial";
+import { getData } from "../../constants/storage";
 import { convertTimestampToString } from "../../constants/time";
 
 import makeRequest from "../../constants/request";
@@ -149,18 +149,11 @@ export default function Content({ navigation, onTut }) {
     };
     //#endregion
 
-    //#region Tutorials
-    useEffect(() => {
-        checkForTutorial();
-    }, []);
-    const checkForTutorial = async () => {
-        const needTutorial = await checkIfTutorialNeeded(1);
-        if (needTutorial) onTut(1);
-    };
-    //#endregion
-
     useEffect(() => {
         checkForTopEvents();
+        checkForTutorial(1).then(rsp => {
+            if (rsp) onTut(1);
+        });
     }, []);
 
     //#region TopEvents

@@ -40,7 +40,7 @@ import {
 } from "../../constants/content/linking";
 import checkForAutoCorrectInside, {
     getCursorPosition,
-} from "../../constants/content/autoCorrect";
+} from "../../constants/utils/autoCorrect";
 import { insertCharacterOnCursor } from "../../constants/content";
 import { publishEvent } from "../../constants/content/publish";
 

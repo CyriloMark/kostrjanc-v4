@@ -24,7 +24,7 @@ import {
 } from "../../constants/content/linking";
 import checkForAutoCorrectInside, {
     getCursorPosition,
-} from "../../constants/content/autoCorrect";
+} from "../../constants/utils/autoCorrect";
 import { insertCharacterOnCursor } from "../../constants/content";
 //#endregion
 
@@ -76,27 +76,28 @@ export default function PostCreate({ navigation, route }) {
     useEffect(() => {
         cursorPos = -1;
 
+        let initData = Post_Placeholder;
         if (fromEdit) {
-            setPost({
+            initData = {
                 ...editData,
                 title: getClearedLinkedText(editData.title),
                 description: getClearedLinkedText(editData.description),
-            });
+            };
             setImageUri(editData.imgUri);
-        } else if (dest.type === "g")
-            setPost(p => {
-                return {
-                    ...p,
-                    group: dest.id,
-                };
-            });
-        else if (dest.type === "e")
-            setPost(p => {
-                return {
-                    ...p,
-                    event: dest.id,
-                };
-            });
+        }
+        if (dest.type === "g") {
+            initData = {
+                ...initData,
+                group: dest.id,
+            };
+        } else if (dest.type === "e") {
+            initData = {
+                ...initData,
+                event: dest.id,
+            };
+        }
+
+        setPost(initData);
     }, []);
     //#endregion
 

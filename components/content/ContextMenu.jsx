@@ -30,8 +30,8 @@ import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { getLangs } from "../../constants/langs";
 import generate, {
     calculateEstimatedGenerationTime,
-} from "../../constants/content/tts";
-import generateSotra from "../../constants/content/sotra";
+} from "../../constants/utils/tts";
+import generateSotra from "../../constants/utils/sotra";
 //#endregion
 
 //#region import Components

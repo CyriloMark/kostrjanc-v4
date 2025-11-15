@@ -12,7 +12,7 @@ import {
     ForYou_Group,
     General_Group,
     Challenge_Group,
-} from "../../constants/content/GroupData";
+} from "../../constants/group/GroupData";
 import { getCurrentLanguage, getLangs } from "../../constants/langs";
 
 export default function GroupElement({

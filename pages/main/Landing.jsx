@@ -7,13 +7,11 @@ import * as style from "../../styles";
 
 //#region import Constants
 import { wait } from "../../constants/wait";
-import { getData, storeData } from "../../constants/storage";
+import { storeData } from "../../constants/storage";
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
-import { General_Group } from "../../constants/content/GroupData";
-import { lerp, sortArrayByDateFromUnderorderedKey } from "../../constants";
+import { General_Group } from "../../constants/group/GroupData";
 import { getLangs } from "../../constants/langs";
-import { checkIfTutorialNeeded } from "../../constants/tutorial";
-import fetchCachedContentData from "../../constants/content/contentCacheLoader";
+import { checkForTutorial } from "../../constants/tutorial";
 import { checkForChallengable } from "../../constants/content";
 import { addNotificationResponseReceivedListener } from "expo-notifications";
 
@@ -113,7 +111,10 @@ export default function Landing({ navigation, onTut }) {
         SETTING_NEW_CONTENT = false;
         setLoading(true);
         loadUser();
-        checkForTutorial();
+
+        checkForTutorial(0).then(rsp => {
+            if (rsp) onTut(0);
+        });
         checkForNotificationResponse();
     }, []);
 
@@ -251,14 +252,6 @@ export default function Landing({ navigation, onTut }) {
         for (let i = 0; i < content.length; i++)
             if (content[i].type === 0) showingPosts.push(content[i].id);
             else if (content[i].type === 1) showingEvents.push(content[i].id);
-    };
-
-    /**
-     * Checks on Load for necessary Tutorial Clips
-     */
-    const checkForTutorial = async () => {
-        const needTutorial = await checkIfTutorialNeeded(0);
-        if (needTutorial) onTut(0);
     };
 
     const checkForNotificationResponse = () => {

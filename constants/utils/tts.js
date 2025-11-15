@@ -1,10 +1,9 @@
-import { Directory, File, FileHandle, Paths } from "expo-file-system";
-import { Buffer } from "buffer";
+import { File, Paths } from "expo-file-system";
 
 import { getAuth } from "firebase/auth";
-import { checkForUnnecessaryNewLine } from ".";
-import { checkLinkedUser } from "./linking";
-import { getUnsignedTranslationText } from "./translation";
+import { checkForUnnecessaryNewLine } from "../content";
+import { checkLinkedUser } from "../content/linking";
+import { getUnsignedTranslationText } from "../content/translation";
 
 /**
  * Returns the plain text for posts and events

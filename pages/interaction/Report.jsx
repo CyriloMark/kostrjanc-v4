@@ -21,7 +21,7 @@ import { getUnsignedTranslationText } from "../../constants/content/translation"
 import makeRequest from "../../constants/request";
 import checkForAutoCorrectInside, {
     getCursorPosition,
-} from "../../constants/content/autoCorrect";
+} from "../../constants/utils/autoCorrect";
 import { insertCharacterOnCursor } from "../../constants/content";
 
 //#region import Components

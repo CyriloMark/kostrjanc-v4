@@ -13,15 +13,16 @@ import { getAuth } from "firebase/auth";
 //#region publicPost
 export async function publishPost(post, fromEdit) {
     const base64 = post.imgBase64;
-    if (!base64) {
+
+    if (!fromEdit && !base64) {
         Alert.alert("Fehler", "Kein Bild ausgewählt oder Base64-Daten fehlen.");
         return;
     }
 
     let body = {
         type: "post",
-        img: base64,
         title: post.title,
+        img: base64,
         description: post.description,
     };
 

@@ -19,8 +19,7 @@ import { getDatabase, ref, get, child, set } from "firebase/database";
 import { Group_Placeholder } from "../constants/content/PlaceholderData";
 import { wait } from "../constants/wait";
 import { getLangs } from "../constants/langs";
-import { getData } from "../constants/storage";
-import { getPlainText } from "../constants/content/tts";
+import { getPlainText } from "../constants/utils/tts";
 
 //#region import Components
 import BackHeader from "../components/BackHeader";
