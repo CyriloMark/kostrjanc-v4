@@ -43,6 +43,8 @@ import SVG_MK from "../../assets/svg/MK";
 export default function UserProfile({ navigation, onTut }) {
     const scrollRef = useRef();
 
+    let LOADING = false;
+
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -56,6 +58,9 @@ export default function UserProfile({ navigation, onTut }) {
     const [postEventList, setPostEventList] = useState([]);
 
     const loadUserData = async () => {
+        if (LOADING) return;
+        LOADING = true;
+
         const uid = await getUID();
 
         const user = await loadUser(uid, true, false);
@@ -71,6 +76,8 @@ export default function UserProfile({ navigation, onTut }) {
         // Content data of profile
         const sortedContentList = await buildProfileContent(userData, false);
         setPostEventList(sortedContentList);
+
+        LOADING = false;
     };
 
     useEffect(() => {
@@ -324,11 +331,12 @@ export default function UserProfile({ navigation, onTut }) {
                                                     ? style.profileContentShadowChallenge
                                                     : style.profileContentShadowGroup,
                                             ]}
-                                            onPress={() =>
+                                            onPress={() => {
+                                                if (item.id === 0) return;
                                                 navigation.push("postView", {
                                                     id: item.id,
-                                                })
-                                            }
+                                                });
+                                            }}
                                         />
                                     ) : (
                                         //#region Event Preview Card

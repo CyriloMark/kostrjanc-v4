@@ -13,7 +13,7 @@ export const User_Placeholder = {
 };
 
 export const Post_Placeholder = {
-    id: "",
+    id: 0,
     type: 0,
     title: "",
     description: "",
@@ -25,7 +25,7 @@ export const Post_Placeholder = {
 };
 
 export const Event_Placeholder = {
-    id: "",
+    id: 0,
     type: 1,
     title: "",
     description: "",

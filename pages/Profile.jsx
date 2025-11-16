@@ -48,6 +48,7 @@ let UID = null;
 export default function Profile({ navigation, route, openContextMenu }) {
     const scrollRef = useRef();
 
+    let LOADING = false;
     let followPressed = false;
 
     const [refreshing, setRefreshing] = useState(false);
@@ -69,6 +70,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
     const [clientIsAdmin, setClintIsAdmin] = useState(false);
 
     const loadUserData = async () => {
+        if (LOADING) return;
+        LOADING = true;
+
         const uid = await getUID();
         UID = uid;
 
@@ -92,6 +96,8 @@ export default function Profile({ navigation, route, openContextMenu }) {
             !isClient
         );
         setPostEventList(sortedContentList);
+
+        LOADING = false;
     };
 
     useEffect(() => {
@@ -411,11 +417,12 @@ export default function Profile({ navigation, route, openContextMenu }) {
                                                     ? style.profileContentShadowChallenge
                                                     : style.profileContentShadowGroup,
                                             ]}
-                                            onPress={() =>
+                                            onPress={() => {
+                                                if (item.id === 0) return;
                                                 navigation.push("postView", {
                                                     id: item.id,
-                                                })
-                                            }
+                                                });
+                                            }}
                                         />
                                     ) : (
                                         //#region Event Preview Card
