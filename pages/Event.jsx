@@ -69,15 +69,13 @@ import {
     insertCharacterOnCursor,
 } from "../constants/content";
 import { getPlainText } from "../constants/utils/tts";
-import { sendCommentPushNotification } from "../constants/notifications/comments";
-import addScore, {
-    PUBLISH_SCORE_DISTRIBUTION,
-} from "../constants/content/scoring";
 import { getIfClientIsAdmin } from "../constants/content/profile";
+import { deleteComment, publishComment } from "../constants/content/comments";
+import { checkEvent } from "../constants/content/event";
 //#endregion
 
 const KEYBOARDBUTTON_ENABLED = false;
-
+let CHECK_PRESSED = false;
 let cursorPos = -1;
 export default function Event({ navigation, route, onTut, openContextMenu }) {
     const mapRef = useRef();
@@ -114,10 +112,6 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
 
     const [clientIsAdmin, setClientIsAdmin] = useState(false);
     const [clientIsCreator, setClientIsCreator] = useState(false);
-
-    useEffect(() => {
-        cursorPos = -1;
-    }, []);
 
     //#region loadData()
     const loadData = () => {
@@ -221,60 +215,27 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
     };
 
     //#region check()
-    const check = () => {
-        let a = event.checks;
+    const handleCheck = async () => {
+        if (CHECK_PRESSED) return;
+        CHECK_PRESSED = true;
 
-        let uid = "";
-
-        getData("userId")
-            .then(id => {
-                if (!id) uid = getAuth();
-                else uid = id;
-            })
-            .finally(() => {
-                if (a.includes(uid)) a.splice(a.indexOf(uid), 1);
-                else a.push(uid);
-                const db = getDatabase();
-                let checksList = [];
-                if (a.length === 0) setChecksUserListData([]);
-                for (let i = 0; i < a.length; i++) {
-                    get(child(ref(db), "users/" + a[i]))
-                        .then(checkSnap => {
-                            if (checkSnap.exists()) {
-                                const checkData = checkSnap.val();
-                                checksList.push({
-                                    id: a[i],
-                                    name: checkData["name"],
-                                    pbUri: checkData["pbUri"],
-                                });
-                            }
-                        })
-                        .catch(error =>
-                            console.log(
-                                "error pages/Event.jsx",
-                                "get checks check() user data",
-                                error.code
-                            )
-                        )
-                        .finally(() => {
-                            if (i === a.length - 1)
-                                setChecksUserListData(checksList);
-                        });
-                }
-
-                setEvent({
-                    ...event,
-                    checks: a,
-                });
-
-                set(ref(db, "events/" + event.id), {
-                    ...event,
-                    checks: a,
-                });
-            });
+        const newChecksUserDataList = await checkEvent(
+            id,
+            event.checks,
+            checksUserListData
+        );
+        setChecksUserListData(newChecksUserDataList);
+        setEvent(prev => {
+            return {
+                ...prev,
+                checks: newChecksUserDataList.map(c => c.id),
+            };
+        });
+        CHECK_PRESSED = false;
     };
 
-    useEffect(async () => {
+    useEffect(() => {
+        cursorPos = -1;
         loadData();
 
         getIfClientIsAdmin().then(rsp => setClientIsAdmin(rsp));
@@ -284,9 +245,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
     }, []);
 
     //#region Comment
-    const publishComment = () => {
-        if (event.isBanned) return;
+    const handlePublishComment = async () => {
         if (
+            event.isBanned ||
             !(
                 currentCommentInput.length > 0 &&
                 currentCommentInput.length <= 256
@@ -298,45 +259,24 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
         setCurrentCommentInput("");
         setCommentVisible(false);
 
-        let uid = "";
-        getData("userId")
-            .then(userID => {
-                if (userID) uid = userID;
-                else uid = getAuth().currentUser.uid;
-            })
-            .finally(() => {
-                setCommentsList(prev => {
-                    let newList = [
-                        {
-                            creator: uid,
-                            created: Date.now(),
-                            content: input,
-                            type: "t",
-                        },
-                    ].concat(prev);
-
-                    set(ref(getDatabase(), `events/${id}/comments`), newList);
-
-                    if (uid !== event.creator) {
-                        sendCommentPushNotification(
-                            event.id,
-                            event.creator,
-                            1,
-                            event.title
-                        );
-                        addScore(uid, PUBLISH_SCORE_DISTRIBUTION.COMMENT, true);
-                    }
-                    return newList;
-                });
-            });
+        const newCommentsList = await publishComment(
+            id,
+            input,
+            commentsList,
+            event,
+            1
+        );
+        setCommentsList(newCommentsList);
     };
 
-    const removeComment = comment => {
-        setCommentsList(prev => {
-            let newList = prev.filter(c => c !== comment);
-            set(ref(getDatabase(), `events/${id}/comments`), newList);
-            return newList;
-        });
+    const handleDeleteComment = async comment => {
+        const newCommentsList = await deleteComment(
+            id,
+            comment,
+            commentsList,
+            1
+        );
+        setCommentsList(newCommentsList);
     };
 
     const openCommentInput = () => {
@@ -905,7 +845,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                 alignItems: "center",
                             }}>
                             <CheckButton
-                                onPress={() => check()}
+                                onPress={() => handleCheck()}
                                 checked={event.checks.includes(
                                     getAuth().currentUser.uid
                                 )}
@@ -1166,7 +1106,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                         }}
                                     />
                                     <SendButton
-                                        onPress={publishComment}
+                                        onPress={() => handlePublishComment()}
                                         style={{ marginLeft: style.defaultMmd }}
                                     />
                                 </View>
@@ -1187,7 +1127,9 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     style={{ marginTop: style.defaultMmd }}
                                     commentData={comment}
                                     showDate
-                                    onRemove={() => removeComment(comment)}
+                                    onRemove={async () =>
+                                        await handleDeleteComment(comment)
+                                    }
                                     onPress={() =>
                                         openContextMenu(
                                             getPlainText(comment.content)

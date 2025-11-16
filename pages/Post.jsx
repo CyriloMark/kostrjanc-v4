@@ -44,11 +44,9 @@ import {
 } from "../constants/content";
 import { openLink } from "../constants";
 import { getPlainText } from "../constants/utils/tts";
-import { sendCommentPushNotification } from "../constants/notifications/comments";
 import { General_Group } from "../constants/group/GroupData";
-import addScore, {
-    PUBLISH_SCORE_DISTRIBUTION,
-} from "../constants/content/scoring";
+import { getIfClientIsAdmin } from "../constants/content/profile";
+import { publishComment, deleteComment } from "../constants/content/comments";
 //#endregion
 
 //#region import Components
@@ -67,7 +65,6 @@ import SmallCard from "../components/content/variableEventCard/SmallCard";
 
 //#region import SVGs
 import SVG_Translate from "../assets/svg/Translate";
-import { getIfClientIsAdmin } from "../constants/content/profile";
 //#endregion
 
 const KEYBOARDBUTTON_ENABLED = false;
@@ -191,9 +188,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
         }
     };
 
-    const publishComment = () => {
-        if (post.isBanned) return;
+    const handlePublishComment = async () => {
         if (
+            post.isBanned ||
             !(
                 currentCommentInput.length > 0 &&
                 currentCommentInput.length <= 256
@@ -205,45 +202,24 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
         setCurrentCommentInput("");
         setCommentVisible(false);
 
-        let uid = "";
-        getData("userId")
-            .then(userID => {
-                if (userID) uid = userID;
-                else uid = getAuth().currentUser.uid;
-            })
-            .finally(() => {
-                setCommentsList(prev => {
-                    let newList = [
-                        {
-                            creator: uid,
-                            created: Date.now(),
-                            content: input,
-                            type: "t",
-                        },
-                    ].concat(prev);
-
-                    set(ref(getDatabase(), `posts/${id}/comments`), newList);
-
-                    if (uid !== post.creator) {
-                        sendCommentPushNotification(
-                            post.id,
-                            post.creator,
-                            0,
-                            post.title
-                        );
-                        addScore(uid, PUBLISH_SCORE_DISTRIBUTION.COMMENT, true);
-                    }
-                    return newList;
-                });
-            });
+        const newCommentsList = await publishComment(
+            id,
+            input,
+            commentsList,
+            post,
+            0
+        );
+        setCommentsList(newCommentsList);
     };
 
-    const removeComment = comment => {
-        setCommentsList(prev => {
-            let newList = prev.filter(c => c !== comment);
-            set(ref(getDatabase(), `posts/${id}/comments`), newList);
-            return newList;
-        });
+    const handleDeleteComment = async comment => {
+        const newCommentsList = await deleteComment(
+            id,
+            comment,
+            commentsList,
+            0
+        );
+        setCommentsList(newCommentsList);
     };
     //#endregion
 
@@ -855,7 +831,7 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                                         }}
                                     />
                                     <SendButton
-                                        onPress={publishComment}
+                                        onPress={() => handlePublishComment()}
                                         style={{ marginLeft: style.defaultMmd }}
                                     />
                                 </View>
@@ -876,7 +852,9 @@ export default function Post({ navigation, route, onTut, openContextMenu }) {
                                     style={{ marginTop: style.defaultMmd }}
                                     commentData={comment}
                                     showDate
-                                    onRemove={() => removeComment(comment)}
+                                    onRemove={async () =>
+                                        await handleDeleteComment(comment)
+                                    }
                                     onPress={() =>
                                         openContextMenu(
                                             getPlainText(comment.content)

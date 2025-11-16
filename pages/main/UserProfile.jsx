@@ -11,17 +11,20 @@ import {
 
 import * as style from "../../styles";
 
-import { getDatabase, ref, get, child, set } from "firebase/database";
-import { getAuth } from "firebase/auth";
-
 //#region import Constants
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 
 import { wait } from "../../constants/wait";
-import { arraySplitter, sortArrayByDate } from "../../constants";
-import { storeData, getData } from "../../constants/storage";
+import { arraySplitter } from "../../constants";
+import { getUID } from "../../constants/storage";
 import { getLangs } from "../../constants/langs";
-import { alertForRoles } from "../../constants/content/profile";
+import {
+    alertForRoles,
+    buildProfileContent,
+    generatePlaceholderContent,
+    generateProfile,
+    loadUser,
+} from "../../constants/content/profile";
 import { checkForTutorial } from "../../constants/tutorial";
 
 //#region import Components
@@ -31,14 +34,11 @@ import EventPreview from "../../components/profile/EventPreview";
 import EditProfileButton from "../../components/profile/EditProfileButton";
 import Refresh from "../../components/RefreshControl";
 import ScoreCounter from "../../components/profile/ScoreCounter";
-import AnimatedPaidBatch from "../../components/content/AnimatedPaidBatch";
 
 //#region import SVGs
 import SVG_Admin from "../../assets/svg/Admin";
 import SVG_Verify from "../../assets/svg/Moderator";
 import SVG_MK from "../../assets/svg/MK";
-
-const DAYS_TO_DELETE_EVENTS = 31;
 
 export default function UserProfile({ navigation, onTut }) {
     const scrollRef = useRef();
@@ -47,7 +47,7 @@ export default function UserProfile({ navigation, onTut }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
 
-        loadUser();
+        loadUserData();
 
         wait(1000).then(() => setRefreshing(false));
     }, []);
@@ -55,122 +55,26 @@ export default function UserProfile({ navigation, onTut }) {
     const [user, setUser] = useState(User_Placeholder);
     const [postEventList, setPostEventList] = useState([]);
 
-    //#region Load Data
-    const setUserData = data => {
-        if (data["isBanned"]) {
-            if (data.isBanned) {
-                setUser({
-                    ...User_Placeholder,
-                    isBanned: true,
-                });
-                return;
-            }
-        }
+    const loadUserData = async () => {
+        const uid = await getUID();
 
-        let userData = {
-            ...data,
-            follower: data["follower"] ? data.follower : [],
-            following: data["following"] ? data.following : [],
-        };
-
-        const hasPosts = data["posts"] ? true : false;
-        const hasEvents = data["events"] ? true : false;
+        const user = await loadUser(uid, true, false);
+        const userData = generateProfile(user);
 
         setUser(userData);
 
-        const db = getDatabase();
-        let postEventDatas = [];
-        if (hasPosts) {
-            const p = data.posts;
+        // For loading time - fill with Placeholder Posts
+        setPostEventList(
+            generatePlaceholderContent(userData.posts, userData.events)
+        );
 
-            for (let i = 0; i < p.length; i++) {
-                get(child(ref(db), "posts/" + p[i]))
-                    .then(postSnap => {
-                        if (postSnap.exists()) {
-                            const postData = postSnap.val();
-                            if (!postData.isBanned)
-                                postEventDatas.push(postData);
-                            if (i === p.length - 1 && !hasEvents)
-                                setPostEventList(
-                                    sortArrayByDate(postEventDatas).reverse()
-                                );
-                        }
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/Profile.jsx",
-                            "get post data",
-                            error.code
-                        )
-                    );
-            }
-        }
-
-        if (hasEvents) {
-            const e = data.events;
-
-            for (let i = 0; i < e.length; i++) {
-                get(child(ref(db), "events/" + e[i]))
-                    .then(eventSnap => {
-                        if (eventSnap.exists()) {
-                            const eventData = eventSnap.val();
-
-                            const xDays =
-                                24 * 1000 * 60 * 60 * DAYS_TO_DELETE_EVENTS;
-                            if (Date.now() - eventData.ending >= xDays) {
-                                set(
-                                    ref(db, `events/${e[i]}/isBanned`),
-                                    true
-                                ).catch(error =>
-                                    console.log(
-                                        "error pages/main/UserProfile.jsx",
-                                        "set Event isBanned when to long ago",
-                                        error.code
-                                    )
-                                );
-                            } else if (!eventData.isBanned)
-                                postEventDatas.push(eventData);
-                            if (i === e.length - 1)
-                                setPostEventList(
-                                    sortArrayByDate(postEventDatas).reverse()
-                                );
-                        }
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/Profile.jsx",
-                            "get event data",
-                            error.code
-                        )
-                    );
-            }
-        }
-    };
-
-    const loadUser = () => {
-        let uid = "";
-        getData("userId")
-            .then(id => {
-                if (!id) uid = getAuth().currentUser.uid;
-                else uid = id;
-            })
-            .finally(() => {
-                const db = getDatabase();
-                get(child(ref(db), "users/" + uid)).then(userSnap => {
-                    if (!userSnap.exists()) return;
-
-                    let userData = userSnap.val();
-                    setUserData(userData);
-                    storeData("userData", userData);
-                });
-            });
+        // Content data of profile
+        const sortedContentList = await buildProfileContent(userData, false);
+        setPostEventList(sortedContentList);
     };
 
     useEffect(() => {
-        getData("userData").then(userData => {
-            if (userData) setUserData(userData);
-            else loadUser();
-        });
+        loadUserData();
 
         checkForTutorial(2).then(rsp => {
             if (rsp) onTut(2);

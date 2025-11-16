@@ -4,13 +4,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  *
  * @param {String} key single string
  * @param {*} value
+ * @returns {Promise<boolean>} True if action was successful
  */
 export const storeData = async (key, value) => {
     try {
         const jsonValue = JSON.stringify(value);
         await AsyncStorage.setItem(key, jsonValue);
+        return true;
     } catch (e) {
         console.log("error storage/index.js storeData", e);
+        return false;
     }
 };
 
@@ -66,3 +69,16 @@ export const hasData = async key => {
         return false;
     }
 };
+
+/**
+ * Fetches Client user ID from Storage
+ * @returns {Promise<String>} User Id
+ */
+export async function getUID() {
+    let uid = await getData("userId");
+    if (!uid) {
+        uid = require("firebase/auth").getAuth().currentUser.uid;
+        await storeData("userId", uid);
+    }
+    return uid;
+}

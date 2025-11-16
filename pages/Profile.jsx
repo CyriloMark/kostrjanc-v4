@@ -7,27 +7,27 @@ import {
     Text,
     Image,
     Platform,
-    Alert,
 } from "react-native";
 
 import * as style from "../styles";
 
-import { getAuth } from "firebase/auth";
-import { getDatabase, ref, get, child, set } from "firebase/database";
-
 //#region import Constants
 import { User_Placeholder } from "../constants/content/PlaceholderData";
-import { getData } from "../constants/storage";
+import { getUID } from "../constants/storage";
 
 import { wait } from "../constants/wait";
-import { arraySplitter, sortArrayByDate } from "../constants";
+import { arraySplitter } from "../constants";
 import { getLangs } from "../constants/langs";
 import { getPlainText } from "../constants/utils/tts";
 import { share } from "../constants/share";
 import {
     alertForRoles,
+    buildProfileContent,
     followUser,
+    generatePlaceholderContent,
+    generateProfile,
     getIfClientIsAdmin,
+    loadUser,
 } from "../constants/content/profile";
 
 //#region import Components
@@ -54,7 +54,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
 
-        loadUser();
+        loadUserData();
 
         wait(1000).then(() => setRefreshing(false));
     }, []);
@@ -68,127 +68,38 @@ export default function Profile({ navigation, route, openContextMenu }) {
 
     const [clientIsAdmin, setClintIsAdmin] = useState(false);
 
-    //#region Load Data
-    const setUserData = data => {
-        if (data["isBanned"]) {
-            if (data.isBanned) {
-                setUser({
-                    ...User_Placeholder,
-                    isBanned: true,
-                });
-                return;
-            }
-        }
+    const loadUserData = async () => {
+        const uid = await getUID();
+        UID = uid;
 
-        let userData = {
-            ...data,
-            follower: data["follower"] ? data.follower : [],
-            following: data["following"] ? data.following : [],
-        };
+        const isClient = uid === id;
+        setCanFollow(!isClient);
+
+        const user = await loadUser(id, isClient, false);
+        const userData = generateProfile(user);
 
         setFollowing(userData.follower.includes(UID));
-
-        const hasPosts = data["posts"] ? true : false;
-        const hasEvents = data["events"] ? true : false;
-
         setUser(userData);
 
-        const db = getDatabase();
-        let postEventDatas = [];
+        // For loading time - fill with Placeholder Posts
+        setPostEventList(
+            generatePlaceholderContent(userData.posts, userData.events)
+        );
 
-        if (hasPosts) {
-            const p = data.posts;
-
-            for (let i = 0; i < p.length; i++) {
-                get(child(ref(db), `posts/${p[i]}`))
-                    .then(postSnap => {
-                        if (postSnap.exists()) {
-                            const postData = postSnap.val();
-
-                            if (
-                                !postData.isBanned &&
-                                (!postData.group || postData.group === 2)
-                            )
-                                postEventDatas.push(postData);
-
-                            if (i === p.length - 1 && !hasEvents)
-                                setPostEventList(
-                                    sortArrayByDate(postEventDatas).reverse()
-                                );
-                        }
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/Profile.jsx",
-                            "get post data",
-                            error.code
-                        )
-                    );
-            }
-        }
-
-        if (hasEvents) {
-            const e = data.events;
-
-            for (let i = 0; i < e.length; i++) {
-                get(child(ref(db), "events/" + e[i]))
-                    .then(eventSnap => {
-                        if (eventSnap.exists()) {
-                            const eventData = eventSnap.val();
-                            if (!eventData.isBanned && !eventData.group)
-                                postEventDatas.push(eventData);
-
-                            if (i === e.length - 1)
-                                setPostEventList(
-                                    sortArrayByDate(postEventDatas).reverse()
-                                );
-                        }
-                    })
-                    .catch(error =>
-                        console.log(
-                            "error pages/Profile.jsx",
-                            "get event data",
-                            error.code
-                        )
-                    );
-            }
-        }
-    };
-
-    const loadUser = () => {
-        const db = getDatabase();
-        get(child(ref(db), "users/" + id)).then(userSnap => {
-            if (!userSnap.exists()) return;
-
-            let userData = userSnap.val();
-            setUserData(userData);
-        });
+        // Content data of profile
+        const sortedContentList = await buildProfileContent(
+            userData,
+            !isClient
+        );
+        setPostEventList(sortedContentList);
     };
 
     useEffect(() => {
-        getData("userId").then(uid => {
-            if (uid) {
-                UID = uid;
-                if (uid === id) {
-                    getData("userData").then(userData => {
-                        if (userData) setUserData(userData);
-                        else loadUser();
-                    });
-                } else {
-                    setCanFollow(true);
-                    loadUser();
-                }
-            } else {
-                UID = getAuth().currentUser.uid;
-                setCanFollow(true);
-                loadUser();
-            }
-        });
+        loadUserData();
 
         const adm = getIfClientIsAdmin();
         setClintIsAdmin(adm);
     }, []);
-    //#endregion
 
     //#region Fkt: Follow/Unfollow
     const handleFollowPress = async () => {

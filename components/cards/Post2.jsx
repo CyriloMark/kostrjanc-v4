@@ -16,7 +16,7 @@ import {
 import { getUnsignedTranslationText } from "../../constants/content/translation";
 import { checkForUnnecessaryNewLine } from "../../constants/content";
 import { checkLinkedUser } from "../../constants/content/linking";
-import { getData } from "../../constants/storage";
+import { getUID } from "../../constants/storage";
 
 // import Components
 import LikeButton from "../content/LikeButton";
@@ -82,11 +82,7 @@ export default function Post(props) {
     };
 
     const loadLikes = async likeList => {
-        if (UID === null) {
-            UID = await getData("userId");
-            if (UID === null) UID = getAuth().currentUser.uid;
-        }
-
+        if (UID === null) await getUID();
         if (likeList !== null) setLiked(likeList.includes(UID));
     };
 
@@ -98,10 +94,7 @@ export default function Post(props) {
         if (!props.likeable || LIKING) return;
         LIKING = true;
 
-        if (UID === null) {
-            UID = await getData("userId");
-            if (UID === null) UID = getAuth().currentUser.uid;
-        }
+        if (UID === null) await getUID();
 
         const db = getDatabase();
 
