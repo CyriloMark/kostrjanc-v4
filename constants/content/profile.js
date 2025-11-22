@@ -252,7 +252,7 @@ async function deleteExpiredEvent(id, ending) {
         const xDays = 24 * 1000 * 60 * 60 * DAYS_TO_DELETE_EVENTS;
         if (Date.now() - ending < xDays) return true;
 
-        await set(ref(getDatabase(), `events/${id}}/isBanned`), true);
+        await set(ref(getDatabase(), `events/${id}/isBanned`), true);
         return true;
     } catch (e) {
         console.log("error deleteExpiredEvents(id, ending)");
