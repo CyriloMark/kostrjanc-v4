@@ -33,15 +33,17 @@ export const getData = async key => {
 };
 
 /**
- *
- * @param {String} key
- * @returns Object
+ * Removes key data from cache
+ * @param {String} key Key
+ * @returns {Promise<boolean>} True if action was successful
  */
 export const removeData = async key => {
     try {
-        const jsonValue = await AsyncStorage.removeItem(key);
+        await AsyncStorage.removeItem(key);
+        return true;
     } catch (e) {
         console.log("error storage/index.js removeData", e);
+        return false;
     }
 };
 
@@ -52,11 +54,17 @@ const KEYS_LIST = [
     "hasUploadForChallenge",
 ];
 
+/**
+ * Removes each key data from KEYS_LIST
+ * @returns {Promise<boolean>} True if action was successful
+ */
 export const removeAll = async () => {
     try {
         await AsyncStorage.multiRemove(KEYS_LIST);
+        return true;
     } catch (e) {
         console.log("error storage/index.js removeAll", e);
+        return false;
     }
 };
 

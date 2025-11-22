@@ -399,6 +399,7 @@
         "settings_landing_aplication_title": "Applikation:",
         "settings_landing_aplication_lang": "Sprache ändern",
         "settings_landing_aplication_notifications": "Nachrichten von kostrjanc",
+        "settings_landing_aplication_deletecache": "Cache löschen",
         "settings_landing_kostrjanc_title": "Über kostrjanc:",
         "settings_landing_kostrjanc_help": "Hilfe",
         "settings_landing_kostrjanc_verify": "Verifizierung",
@@ -437,6 +438,13 @@
         "settings_notifications_comments_sub": "Du bekommst eine Nachricht, sobald ein Benutzer einen Kommentar unter einem deiner Posts oder Events veröffentlicht.",
         "settings_notifications_eventstart_title": "Event-Start:",
         "settings_notifications_eventstart_sub": "Sollte ein Event zum Zeitpunkt des Starts heranrücken, bekommst du eine Erinnerung in Form einer Nachricht.",
+
+        "settings_removecache_title": "Cache leeren?",
+        "settings_removecache_sub": "Bist du dir sicher, dass du die Daten im Zwischespeicher löschen möchtest?",
+        "settings_removecache_success_title": "Erfolgreich entfernt.",
+        "settings_removecache_success_sub": "Cache wurde erfolgreich geleert.",
+        "settings_removecache_error_title": "Fehler beim Löschen.",
+        "settings_removecache_error_sub": "Cache wurde nicht geleert.",
 
         "settings_admin_title": "Admin und Moderator",
         "settings_admin_h2": "Bereich für Admins und Moderatoren:",

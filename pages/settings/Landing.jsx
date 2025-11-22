@@ -13,18 +13,23 @@ import * as style from "../../styles";
 
 import * as Account from "../../components/settings";
 
+import { child, get, getDatabase, ref } from "firebase/database";
+
+//#region import Constants
 import { User_Placeholder } from "../../constants/content/PlaceholderData";
 import { getData } from "../../constants/storage";
 import { getCurrentLanguage, getLangs } from "../../constants/langs";
 import { openLink } from "../../constants";
+import { handleRemoveCache } from "../../constants/settings";
 
-import { child, get, getDatabase, ref } from "firebase/database";
-
+//#region import Components
 import BackHeader from "../../components/BackHeader";
 import WarnButton from "../../components/settings/WarnButton";
 import OptionButton from "../../components/OptionButton";
 
+//#region import SVGs
 import SVG_Recent from "../../assets/svg/Recent";
+import SVG_Cache from "../../assets/svg/Cache";
 import SVG_Help from "../../assets/svg/Help";
 import SVG_Moderator from "../../assets/svg/Moderator";
 import SVG_Ban from "../../assets/svg/Ban";
@@ -44,6 +49,7 @@ export default function Landing({ navigation }) {
         getUserData();
     }, []);
 
+    //#region getUserData()
     let getUserData = async () => {
         setUserData({
             uid: await getData("userId").then(uid => {
@@ -66,6 +72,7 @@ export default function Landing({ navigation }) {
         });
     };
 
+    //#region getFlag()
     let getFlag = () => {
         const curLang = getCurrentLanguage();
         if (curLang < 0) return flags.langs[0].flag;
@@ -74,7 +81,9 @@ export default function Landing({ navigation }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
+            {
+                //#region  Header
+            }
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
                     title={getLangs("settings_landing_title")}
@@ -121,7 +130,9 @@ export default function Landing({ navigation }) {
                     }}
                 />
 
-                {/* Client */}
+                {
+                    //#region  Client
+                }
                 <View
                     style={{
                         width: "100%",
@@ -131,6 +142,9 @@ export default function Landing({ navigation }) {
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("settings_landing_aplication_title")}
                     </Text>
+                    {
+                        //#region ...Language
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         icon={
@@ -160,6 +174,9 @@ export default function Landing({ navigation }) {
                             })
                         }
                     />
+                    {
+                        //#region ...Notifications
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         icon={<SVG_Recent fill={style.colors.white} />}
@@ -170,31 +187,47 @@ export default function Landing({ navigation }) {
                             navigation.navigate("settings-notifications")
                         }
                     />
+                    {
+                        //#region ...Cache
+                    }
+                    <OptionButton
+                        style={styles.optionButton}
+                        icon={<SVG_Cache fill={style.colors.white} />}
+                        title={getLangs(
+                            "settings_landing_aplication_deletecache"
+                        )}
+                        onPress={handleRemoveCache}
+                    />
                 </View>
 
-                {/* about kostrjanc */}
+                {
+                    //#region About kostrjanc
+                }
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("settings_landing_kostrjanc_title")}
                     </Text>
+                    {
+                        //#region ...Help
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_kostrjanc_help")}
                         icon={<SVG_Help fill={style.colors.white} />}
                         onPress={() => navigation.navigate("settings-help")}
                     />
-                    {false ? (
-                        <OptionButton
-                            style={styles.optionButton}
-                            icon={<SVG_Moderator fill={style.colors.white} />}
-                            title={getLangs(
-                                "settings_landing_kostrjanc_verify"
-                            )}
-                            onPress={() =>
-                                navigation.navigate("settings-verify")
-                            }
-                        />
-                    ) : null}
+                    {
+                        //#region ...Verify
+                    }
+                    <OptionButton
+                        style={styles.optionButton}
+                        icon={<SVG_Moderator fill={style.colors.white} />}
+                        title={getLangs("settings_landing_kostrjanc_verify")}
+                        onPress={() => navigation.navigate("settings-verify")}
+                    />
+                    {
+                        //#region ...Data Security
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs(
@@ -205,6 +238,9 @@ export default function Landing({ navigation }) {
                             navigation.navigate("settings-datasec&impresum")
                         }
                     />
+                    {
+                        //#region ...Admin
+                    }
                     {isAdmin === true ? (
                         <OptionButton
                             style={styles.optionButton}
@@ -217,13 +253,17 @@ export default function Landing({ navigation }) {
                     ) : null}
                 </View>
 
-                {/* Account */}
+                {
+                    //#region Account
+                }
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("settings_landing_account_title")}
                     </Text>
 
-                    {/* Account */}
+                    {
+                        //#region ...Account
+                    }
                     <Pressable
                         style={[
                             style.Pmd,
@@ -262,7 +302,9 @@ export default function Landing({ navigation }) {
                             </Text>
                         </View>
                     </Pressable>
-
+                    {
+                        //#region ...Log out
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_logout")}
@@ -281,6 +323,9 @@ export default function Landing({ navigation }) {
                         }
                         red
                     />
+                    {
+                        //#region ...Delete Account
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_delete")}
@@ -291,11 +336,14 @@ export default function Landing({ navigation }) {
                         red
                     />
                 </View>
-                {/* End Account */}
 
-                {/* Footer */}
+                {
+                    //#region Footer
+                }
                 <View style={[styles.sectionContainer, style.allCenter]}>
-                    {/* Zalozba za serbski Lud */}
+                    {
+                        //#region Zalozba za serbski Lud
+                    }
                     <View style={[styles.stiftungContainer, style.allCenter]}>
                         <View style={[{ flex: 0.2 }, style.allCenter]}>
                             <Image

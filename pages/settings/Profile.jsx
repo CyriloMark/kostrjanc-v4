@@ -14,12 +14,14 @@ import * as Account from "../../components/settings";
 
 import { setStringAsync } from "expo-clipboard";
 
+//#region import Components
 import BackHeader from "../../components/BackHeader";
-import EditProfileButton from "../../components/profile/EditProfileButton";
 import OptionButton from "../../components/OptionButton";
 
+//#region import Constants
 import { getLangs } from "../../constants/langs";
 
+//#region import SVGs
 import SVG_Copy from "../../assets/svg/Share";
 import SVG_Logout from "../../assets/svg/Logout";
 import SVG_Basket from "../../assets/svg/Basket";
@@ -27,6 +29,7 @@ import SVG_Basket from "../../assets/svg/Basket";
 export default function Profile({ navigation, route }) {
     const { uid, userData } = route.params;
 
+    //#region copy()
     const copy = async () => {
         const output = `${getLangs("settings_profile_statinfo_username")} ${
             userData.name
@@ -72,7 +75,9 @@ export default function Profile({ navigation, route }) {
 
     return (
         <View style={[style.container, style.bgBlack]}>
-            {/* Header */}
+            {
+                //#region Header
+            }
             <Pressable style={{ zIndex: 10 }}>
                 <BackHeader
                     title={getLangs("settings_profile_title")}
@@ -96,7 +101,9 @@ export default function Profile({ navigation, route }) {
                 automaticallyAdjustContentInsets
                 snapToAlignment="center"
                 snapToEnd>
-                {/* Profile Header */}
+                {
+                    //#region Profile Header
+                }
                 <Pressable
                     style={[style.Pmd, style.border, styles.accountContainer]}
                     onLongPress={() => Account.copyUIDToClipboard(uid)}>
@@ -122,20 +129,9 @@ export default function Profile({ navigation, route }) {
                     </View>
                 </Pressable>
 
-                {/* Edit */}
-                <View style={[styles.sectionContainer, style.allCenter]}>
-                    <EditProfileButton
-                        checked
-                        title={getLangs("settings_profile_editbutton")}
-                        onPress={() =>
-                            navigation.navigate("editProfile", {
-                                userData: userData,
-                            })
-                        }
-                    />
-                </View>
-
-                {/* Stats */}
+                {
+                    //#region Stats
+                }
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("settings_profile_statinfo_title")}
@@ -220,6 +216,9 @@ export default function Profile({ navigation, route }) {
                                 : getLangs("no")}
                         </Text>
                     </View>
+                    {
+                        //#region ...Copy data
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_profile_account_copy")}
@@ -239,11 +238,16 @@ export default function Profile({ navigation, route }) {
                     />
                 </View>
 
-                {/* Actions */}
+                {
+                    //#region Actions
+                }
                 <View style={styles.sectionContainer}>
                     <Text style={[style.tWhite, style.TlgBd]}>
                         {getLangs("settings_profile_interaction_title")}
                     </Text>
+                    {
+                        //#region ...Log out
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_logout")}
@@ -262,6 +266,9 @@ export default function Profile({ navigation, route }) {
                         onPress={Account.logout}
                         red
                     />
+                    {
+                        //#region ...Delete Account
+                    }
                     <OptionButton
                         style={styles.optionButton}
                         title={getLangs("settings_landing_account_delete")}
@@ -272,7 +279,6 @@ export default function Profile({ navigation, route }) {
                         red
                     />
                 </View>
-
                 <View style={styles.sectionContainer} />
             </ScrollView>
         </View>

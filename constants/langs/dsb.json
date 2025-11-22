@@ -384,6 +384,7 @@
         "settings_landing_aplication_title": "Applacija:",
         "settings_landing_aplication_lang": "rěc pśeměniś",
         "settings_landing_aplication_notifications": "powěsći wót stśěla",
+        "settings_landing_aplication_deletecache": "Cache wuprozniś",
         "settings_landing_kostrjanc_title": "Pśez krowac:",
         "settings_landing_kostrjanc_help": "pomoc",
         "settings_landing_kostrjanc_verify": "werifikacija",
@@ -422,6 +423,13 @@
         "settings_notifications_comments_sub": "Dostanjoš powěsć, gaž wužywaŕ komentar pód jadnym z twójich postow abo ewentow wózjawijo.",
         "settings_notifications_eventstart_title": "Start ewenta:",
         "settings_notifications_eventstart_sub": "Dejał-lic se ewent za cas starta pśibližyś, dostanjoš dopomnjeśe w formje powěsći.",
+
+        "settings_removecache_title": "Cache wuprozniś?",
+        "settings_removecache_sub": "Sy sebje wěsty, až coš daty w mjazyskładowem składźe wótpóraś?",
+        "settings_removecache_success_title": "Wuspěšnje wótpórajo.",
+        "settings_removecache_success_sub": "Cache jo se wuspěšnje wuproznił.",
+        "settings_removecache_error_title": "Zmólki pśi wótpóranju.",
+        "settings_removecache_error_sub": "Cache njejo se wuproznił.",
 
         "settings_admin_title": "admin a moderator",
         "settings_admin_h2": "wobłuk za adminy a moderatory",
