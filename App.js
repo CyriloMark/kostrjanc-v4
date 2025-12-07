@@ -24,7 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { firebaseApp } from "./constants/firebaseApp";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, get, child, set, onValue } from "firebase/database";
+import { getDatabase, ref, get, child, onValue } from "firebase/database";
 import {
     getReactNativePersistence,
     initializeAuth,
@@ -56,6 +56,7 @@ import Loading from "./pages/static/Loading";
 import ServerStatus from "./pages/static/ServerStatus";
 import Ban from "./pages/static/Ban";
 import TestView from "./pages/static/TestView";
+import LanguageSelect from "./pages/static/LanguageSelect";
 //#endregion
 
 //#region import Components
@@ -261,13 +262,6 @@ export default function App() {
             </SafeAreaProvider>
         );
 
-    // if (langIsSet === false)
-    //     return (
-    //         <SafeAreaProvider style={[style.container, style.bgBlack]}>
-    //             <LanguageSelect onLanguageChange={() => setLangIsSet(true)} />
-    //         </SafeAreaProvider>
-    //     );
-
     //#region Server Status Screen
     if (serverStatus !== "online")
         return (
@@ -283,6 +277,14 @@ export default function App() {
     //             <UpdateVersion versions={isRecentVersion} />
     //         </SafeAreaProvider>
     //     );
+
+    //#region LanguageSelect Screen
+    if (langIsSet === false)
+        return (
+            <SafeAreaProvider style={[style.container, style.bgBlack]}>
+                <LanguageSelect onLanguageChange={() => setLangIsSet(true)} />
+            </SafeAreaProvider>
+        );
 
     //#region NoAuth Content
     if (!loggedIn) {

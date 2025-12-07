@@ -3,6 +3,7 @@ import { child, get, getDatabase, ref } from "firebase/database";
 import { getData, storeData } from "../storage";
 import { getAuth } from "firebase/auth";
 
+//#region getGroupsData(g)
 /**
  * Fetches all group data for every given group name
  * @param {String[]} g Array of group names
@@ -30,6 +31,7 @@ async function getGroupsData(g) {
     return output;
 }
 
+//#region getGroups()
 /**
  * Fetches all participating groups of client and returnes as array
  * @returns {String[]} Array of Group Names
@@ -50,6 +52,7 @@ async function getGroups() {
     return groups;
 }
 
+//#region checkForChallenge()
 async function checkForChallenge() {
     const hasUploadForChallenge = await getData("hasUploadForChallenge");
     if (hasUploadForChallenge != null) return !hasUploadForChallenge;
@@ -73,9 +76,10 @@ async function checkForChallenge() {
     return !hasChallengePost;
 }
 
+//#region getTopEvents()
 /**
  *
- * @returns {Object[]} Array of top events including id, score, creator
+ * @returns {Promise<Array<Object>>} Array of top events including id, score, creator
  */
 async function getTopEvents() {
     let events = (
@@ -89,6 +93,19 @@ async function getTopEvents() {
     return out;
 }
 
+//#region getCheckedEvents()
+/**
+ * Fetches checked event ids from cache
+ * @returns {Promise<Array<number>>} List of event ids
+ */
+async function getCheckedEvents() {
+    const eventIds = await getData("checkedEvents");
+
+    if (eventIds === null) return [];
+    return eventIds;
+}
+
+//#region getEventsData()
 async function getEventsData(e) {
     if (!Array.isArray(e)) return [];
 
@@ -99,7 +116,10 @@ async function getEventsData(e) {
         await get(child(db, `events/${e[i]}`)).then(eSnap => {
             if (eSnap.exists()) {
                 const eData = eSnap.val();
-                output.push(eData);
+
+                // Check if event is not over yet
+                const today = Date.now();
+                if (eData.ending > today && !eData.isBanned) output.push(eData);
             }
         });
     }
@@ -107,6 +127,7 @@ async function getEventsData(e) {
     return output;
 }
 
+//#region getCreatorName()
 /**
  * Fetches the Username of any user by id
  * @param {number} id Id of an User
@@ -124,6 +145,7 @@ export const create = {
     getGroupsData,
     checkForChallenge,
     getTopEvents,
+    getCheckedEvents,
     getEventsData,
     getCreatorName,
 };

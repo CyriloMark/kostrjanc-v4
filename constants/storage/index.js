@@ -52,6 +52,7 @@ const KEYS_LIST = [
     "userData",
     "userId",
     "hasUploadForChallenge",
+    "checkedEvents",
 ];
 
 /**

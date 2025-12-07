@@ -1,19 +1,50 @@
 import { getAuth } from "firebase/auth";
 import { get, ref, child, getDatabase } from "firebase/database";
-import { getDaysInMonth } from ".";
 
-async function getFutureEvents() {
+import { create } from "../content/create";
+
+//#region getFutureEvents()
+async function getFutureEvents2() {
     try {
         const eventSnap = await get(child(ref(getDatabase()), "events"));
         if (!eventSnap.exists()) return [];
 
         return Object.values(eventSnap.val());
     } catch (error) {
-        console.log("error in constants/calendar/events.js", error);
+        console.log(
+            "error in constants/calendar/events.js getFutureEvents2()",
+            error
+        );
         return [];
     }
 }
 
+async function getFutureEvents() {
+    try {
+        // Collect event ids
+        const checkedEventIds = await create.getCheckedEvents();
+        const topEvents = await create.getTopEvents();
+
+        const eventList =
+            require("../content/filterUsers").filterDuplicateUsers([
+                ...checkedEventIds,
+                ...topEvents,
+            ]);
+
+        // Fetch event datas
+        const checkedEventDatas = await create.getEventsData(eventList);
+
+        return checkedEventDatas;
+    } catch (error) {
+        console.log(
+            "error in constants/calendar/events.js getFutureEvents()",
+            error
+        );
+        return [];
+    }
+}
+
+//#region getFutureEventsByMonth()
 export async function getFutureEventsByMonth() {
     const events = await getFutureEvents();
 
@@ -49,6 +80,7 @@ export async function getFutureEventsByMonth() {
     return out;
 }
 
+//#region translateRelevnatEventsToColor()
 /**
  *
  * @param {Object[]} relevantEvents

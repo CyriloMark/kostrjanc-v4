@@ -1,5 +1,5 @@
 import { getDatabase, get, child, ref, set } from "firebase/database";
-import { getUID } from "../storage";
+import { getData, getUID, storeData } from "../storage";
 
 /**
  *
@@ -13,7 +13,9 @@ export async function checkEvent(id, currentChecks, currentChecksDataList) {
         const UID = await getUID();
         let currCh = currentChecks;
 
-        if (currCh.includes(UID)) {
+        const uncheck = currCh.includes(UID);
+
+        if (uncheck) {
             currCh.splice(currCh.indexOf(UID), 1);
         } else {
             currCh.push(UID);
@@ -36,12 +38,45 @@ export async function checkEvent(id, currentChecks, currentChecksDataList) {
             });
         }
 
+        // Write new checks into cache
+        await checkIntoLocalStorage(id, uncheck);
+
         // Fetch updated checks list to Firebase
-        set(ref(getDatabase(), `events/${id}/checks`), currCh);
+        await set(ref(getDatabase(), `events/${id}/checks`), currCh);
 
         return checksDataList;
     } catch (e) {
         console.log("error in checkEvent()");
         return currentChecksDataList;
+    }
+}
+
+/**
+ *
+ * @param {number} id Id of event
+ * @param {boolean} uncheck True if event was unchecked
+ * @returns {Promise<boolean>} True if action was successful
+ */
+async function checkIntoLocalStorage(id, uncheck) {
+    try {
+        // Get current checks from cache
+        let checks = await getData("checkedEvents");
+        if (!checks) checks = [];
+
+        if (uncheck) {
+            // Remove id
+            const index = checks.indexOf(id);
+            if (index !== -1) checks.splice(index, 1);
+        } else {
+            // Add id
+            checks.push(id);
+        }
+
+        // Store new list into cache
+        const rsp = await storeData("checkedEvents", checks);
+        return rsp;
+    } catch (e) {
+        console.log("error checkIntoLocalStorage(newList)");
+        return false;
     }
 }

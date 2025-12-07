@@ -32,7 +32,10 @@ export default function DestSelect({ navigation }) {
             );
         create.checkForChallenge().then(res => setCanUploadForChallenge(res));
 
-        create.getTopEvents().then(events => {
+        // create.getTopEvents().then(events => {
+        //     create.getEventsData(events).then(eD => setEventData(eD));
+        // });
+        create.getCheckedEvents().then(events => {
             create.getEventsData(events).then(eD => setEventData(eD));
         });
     }, []);

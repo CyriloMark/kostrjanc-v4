@@ -2,9 +2,11 @@ import React from "react";
 
 import { Platform, Pressable, View } from "react-native";
 
+//#region import RN-Maps / RN-Webview
 import MapView, { Marker } from "react-native-maps";
 import WebView from "react-native-webview";
 
+//#region import Constants
 import { getUnsignedTranslationText } from "../../constants/content/translation";
 import { transformMapByAlignment } from "../../constants/content";
 
@@ -40,6 +42,7 @@ export default function Map({
         align
     );
 
+    //#region htmlContent-LeafletMap
     const htmlContent = `
             <html>
             <head>
@@ -168,6 +171,7 @@ export default function Map({
             </html>
         `;
 
+    //#region Map-Type 1 : Android
     if (MAP_TYPE == 1)
         if (Platform.OS == "android" && onPress == null)
             return (
@@ -188,6 +192,7 @@ export default function Map({
                     />
                 </View>
             );
+        //#region Map-Type 1 : No Android
         else
             return (
                 <Pressable
@@ -210,6 +215,7 @@ export default function Map({
                     />
                 </Pressable>
             );
+    //#region Map-Type 0
     else if (MAP_TYPE == 0)
         return (
             <Pressable
@@ -224,6 +230,7 @@ export default function Map({
                     focusable={accessible}
                     rotateEnabled={accessible}
                     zoomEnabled={accessible}
+                    showsUserLocation={accessible}
                     scrollEnabled={accessible}
                     pitchEnabled={accessible}
                     initialRegion={transformedInitialRegion}

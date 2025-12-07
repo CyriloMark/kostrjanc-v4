@@ -49,7 +49,6 @@ import { convertTimestampToString } from "../constants/time";
 import { wait } from "../constants/wait";
 import { checkIfLive, Event_Types, Event_Tags } from "../constants/event";
 import { openLink } from "../constants";
-import { getData } from "../constants/storage";
 import { share } from "../constants/share";
 import { getLangs } from "../constants/langs";
 import { checkLinkedUser } from "../constants/content/linking";
