@@ -49,7 +49,7 @@ export default function UserProfile({ navigation, onTut }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
 
-        loadUserData();
+        loadUserData(true);
 
         wait(1000).then(() => setRefreshing(false));
     }, []);
@@ -57,13 +57,13 @@ export default function UserProfile({ navigation, onTut }) {
     const [user, setUser] = useState(User_Placeholder);
     const [postEventList, setPostEventList] = useState([]);
 
-    const loadUserData = async () => {
+    const loadUserData = async forceFetch => {
         if (LOADING) return;
         LOADING = true;
 
         const uid = await getUID();
 
-        const user = await loadUser(uid, true, false);
+        const user = await loadUser(uid, true, forceFetch);
         const userData = generateProfile(user);
 
         setUser(userData);
@@ -74,14 +74,19 @@ export default function UserProfile({ navigation, onTut }) {
         );
 
         // Content data of profile
-        const sortedContentList = await buildProfileContent(userData, false);
+        const sortedContentList = await buildProfileContent(
+            userData,
+            false,
+            forceFetch,
+            setPostEventList
+        );
         setPostEventList(sortedContentList);
 
         LOADING = false;
     };
 
     useEffect(() => {
-        loadUserData();
+        loadUserData(false);
 
         checkForTutorial(2).then(rsp => {
             if (rsp) onTut(2);

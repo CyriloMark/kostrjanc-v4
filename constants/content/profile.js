@@ -161,9 +161,16 @@ export function generateProfile(userData) {
  * @param {Array<number>} userData.posts List of user posts
  * @param {Array<number>} userData.events List of user events
  * @param {boolean} hideGroupContent True if group content should be hidden
+ * @param {boolean} forceFetch Whether the user data need to be fetched new
+ * @param {*} setState State Setter for Post Event Data List
  * @returns {Promise<Array<Object>>} Sortet list of post and event datas for profile
  */
-export async function buildProfileContent(userData, hideGroupContent) {
+export async function buildProfileContent(
+    userData,
+    hideGroupContent,
+    forceFetch,
+    setState
+) {
     const hasPosts = !!userData.posts;
     const hasEvents = !!userData.events;
 
@@ -176,7 +183,9 @@ export async function buildProfileContent(userData, hideGroupContent) {
             db,
             userData.posts,
             0,
-            hideGroupContent
+            hideGroupContent,
+            forceFetch,
+            setState
         );
         postEventDatas.push(...postDatas);
     }
@@ -185,7 +194,9 @@ export async function buildProfileContent(userData, hideGroupContent) {
             db,
             userData.events,
             1,
-            hideGroupContent
+            hideGroupContent,
+            forceFetch,
+            setState
         );
         postEventDatas.push(...eventDatas);
     }
@@ -199,14 +210,24 @@ export async function buildProfileContent(userData, hideGroupContent) {
  * @param {*} db Reference to Firebase Database
  * @param {Array<number>} contentList List of Ids of user contents
  * @param {number} type `0 - Posts | 1 - Events`
+ * @param {boolean} forceFetch Whether the user data need to be fetched new
+ * @param {*} setState State Setter for Post Event Data List
+ * @returns {Array<Object>}
  */
-async function handleFetchContent(db, contentList, type, hideGroupContent) {
+async function handleFetchContent(
+    db,
+    contentList,
+    type,
+    hideGroupContent,
+    forceFetch,
+    setState
+) {
     let outputList = [];
 
     for (let i = 0; i < contentList.length; i++) {
         try {
             // Get content data from cache or Firebase
-            const curr = await fetchData(db, contentList[i], type);
+            const curr = await fetchData(db, contentList[i], type, forceFetch);
             if (!curr) continue;
 
             // Check if event is expired
@@ -220,6 +241,7 @@ async function handleFetchContent(db, contentList, type, hideGroupContent) {
             if (curr.group && curr.group !== 2 && hideGroupContent) continue;
 
             outputList.push(curr);
+            if (type === 0) updatePostEventContentState(setState, curr, i);
         } catch (e) {
             console.log("error in handleFetchContent(db, contentList, type)");
         }
@@ -233,15 +255,19 @@ async function handleFetchContent(db, contentList, type, hideGroupContent) {
  * Fetches content data of content from Cache or Firebae
  * @param {*} db Reference to Firebase database
  * @param {number} id Id of content
- * @param {*} type `0 - Posts | 1 - Events`
+ * @param {number} type `0 - Posts | 1 - Events`
+ * @param {boolean} forceFetch Whether the user data need to be fetched new
  * @returns {Promise<Object>} Content data
  */
-async function fetchData(db, id, type) {
-    // Try to load from cache
-    const cacheData = await loadContent(id);
+async function fetchData(db, id, type, forceFetch) {
+    // First searches in local storage
+    if (!forceFetch) {
+        // Try to load from cache
+        const cacheData = await loadContent(id);
 
-    // Return if data exists
-    if (cacheData) return cacheData;
+        // Return if data exists
+        if (cacheData) return cacheData;
+    }
 
     // Get content data from Firebase
     const firebaseData = (
@@ -289,4 +315,20 @@ async function deleteExpiredEvent(id, ending) {
         console.log("error deleteExpiredEvents(id, ending)");
         return false;
     }
+}
+
+/**
+ *
+ * @param {*} setState
+ * @param {Object} newContentData
+ * @param {number} index
+ */
+function updatePostEventContentState(setState, newContentData, index) {
+    setState(cur => {
+        let newList = Array.from(cur);
+
+        newList[index] = newContentData;
+
+        return newList;
+    });
 }

@@ -55,7 +55,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
 
-        loadUserData();
+        loadUserData(true);
 
         wait(1000).then(() => setRefreshing(false));
     }, []);
@@ -69,7 +69,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
 
     const [clientIsAdmin, setClintIsAdmin] = useState(false);
 
-    const loadUserData = async () => {
+    const loadUserData = async forceFetch => {
         if (LOADING) return;
         LOADING = true;
 
@@ -79,7 +79,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
         const isClient = uid === id;
         setCanFollow(!isClient);
 
-        const user = await loadUser(id, isClient, false);
+        const user = await loadUser(id, isClient, forceFetch);
         const userData = generateProfile(user);
 
         setFollowing(userData.follower.includes(UID));
@@ -93,7 +93,9 @@ export default function Profile({ navigation, route, openContextMenu }) {
         // Content data of profile
         const sortedContentList = await buildProfileContent(
             userData,
-            !isClient
+            !isClient,
+            forceFetch,
+            setPostEventList
         );
         setPostEventList(sortedContentList);
 
@@ -101,7 +103,7 @@ export default function Profile({ navigation, route, openContextMenu }) {
     };
 
     useEffect(() => {
-        loadUserData();
+        loadUserData(false);
 
         const adm = getIfClientIsAdmin();
         setClintIsAdmin(adm);
