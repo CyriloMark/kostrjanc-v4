@@ -30,7 +30,8 @@
             },
             "infoPlist": {
                 "ITSAppUsesNonExemptEncryption": false
-            }
+            },
+            "icon": "./assets/icons/icon.icon"
         },
         "android": {
             "googleServicesFile": "./google-services.json",
@@ -65,7 +66,6 @@
             ],
             "expo-font",
             "expo-secure-store",
-            "expo-audio",
             "expo-video",
             [
                 "expo-calendar",

@@ -17,7 +17,7 @@ import { transformMapByAlignment } from "../../constants/content";
 ];
 */
 
-const MAP_TYPE = process.env.EXPO_PUBLIC_MAP_TYPE;
+const MAP_TYPE = Number.parseInt(process.env.EXPO_PUBLIC_MAP_TYPE);
 
 const PIN_URL =
     "https://firebasestorage.googleapis.com/v0/b/kostrjanc.appspot.com/o/pin.png?alt=media&token=6f3538eb-2808-434b-9650-60b400de9637";
