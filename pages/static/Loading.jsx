@@ -75,7 +75,7 @@ export default function Loading() {
                     <Text style={[style.tBlue, style.TsmLt, style.tCenter]}>
                         Version {require("../../app.json").expo.version}
                         {"\n"}
-                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2025
+                        Produced by Mark, Cyril; Baier, Korla{"\n"}© 2022-2026
                         All Rights Reserved
                     </Text>
                 </View>

@@ -13,7 +13,7 @@ kostrjanc je prěnja a jenička serbskorěčna socialna syć za šmóratko. Tut�
 
 ### Licenca a Copyright
 
-> © Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2025
+> © Karl Baier und Cyril Mark kostrjanc GbR. All Rights Reserved. 2022 - 2026
 
 Licenca je `GPL-3.0 LICENCE` tuta namaka so tu: [Link](./LICENSE).
 
@@ -83,4 +83,4 @@ Wšitke trěbne prawniske informacije hodźa so pod linkomn namakać: [kostrjanc
 
 <hr>
 
-#### Last Updated 15.01.2025
+#### Last Updated 15.01.2026
