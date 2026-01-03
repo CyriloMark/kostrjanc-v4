@@ -4,7 +4,7 @@
         "slug": "kostrjanc",
         "scheme": "kostrjanc",
         "owner": "lauske",
-        "version": "4.5.1",
+        "version": "4.9.0",
         "orientation": "portrait",
         "icon": "./assets/icons/icon.png",
         "splash": {
@@ -24,7 +24,7 @@
             "googleServicesFile": "./GoogleService-Info.plist",
             "supportsTablet": true,
             "bundleIdentifier": "de.kostrjanc.kostrjanc",
-            "buildNumber": "4.5.1",
+            "buildNumber": "4.9.0",
             "config": {
                 "googleMapsApiKey": "AIzaSyCMn8UNxdrveua2TUaPczfuXo0qpB28u6s"
             },
@@ -40,7 +40,7 @@
             },
             "softwareKeyboardLayoutMode": "pan",
             "package": "de.kostrjanc.kostrjanc",
-            "versionCode": 23,
+            "versionCode": 25,
             "config": {
                 "googleMaps": {
                     "apiKey": "AIzaSyCIoPcZR2nHZ2qsNb5b-n1JvFCeZGPOb5k"

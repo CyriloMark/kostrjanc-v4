@@ -42,7 +42,7 @@ let LOADING = false;
 let LAST_UPDATED = 0;
 let SETTING_NEW_CONTENT = false;
 
-const CALENDAR_ENABLED = true;
+const CALENDAR_ENABLED = false;
 
 let showingContent = [];
 
