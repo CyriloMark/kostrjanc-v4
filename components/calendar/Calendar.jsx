@@ -37,7 +37,7 @@ export default function Calendar({ style, onPress }) {
 
     return (
         <View style={[style, styles.shadow, s.oVisible]}>
-            <Pressable style={[styles.container, s.oHidden]} onPress={onPress}>
+            <Pressable style={[styles.container, s.oHidden]}>
                 <ScrollView
                     style={s.oVisible}
                     scrollEnabled
@@ -63,6 +63,13 @@ export default function Calendar({ style, onPress }) {
                                     d.month == month.month &&
                                     d.year == month.year
                             )}
+                            onPress={d => {
+                                onPress({
+                                    day: d,
+                                    month: month.month,
+                                    year: month.year,
+                                });
+                            }}
                         />
                     ))}
                 </ScrollView>
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
         // },
         // borderRadius: 10,
         // backgroundColor: s.colors.black,
-        // borderColor: s.colors.sec,
+        // borderColor: "transparent",
         // borderWidth: 1,
     },
     container: {

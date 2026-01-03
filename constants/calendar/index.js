@@ -1,3 +1,5 @@
+import { getWeekday } from "../time";
+
 export const DEFAULT_HEIGHT = Math.min(
     require("react-native").Dimensions.get("screen").height / 3,
     512
@@ -5,6 +7,7 @@ export const DEFAULT_HEIGHT = Math.min(
 export const DEFAULT_DATEBOX_WIDTH = DEFAULT_HEIGHT * (1 / 8.875); //DEFAULT_HEIGHT * 8.875;
 export const DEFAULT_MONTH_TO_SCROLL_COUNT = 3;
 
+//#region getCurrentDateInfo()
 /**
  * Gibt das aktuelle Datum als Objekt zurück.
  * Enthält Jahr, Monat und Tag.
@@ -22,26 +25,7 @@ export function getCurrentDateInfo() {
     };
 }
 
-/**
- * Ermittelt den Wochentag für ein gegebenes Datum.
- *
- * @param {number} year - Das Jahr (z. B. 2025)
- * @param {number} month - Der Monat (0–11, z. B. 9 für Oktober)
- * @param {number} day - Der Tag im Monat (1–31)
- * @returns {string} - Der Wochentag als Zahl (z. B. "3 = Donnerstag")
- */
-function getWeekday(year, month, day) {
-    // Achtung: Beim Date-Konstruktor ist der Monat 0-basiert (0 = Januar, 11 = Dezember).
-    const date = new Date(year, month, day);
-
-    function mod(n, m) {
-        return ((n % m) + m) % m;
-    }
-
-    // getDay() liefert eine Zahl zwischen 0 und 6 zurück
-    return mod(date.getDay() - 1, 7);
-}
-
+//#region getDaysInMonth(year, month)
 /**
  * Gibt die Anzahl der Tage im angegebenen Monat zurück.
  *
@@ -55,6 +39,12 @@ export function getDaysInMonth(year, month) {
     return new Date(year, month, 0).getDate();
 }
 
+//#region generateMonthData(amt)
+/**
+ *
+ * @param {number} amt Amount of month to scroll
+ * @returns {Array<{day:number,month:number,year:number,weekday:number}>}
+ */
 export function generateMonthDatas(amt) {
     const today = getCurrentDateInfo();
 
@@ -78,6 +68,7 @@ export function generateMonthDatas(amt) {
     return out;
 }
 
+//#region buildMonthStructure(month, colors)
 /**
  * Builds a calendar structure for a given month.
  * Returns an array of weeks (rows), each week is an array of 7 cells.

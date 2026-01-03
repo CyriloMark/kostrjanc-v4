@@ -45,7 +45,7 @@ export default function MonthCard({
     const isCurrentMonth = getCurrentDateInfo().month === month.month;
 
     return (
-        <Pressable style={[style, styles.container]} onPress={onPress}>
+        <Pressable style={[style, styles.container]} onPress={() => onPress(1)}>
             {
                 //#region Header Container
             }
@@ -82,7 +82,7 @@ export default function MonthCard({
                                 day.type === 1 ? (
                                     <BlueDateCell
                                         key={dayKey}
-                                        onPress={onPress}
+                                        onPress={() => onPress(day.date)}
                                         text={day.date}
                                         style={[
                                             styles.dateContainer,
@@ -102,7 +102,7 @@ export default function MonthCard({
                                 ) : day.type === 2 ? (
                                     <RedDateCell
                                         key={dayKey}
-                                        onPress={onPress}
+                                        onPress={() => onPress(day.date)}
                                         text={day.date}
                                         style={[
                                             styles.dateContainer,
@@ -122,7 +122,7 @@ export default function MonthCard({
                                 ) : (
                                     <DefaultDateCell
                                         key={dayKey}
-                                        onPress={onPress}
+                                        onPress={() => onPress(day.date)}
                                         text={day.date}
                                         style={[
                                             styles.dateContainer,

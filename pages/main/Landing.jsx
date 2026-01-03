@@ -426,7 +426,13 @@ export default function Landing({ navigation, onTut }) {
                             marginBottom: style.defaultMmd,
                             marginHorizontal: style.defaultMmd * 2,
                         }}>
-                        <Calendar />
+                        <Calendar
+                            onPress={month => {
+                                navigation.navigate("calendar", {
+                                    month: month,
+                                });
+                            }}
+                        />
                     </View>
                 ) : null}
 

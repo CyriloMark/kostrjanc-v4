@@ -29,6 +29,18 @@ export function checkIfEventHasBanner(eventData) {
     return eventData.eventOptions?.adBanner !== undefined;
 }
 
+/**
+ * Checks if two timestamps are longer than 24 hours
+ * @param {number} starting Start time
+ * @param {number} ending End time
+ * @returns {boolean} True if event is longer than 24 hours
+ */
+export function checkIfEventIsLongerThanADay(starting, ending) {
+    const twentyfourhours = 24 * 60 * 60 * 1000;
+
+    return ending - starting > twentyfourhours;
+}
+
 export const Event_Types = [
     "event_types_0",
     "event_types_1",

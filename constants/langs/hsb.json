@@ -652,6 +652,26 @@
         "calendar_months_alt_8": "požnjenc",
         "calendar_months_alt_9": "winowc",
         "calendar_months_alt_10": "nazymnik",
-        "calendar_months_alt_11": "hodownik"
+        "calendar_months_alt_11": "hodownik",
+
+        "publishdate_weekday_0": "Póndźela",
+        "publishdate_weekday_1": "Wutora",
+        "publishdate_weekday_2": "Srjeda",
+        "publishdate_weekday_3": "Štwórtk",
+        "publishdate_weekday_4": "Pjatk",
+        "publishdate_weekday_5": "Sobota",
+
+        "publishdate_month_2_0": "januara",
+        "publishdate_month_2_1": "februara",
+        "publishdate_month_2_2": "měrca",
+        "publishdate_month_2_3": "apryla",
+        "publishdate_month_2_4": "meje",
+        "publishdate_month_2_5": "junija",
+        "publishdate_month_2_6": "julija",
+        "publishdate_month_2_7": "awgusta",
+        "publishdate_month_2_8": "septembra",
+        "publishdate_month_2_9": "oktobra",
+        "publishdate_month_2_10": "nowembra",
+        "publishdate_month_2_11": "decembra"
     }
 }

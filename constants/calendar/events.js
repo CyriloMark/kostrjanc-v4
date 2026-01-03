@@ -19,6 +19,10 @@ async function getFutureEvents2() {
     }
 }
 
+/**
+ *
+ * @returns {Promise<Array<Object>>}
+ */
 async function getFutureEvents() {
     try {
         // Collect event ids

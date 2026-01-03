@@ -15,7 +15,7 @@ import {
 
 import BottomTransitionBar from "../../components/BottomTransitionBar";
 
-//#region Pages
+//#region Main pages
 import Landing from "./Landing";
 import Content from "./Content";
 
@@ -27,7 +27,9 @@ import Post from "../Post";
 import Event from "../Event";
 import Profile from "../Profile";
 import Group from "../Group";
+import Calendar from "../Calendar";
 
+//#region Settings pages
 import Settings from "../settings/Landing";
 import Settings_Language from "../settings/Language";
 import Settings_Notifications from "../settings/Notifications";
@@ -37,6 +39,7 @@ import Settings_DataSecurityImpresum from "../settings/DataSecurityImpresum";
 import Settings_Admin from "../settings/Admin";
 import Settings_Profile from "../settings/Profile";
 
+//#region Auth pages
 import LandingCreate from "../create/LandingCreate";
 import DestSelect from "../create/DestSelect";
 import PostCreate from "../create/PostCreate";
@@ -45,6 +48,7 @@ import GroupCreate from "../create/GroupCreate";
 
 import UserProfileEdit from "../UserProfileEdit";
 
+//#region Interaction Pages
 import ImageFullscreen from "../ImageFullscreen";
 import UserList from "../UserList";
 import Report from "../interaction/Report";
@@ -132,6 +136,7 @@ export default function ViewportManager({
                         />
                     )}
                 </MainNavStack.Screen>
+                <MainNavStack.Screen name="calendar" component={Calendar} />
 
                 <MainNavStack.Screen name="settings" component={Settings} />
 
