@@ -8,7 +8,6 @@ export async function share(type, id, title) {
     if (Platform.OS === "web") return;
 
     let body = {
-        href: "",
         title: "",
         message: "",
     };
@@ -16,7 +15,6 @@ export async function share(type, id, title) {
     switch (type) {
         case 0:
             body = {
-                href: "p",
                 title: `${getLangs("delete_post")}: ${title}`,
                 message: `${getLangs("share_share_0")} ${getLangs(
                     "share_share_post"
@@ -27,7 +25,6 @@ export async function share(type, id, title) {
             break;
         case 1:
             body = {
-                href: "e",
                 title: `${getLangs("delete_event")}: ${title}`,
                 message: `${getLangs("share_share_0")} ${getLangs(
                     "share_share_event"
@@ -38,7 +35,6 @@ export async function share(type, id, title) {
             break;
         case 2:
             body = {
-                href: "u",
                 title: `${getLangs("share_share_usertitle")}: ${title}`,
                 message: `${getLangs("share_share_0")} ${getLangs(
                     "share_share_user"
@@ -52,7 +48,7 @@ export async function share(type, id, title) {
     try {
         Share.share(
             {
-                url: `${staticShareURL}?t=${body.href}?id=${id}`,
+                url: createShareURL(type, id),
                 // url: `${staticShareURL}${type === 0 ? "p" : "e"}/${id}`,
                 // url: `kostrjanc://${type === 0 ? "p" : "e"}/${id}`, ,
                 title: body.title,
@@ -76,4 +72,31 @@ export async function share(type, id, title) {
             ]
         );
     }
+}
+
+/**
+ *
+ * @param {number} type `0 - Post, 1 - Event, 2 - User`
+ * @param {number} id
+ * @returns {string} Share url for given content
+ */
+export function createShareURL(type, id) {
+    let href;
+
+    switch (type) {
+        case 0:
+            href = "p";
+            break;
+        case 1:
+            href = "e";
+            break;
+        case 2:
+            href = "u";
+            break;
+        default:
+            href = "p";
+            break;
+    }
+
+    return `${staticShareURL}?t=${href}?id=${id}`;
 }

@@ -110,7 +110,7 @@ export default function Map({
                     ]);
 
                     L.tileLayer('https://tile.openstreetmap.de/tiles/osmhrb/{z}/{x}/{y}.png', {
-                        attribution: '© OpenStreetMap contributors 2025'
+                        attribution: '© OpenStreetMap contributors 2026'
                     }).addTo(map);
 
                     function animateToPosition(lat, latD, lng, lngD, duration) {

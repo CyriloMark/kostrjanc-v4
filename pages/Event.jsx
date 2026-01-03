@@ -6,7 +6,6 @@ import {
     Pressable,
     Text,
     Image,
-    TextInput,
     Platform,
     KeyboardAvoidingView,
 } from "react-native";
@@ -71,6 +70,7 @@ import { getPlainText } from "../constants/utils/tts";
 import { getIfClientIsAdmin } from "../constants/content/profile";
 import { deleteComment, publishComment } from "../constants/content/comments";
 import { checkEvent } from "../constants/content/event";
+import { createCalendarEntry } from "../constants/calendar/nativecalendar";
 //#endregion
 
 const KEYBOARDBUTTON_ENABLED = false;
@@ -899,9 +899,12 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                             {getLangs("interactionbar_title")}
                         </Text>
                         <InteractionBar
-                            style={{ marginTop: style.defaultMsm }}
+                            style={{
+                                marginTop: style.defaultMmd,
+                            }}
                             ban={clientIsAdmin}
                             share
+                            calendar
                             warn
                             edit={clientIsCreator}
                             del={clientIsCreator}
@@ -920,6 +923,7 @@ export default function Event({ navigation, route, onTut, openContextMenu }) {
                                     type: 1,
                                 })
                             }
+                            onCalendar={() => createCalendarEntry(event)}
                             onBan={() =>
                                 navigation.navigate("ban", {
                                     item: event,

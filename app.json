@@ -66,7 +66,13 @@
             "expo-font",
             "expo-secure-store",
             "expo-audio",
-            "expo-video"
+            "expo-video",
+            [
+                "expo-calendar",
+                {
+                    "calendarPermission": "The app needs to access your calendar."
+                }
+            ]
         ],
         "extra": {
             "eas": {
