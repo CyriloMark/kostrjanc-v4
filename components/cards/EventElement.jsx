@@ -64,7 +64,9 @@ export default function EventElement({ event, style, onPress, k }) {
                         }}
                         style={s.allMax}>
                         <View style={[styles.contentInnerContainer]}>
-                            {/* Event Creator */}
+                            {
+                                //#region  Event Creator
+                            }
                             <LinearGradient
                                 colors={["#252D33", "#0F0F09"]}
                                 start={{
@@ -81,7 +83,9 @@ export default function EventElement({ event, style, onPress, k }) {
                                 </Text>
                             </LinearGradient>
 
-                            {/* Event Title */}
+                            {
+                                //#region  Event Title
+                            }
                             <Text
                                 numberOfLines={2}
                                 style={[
@@ -91,40 +95,44 @@ export default function EventElement({ event, style, onPress, k }) {
                                 ]}>
                                 {checkLinkedUser(
                                     getUnsignedTranslationText(
-                                        checkForUnnecessaryNewLine(event.title)
-                                    )
+                                        checkForUnnecessaryNewLine(event.title),
+                                    ),
                                 ).map((el, key) =>
                                     !el.isLinked ? (
-                                        checkForURLs(el.text).map((el2, key2) =>
-                                            !el2.hasUrl ? (
-                                                <Text key={key2}>
-                                                    {el2.text}
-                                                </Text>
-                                            ) : (
-                                                <Text
-                                                    key={key2}
-                                                    style={[
-                                                        s.tBlue,
-                                                        {
-                                                            textDecorationLine:
-                                                                "underline",
-                                                            textDecorationColor:
-                                                                s.colors.blue,
-                                                        },
-                                                    ]}>
-                                                    {el2.text}
-                                                </Text>
-                                            )
+                                        checkForURLs(el.text).map(
+                                            (el2, key2) =>
+                                                !el2.hasUrl ? (
+                                                    <Text key={key2}>
+                                                        {el2.text}
+                                                    </Text>
+                                                ) : (
+                                                    <Text
+                                                        key={key2}
+                                                        style={[
+                                                            s.tBlue,
+                                                            {
+                                                                textDecorationLine:
+                                                                    "underline",
+                                                                textDecorationColor:
+                                                                    s.colors
+                                                                        .blue,
+                                                            },
+                                                        ]}>
+                                                        {el2.text}
+                                                    </Text>
+                                                ),
                                         )
                                     ) : (
                                         <Text key={key} style={s.tBlue}>
                                             {el.text}
                                         </Text>
-                                    )
+                                    ),
                                 )}
                             </Text>
 
-                            {/* Event Time Starting */}
+                            {
+                                //#region Event Time Starting
+                            }
                             <View style={styles.timeContainer}>
                                 {checkIfLive(event.starting, event.ending) ? (
                                     <SVG_Live

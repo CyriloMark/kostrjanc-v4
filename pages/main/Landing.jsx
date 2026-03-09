@@ -42,7 +42,7 @@ let LOADING = false;
 let LAST_UPDATED = 0;
 let SETTING_NEW_CONTENT = false;
 
-const CALENDAR_ENABLED = false;
+const CALENDAR_ENABLED = true;
 
 let showingContent = [];
 
@@ -102,8 +102,8 @@ export default function Landing({ navigation, onTut }) {
                 console.log(
                     "error main/Landing.jsx",
                     "get user data",
-                    error.code
-                )
+                    error.code,
+                ),
             );
     };
 
@@ -163,7 +163,7 @@ export default function Landing({ navigation, onTut }) {
         _id,
         user,
         updateBanners,
-        groupId
+        groupId,
     ) => {
         //#region Loading Screen and avoid multiple calls
         if (groupId != 1) {
@@ -207,21 +207,21 @@ export default function Landing({ navigation, onTut }) {
             newShowingContent = await handleGeneralContent(
                 user,
                 showingPosts,
-                showingEvents
+                showingEvents,
             );
         else if (groupId === 1) FORYOU_ALGORITHM(_id);
         else if (groupId === 2)
             newShowingContent = await handleChallengeContent(
                 null, //cachedData,
                 showingPosts,
-                updateBanners
+                updateBanners,
             );
         else
             newShowingContent = await handleGroupContent(
                 SELECTED_GROUP.groupData,
                 showingPosts,
                 showingEvents,
-                updateBanners
+                updateBanners,
             );
         //#endregion
 
@@ -289,8 +289,8 @@ export default function Landing({ navigation, onTut }) {
                     console.log(
                         "error pages/main/Landing.jsx",
                         "foryou_algo get amts",
-                        error.code
-                    )
+                        error.code,
+                    ),
                 );
         //#endregion
 
@@ -391,7 +391,7 @@ export default function Landing({ navigation, onTut }) {
                             null,
                             null,
                             false,
-                            SELECTED_GROUP.id
+                            SELECTED_GROUP.id,
                         );
                 }}>
                 {
@@ -513,7 +513,7 @@ export default function Landing({ navigation, onTut }) {
                                 })
                             }
                         />
-                    )
+                    ),
                 )}
 
                 {

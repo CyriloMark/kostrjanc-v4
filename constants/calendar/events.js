@@ -13,7 +13,7 @@ async function getFutureEvents2() {
     } catch (error) {
         console.log(
             "error in constants/calendar/events.js getFutureEvents2()",
-            error
+            error,
         );
         return [];
     }
@@ -42,7 +42,7 @@ async function getFutureEvents() {
     } catch (error) {
         console.log(
             "error in constants/calendar/events.js getFutureEvents()",
-            error
+            error,
         );
         return [];
     }
@@ -60,7 +60,7 @@ export async function getFutureEventsByMonth() {
 
         const t = today.getFullYear() * 12 + today.getMonth();
         const start = new Date(
-            event.starting >= Date.now() ? event.starting : Date.now()
+            event.starting >= Date.now() ? event.starting : Date.now(),
         );
         const end = new Date(event.ending);
 
@@ -133,4 +133,23 @@ export function translateRelevantEventsToColor(relevantEvents) {
     });
 
     return { selected: selected, checked: checked };
+}
+
+/**
+ *
+ * @param {string} creatorId Id of Creator
+ * @returns
+ */
+export async function loadEventCreatorName(creatorId) {
+    try {
+        const creatorSnap = await get(
+            child(ref(getDatabase()), `users/${creatorId}/name`),
+        );
+
+        if (!creatorSnap.exists()) return "";
+        return creatorSnap.val();
+    } catch (e) {
+        console.log("error", "loadEventCreatorData id:", creatorId, error);
+        return "";
+    }
 }

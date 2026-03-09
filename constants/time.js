@@ -54,7 +54,7 @@ export const convertTextIntoTimestamp = val => {
         dateSplit[3],
         dateSplit[4],
         0,
-        0
+        0,
     );
     const a = Date.parse(dateFormat);
     return a;
@@ -111,16 +111,33 @@ export function convertTimestampToDateText(time) {
     const weekday = getWeekday(
         date.getFullYear(),
         date.getMonth(),
-        date.getDate()
+        date.getDate(),
     );
     const day = date.getDate();
     const month = date.getMonth();
     const year = date.getFullYear();
 
+    const hours = date.getHours();
+    const mins = date.getMinutes();
+
+    let timeOut =
+        (hours < 10 ? "0" + hours : hours) +
+        ":" +
+        (mins < 10 ? "0" + mins : mins);
+
     let out = "";
 
     out += getLangs(`publishdate_weekday_${weekday}`) + ", ";
-    out += day + ". " + getLangs(`publishdate_month_2_${month}`) + " " + year;
+    out +=
+        day +
+        ". " +
+        getLangs(`publishdate_month_2_${month}`) +
+        " " +
+        year +
+        " • " +
+        timeOut +
+        " " +
+        getLangs("publishdate_time");
 
     return out;
 }

@@ -610,6 +610,7 @@
         "notification_comments_body_post": "Maš nowy komentar pód postom",
         "notification_comments_body_event": "Maš nowy komentar pód ewentom",
 
+        "calendar_title": "kostrjanc kalendarja",
         "calendar_months_0": "Januar",
         "calendar_months_1": "Februar",
         "calendar_months_2": "Měrc",
@@ -654,6 +655,8 @@
         "publishdate_month_2_8": "septembra",
         "publishdate_month_2_9": "oktobra",
         "publishdate_month_2_10": "nowembra",
-        "publishdate_month_2_11": "decembra"
+        "publishdate_month_2_11": "decembra",
+
+        "publishdate_time": "hodź."
     }
 }

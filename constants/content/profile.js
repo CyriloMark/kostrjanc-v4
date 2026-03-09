@@ -27,11 +27,11 @@ export function alertForRoles(user) {
             user.isAdmin
                 ? getLangs("profile_role_admin")
                 : user.isMod
-                ? getLangs("profile_role_mod")
-                : user.isMK
-                ? getLangs("profile_role_mk")
-                : ""
-        } ${getLangs("profile_role_sub_1")}`
+                  ? getLangs("profile_role_mod")
+                  : user.isMK
+                    ? getLangs("profile_role_mk")
+                    : ""
+        } ${getLangs("profile_role_sub_1")}`,
     );
 }
 
@@ -64,7 +64,7 @@ export async function followUser(id, unfollow, UID) {
                     text: "Ok",
                     style: "default",
                 },
-            ]
+            ],
         );
     }
 
@@ -169,7 +169,7 @@ export async function buildProfileContent(
     userData,
     hideGroupContent,
     forceFetch,
-    setState
+    setState,
 ) {
     const hasPosts = !!userData.posts;
     const hasEvents = !!userData.events;
@@ -185,7 +185,7 @@ export async function buildProfileContent(
             0,
             hideGroupContent,
             forceFetch,
-            setState
+            setState,
         );
         postEventDatas.push(...postDatas);
     }
@@ -196,7 +196,7 @@ export async function buildProfileContent(
             1,
             hideGroupContent,
             forceFetch,
-            setState
+            setState,
         );
         postEventDatas.push(...eventDatas);
     }
@@ -220,7 +220,7 @@ async function handleFetchContent(
     type,
     hideGroupContent,
     forceFetch,
-    setState
+    setState,
 ) {
     let outputList = [];
 

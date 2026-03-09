@@ -59,14 +59,14 @@ export default function Event(props) {
                     isBanned: false,
                 });
                 setIsLive(
-                    checkIfLive(eventData["starting"], eventData["ending"])
+                    checkIfLive(eventData["starting"], eventData["ending"]),
                 );
                 getChecksUris(
-                    eventSnap.hasChild("checks") ? eventData["checks"] : []
+                    eventSnap.hasChild("checks") ? eventData["checks"] : [],
                 );
             })
             .catch(error =>
-                console.log("cards/Event.jsx", "get event", error.code)
+                console.log("cards/Event.jsx", "get event", error.code),
             );
     };
 
@@ -103,8 +103,8 @@ export default function Event(props) {
                     console.log(
                         "error comps/cards/Event.jsx",
                         "getChecksUris getPbs",
-                        error.code
-                    )
+                        error.code,
+                    ),
                 );
         }
     };
@@ -136,8 +136,8 @@ export default function Event(props) {
                     <View style={styles.titleContainer}>
                         {checkLinkedUser(
                             getUnsignedTranslationText(
-                                checkForUnnecessaryNewLine(event.title)
-                            )
+                                checkForUnnecessaryNewLine(event.title),
+                            ),
                         ).map((el, key) => (
                             <Text
                                 key={key}

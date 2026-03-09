@@ -4,14 +4,15 @@ export async function getEvents() {
     try {
         const db = getDatabase();
         const events = Object.values(
-            (await get(child(ref(db), "events"))).val()
+            (await get(child(ref(db), "events"))).val(),
         );
 
         if (!events) return [];
 
         let out = [];
         for (let i = 0; i < events.length; i++) {
-            if (events[i].isBanned) continue;
+            const e = events[i];
+            if (e.isBanned || e.group) continue;
             // if (events[i].ending < Date.now()) continue;
 
             out.push(events[i]);

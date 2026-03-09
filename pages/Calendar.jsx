@@ -5,6 +5,7 @@ import * as style from "../styles";
 
 //#region import Constants
 import { getEvents } from "../constants/calendar/calendarpage";
+import { getLangs } from "../constants/langs";
 
 //#region import Components
 import BackHeader from "../components/BackHeader";
@@ -18,7 +19,9 @@ export default function Calendar({ navigation, route }) {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        getEvents().then(events => setEvents(events));
+        getEvents().then(events =>
+            setEvents(events.sort((a, b) => a.starting - b.starting)),
+        );
     }, []);
 
     return (
@@ -57,7 +60,7 @@ export default function Calendar({ navigation, route }) {
                         style.Ttitle2,
                         { marginBottom: style.defaultMmd },
                     ]}>
-                    kostrjanc protyka
+                    {getLangs("calendar_title")}
                 </Text>
 
                 {events.map((event, key) => (
@@ -66,7 +69,7 @@ export default function Calendar({ navigation, route }) {
                         eventData={event}
                         id={event.id}
                         onPress={() =>
-                            navigation.navigate("eventView", { id: id })
+                            navigation.navigate("eventView", { id: event.id })
                         }
                     />
                 ))}

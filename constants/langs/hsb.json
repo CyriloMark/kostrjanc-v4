@@ -629,6 +629,7 @@
         "notification_comments_body_post": "Maš nowy komentar pod postom",
         "notification_comments_body_event": "Maš nowy komentar pod ewentom",
 
+        "calendar_title": "kostrjanc protyka",
         "calendar_months_0": "Januar",
         "calendar_months_1": "Februar",
         "calendar_months_2": "Měrc",
@@ -660,6 +661,7 @@
         "publishdate_weekday_3": "Štwórtk",
         "publishdate_weekday_4": "Pjatk",
         "publishdate_weekday_5": "Sobota",
+        "publishdate_weekday_6": "Njedźela",
 
         "publishdate_month_2_0": "januara",
         "publishdate_month_2_1": "februara",
@@ -672,6 +674,8 @@
         "publishdate_month_2_8": "septembra",
         "publishdate_month_2_9": "oktobra",
         "publishdate_month_2_10": "nowembra",
-        "publishdate_month_2_11": "decembra"
+        "publishdate_month_2_11": "decembra",
+
+        "publishdate_time": "hodź."
     }
 }
