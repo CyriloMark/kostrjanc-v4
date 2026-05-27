@@ -6,15 +6,6 @@
         "version": "4.5.1",
         "orientation": "portrait",
         "icon": "./assets/icons/icon.png",
-        "splash": {
-            "image": "./assets/icons/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#060A0D"
-        },
-        "notification": {
-            "icon": "./assets/icons/icon.png",
-            "color": "#060A0D"
-        },
         "updates": {
             "fallbackToCacheTimeout": 0
         },
@@ -65,7 +56,11 @@
             "expo-font",
             "expo-secure-store",
             "expo-audio",
-            "expo-video"
+            "expo-video",
+            "@react-native-community/datetimepicker",
+            "expo-splash-screen",
+            "expo-status-bar",
+            "expo-asset"
         ],
         "extra": {
             "eas": {
